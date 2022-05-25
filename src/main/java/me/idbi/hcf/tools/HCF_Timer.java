@@ -1,0 +1,115 @@
+package me.idbi.hcf.tools;
+
+import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+public class HCF_Timer {
+    // Combatlog Timer
+    private static final HashMap<Player, Long>                timers = new HashMap<>();
+    private static final HashMap<Player, Long>                Archertimers = new HashMap<>();
+    private static final HashMap<Player, Long>                eptimers = new HashMap<>();
+    // Ms >> Duration
+    private static final int combatTimerDuration =      10000;
+    // Ms >> Duration
+    private static final int ArcherTimerDuration =      30000;
+
+    private static final int EpTimerDuration =          15000;
+
+    public static boolean addCombatTimer(Player player){
+        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        if(!timers.containsKey(player)){
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            timers.put(player, System.currentTimeMillis() + combatTimerDuration);
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+    public static boolean checkCombatTimer(Player player) {
+        // Ha van rajta CombatTimer
+        if(timers.containsKey(player)){
+            if(System.currentTimeMillis() >= timers.get(player)){
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                timers.remove(player);
+                return false;
+            }else{
+                // Ellenkező esetben: Van rajta
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
+    public static double getCombatTime(Player player) {
+        // Ha van rajta CombatTimer
+        if(timers.containsKey(player)){
+            if(System.currentTimeMillis() >= timers.get(player)){
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                timers.remove(player);
+                return 0;
+            }else{
+                // Ellenkező esetben: Van rajta
+                return System.currentTimeMillis()-timers.get(player);
+            }
+        }else{
+            return 0;
+        }
+    }
+
+    public static boolean addArcherTimer(Player player){
+        // Ha már van rajta Archertag, akkor ne addjuk hozzá
+        if(!Archertimers.containsKey(player)){
+            // A mostani időhöz hozzá adjuk a Archertag idejét
+            Archertimers.put(player, System.currentTimeMillis() + ArcherTimerDuration);
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+    // true active; false nem
+    public static boolean checkArcherTimer(Player player) {
+        // Ha van rajta Archertag
+        if(Archertimers.containsKey(player)){
+            // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta Archertag
+            if(System.currentTimeMillis() >= Archertimers.get(player)){
+                Archertimers.remove(player);
+                return false;
+            }else{
+                // Ellenkező esetben: Van rajta
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    public static boolean addEpTimer(Player player){
+        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        if(!eptimers.containsKey(player)){
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            eptimers.put(player, System.currentTimeMillis() + EpTimerDuration);
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+    public static double getEpTime(Player player) {
+        // Ha van rajta CombatTimer
+        if(eptimers.containsKey(player)){
+            if(System.currentTimeMillis() >= eptimers.get(player)){
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                eptimers.remove(player);
+                return 0;
+            }else{
+                // Ellenkező esetben: Van rajta
+                return System.currentTimeMillis()-eptimers.get(player);
+            }
+        }else{
+            return 0;
+        }
+    }
+
+}

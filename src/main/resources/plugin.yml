@@ -1,0 +1,24 @@
+name: HCFPlugin
+version: '${project.version}'
+main: me.idbi.hcf.Main
+api-version: 1.18
+authors: [ Idbi, kbalu ]
+description: FÜR PLAYERS WO WANNA PLAY some HCF
+softdepend:
+  - Multiverse-Core
+
+commands:
+  faction:
+    aliases: [ f, factions ]
+
+permissions:
+  factions.reload:
+    default: op
+  factions.*:
+    default: op
+    children: [
+      factions.reload,
+      factions.admin.teleport.bypass
+    ]
+  factions.admin.teleport.bypass:
+    default: op

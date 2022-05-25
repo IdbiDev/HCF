@@ -1,0 +1,218 @@
+package me.idbi.hcf.MessagesEnums;
+
+import me.idbi.hcf.CustomFiles.ConfigManager;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import me.idbi.hcf.CustomFiles.MessagesFile;
+import org.bukkit.entity.Player;
+
+public enum Messages {
+
+    /*
+    Example meghívások:
+player.sendMessage(Messages.KICK_MESSAGE.getMessage().replaceDeath(p1, p2).queue());
+player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue());
+     */
+
+    PREFIX("&8[&2HCF&a+&8] &7>"),
+    RELOAD("&aSuccessfully configuration files reloaded!"),
+
+    // Errors
+    NO_PERMISSION("%prefix% &cYou don't have permission!"),
+    NO_PERMISSION_IN_FACTION("%prefix% &cYou need a higher rank to use this command!"),
+    NOT_ENOUGH_SLOT("%prefix% &cYou don't have enough space!"),
+    NOT_FOUND_PLAYER("%prefix% &cCan't find this player"),
+    NOT_FOUND_FACTION("%prefix% &cCan't find this faction"),
+
+    UNKNOWN_COMMAND("%prefix% &cUnknown command. Use &c&o/faction &ccommand to see the commands!"),
+    TOO_MANY_ARGS("%prefix% &cToo many arguments!"),
+    NOT_A_NUMBER("%prefix% &cPlease type a valid number"),
+
+    CANT_DEMOTE("%prefix% &cYou can't demote &c&o%player%"),
+    CANT_PROMOTE("%prefix% &cYou can't promote &c&o%player%"),
+
+    NOT_FILE("%prefix% &cCan't find this file!"),
+
+    // Errors - faction
+    EXISTS_FACTION_NAME("%prefix% &cThis faction name already exists!"),
+    YOU_ALREADY_IN_FACTION("%prefix% &cYou are already in faction!"),
+    NOT_IN_FACTION("%prefix% &cYou are not in a faction!"),
+    PLAYER_IN_FACTION("%prefix% &cThis player already in a faction!"),
+
+    ALREADY_INVITED("&cThis player is already invited"),
+    NOT_INVITED("%prefix% &cYou are not invited to this faction!"),
+
+    NO_FACTION_EXISTS("%prefix% &cThis faction is not exists!"),
+
+    // Commands
+    FACTION_CREATON("%prefix% &aSuccessfully faction creation!"),//ok
+    FACTION_LEAVE("%prefix% &eYou leaved from faction!"),
+    FACTION_CLAIM("%prefix% nem tudom, hogy mi az a claim! :)"), // közben olvasgathatod miket írogatok mert ugye nem biztos, hogy értelmesek
+
+    // Commands - invite
+    INVITED_BY("&eYou invited by &6&o%executor% &eto &6&o%faction_name%&e!"),
+    INVITED_PLAYER("&eYou invited &6&o%player% &eto the faction!"),
+    FACTION_INVITE_BROADCAST("&6&o%executor% &einvited &6&o%player% a&eto the faction!"),
+
+    // Faction join and quit
+    BC_JOIN_MESSAGE("&6&o%player% &ejoined to the faction!"),
+    BC_LEAVE_MESSAGE("&6&o%player% &eleaved from the faction!"),
+    JOIN_MESSAGE("&eYou joined to the faction!"),
+    LEAVE_MESSAGE("&aYou leaved from the faction!"),
+
+    // Faction bank
+    FACTION_BANK_DEPOSIT("%prefix% &aSuccessfully deposited &2&o$%amount% &ato your faction bank."),
+    FACTION_BANK_WITHDRAW("%prefix% &aSuccessfully withdrew &2&o$%amount% &afrom your faction bank."),
+    FACTION_BANK_NOT_ENOUGH("%prefix% &cYour faction doesn't have enough money!"),
+    FACTION_BANK_NUMBER_ERROR("%prefix% &cPlease enter a valid number!"),
+
+    // Server broadcasts
+    FACTION_CREATED("&6&o%faction_name% &esuccessfully created by &6&o%player%&e!"), // Sexy lesz :D azám :D
+    DEATH_MESSAGE("&a&o%victim% &ekilled by &a&o%killer%&e."),
+
+    // Zones interact You've exited
+    LEAVE_ZONE("§eYou've exited from §6§o%zone_name%"),
+    ENTERED_ZONE("§eYou entered to §6§o%zone_name%"),
+
+    // Faction messages
+    KICK_MESSAGE("&a%executor% &ekicked &a%player%&e from the faction!"),
+    WITHDRAW_MESSAGE("%prefix% &eYou withdrew &6&o$%amount% &efrom faction bank!"),
+    DEPOSIT_MESSAGE("%prefix% &eYou deposited &6&o$%amount% &eto faction bank!"),
+    EXECUTOR_INVITE_MESSAGE("&eYou invited &6&o%player% &eto your faction!"),
+    INVITED_INVITE_MESSAGE("&eYou invited to &6&o%faction_name% &efaction by &6&o%executor%&e!"),
+
+    JOIN_FACTION_BC("&8[&a+&8] &7&l» &6&o%player%"),
+    LEAVE_FACTION_BC("&8[&c-&8] &7&l» &6&o%player%"),
+
+    // Faction home
+    SETHOME_MESSAGE("&aSuccessfully set home of your faction to your location!"),
+    TELEPORT_TO_HOME("&eTeleportation will commenence in &6&o%time% seconds&e. &cDo not move!"),
+    SUCCESSFULLY_TELEPORT("&eYou are successfully teleported to your faction's home!"),
+    TELEPORT_CANCEL("&cYou moved, teleportation cancelled!"),
+    DOESNT_HOME("&cYour faction doesn't have home!"),
+
+    // Faction chat
+    FACTION_CHAT("&7[&e%faction_name%&7] &6%player%&f: &a%message%"),
+
+    // Faction permissions messages
+    PROMOTE_MESSAGE("&6&o%executor% &epromoted you to &6&o%rank%&e!"),
+    DEMOTE_MESSAGE("&6&o%executor% &edemoted you to &6&o%rank%&e!"),
+
+    EXECUTOR_PROMOTE_MESSAGE("&eYou promoted &6&o%player% &eto &6&o%rank%&e!"),
+    EXECUTOR_DEMOTE_MESSAGE("&eYou demoted &6&o%player% &eto &6&o%rank%&e!"),
+
+    FACTION_CREATE_RANK("%prefix% &aSuccessfully rank creation!"),
+    FACTION_RANK_EXISTS("%prefix% &cThis rank is exists!"),
+
+    // Console error
+    NOT_VALID_BLACKLISTED_BLOCKS("§cInvalid material type in config. Excepted material: %material%"),
+
+    // Designs
+    STATUS_DESIGN_ONLINE("&aOnline"),
+    STATUS_DESIGN_OFFLINE("&cOffline"),
+    CATEGORY_DESIGN("&e%category%:"),
+    MEMBER_LIST_DESIGN_ONLINE("&7▬ &a%member% &f[&7%member_kill%&f]"),
+    MEMBER_LIST_DESIGN_OFFLINE("&7▬ &7%member% &f[&7%member_kill%&f]");
+
+    private String msg, defaultMsg;
+    private String message;
+
+    Messages(String msg) {
+        this.msg = msg;
+        this.defaultMsg = msg;
+        this.message = msg;
+    }
+
+    public Messages getMessage() {
+        message = ChatColor.translateAlternateColorCodes('&', msg
+                .replace("%newline%", "\n")
+                .replace("%prefix%", Messages.PREFIX.msg));
+        return this;
+    }
+
+    public Messages getDefaultMessage() {
+        defaultMsg = ChatColor.translateAlternateColorCodes('&', defaultMsg
+                .replace("%newline%", "\n")
+                .replace("%prefix%", Messages.PREFIX.msg));
+        return this;
+    }
+
+    public String queue() {
+        if(message.equalsIgnoreCase(defaultMsg)) {
+            return ChatColor.translateAlternateColorCodes('&', msg
+                    .replace("%newline%", "\n")
+                    .replace("%prefix%", Messages.PREFIX.msg));
+        }
+        return ChatColor.translateAlternateColorCodes('&', message
+                .replace("%newline%", "\n")
+                .replace("%prefix%", Messages.PREFIX.msg));
+    }
+
+    public Messages repDeath(Player victim, Player killer) {
+        message = msg.replace("%victim%", victim.getName()).replace("%killer%", killer.getName());
+        return this;
+    }
+
+    public Messages repPlayer(Player p) {
+        message = msg.replace("%player%", p.getName());
+        return this;
+    }
+
+    public Messages setZone(String zoneName) {
+        message = msg.replace("%zone_name%", zoneName);
+        return this;
+    }
+
+    public Messages setFaction(String factionName) {
+        message = msg.replace("%faction_name%", factionName);
+        return this;
+    }
+
+    public Messages setAmount(String amount) {
+        message = msg.replace("%amount%", amount);
+        return this;
+    }
+
+    public Messages setMessage(Player p, String message) {
+        this.message = msg.replace("%message%", message).replace("%player%", p.getName());
+        return this;
+    }
+
+
+    public Messages setRank(Player p, String rank) {
+        message = msg.replace("%rank%", rank).replace("%player%", p.getName());
+        return this;
+    }
+
+    public Messages repExecutor(Player executor) {
+        message = msg.replace("%executor%", executor.getName());
+        return this;
+    }
+
+    public Messages repPlayerExecutor(Player p, Player executor) {
+        message = msg.replace("%executor%", executor.getName()).replace("%player%", p.getName());
+        return this;
+    }
+
+    public void load() {
+        FileConfiguration msgs = ConfigManager.getManager().getMessages();
+
+        if (msgs == null) return;
+
+        if (msgs.getString(this.toString()) == null) {
+            msgs.set(this.toString(), msg);
+            save();
+            return;
+        }
+
+        msg = msgs.getString(this.toString());
+    }
+
+    public void save() {
+        FileConfiguration msgs = MessagesFile.getMessages();
+
+        msgs.set(this.toString(), msg);
+
+        MessagesFile.saveMessages();
+    }
+}
