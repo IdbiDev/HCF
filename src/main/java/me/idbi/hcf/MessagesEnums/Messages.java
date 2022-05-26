@@ -47,7 +47,12 @@ player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue())
     // Commands
     FACTION_CREATON("%prefix% &aSuccessfully faction creation!"),//ok
     FACTION_LEAVE("%prefix% &eYou leaved from faction!"),
-    FACTION_CLAIM("%prefix% nem tudom, hogy mi az a claim! :)"), // közben olvasgathatod miket írogatok mert ugye nem biztos, hogy értelmesek
+    FACTION_CLAIM("%prefix% nem tudom, hogy mi az a claim! :)"),
+
+    //Claim actions
+    FACTION_CLAIM_DECLINE("%prefix% &cYou successfully rejected the claim."),
+    FACTION_CLAIM_ACCEPT("%prefix% &aYou successfully claimed"),
+    FACTION_CLAIM_INVALID_ZONE("%prefix% &cInvalid claiming zone!"),
 
     // Commands - invite
     INVITED_BY("&eYou invited by &6&o%executor% &eto &6&o%faction_name%&e!"),

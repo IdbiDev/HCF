@@ -13,5 +13,6 @@ public class onPlayerRespawn implements Listener {
         if(Main.debug)
             System.out.println("Respawning player.. Loading it ");
         playertools.LoadPlayer(e.getPlayer());
+
     }
 }

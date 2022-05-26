@@ -10,9 +10,23 @@ public class Faction_Ranks {
     public static void addRank(Player p, String name){
         if(!playertools.getMetadata(p,"factionid").equals("0")){
             Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p,"factionid")));
+            // ToDo: Check rank exists
+            if(playertools.hasPermission(p, rankManager.Permissions.ALL)){
+                rankManager.CreateNewRank(faction,name);
+                p.sendMessage(Messages.FACTION_CREATE_RANK.queue());
+            }else{
+                p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
+            }
+        }else{
+            p.sendMessage(Messages.NOT_IN_FACTION.queue());
+        }
+    }
+    public static void setPermissionToRank(Player p, String name){
+        if(!playertools.getMetadata(p,"factionid").equals("0")){
+            Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p,"factionid")));
             //Todo: Playertools permission check function
             // ToDo: Check rank exists
-            if(true){
+            if(playertools.hasPermission(p, rankManager.Permissions.ALL)){
                 rankManager.CreateNewRank(faction,name);
                 p.sendMessage(Messages.FACTION_CREATE_RANK.queue());
             }else{

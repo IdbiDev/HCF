@@ -1,6 +1,7 @@
 package me.idbi.hcf.events;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.ChatColor;
@@ -19,7 +20,7 @@ public class onPlayerInteract implements Listener {
             if(HCF_Claiming.checkEnemyClaimAction(e.getClickedBlock().getX(),e.getClickedBlock().getZ(), Integer.parseInt( playertools.getMetadata(p,"factionid")) )){
                 if(Main.blacklistedBlocks.contains(e.getClickedBlock().getType()) && playertools.getDTR(Integer.parseInt( playertools.getMetadata(p,"factionid")) ) > 0){
                     e.setCancelled(true);
-                    p.sendMessage(Main.servername+"§4Ezt nem teheted meg itt!");
+                    p.sendMessage(Messages.NO_PERMISSION.queue());
                 }
             }
         }
@@ -32,6 +33,7 @@ public class onPlayerInteract implements Listener {
                 e.setCancelled(true);
                 HCF_Claiming.CreateNewFakeTower(e.getPlayer(),e.getClickedBlock().getLocation());
                 if(HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1){
+                    //Todo: Fizetendő
                     e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: $"+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
                 }
             }
@@ -44,6 +46,7 @@ public class onPlayerInteract implements Listener {
                 HCF_Claiming.CreateNewFakeTower(e.getPlayer(),e.getClickedBlock().getLocation());
                 HCF_Claiming.setStartPosition(Integer.parseInt( playertools.getMetadata(e.getPlayer(),"factionid")),e.getClickedBlock().getX(),e.getClickedBlock().getZ());
                 if(HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1){
+                    //Todo: Fizetendő
                     e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: "+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
                 }
             }
@@ -55,7 +58,7 @@ public class onPlayerInteract implements Listener {
                 HCF_Claiming.removeClaiming(Integer.parseInt( playertools.getMetadata(e.getPlayer(),"factionid")));
                 e.getPlayer().getInventory().remove(e.getItem());
                 HCF_Claiming.DeletFakeTowers(e.getPlayer());
-                e.getPlayer().sendMessage(Main.servername+ ChatColor.RED+"Befejezted a claimelést!");
+                e.getPlayer().sendMessage(Messages.FACTION_CLAIM_DECLINE.queue());
             }
         }
         // Elfogadás
@@ -63,11 +66,11 @@ public class onPlayerInteract implements Listener {
             if(e.getItem().getType() != Material.DIAMOND_HOE) return;
             if(e.getItem().getItemMeta().hasLore()){
                 if(HCF_Claiming.FinishClaiming(Integer.parseInt( playertools.getMetadata(e.getPlayer(),"factionid")))){
-                    e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Sikeresen claimelted a zónát!");
+                    e.getPlayer().sendMessage(Messages.FACTION_CLAIM_ACCEPT.queue());
                     e.getPlayer().getInventory().remove(e.getItem());
                     HCF_Claiming.DeletFakeTowers(e.getPlayer());
                 }else {
-                    e.getPlayer().sendMessage(Main.servername+ ChatColor.RED+"Érvénytelen claimelési zóna!");
+                    e.getPlayer().sendMessage(Messages.FACTION_CLAIM_INVALID_ZONE.queue());
                 }
             }
         }

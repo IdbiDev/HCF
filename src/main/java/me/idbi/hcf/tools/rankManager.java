@@ -40,12 +40,13 @@ public class rankManager {
                 JSONObject jsonObject = new JSONObject(permissionmap.get("permissions"));
                 for (Map.Entry<String, Object> p : JsonUtils.jsonToMap(jsonObject).entrySet()) {
                     String rank = p.getKey();
-                    boolean isValid = (boolean) p.getValue();
+                    boolean isValid = Boolean.parseBoolean(String.valueOf(p.getValue()));
                     clas_permissions.put(rank,isValid);
                 }
             }catch (Exception ignored){
                 if(Main.debug)
                     System.out.println("A kurva anyádért nulla ez");
+                ignored.printStackTrace();
             }
 
         }
@@ -74,7 +75,11 @@ public class rankManager {
     }
 
     public static void CreateNewRank(Main.Faction faction,String name){
-        //Todo: Check if rank is already exist
+        for(Faction_Rank rank : faction.ranks)
+            if(rank.name.equals(name)) {
+                return;
+            }
+
         Integer id = SQL_Connection.dbExecute(con,"INSERT INTO ranks SET name = '?' faction='?'",name, String.valueOf(faction.factionid));
         Faction_Rank rank = new Faction_Rank(id,name);
         rank.loadPermissions();

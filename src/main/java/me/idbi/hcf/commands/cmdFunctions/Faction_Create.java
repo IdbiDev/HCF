@@ -2,6 +2,7 @@ package me.idbi.hcf.commands.cmdFunctions;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ public class Faction_Create  {
             if(!isFactionNameTaken(name)){
                 //Create Faction
                 int x = SQL_Connection.dbExecute(con,"INSERT INTO factions SET name='?', leader='?'",name,p.getUniqueId().toString());
+                //Todo: GetFactionDefault Balance
                 Main.Faction faction = new Main.Faction(x,name,p.getUniqueId().toString(),5000);
                 faction.members.add(p);
                 //
@@ -25,7 +27,7 @@ public class Faction_Create  {
 
                 SQL_Connection.dbExecute(con,"UPDATE members SET faction = ?,factionname='?' WHERE uuid = '?'", String.valueOf(x), name,p.getUniqueId().toString());
                 Main.faction_cache.put(x,faction);
-
+                Scoreboards.refresh(p);
                 // Kiíratás global chatre ->
                 //                              xy faction létre jött
                 Bukkit.broadcastMessage(Messages.FACTION_CREATON.getMessage().setFaction(name).repPlayer(p).queue());

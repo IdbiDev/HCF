@@ -6,6 +6,7 @@ import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.JsonUtils;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.tools.rankManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -24,8 +25,10 @@ public class Faction_Home implements Listener {
 
     private static Connection con = Main.getConnection("faction");
     public static void setHome(Player p) {
-        // ToDo: check permission here
-
+        if(!playertools.hasPermission(p, rankManager.Permissions.SETHOME)){
+            //Todo: Message on you dont have permission
+            return;
+        }
         Main.Faction faction = Main.faction_cache.get(Integer.valueOf(playertools.getMetadata(p,"factionid")));
 
         HashMap map = new HashMap() {{

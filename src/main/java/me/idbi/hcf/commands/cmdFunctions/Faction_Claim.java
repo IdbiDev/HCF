@@ -5,6 +5,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.tools.rankManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +19,10 @@ public class Faction_Claim {
 
     public static boolean PrepareClaiming(Player p){
         if(!playertools.getMetadata(p,"factionid").equals("0")){
+            if(!playertools.hasPermission(p, rankManager.Permissions.ALL)){
+                //Todo: Message permisiion fos
+                return false;
+            }
             if(p.getInventory().firstEmpty() != -1){
                 ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
                 ItemMeta meta = wand.getItemMeta();

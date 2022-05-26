@@ -89,7 +89,7 @@ public final class Main extends JavaPlugin {
         Misc_Timers.Bard_Energy();
        // new scoreboard();
 
-        Misc_Timers.AutoSave();
+        //Misc_Timers.AutoSave();
     }
 
     @Override
@@ -150,8 +150,8 @@ public final class Main extends JavaPlugin {
                     f.factioname
             };
             if(Main.debug)
-                System.out.println("Saving "+ f.factioname + " Faction!");
-            SQL_Connection.dbUpdate(con,"factions",keys,values, "ID='"+String.valueOf(faction.getValue().factionid)+"'");
+                System.out.println("Saving \""+ f.factioname + "\" Faction!");
+           // SQL_Connection.dbUpdate(con,"factions",keys,values, "ID='"+String.valueOf(faction.getValue().factionid)+"'");
         }
     }
     public static void SavePlayers() {
@@ -175,7 +175,7 @@ public final class Main extends JavaPlugin {
             if(Main.debug)
                 System.out.println("Saving "+ p.getDisplayName() + " Player!");
             // Safe
-            SQL_Connection.dbUpdate(con,"factions",keys,values, "uuid='"+p.getUniqueId().toString()+"'");
+            //SQL_Connection.dbUpdate(con,"factions",keys,values, "uuid='"+p.getUniqueId().toString()+"'");
         }
     }
     public static void SaveAll(){

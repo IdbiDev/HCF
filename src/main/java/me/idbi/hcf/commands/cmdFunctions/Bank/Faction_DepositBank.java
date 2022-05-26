@@ -2,11 +2,13 @@ package me.idbi.hcf.commands.cmdFunctions.Bank;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
 public class Faction_DepositBank {
-
+    public static final Connection con = Main.getConnection("Faction.cmd");
     boolean transaction;
 
     public Faction_DepositBank depositFaction(Main.Faction faction, int amount) {
@@ -18,6 +20,7 @@ public class Faction_DepositBank {
             transaction = true;
         } catch (Exception ex) {
             transaction = false;
+            ex.printStackTrace();
         }
 
         return this;
@@ -28,7 +31,10 @@ public class Faction_DepositBank {
     }
 
     public static void asd(String[] args, Player p) {
-        // ToDo: permission check
+        if(!playertools.hasPermission(p, rankManager.Permissions.DEPOSIT)){
+            // ToDo: permission handle
+            return;
+        }
 
         if(args[1].matches("^[0-9]+$")) {
             try {
@@ -37,7 +43,7 @@ public class Faction_DepositBank {
                     p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
                     return;
                 }
-
+                System.out.println("ADEPOSITING");
                 Faction_DepositBank deposit =
                         new Faction_DepositBank().depositFaction(
                                 faction,
@@ -46,6 +52,7 @@ public class Faction_DepositBank {
 
                 if(deposit.transactionSuccessfully()) {
                     p.sendMessage(Messages.FACTION_BANK_DEPOSIT.queue().replace("%amount%", args[1]));
+                    Scoreboards.refresh(p);
                 }
             } catch (NumberFormatException ex) {
                 p.sendMessage(Messages.FACTION_BANK_NUMBER_ERROR.queue());

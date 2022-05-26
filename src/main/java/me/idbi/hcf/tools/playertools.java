@@ -1,6 +1,7 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -40,6 +41,7 @@ public class playertools {
             if(!playerMap.get("faction").equals("0")){
                 Main.faction_cache.get(Integer.valueOf(String.valueOf(playerMap.get("faction")))).ApplyPlayerRank(player, String.valueOf(playerMap.get("rank")));
             }
+            Scoreboards.refresh(player);
 
         }else{
             // Játékos létrehozása SQL-ben, majd újra betöltjük
@@ -166,6 +168,17 @@ public class playertools {
         }
     }
 
+    public static boolean hasPermission(Player player,rankManager.Permissions perm){
+        return true;
+        /*int faction = Integer.parseInt(getMetadata(player,"factionid"));
+        if(faction != 0){
+            rankManager.Faction_Rank rank = Main.faction_cache.get(faction).player_ranks.get(player);
+            if(rank != null){
+                return rank.hasPermission(perm);
+            }
+        }
+        return false;*/
+    }
 
 
     @Deprecated
