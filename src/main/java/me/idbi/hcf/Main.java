@@ -4,18 +4,14 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.CustomFiles.ConfigManager;
 import me.idbi.hcf.CustomFiles.MessagesFile;
 import me.idbi.hcf.classes.Bard;
-import me.idbi.hcf.commands.cmdFunctions.Bank.Faction_DepositBank;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.tools.*;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.Bukkit;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,6 +66,24 @@ public final class Main extends JavaPlugin {
         Faction_Home.teleportPlayers = new ArrayList<>();
 
 
+        // Config
+        ArrayList<String > scoreboardList = new ArrayList<String>() {{
+            add("&7┌─");
+            add("&7│ &eFaction: &6%faction%");
+            add("&7│ &eLocation: &6%location%");
+            add("&7│ &eMoney: &6$%money%");
+            add("&7│ &eClass: &6%class%");
+            add("&7└─");
+            add("empty");
+            add("&7▍ &eSpawn Tag: &6%spawntag%");
+            add("&7▍ &ePearl: &6%ep_cd%");
+            add("&7▍ &eBard energy: &6%bard_energy%");
+        }};
+
+        getConfig().addDefault("Scoreboard", scoreboardList);
+        getConfig().options().copyDefaults(true);
+        saveDefaultConfig();
+        saveConfig();
 
         //Commandok / Eventek setupolása
         setupEvents.SetupEvents();
@@ -88,7 +102,7 @@ public final class Main extends JavaPlugin {
         Misc_Timers.addBardEffects();
         Misc_Timers.DTR_Timer();
         Misc_Timers.Bard_Energy();
-       // new scoreboard();
+        //Scoreboards.scoreboard();
 
         Misc_Timers.AutoSave();
     }

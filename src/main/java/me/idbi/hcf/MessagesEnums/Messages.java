@@ -70,6 +70,7 @@ player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue())
     FACTION_BANK_WITHDRAW("%prefix% &aSuccessfully withdrew &2&o$%amount% &afrom your faction bank."),
     FACTION_BANK_NOT_ENOUGH("%prefix% &cYour faction doesn't have enough money!"),
     FACTION_BANK_NUMBER_ERROR("%prefix% &cPlease enter a valid number!"),
+    FACTION_BANK_PLAYER_NOT_ENOUGH("%prefix% &cYou don't have enough money!"),
 
     // Server broadcasts
     FACTION_CREATED("&6&o%faction_name% &esuccessfully created by &6&o%player%&e!"), // Sexy lesz :D azám :D

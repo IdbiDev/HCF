@@ -11,11 +11,14 @@ import org.bukkit.entity.Player;
 public class Faction_WithdrawBank {
     boolean transaction;
 
-    public Faction_WithdrawBank withdrawFaction(Main.Faction faction, int amount) {
+    public Faction_WithdrawBank withdrawFaction(Main.Faction faction, Player p, int amount) {
         try {
             int SumSumAmount = faction.balance - amount;
 
             faction.balance = SumSumAmount;
+
+            int playerMoney = Integer.parseInt(playertools.getMetadata(p, "money"));
+            playertools.setMetadata(p, "money", playerMoney + amount);
 
             transaction = true;
         } catch (Exception ex) {
@@ -41,6 +44,11 @@ public class Faction_WithdrawBank {
                     p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
                     return;
                 }
+                if(faction.balance <= 0) {
+                    p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
+                    return;
+                }
+
                 if(faction.balance < Integer.parseInt(args[1])) {
                     p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
                     return;
@@ -48,6 +56,7 @@ public class Faction_WithdrawBank {
                 Faction_WithdrawBank withdraw =
                         new Faction_WithdrawBank().withdrawFaction(
                                 faction,
+                                p,
                                 Integer.parseInt(args[1])
                         );
 

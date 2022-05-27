@@ -19,6 +19,7 @@ public enum ConfigLibrary {
     Claim_price_multiplier("1.5"),
     teleport_delay_in_seconds("10"),
     Faction_default_balance("1000"),
+    Scoreboard_title("&6HCF+ &7- &eMap &6#1"),
 
     DATABASE_HOST("host"),
     DATABASE_PORT("25565"),
@@ -39,6 +40,10 @@ public enum ConfigLibrary {
         return ChatColor.translateAlternateColorCodes('&', value
                 .replace("%newline%", "\n")
                 .replace("%prefix%", Messages.PREFIX.getMessage().queue()));
+    }
+
+    public static List<String> getScoreboard() {
+        return m.getConfig().getStringList("Scoreboard");
     }
 
     public String getDefaultValue() {
