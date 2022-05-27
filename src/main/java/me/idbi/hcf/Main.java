@@ -65,7 +65,6 @@ public final class Main extends JavaPlugin {
         // Variables
         Faction_Home.teleportPlayers = new ArrayList<>();
 
-
         // Config
         ArrayList<String > scoreboardList = new ArrayList<String>() {{
             add("&7┌─");

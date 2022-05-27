@@ -3,6 +3,7 @@ package me.idbi.hcf.MessagesEnums;
 import me.idbi.hcf.CustomFiles.ConfigManager;
 import me.idbi.hcf.CustomFiles.MessagesFile;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -33,6 +34,8 @@ player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue())
 
     NOT_FILE("%prefix% &cCan't find this file!"),
 
+    DONT_HAVE_ITEM("%prefix% &cYou don't have enough item in your inventory!"),
+
     // Errors - faction
     EXISTS_FACTION_NAME("%prefix% &cThis faction name already exists!"),
     YOU_ALREADY_IN_FACTION("%prefix% &cYou are already in faction!"),
@@ -57,7 +60,7 @@ player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue())
     // Commands - invite
     INVITED_BY("&eYou invited by &6&o%executor% &eto &6&o%faction_name%&e!"),
     INVITED_PLAYER("&eYou invited &6&o%player% &eto the faction!"),
-    FACTION_INVITE_BROADCAST("&6&o%executor% &einvited &6&o%player% a&eto the faction!"),
+    FACTION_INVITE_BROADCAST("&6&o%executor% &einvited &6&o%player% &eto the faction!"),
 
     // Faction join and quit
     BC_JOIN_MESSAGE("&6&o%player% &ejoined to the faction!"),
@@ -112,6 +115,7 @@ player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue())
 
     // Console error
     NOT_VALID_BLACKLISTED_BLOCKS("§cInvalid material type in config. Excepted material: %material%"),
+    SIGN_SHOP_MATERIAL("§cInvalid material in the sign shop."),
 
     // Designs
     STATUS_DESIGN_ONLINE("&aOnline"),
@@ -144,11 +148,14 @@ player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue())
     }
 
     public String queue() {
-        if(message.equalsIgnoreCase(defaultMsg)) {
+        if (message.equalsIgnoreCase(defaultMsg)) {
+            msg = defaultMsg;
+            message = defaultMsg;
             return ChatColor.translateAlternateColorCodes('&', msg
                     .replace("%newline%", "\n")
                     .replace("%prefix%", Messages.PREFIX.msg));
         }
+        msg = defaultMsg;
         return ChatColor.translateAlternateColorCodes('&', message
                 .replace("%newline%", "\n")
                 .replace("%prefix%", Messages.PREFIX.msg));
@@ -156,47 +163,56 @@ player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue())
 
     public Messages repDeath(Player victim, Player killer) {
         message = msg.replace("%victim%", victim.getName()).replace("%killer%", killer.getName());
+        this.msg = message;
         return this;
     }
 
     public Messages repPlayer(Player p) {
         message = msg.replace("%player%", p.getName());
+        this.msg = message;
         return this;
     }
 
     public Messages setZone(String zoneName) {
         message = msg.replace("%zone_name%", zoneName);
+        this.msg = message;
         return this;
     }
 
     public Messages setFaction(String factionName) {
-        message = msg.replace("%faction_name%", factionName);
+        message = msg.replace(msg, msg.replace("%faction_name%", factionName));
+        this.msg = message;
         return this;
     }
 
     public Messages setAmount(String amount) {
         message = msg.replace("%amount%", amount);
+        this.msg = message;
         return this;
     }
 
     public Messages setMessage(Player p, String message) {
         this.message = msg.replace("%message%", message).replace("%player%", p.getName());
+        this.msg = message;
         return this;
     }
 
 
     public Messages setRank(Player p, String rank) {
         message = msg.replace("%rank%", rank).replace("%player%", p.getName());
+        this.msg = message;
         return this;
     }
 
     public Messages repExecutor(Player executor) {
         message = msg.replace("%executor%", executor.getName());
+        this.msg = message;
         return this;
     }
 
     public Messages repPlayerExecutor(Player p, Player executor) {
         message = msg.replace("%executor%", executor.getName()).replace("%player%", p.getName());
+        this.msg = message;
         return this;
     }
 

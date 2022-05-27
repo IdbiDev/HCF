@@ -1,6 +1,8 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.SignShop.CreateShopSign;
+import me.idbi.hcf.SignShop.InteractShopSign;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.events.*;
 
@@ -22,6 +24,8 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new onBowShoot(),Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new Faction_Home(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new InteractShopSign(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new CreateShopSign(), Main.getPlugin(Main.class));
 
 
     }

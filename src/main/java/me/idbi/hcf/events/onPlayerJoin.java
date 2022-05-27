@@ -20,7 +20,7 @@ public class onPlayerJoin implements Listener {
         e.setJoinMessage("");
         if(!Objects.equals(playertools.getMetadata(p, "factionid"), "0")) {
             playertools.BroadcastFaction(Main.factionToname.get(Integer.valueOf(playertools.getMetadata(p,"factionid"))),
-                    Messages.JOIN_FACTION_BC.getMessage().repPlayer(p).queue());
+                    Messages.JOIN_FACTION_BC.repPlayer(p).queue());
         }
         Scoreboards.refresh(p);
 

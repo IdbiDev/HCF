@@ -20,7 +20,10 @@ permissions:
     default: op
     children: [
       factions.reload,
-      factions.admin.teleport.bypass
+      factions.admin.teleport.bypass,
+      factions.admin
     ]
   factions.admin.teleport.bypass:
+    default: op
+  factions.admin:
     default: op
