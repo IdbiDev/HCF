@@ -3,7 +3,6 @@ package me.idbi.hcf.commands.cmdFunctions.Bank;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
@@ -43,7 +42,6 @@ public class Faction_DepositBank {
                     p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
                     return;
                 }
-                System.out.println("ADEPOSITING");
                 Faction_DepositBank deposit =
                         new Faction_DepositBank().depositFaction(
                                 faction,

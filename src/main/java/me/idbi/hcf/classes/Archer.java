@@ -2,8 +2,8 @@ package me.idbi.hcf.classes;
 
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 

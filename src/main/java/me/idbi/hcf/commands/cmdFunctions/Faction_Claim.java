@@ -1,7 +1,6 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
-import com.google.common.collect.ListMultimap;
-import me.idbi.hcf.Main;
+
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.playertools;
@@ -11,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

@@ -3,12 +3,10 @@ package me.idbi.hcf.commands.cmdFunctions.Bank;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import me.idbi.hcf.tools.rankManager;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 
 public class Faction_WithdrawBank {
     boolean transaction;

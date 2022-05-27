@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.Metadatable;
 
-import javax.swing.plaf.basic.BasicScrollPaneUI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,8 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static me.idbi.hcf.Main.nameToFaction;
 
 
 public class playertools {
@@ -34,8 +31,9 @@ public class playertools {
             setMetadata(player,"deaths",playerMap.get("deaths"));
             setMetadata(player,"money",playerMap.get("money"));
             setMetadata(player,"class","none");
-            setMetadata(player,"current_loc","spawn");
             setMetadata(player,"faction",playerMap.get("factionname"));
+            String c = HCF_Claiming.sendFactionTerretory(player);
+            setMetadata(player,"current_loc",c);
            // rankManager.addRankToPlayer(player);
             SQL_Connection.dbExecute(con,"UPDATE members SET online='?' WHERE uuid='?'","1",player.getUniqueId().toString());
             if(!playerMap.get("faction").equals("0")){
@@ -255,6 +253,7 @@ public class playertools {
                     }
 
                     returnHashMap.put(rank, players);
+
                 }
             }
 
@@ -287,6 +286,7 @@ public class playertools {
                         rankManager.Faction_Rank rank = new rankManager.Faction_Rank(rank_rs.getInt("ID"), rank_rs.getString("name"));
                         rank.loadPermissions();
                         faction.ranks.add(rank);
+
                     }
                 }
             }

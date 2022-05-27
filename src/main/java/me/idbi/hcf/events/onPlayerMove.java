@@ -1,6 +1,5 @@
 package me.idbi.hcf.events;
 
-import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.HCF_Claiming;

@@ -4,11 +4,10 @@ import me.idbi.hcf.CustomFiles.MessagesFile;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf.commands.cmdFunctions.*;
 import me.idbi.hcf.commands.cmdFunctions.Bank.Faction_DepositBank;
 import me.idbi.hcf.commands.cmdFunctions.Bank.Faction_WithdrawBank;
+import me.idbi.hcf.commands.cmdFunctions.*;
 import me.idbi.hcf.tools.playertools;
-import me.idbi.hcf.tools.rankManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -120,9 +119,24 @@ public class faction implements CommandExecutor, TabCompleter {
                             }
                             break;
                         case "addrank":
-                            //Invite
                             try {
                                 Faction_Ranks.addRank(p, args[1]);
+                            } catch (Exception e){
+                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                                //Kiíratás hogy balfaszul használta a commandot
+                            }
+                            break;
+                        case "setrankperm":
+                            try {
+                                Faction_Ranks.setPermissionToRank(p, args[1],args[2]);
+                            } catch (Exception e){
+                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                                //Kiíratás hogy balfaszul használta a commandot
+                            }
+                            break;
+                        case "removerankperm":
+                            try {
+                                Faction_Ranks.removePermissionFromRank(p, args[1],args[2]);
                             } catch (Exception e){
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                                 //Kiíratás hogy balfaszul használta a commandot

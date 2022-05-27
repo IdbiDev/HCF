@@ -47,6 +47,7 @@ public final class Main extends JavaPlugin {
                 -
             STB:
                 - Automata Adatbázis felépítése
+                - Parancsok elnevezése
 
          */
 
@@ -89,7 +90,7 @@ public final class Main extends JavaPlugin {
         Misc_Timers.Bard_Energy();
        // new scoreboard();
 
-        //Misc_Timers.AutoSave();
+        Misc_Timers.AutoSave();
     }
 
     @Override
@@ -138,42 +139,21 @@ public final class Main extends JavaPlugin {
     public static void SaveFactions() {
         for(Map.Entry<Integer, Faction> faction : faction_cache.entrySet()){
             Main.Faction f = faction.getValue();
-            String[] keys = {
-                    "money",
-                    "DTR",
-                    "name"
-            };
-
-            String[] values = {
-                    String.valueOf(f.balance),
-                    String.valueOf(f.DTR),
-                    f.factioname
-            };
             if(Main.debug)
                 System.out.println("Saving \""+ f.factioname + "\" Faction!");
-           // SQL_Connection.dbUpdate(con,"factions",keys,values, "ID='"+String.valueOf(faction.getValue().factionid)+"'");
+            SQL_Connection.dbExecute(con,"UPDATE factions SET money='?',DTR='?',name='?' WHERE ID = '?'",String.valueOf(f.balance), String.valueOf(f.DTR), f.factioname, String.valueOf(f.factionid));
         }
     }
     public static void SavePlayers() {
         for(Map.Entry<Player, Player_Obj> value : player_cache.entrySet()){
+
             Player_Obj p_Obj = value.getValue();
             Player p = value.getKey();
             if(p == null)
                 continue;
-            String[] keys = {
-                    "faction",
-                    "rank",
-                    "money",
-                    "factionname"
-            };
-            String[] values = {
-                    p_Obj.getData("faction"),
-                    p_Obj.getData("rank"),p_Obj.getData("money"),
-                    p_Obj.getData("faction")
-            };
-
             if(Main.debug)
                 System.out.println("Saving "+ p.getDisplayName() + " Player!");
+            SQL_Connection.dbExecute(con,"UPDATE members SET faction='?',rank='?',money='?',factionname='?' WHERE UUID='?'",p_Obj.getData("factionid"),p_Obj.getData("rank"),p_Obj.getData("money"), p_Obj.getData("faction"),p.getUniqueId().toString());
             // Safe
             //SQL_Connection.dbUpdate(con,"factions",keys,values, "uuid='"+p.getUniqueId().toString()+"'");
         }
@@ -196,7 +176,8 @@ public final class Main extends JavaPlugin {
                 return metadata.get(key).toString();
             }catch (Exception ignored){
                 if(Main.debug)
-                    Bukkit.getLogger().severe("§4 Error while reading key");
+                    Bukkit.getLogger().severe(" Error while reading key:" +key);
+                    ignored.printStackTrace();
                 return null;
             }
         }
@@ -254,9 +235,18 @@ public final class Main extends JavaPlugin {
             for(rankManager.Faction_Rank rank : ranks){
                 if(Objects.equals(rank.name, name)){
                     player_ranks.put(p,rank);
+                    playertools.setMetadata(p,"rank",rank.name);
                     break;
                 }
             }
+        }
+        public rankManager.Faction_Rank FindRankByName(String name){
+            for(rankManager.Faction_Rank rank : ranks){
+                if(Objects.equals(rank.name, name)){
+                    return rank;
+                }
+            }
+            return null;
         }
     }
 

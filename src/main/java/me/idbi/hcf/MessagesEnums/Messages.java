@@ -1,9 +1,9 @@
 package me.idbi.hcf.MessagesEnums;
 
 import me.idbi.hcf.CustomFiles.ConfigManager;
+import me.idbi.hcf.CustomFiles.MessagesFile;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
-import me.idbi.hcf.CustomFiles.MessagesFile;
 import org.bukkit.entity.Player;
 
 public enum Messages {

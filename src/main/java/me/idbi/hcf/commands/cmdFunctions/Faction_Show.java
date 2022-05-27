@@ -3,12 +3,10 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;

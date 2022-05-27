@@ -1,11 +1,10 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
-
-import static org.bukkit.Bukkit.getServer;
-
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.events.*;
+
+import static org.bukkit.Bukkit.getServer;
 
 public class setupEvents {
     public static void SetupEvents() {
