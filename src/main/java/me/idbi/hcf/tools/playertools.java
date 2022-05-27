@@ -32,11 +32,13 @@ public class playertools {
             setMetadata(player,"money",playerMap.get("money"));
             setMetadata(player,"class","none");
             setMetadata(player,"faction",playerMap.get("factionname"));
+            setMetadata(player,"adminDuty",true);
+            setMetadata(player,"rank","none");
             String c = HCF_Claiming.sendFactionTerretory(player);
             setMetadata(player,"current_loc",c);
            // rankManager.addRankToPlayer(player);
             SQL_Connection.dbExecute(con,"UPDATE members SET online='?' WHERE uuid='?'","1",player.getUniqueId().toString());
-            if(!playerMap.get("faction").equals("0")){
+            if(!playerMap.get("faction").equals(0)){
                 Main.faction_cache.get(Integer.valueOf(String.valueOf(playerMap.get("faction")))).ApplyPlayerRank(player, String.valueOf(playerMap.get("rank")));
             }
             Scoreboards.refresh(player);

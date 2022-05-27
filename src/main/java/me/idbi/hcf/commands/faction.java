@@ -8,6 +8,7 @@ import me.idbi.hcf.commands.cmdFunctions.Bank.Faction_DepositBank;
 import me.idbi.hcf.commands.cmdFunctions.Bank.Faction_WithdrawBank;
 import me.idbi.hcf.commands.cmdFunctions.*;
 import me.idbi.hcf.tools.playertools;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -43,6 +44,10 @@ public class faction implements CommandExecutor, TabCompleter {
                                 Faction_Show.show(p, playertools.getMetadata(p, "faction"));
                                 return false;
                             } else if(args.length == 2) {
+                                if(Bukkit.getPlayer(args[1]) != null){
+                                    args[1] = Main.factionToname.get(Integer.parseInt(playertools.getMetadata(Bukkit.getPlayer(args[1]),"factionid")));
+
+                                }
                                 for(Map.Entry<Integer, Main.Faction> faction : Main.faction_cache.entrySet()) {
                                     if (faction.getValue().factioname.equalsIgnoreCase(args[1])) {
                                         Faction_Show.show(p, args[1]);
@@ -80,6 +85,14 @@ public class faction implements CommandExecutor, TabCompleter {
                             //Invite
                             try {
                                 Faction_Invite.InvitePlayerToFaction(p, args[1]);
+                            } catch (Exception e){
+                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                                //Kiíratás hogy balfaszul használta a commandot
+                            }
+                            break;
+                        case "join":
+                            try {
+                                Faction_Join.JoinToFaction(p, args[1]);
                             } catch (Exception e){
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                                 //Kiíratás hogy balfaszul használta a commandot

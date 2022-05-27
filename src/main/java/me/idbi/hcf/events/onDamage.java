@@ -22,7 +22,10 @@ public class onDamage implements Listener {
             Player victim = (Player) e.getEntity();
             ItemStack damagerWeapon = ((Player) e.getDamager()).getItemInHand();
             // Check Friendly Fire
-
+            if(Boolean.parseBoolean(playertools.getMetadata(damager,"adminDuty")))
+                //Todo: Admin nope sebzés player
+                damager.sendMessage("Meleg");
+                e.setCancelled(true);
             int damager_faction = Integer.parseInt(playertools.getMetadata(damager,"factionid"));
             int victim_faction = Integer.parseInt(playertools.getMetadata(victim,"factionid"));
 
@@ -30,6 +33,7 @@ public class onDamage implements Listener {
                 return;
 
             if (damager_faction == victim_faction){
+                //Todo: Friendly Fire
                 damager.sendMessage(Main.servername+ChatColor.RED+"Nem sebezheted a csapattársad!");
                 System.out.println("Friendly Fire: Off");
                 e.setCancelled(true);
@@ -37,6 +41,7 @@ public class onDamage implements Listener {
             }
             //Add combatTimer
             if(HCF_Timer.addCombatTimer(victim)){
+                //Todo: Cobmat tag
                 victim.sendMessage(Main.servername+ChatColor.RED+"Combat taget kaptál! Ne lépj ki!"+ChatColor.GREEN +" [30 sec]");
             }
             //Damage if ArcherTag
@@ -63,6 +68,7 @@ public class onDamage implements Listener {
                 }
 
                 if (damager_faction == victim_faction){
+                    //Todo: Friendly Fire
                     damager.sendMessage(Main.servername+ChatColor.RED+"Nem sebezheted a csapattársad!");
                     System.out.println("Friendly Fire: Off");
                     e.setCancelled(true);

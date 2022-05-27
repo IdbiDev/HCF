@@ -10,6 +10,8 @@ softdepend:
 commands:
   faction:
     aliases: [ f, factions ]
+  admin:
+    aliases: [ a, ad ]
 
 permissions:
   factions.reload:

@@ -20,7 +20,7 @@ public class Faction_Create  {
                 int x = SQL_Connection.dbExecute(con,"INSERT INTO factions SET name='?', leader='?'",name,p.getUniqueId().toString());
                 //Todo: GetFactionDefault Balance
                 Main.Faction faction = new Main.Faction(x,name,p.getUniqueId().toString(),5000);
-                faction.members.add(p);
+
                 //
                 playertools.setMetadata(p,"faction",name);
                 playertools.setMetadata(p,"factionid",x);

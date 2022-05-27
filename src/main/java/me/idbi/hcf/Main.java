@@ -28,7 +28,7 @@ public final class Main extends JavaPlugin {
     public static boolean debug;
 
     private static Connection con;
-   public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
+    public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
     public static HashMap<Integer, String> factionToname = new HashMap<>();
     public static HashMap<Player, Main.Player_Obj> player_cache = new HashMap<>();
@@ -208,14 +208,13 @@ public final class Main extends JavaPlugin {
         public String leader;
         public Integer balance;
         public ArrayList<HCF_Claiming.Faction_Claim> claims = new ArrayList<>();
-        public ArrayList<Player> members;
         public int DTR = 3;
         public inviteManager.factionInvite invites;
 
         public ArrayList<rankManager.Faction_Rank> ranks = new ArrayList<>();
         public HashMap<Player,rankManager.Faction_Rank> player_ranks = new HashMap<>();
 
-        public Faction(Integer id,String name,String leader,Integer balance) {
+        public Faction(Integer id, String name, String leader, Integer balance) {
             this.factionid = id;
             this.factioname = name;
             this.leader = leader;
@@ -260,6 +259,7 @@ public final class Main extends JavaPlugin {
                     return rank;
                 }
             }
+
             return null;
         }
     }
