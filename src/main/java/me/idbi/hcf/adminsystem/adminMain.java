@@ -123,8 +123,13 @@ public class adminMain {
         SQL_Connection.dbExecute(con,"DELETE FROM factions WHERE ID='?'", String.valueOf(selectedFaction.factionid));
         SQL_Connection.dbExecute(con,"DELETE FROM claims WHERE factionid='?'", String.valueOf(selectedFaction.factionid));
         SQL_Connection.dbExecute(con,"UPDATE members SET rank='Nincs',faction=0,factionname='Nincs' WHERE faction='?'", String.valueOf(selectedFaction.factionid));
+        for(Player player :playertools.getFactionOnlineMembers(faction)){
+            playertools.setMetadata(player,"faction","Nincs");
+            playertools.setMetadata(player,"factionid","0");
+            playertools.setMetadata(player,"rank","none");
+        }
 
-
+        Bukkit.broadcastMessage(Messages.DELETE_FACTION_BY_ADMIN.repExecutor(admin).setFaction(selectedFaction.factioname).queue());
     }
     public static void setFactionLeader(Player admin,String faction,String Leader){
         if(!Main.nameToFaction.containsKey(faction)){
@@ -205,6 +210,7 @@ public class adminMain {
             //Todo: You are unfrozen IDK
             p.sendMessage();
         }
+        playertools.setMetadata(p,"freeze",!state);
     }
 
 }

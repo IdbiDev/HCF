@@ -27,13 +27,13 @@ public class Faction_Join {
             if(faction.isPlayerInvited(p)){
                 playertools.setMetadata(p,"factionid",id_faction);
                 playertools.setMetadata(p,"faction",faction.factioname);
-                SQL_Connection.dbExecute(con,"UPDATE members SET faction='?',factionname='?' WHERE uuid='?'", String.valueOf(id_faction),faction.factioname,p.getUniqueId().toString());
+                SQL_Connection.dbExecute(con,"UPDATE members SET faction='?',factionname='?',rank='?' WHERE uuid='?'", String.valueOf(id_faction),faction.factioname,faction.getDefaultRank().name,p.getUniqueId().toString());
 
                 faction.unInvitePlayer(p);
 
                 //Sikeres belépés
                 p.sendMessage(Messages.JOIN_MESSAGE.queue());
-
+                faction.ApplyPlayerRank(p,faction.getDefaultRank().name);
                 //Faction -> xy belépett
                 playertools.BroadcastFaction(faction.factioname, Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
             }else{

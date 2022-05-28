@@ -22,7 +22,7 @@ public class playertools {
 
     public static void LoadPlayer(Player player){
         // Loading player From SQL
-        HashMap playerMap = SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid = '?'",player.getUniqueId().toString());
+        HashMap<String, Object> playerMap = SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid = '?'",player.getUniqueId().toString());
         if (playerMap.size() > 0){
             Main.player_cache.put(player,new Main.Player_Obj());
             // Találat
@@ -34,6 +34,7 @@ public class playertools {
             setMetadata(player,"faction",playerMap.get("factionname"));
             setMetadata(player,"adminDuty",true);
             setMetadata(player,"rank","none");
+            setMetadata(player,"freeze",false);
             String c = HCF_Claiming.sendFactionTerretory(player);
             setMetadata(player,"current_loc",c);
            // rankManager.addRankToPlayer(player);
@@ -45,7 +46,7 @@ public class playertools {
 
         }else{
             // Játékos létrehozása SQL-ben, majd újra betöltjük
-            SQL_Connection.dbExecute(con,"INSERT INTO members SET name='?',uuid='?',online=0",player.getDisplayName(),player.getUniqueId().toString());
+            SQL_Connection.dbExecute(con,"INSERT INTO members SET name='?',uuid='?',online=0",player.getName(),player.getUniqueId().toString());
             LoadPlayer(player);
         }
     }
@@ -112,6 +113,12 @@ public class playertools {
             e.printStackTrace();
             return null;
         }
+    }
+    public static int getPlayerBalance(Player p){
+        return Integer.parseInt(getMetadata(p,"money"));
+    }
+    public static void setPlayerBalance(Player p,int amount){
+        setMetadata(p,"money",amount);
     }
     public static void setMetadata(Player p, String key, Object data){
         if(Main.player_cache.containsKey(p)){
@@ -197,11 +204,23 @@ public class playertools {
             Main.faction_cache.clear();
             PreparedStatement ps =  con.prepareStatement("SELECT * FROM factions");
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
-                Main.factionToname.put(rs.getInt("ID"),rs.getString("name"));
-                Main.Faction faction = new Main.Faction(rs.getInt("ID"),rs.getString("name"),rs.getString("leader"),rs.getInt("money"));
-                Main.faction_cache.put(rs.getInt("ID"),faction);
-                Main.nameToFaction.put(rs.getString("name"),faction);
+            while (rs.next()) {
+                Main.factionToname.put(rs.getInt("ID"), rs.getString("name"));
+                Main.Faction faction = new Main.Faction(rs.getInt("ID"), rs.getString("name"), rs.getString("leader"), rs.getInt("money"));
+                Main.faction_cache.put(rs.getInt("ID"), faction);
+                Main.nameToFaction.put(rs.getString("name"), faction);
+                if(rs.getString("home") == null)
+                    continue;
+                Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(rs.getString("home")));
+                Location loc = new Location(
+                        Bukkit.getWorld(ConfigLibrary.World_name.getValue()),
+                        Integer.parseInt(map.get("X").toString()),
+                        Integer.parseInt(map.get("Y").toString()),
+                        Integer.parseInt(map.get("Z").toString()),
+                        Integer.parseInt(map.get("YAW").toString()),
+                        Integer.parseInt(map.get("PITCH").toString()));
+                System.out.println(loc);
+                faction.setHomeLocation(loc);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -288,7 +307,12 @@ public class playertools {
                         rankManager.Faction_Rank rank = new rankManager.Faction_Rank(rank_rs.getInt("ID"), rank_rs.getString("name"));
                         rank.loadPermissions();
                         faction.ranks.add(rank);
-
+                        if(rank_rs.getInt("isLeader") == 1){
+                            rank.isLeader = true;
+                        }
+                        if(rank_rs.getInt("isDefault") == 1){
+                            rank.isDefault = true;
+                        }
                     }
                 }
             }

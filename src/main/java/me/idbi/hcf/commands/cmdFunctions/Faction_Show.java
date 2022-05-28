@@ -15,7 +15,7 @@ import java.util.UUID;
 public class Faction_Show {
     public static HashMap<Player, Integer> show(Player p, String factionName) {
         if(factionName.equals("Nincs")) {
-            p.sendMessage(Messages.NOT_IN_FACTION.queue());
+            p.sendMessage(Messages.NO_FACTION_EXISTS.queue());
             return null;
         }
         HashMap<Player, Integer> returnPlayers = new HashMap<>();

@@ -41,8 +41,13 @@ public class SQL_Connection {
         }
         // Az elkészített qh-t dobni az sqlnek
         try {
-            Statement st = con.createStatement();
-            return st.executeUpdate(private_string_query);
+            PreparedStatement st = con.prepareStatement(private_string_query,Statement.RETURN_GENERATED_KEYS);
+            st.executeUpdate();
+                ResultSet genkys = st.getGeneratedKeys();
+                if(genkys != null && genkys.next()){
+                    return genkys.getInt(1);
+                }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

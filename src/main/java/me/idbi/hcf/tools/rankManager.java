@@ -29,6 +29,7 @@ public class rankManager {
         public Integer id;
 
         public boolean isDefault = false;
+        public boolean isLeader = true;
         public HashMap<String,Boolean> clas_permissions = new HashMap<>();
         public Faction_Rank(Integer id,String name){
             this.name = name;
@@ -74,16 +75,46 @@ public class rankManager {
         }
     }
 
-    public static void CreateNewRank(Main.Faction faction,String name){
-        for(Faction_Rank rank : faction.ranks)
-            if(rank.name.equals(name)) {
-                return;
+    public static Faction_Rank CreateNewRank(Main.Faction faction,String name){
+        for(Faction_Rank rank : faction.ranks) {
+            if (rank.name.equals(name)) {
+                System.out.println("Anyádért vagy te buzi te rohadák kettes metrós geci villamos meleg");
+                return null;
             }
-
-        Integer id = SQL_Connection.dbExecute(con,"INSERT INTO ranks SET name = '?' faction='?'",name, String.valueOf(faction.factionid));
+        }
+        Integer id = SQL_Connection.dbExecute(con,"INSERT INTO ranks SET name = '?', faction='?'",name, String.valueOf(faction.factionid));
         Faction_Rank rank = new Faction_Rank(id,name);
         rank.loadPermissions();
         faction.ranks.add(rank);
+        return rank;
     }
-
+    public static void setDefaultRank(Main.Faction faction, String name){
+        Faction_Rank rank = null;
+        for(Faction_Rank r : faction.ranks)
+            if(r.name.equals(name)) {
+                rank = r;
+                break;
+            }
+        if(rank != null){
+            if(!rank.isDefault && !rank.isLeader){
+                for(Faction_Rank r : faction.ranks)
+                    if(r.isDefault) {
+                        r.isDefault = false;
+                    }
+                rank.isDefault = true;
+            }
+        }
+    }
+    public static void setLeaderRank(Main.Faction faction, String name){
+        Faction_Rank rank = faction.FindRankByName(name);
+        if(rank != null){
+            if(!rank.isDefault && !rank.isLeader){
+                for(Faction_Rank r : faction.ranks)
+                    if(r.isLeader) {
+                        r.isLeader = false;
+                    }
+                rank.isLeader = true;
+            }
+        }
+    }
 }

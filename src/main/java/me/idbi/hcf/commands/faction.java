@@ -46,7 +46,10 @@ public class faction implements CommandExecutor, TabCompleter {
                             } else if(args.length == 2) {
                                 if(Bukkit.getPlayer(args[1]) != null){
                                     args[1] = Main.factionToname.get(Integer.parseInt(playertools.getMetadata(Bukkit.getPlayer(args[1]),"factionid")));
-
+                                    if(args[1] != null){
+                                        Faction_Show.show(p, args[1]);
+                                        return false;
+                                    }
                                 }
                                 for(Map.Entry<Integer, Main.Faction> faction : Main.faction_cache.entrySet()) {
                                     if (faction.getValue().factioname.equalsIgnoreCase(args[1])) {

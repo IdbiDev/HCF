@@ -18,7 +18,7 @@ public class Faction_DepositBank {
             int SQLAmount = Integer.parseInt(playertools.getMetadata(p,"money"));
             if(amount > SQLAmount) {
                 transaction = false;
-                p.sendMessage(Messages.FACTION_BANK_PLAYER_NOT_ENOUGH.queue());
+                p.sendMessage(Messages.NOT_ENOUGH_MONEY.queue());
                 return this;
             }
 

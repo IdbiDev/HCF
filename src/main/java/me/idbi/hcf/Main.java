@@ -7,6 +7,7 @@ import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.tools.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +27,7 @@ public final class Main extends JavaPlugin {
     public static int death_time;
     public static double claim_price_multiplier;
     public static boolean debug;
+    public static int faction_startingmoney;
 
     private static Connection con;
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
@@ -42,11 +44,10 @@ public final class Main extends JavaPlugin {
                 - Faction kezdőpénz
                 -
             STB:
-                - Automata Adatbázis felépítése
                 - Parancsok elnevezése
 
          */
-
+        //System.out.println(0/0*0^0);
         MessagesFile.setup();
         ConfigManager.getManager().setup();
         // Setup variables
@@ -54,14 +55,14 @@ public final class Main extends JavaPlugin {
         claim_price_multiplier = Double.parseDouble(ConfigLibrary.Claim_price_multiplier.getValue());
         death_time = Integer.parseInt(ConfigLibrary.Death_time_seconds.getValue());
         debug = Boolean.parseBoolean(ConfigLibrary.Debug.getValue());
-
+        faction_startingmoney = Integer.parseInt(ConfigLibrary.Faction_default_balance.getValue());
         con = SQL_Connection.dbConnect(
                 ConfigLibrary.DATABASE_HOST.getValue(),
                 ConfigLibrary.DATABASE_PORT.getValue(),
                 ConfigLibrary.DATABASE_DATABSE.getValue(),
                 ConfigLibrary.DATABASE_USER.getValue(),
                 ConfigLibrary.DATABASE_PASSWORD.getValue());
-
+        new SQL_Generator();
         // Variables
         Faction_Home.teleportPlayers = new ArrayList<>();
 
@@ -109,7 +110,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         // Adatbázis kapcsolat leállítása
-        SaveAll();
+        //SaveAll();
         try {
             con.close();
             con = null;
@@ -185,14 +186,10 @@ public final class Main extends JavaPlugin {
             metadata.put(key,value);
         }
         public String getData(String key){
-            try{
+            if(hasData(key))
                 return metadata.get(key).toString();
-            }catch (Exception ignored){
-                if(Main.debug)
-                    Bukkit.getLogger().severe(" Error while reading key:" +key);
-                    ignored.printStackTrace();
-                return null;
-            }
+            Bukkit.getLogger().severe(" Error while reading key:" +key);
+            return "";
         }
 
         public boolean hasData(String key){
@@ -209,6 +206,8 @@ public final class Main extends JavaPlugin {
         public ArrayList<HCF_Claiming.Faction_Claim> claims = new ArrayList<>();
         public int DTR = 3;
         public inviteManager.factionInvite invites;
+
+        public Location homeLocation;
 
         public ArrayList<rankManager.Faction_Rank> ranks = new ArrayList<>();
         public HashMap<Player,rankManager.Faction_Rank> player_ranks = new HashMap<>();
@@ -248,6 +247,7 @@ public final class Main extends JavaPlugin {
                 if(Objects.equals(rank.name, name)){
                     player_ranks.put(p,rank);
                     playertools.setMetadata(p,"rank",rank.name);
+                    System.out.println("Found player with rank");
                     break;
                 }
             }
@@ -258,9 +258,29 @@ public final class Main extends JavaPlugin {
                     return rank;
                 }
             }
-
             return null;
         }
+        public rankManager.Faction_Rank getDefaultRank(){
+            for (rankManager.Faction_Rank rank : ranks){
+                if(rank.isDefault)
+                    return rank;
+            }
+            return null;
+        }
+        public rankManager.Faction_Rank getLeaderRank(){
+            for (rankManager.Faction_Rank rank : ranks){
+                if(rank.isLeader)
+                    return rank;
+            }
+            return null;
+        }
+
+        public void setHomeLocation(Location loc){
+            homeLocation = loc;
+        }
+
+
+
     }
 
     public void setDebugMode(String debugMode) {
