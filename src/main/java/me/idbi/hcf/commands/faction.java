@@ -97,6 +97,7 @@ public class faction implements CommandExecutor, TabCompleter {
                             try {
                                 Faction_Join.JoinToFaction(p, args[1]);
                             } catch (Exception e){
+                                e.printStackTrace();
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                                 //Kiíratás hogy balfaszul használta a commandot
                             }
@@ -199,6 +200,7 @@ public class faction implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         if(cmd.getName().equalsIgnoreCase("faction")) {
             if(args.length == 2) {
+                if(args[1].equalsIgnoreCase("reload"))
                 return Arrays.asList(
                         "all", "config", "messages"
                 );

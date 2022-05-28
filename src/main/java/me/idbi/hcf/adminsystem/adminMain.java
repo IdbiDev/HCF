@@ -4,6 +4,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
+import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -18,93 +19,88 @@ public class adminMain {
         if(state){
             player.setGameMode(GameMode.CREATIVE);
             playertools.setMetadata(player,"adminDuty",true);
-            //Todo: Dutyba léptél
-            player.sendMessage("Beléptél");
+
+            player.sendMessage(Messages.ADMIN_DUTY_ON.queue());
         }else{
             player.setGameMode(GameMode.SURVIVAL);
-            //Todo: Kiléptél dutyból
+
             playertools.setMetadata(player,"adminDuty",false);
-            player.sendMessage("Kiléptél");
+            player.sendMessage(Messages.ADMIN_DUTY_OFF.queue());
         }
     }
 
     public static void Deposit(Player admin,String faction,int amount){
         if(!Main.nameToFaction.containsKey(faction)){
-            //Todo: Nem található faction
             admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
             return;
         }
         if(amount <= 0){
-            //Todo: Valid number
+            admin.sendMessage(Messages.NOT_A_NUMBER.queue());
             return;
         }
         Main.Faction selectedFaction = Main.nameToFaction.get(faction);
-        selectedFaction.balance -= amount;
-        //Todo: Broadcast the loss
-        playertools.BroadcastFaction(faction,"RETARD");
+        selectedFaction.balance += amount;
+
+        playertools.BroadcastFaction(faction,Messages.FACTION_ADMIN_DEPOSIT_BC.repExecutor(admin).queue());
     }
 
     public static void Withdraw(Player admin,String faction,int amount){
         if(!Main.nameToFaction.containsKey(faction)){
             admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
-            //Todo: Nem található faction
             return;
         }
         if(amount <= 0){
-            //Todo: Valid number
+            admin.sendMessage(Messages.NOT_A_NUMBER.queue());
             return;
         }
         Main.Faction selectedFaction = Main.nameToFaction.get(faction);
-        selectedFaction.balance += amount;
-        //Todo: Broadcast the money
-        playertools.BroadcastFaction(faction,"RETARD");
+        selectedFaction.balance -= amount;
+
+        playertools.BroadcastFaction(faction,Messages.FACTION_ADMIN_WITHDRAW_BC.repExecutor(admin).queue());
     }
 
     public static void SetFactionname(Player admin,String faction,String newName){
         if(!Main.nameToFaction.containsKey(faction)){
-            //Todo: Nem található faction
             admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
             return;
         }
         if(newName.length() > 5){
-            //Todo: Valid number
+            admin.sendMessage(Messages.NOT_A_NUMBER.queue());
             return;
         }
         Main.Faction selectedFaction = Main.nameToFaction.get(faction);
         selectedFaction.factioname = newName;
         //Todo: Broadcast the change
-        playertools.BroadcastFaction(faction,"RETARD");
+        playertools.BroadcastFaction(faction,Messages.SET_FACTION_NAME.repExecutor(admin).setFaction(newName).queue());
     }
     public static void GiveMoney(Player admin,String target,int amount){
         if(Bukkit.getPlayer(target) == null){
             admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
-            //Todo: Nem található player
             return;
         }
         if(amount <= 0){
-            //Todo: Valid number
+            admin.sendMessage(Messages.NOT_A_NUMBER.queue());
             return;
         }
         Player player = Bukkit.getPlayer(target);
         playertools.setMetadata(player,"money",Integer.parseInt(playertools.getMetadata(player,"money")) + amount);
-        //Todo: Broadcast the change
-        player.sendMessage("Cica");
+
+        player.sendMessage(Messages.GIVE_MONEY.repExecutor(admin).setAmount(String.valueOf(amount)).queue());
     }
 
     public static void TakeMoney(Player admin,String target,int amount){
         if(Bukkit.getPlayer(target) == null){
             admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
-            //Todo: Nem található player
             return;
         }
         if(amount <= 0){
-            //Todo: Valid number
+            admin.sendMessage(Messages.NOT_A_NUMBER.queue());
             return;
         }
         Player player = Bukkit.getPlayer(target);
         playertools.setMetadata(player,"money",Integer.parseInt(playertools.getMetadata(player,"money")) - amount);
-        //Todo: Broadcast the change
-        player.sendMessage("Cica");
+
+        player.sendMessage(Messages.TAKE_MONEY.repExecutor(admin).setAmount(String.valueOf(amount)).queue());
     }
 
     public static void DeleteFaction(Player admin,String faction){
@@ -112,10 +108,9 @@ public class adminMain {
             admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
             return;
         }
-        //Todo: Broadcast the change
-        playertools.BroadcastFaction(faction,"RETARD");
 
         Main.Faction selectedFaction = Main.nameToFaction.get(faction);
+
         Main.faction_cache.remove(selectedFaction.factionid);
         Main.nameToFaction.remove(selectedFaction.factioname);
         Main.factionToname.remove(selectedFaction.factionid);
@@ -133,30 +128,26 @@ public class adminMain {
     }
     public static void setFactionLeader(Player admin,String faction,String Leader){
         if(!Main.nameToFaction.containsKey(faction)){
-            //Todo: Nem található faction
             admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
             return;
         }
         if(Bukkit.getPlayer(Leader) == null){
             admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
-            //Todo: Nem található player
             return;
         }
         Main.Faction selectedFaction = Main.nameToFaction.get(faction);
         selectedFaction.leader = Bukkit.getPlayer(Leader).getUniqueId().toString();
         SQL_Connection.dbExecute(con,"UPDATE factions SET leader='?' WHERE name='?'", selectedFaction.leader,faction);
         //Todo: Broadcast the change
-        playertools.BroadcastFaction(faction,"RETARD");
+        playertools.BroadcastFaction(faction,Messages.SET_FACTION_LEADER_BY_ADMIN.repPlayer(Bukkit.getPlayer(Leader)).repExecutor(admin).queue());
     }
     public static void setPlayerFaction(Player admin,String target,String faction){
         if(!Main.nameToFaction.containsKey(faction)){
-            //Todo: Nem található faction
             admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
             return;
         }
         if(Bukkit.getPlayer(target) == null){
             admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
-            //Todo: Nem található player
             return;
         }
         Player p = Bukkit.getPlayer(target);
@@ -173,13 +164,11 @@ public class adminMain {
     }
     public static void kickPlayerFromFaction(Player admin,String target,String faction){
         if(!Main.nameToFaction.containsKey(faction)){
-            //Todo: Nem található faction
             admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
             return;
         }
         if(Bukkit.getPlayer(target) == null){
             admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
-            //Todo: Nem található player
             return;
         }
         Player p = Bukkit.getPlayer(target);
@@ -192,23 +181,18 @@ public class adminMain {
     public static void FreezePlayer(Player admin,String target){
         if(Bukkit.getPlayer(target) == null){
             admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
-            //Todo: Nem található player
             return;
         }
         Player p = Bukkit.getPlayer(target);
         boolean state = Boolean.parseBoolean(playertools.getMetadata(p,"freeze"));
         // Freeze
         if(!state){
-            p.setWalkSpeed(0);
-            p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 255),true);
-            //Todo: You are frozen IDK
-            p.sendMessage();
+            admin.sendMessage(Messages.FREEZE_EXECUTOR_ON.repPlayer(p).queue());
+            p.sendMessage(Messages.FREEZE_PLAYER_ON.repExecutor(admin).queue());
         }else{
             //UnFreeze
-            p.removePotionEffect(PotionEffectType.JUMP);
-            p.setWalkSpeed(0.2f);
-            //Todo: You are unfrozen IDK
-            p.sendMessage();
+            admin.sendMessage(Messages.FREEZE_EXECUTOR_OFF.repPlayer(p).queue());
+            p.sendMessage(Messages.FREEZE_PLAYER_OFF.repExecutor(admin).queue());
         }
         playertools.setMetadata(p,"freeze",!state);
     }

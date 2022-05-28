@@ -6,14 +6,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public enum Messages {
-
-    /*
-    Example meghívások:
-player.sendMessage(Messages.KICK_MESSAGE.getMessage().replaceDeath(p1, p2).queue());
-player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue());
-     */
 
     PREFIX("&8[&2HCF&a+&8] &7>"),
     RELOAD("&aSuccessfully configuration files reloaded!"),
@@ -45,7 +40,7 @@ player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue())
     ALREADY_INVITED("&cThis player is already invited"),
     NOT_INVITED("%prefix% &cYou are not invited to this faction!"),
 
-    NO_FACTION_EXISTS("%prefix% &cThis faction is not exists!"),
+    NO_FACTION_EXISTS("%prefix% &cThis faction does not exists!"),
 
     // Commands
     FACTION_CREATON("%prefix% &aSuccessfully faction creation!"),//ok
@@ -73,7 +68,7 @@ player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue())
     FACTION_BANK_WITHDRAW("%prefix% &aSuccessfully withdrew &2&o$%amount% &afrom your faction bank."),
     FACTION_BANK_NOT_ENOUGH("%prefix% &cYour faction doesn't have enough money!"),
     FACTION_BANK_NUMBER_ERROR("%prefix% &cPlease enter a valid number!"),
-    FACTION_BANK_PLAYER_NOT_ENOUGH("%prefix% &cYou don't have enough money!"),
+    NOT_ENOUGH_MONEY("%prefix% &cYou don't have enough money!"),
 
     // Server broadcasts
     FACTION_CREATED("&6&o%faction_name% &esuccessfully created by &6&o%player%&e!"), // Sexy lesz :D azám :D
@@ -122,7 +117,30 @@ player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue())
     STATUS_DESIGN_OFFLINE("&cOffline"),
     CATEGORY_DESIGN("&e%category%:"),
     MEMBER_LIST_DESIGN_ONLINE("&7▬ &a%member% &f[&7%member_kill%&f]"),
-    MEMBER_LIST_DESIGN_OFFLINE("&7▬ &7%member% &f[&7%member_kill%&f]");
+    MEMBER_LIST_DESIGN_OFFLINE("&7▬ &7%member% &f[&7%member_kill%&f]"),
+    
+    // Sign Shop message
+    SIGN_SHOP_BOUGHT("%prefix% &aYou bought &2&o%amount%x %item% &afor &2&o$%price%&a."),
+    SIGN_SHOP_SOLD("%prefix% &aYou sold &2&o%amount%x %item% &afor &2&o$%price%&a."),
+    
+    // Admin Duty
+    ADMIN_DUTY_ON("%prefix% &aDuty mode: &2&oon"),
+    ADMIN_DUTY_OFF("%prefix% &cDuty mode: &4&ooff"),
+    FREEZE_PLAYER_ON("%prefix% &aYou froze by &2&o%executor%"),
+    FREEZE_PLAYER_OFF("%prefix% &cYou unfreeze by &4&o%executor%"),
+    FREEZE_EXECUTOR_ON("%prefix% &aYou froze &2&o%player%"),
+    FREEZE_EXECUTOR_OFF("%prefix% &cYou unfreeze &4&o%player%"),
+
+    FACTION_ADMIN_WITHDRAW_BC("%prefix% &c&l%executor% &cdeposited &c&l%amount% &cto faction's bank!"),
+    FACTION_ADMIN_DEPOSIT_BC("%prefix% &c&l%executor% &cwithdrew &c&l%amount% &cfrom faction's bank!"),
+
+    SET_FACTION_NAME("%prefix% &eFaction's name changed by &6&o%executor% &eto &6&o%faction_name%&e!"),
+
+    GIVE_MONEY("%prefix% &eYou got &6&o%amount% &efrom &6&o%executor%&e!"),
+    TAKE_MONEY("%prefix% &6&o%executor%&e took &6&o%amount% &efrom you!"),
+
+    SET_FACTION_LEADER_BY_ADMIN("%prefix% &6&o%executor%&e set &6&o%player% &eto faction leader!"),
+    DELETE_FACTION_BY_ADMIN("%prefix% &6&o%executor%&e deleted the &6&o%faction_name% &efaction!");
 
     private String msg, defaultMsg;
     private String message;
@@ -206,6 +224,18 @@ player.sendMessage(Messages.KICK_MESSAGE.getMessage().replacePlayer(p1).queue())
 
     public Messages repExecutor(Player executor) {
         message = msg.replace("%executor%", executor.getName());
+        this.msg = message;
+        return this;
+    }
+
+    public Messages setPrice(int price) {
+        message = msg.replace("%price%", String.valueOf(price));
+        this.msg = message;
+        return this;
+    }
+
+    public Messages setItem(ItemStack item) {
+        message = msg.replace("%item%", item.getType().name().substring(0, 1) + item.getType().name().substring(1).toLowerCase());
         this.msg = message;
         return this;
     }

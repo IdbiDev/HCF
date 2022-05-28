@@ -19,6 +19,7 @@ import static me.idbi.hcf.tools.playertools.HasMetaData;
 
 public class onPlayerLeft implements Listener {
     private final Connection con = Main.getConnection("events.Quit");
+    private Main m = Main.getPlugin(Main.class);
     @EventHandler
     public void onPlayerLeft(PlayerQuitEvent e){
         e.setQuitMessage("");

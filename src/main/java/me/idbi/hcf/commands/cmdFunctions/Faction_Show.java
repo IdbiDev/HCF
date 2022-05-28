@@ -1,12 +1,15 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
+import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,8 +36,17 @@ public class Faction_Show {
                 ? Bukkit.getPlayer(UUID.fromString(faction.leader)).getName()
                 : Bukkit.getOfflinePlayer(UUID.fromString(faction.leader)).getName());
 
+        Location homeLoc;
+        if(faction.homeLocation == null)
+            homeLoc = new Location(Bukkit.getWorld(ConfigLibrary.World_name.getValue()), 0, 0, 0, 0, 0);
+        else homeLoc = faction.homeLocation;
+
         for (String line : ListMessages.FACTION_SHOW.setupShow(
-                        faction.factioname, factionStatus, leaderName, String.valueOf(faction.balance), "2", "3", "4", String.valueOf(faction.DTR)
+                        faction.factioname, factionStatus, leaderName, String.valueOf(faction.balance),
+                        "2",
+                        "3",
+                        homeLoc.getBlockX() + ", " + homeLoc.getBlockZ(),
+                        String.valueOf(faction.DTR)
                 )
                 .setMembers(playertools.getRankPlayers(faction.factioname),
                         playertools.getPlayersKills()).queue()) {

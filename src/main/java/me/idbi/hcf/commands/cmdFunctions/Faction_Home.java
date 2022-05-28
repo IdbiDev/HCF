@@ -40,6 +40,7 @@ public class Faction_Home implements Listener {
             put("PITCH", (int) p.getLocation().getPitch());
         }};
 
+        faction.setHomeLocation(p.getLocation());
 
         JSONObject object = new JSONObject(map);
 

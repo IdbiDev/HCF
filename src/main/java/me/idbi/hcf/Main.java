@@ -81,6 +81,9 @@ public final class Main extends JavaPlugin {
         }};
 
         getConfig().addDefault("Scoreboard", scoreboardList);
+        getConfig().addDefault("Freeze.Ban", true);
+        getConfig().addDefault("Freeze.Reason", "You leaved when you are froze!");
+        getConfig().addDefault("Freeze.BanTimeSeconds", 300);
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         saveConfig();

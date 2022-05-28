@@ -4,6 +4,8 @@ package me.idbi.hcf.MessagesEnums;
 
 import me.idbi.hcf.CustomFiles.ConfigManager;
 import me.idbi.hcf.CustomFiles.MessagesFile;
+import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -65,7 +67,7 @@ public enum ListMessages {
 
         return returnString;
     }
-    //                             category name   playerek a rankban        player name     player kills
+    //                                rank name     playerek a rankban        player name     player kills
     public ListMessages setMembers(HashMap<String, List<String>> categories, HashMap<String, String> players) {
         List<String> listike = new ArrayList<>();
 
@@ -76,12 +78,16 @@ public enum ListMessages {
             if (line.equalsIgnoreCase("%members_list_categories_and_members%")) {
                 for (Map.Entry<String, List<String>> category : sortedMap.entrySet()) {
 
+                    if(category.getKey().equalsIgnoreCase("Leader")) continue;
+
                     listike.add(Messages.CATEGORY_DESIGN.queue()
                             .replace("%category%",
                                     category.getKey().substring(0, 1).toUpperCase() + category.getKey().substring(1)));
 
                     for (Map.Entry<String, String> player : players.entrySet()) {
                         if (category.getValue().contains(player.getKey())) { // player a rankban!!!
+//                            if(Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(Bukkit.getPlayer(player.getKey()), "factionid")))
+//                                    .player_ranks.get(Bukkit.getPlayer(player.getKey())).isLeader)
                             if (Bukkit.getPlayer(player.getKey()) != null) { // player online!!
                                 listike.add(Messages.MEMBER_LIST_DESIGN_ONLINE.queue()
                                         .replace("%member%", player.getKey())

@@ -1,6 +1,8 @@
 package me.idbi.hcf.SignShop;
 
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -49,10 +51,47 @@ public class InteractShopSign implements Listener {
                             else
                                 material = Material.matchMaterial(line2);
 
-                            Bukkit.broadcastMessage(String.valueOf(remainingSpace(p, new ItemStack(material, amount, Short), amount)));
+                            int remainingSpace = remainingSpace(p, new ItemStack(material, amount, Short));
+                            int signPrice = Integer.parseInt(line3.replace("$", ""));
+                            int fertigPreise =  (signPrice / amount) * remainingSpace;
+                            int playerBalance = playertools.getPlayerBalance(p);
+
+                            Scoreboards.refresh(p);
+                            if(remainingSpace < amount && remainingSpace > 0) {
+                                if (SignShopLibrary.isFull(p, new ItemStack(material, remainingSpace, Short))) {
+                                    p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
+                                    return;
+                                }
+
+                                if(playerBalance < fertigPreise) {
+                                    p.sendMessage(Messages.NOT_ENOUGH_MONEY.queue());
+                                    return;
+                                }
+
+                                playertools.setPlayerBalance(p, playerBalance - fertigPreise);
+                                p.sendMessage(Messages.SIGN_SHOP_BOUGHT.setItem(new ItemStack(material, remainingSpace, Short))
+                                        .setPrice(fertigPreise)
+                                        .setAmount(String.valueOf(remainingSpace))
+                                        .queue());
+                                Scoreboards.refresh(p);
+                                return;
+                            }
+
                             if (SignShopLibrary.isFull(p, new ItemStack(material, amount, Short))) {
                                 p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
+                                return;
                             }
+
+                            if(playerBalance >= signPrice) {
+                                p.sendMessage(Messages.SIGN_SHOP_BOUGHT
+                                        .setItem(new ItemStack(material, amount, Short))
+                                        .setPrice(signPrice)
+                                                .setAmount(String.valueOf(amount))
+                                        .queue());
+                                playertools.setPlayerBalance(p, playerBalance - signPrice);
+                            }
+
+                            Scoreboards.refresh(p);
                         } catch (NullPointerException | IllegalArgumentException ex) {
                             ex.printStackTrace();
                         }
@@ -81,11 +120,22 @@ public class InteractShopSign implements Listener {
                             else
                                 material = Material.matchMaterial(line2);
 
+                            int price = Integer.parseInt(line3.replace("$", ""));
+
                             if (p.getInventory().contains(material)) {
                                 p.getInventory().removeItem(new ItemStack(material, amount, Short));
+                                p.sendMessage(Messages.SIGN_SHOP_SOLD
+                                        .setPrice(price)
+                                        .setAmount(line1)
+                                        .setItem(new ItemStack(material, amount, Short))
+                                        .queue()
+                                );
+                                Scoreboards.refresh(p);
+                                playertools.setMetadata(p, "money", Integer.parseInt(playertools.getMetadata(p, "money")) + price);
                             } else {
                                 p.sendMessage(Messages.DONT_HAVE_ITEM.queue());
                             }
+                            Scoreboards.refresh(p);
                         } catch (NullPointerException | IllegalArgumentException ex) {
                         }
                     }
@@ -94,15 +144,16 @@ public class InteractShopSign implements Listener {
         }
     }
 
-    private static int remainingSpace(Player p, ItemStack item, int buyerAmount) {
+    private static int remainingSpace(Player p, ItemStack item) {
         int amount = 0;
         for(ItemStack is : p.getInventory().getContents()) {
             if(is == null) continue;
             if(is.isSimilar(item)) {
-                amount += is.getAmount();
+                if(is.getAmount() < 64) {
+                    amount += 64 - is.getAmount();
+                }
             }
         }
-        // ToDo: ki kell számolni, hogy mennyi a maradék helye a blocknak
-        return 0;
+        return amount;
     }
 }
