@@ -9,7 +9,9 @@ import me.idbi.hcf.tools.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
@@ -35,6 +37,8 @@ public final class Main extends JavaPlugin {
     public static HashMap<Integer, String> factionToname = new HashMap<>();
     public static HashMap<Player, Main.Player_Obj> player_cache = new HashMap<>();
     public static HashMap<Integer, Long> DTR_REGEN = new HashMap<>();
+    public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
+    public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -105,6 +109,7 @@ public final class Main extends JavaPlugin {
         Misc_Timers.addBardEffects();
         Misc_Timers.DTR_Timer();
         Misc_Timers.Bard_Energy();
+        Misc_Timers.PvpTag();
         //Scoreboards.scoreboard();
 
         Misc_Timers.AutoSave();
@@ -250,6 +255,7 @@ public final class Main extends JavaPlugin {
                 if(Objects.equals(rank.name, name)){
                     player_ranks.put(p,rank);
                     playertools.setMetadata(p,"rank",rank.name);
+                    SQL_Connection.dbExecute(con,"UPDATE members SET rank='?' WHERE uuid='?'",rank.name,p.getUniqueId().toString());
                     System.out.println("Found player with rank");
                     break;
                 }
@@ -281,9 +287,12 @@ public final class Main extends JavaPlugin {
         public void setHomeLocation(Location loc){
             homeLocation = loc;
         }
-
-
-
+        public void BroadcastFaction(String message){
+            Player[] members = playertools.getFactionOnlineMembers(factioname);
+            for (Player member : members) {
+                member.sendMessage(message);
+            }
+        }
     }
 
     public void setDebugMode(String debugMode) {

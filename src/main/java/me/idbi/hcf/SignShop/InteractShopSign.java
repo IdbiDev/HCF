@@ -3,8 +3,6 @@ package me.idbi.hcf.SignShop;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.playertools;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -16,7 +14,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class InteractShopSign implements Listener {
-
+    public static boolean isFull(Player p, ItemStack is) {
+        if(p.getInventory().addItem(is).isEmpty())
+            return false;
+        return true;
+    }
     @EventHandler
     public void onSignClick(PlayerInteractEvent e) {
         Block b = e.getClickedBlock();
@@ -58,7 +60,7 @@ public class InteractShopSign implements Listener {
 
                             Scoreboards.refresh(p);
                             if(remainingSpace < amount && remainingSpace > 0) {
-                                if (SignShopLibrary.isFull(p, new ItemStack(material, remainingSpace, Short))) {
+                                if (isFull(p, new ItemStack(material, remainingSpace, Short))) {
                                     p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
                                     return;
                                 }

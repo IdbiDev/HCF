@@ -46,12 +46,11 @@ public class Bard {
 
     public static void setEffect(Player p){
         // Remove Effects;
-        p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-        p.removePotionEffect(PotionEffectType.SPEED);
+        removeEffects(p);
         //Adding Effects
         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,Integer.MAX_VALUE,0,false,false));
         p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,Integer.MAX_VALUE,0,false,false));
-        playertools.setMetadata(p,"class","bard");
+        playertools.setMetadata(p,"class","Bard");
     }
     public static void removeEffects(Player p){
 
@@ -77,7 +76,35 @@ public class Bard {
             }
         }
     }
-
+    public static void OhLetsBreakItDown(Player bardplayer) {
+       ItemStack main = bardplayer.getItemInHand();
+       if(main != null){
+            if(barditems.containsKey(main.getType())){
+                for (Player p : getFactionMembersInDistance(bardplayer,15)) {
+                    PotionEffectType potion = barditems.get(main.getType());
+                    bardplayer.getActivePotionEffects().forEach(potionEffect -> {
+                        if(potionEffect.getType().equals(potion)){
+                            p.addPotionEffect(new PotionEffect(potion,potionEffect.getDuration()+180,potionEffect.getAmplifier()+1,false,false));
+                            System.out.println(p.getDisplayName()+" got+++++ "+potion.getName()+" effect from "+bardplayer.getDisplayName());
+                        }
+                    });
+                }
+            }
+       }
+        /*for(int i = 0;i<=8;i++){
+            //Ha semmi nincs a kezébe, skippeljük
+            if (bardplayer.getInventory().getItem(i) == null) continue;
+            //Ha van, és bard item akkor
+            if(barditems.containsKey(bardplayer.getInventory().getItem(i).getType())){
+                //Végig megyünk az összes frakciótársan a közelbe
+                for (Player p:getFactionMembersInDistance(bardplayer,10)) {
+                    PotionEffectType potion = barditems.get(Objects.requireNonNull(bardplayer.getInventory().getItem(i)).getType());
+                    p.addPotionEffect(new PotionEffect(potion,180,0,false,false));
+                    System.out.println(p.getDisplayName()+" got "+potion.getName()+" effect from "+bardplayer.getDisplayName());
+                }
+            }
+        }*/
+    }
 
 
 }

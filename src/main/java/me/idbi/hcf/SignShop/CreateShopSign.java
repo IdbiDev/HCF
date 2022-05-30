@@ -2,16 +2,13 @@ package me.idbi.hcf.SignShop;
 
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.playertools;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CreateShopSign implements Listener {
 

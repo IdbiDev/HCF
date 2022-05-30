@@ -124,7 +124,11 @@ public class Scoreboards {
 
         p.setScoreboard(sb);
     }
-
+    public static void RefreshAll(){
+        for(Player p : Bukkit.getOnlinePlayers()){
+            Scoreboards.refresh(p);
+        }
+    }
     public static ArrayList<List<String>> sortLists() {
         List<String> str = ConfigLibrary.getScoreboard();
         List<String> fix = new ArrayList<>();

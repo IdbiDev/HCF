@@ -33,16 +33,13 @@ public class Archer {
 
     public static void setEffect(Player p){
         // Remove Effects;
-        p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-        p.removePotionEffect(PotionEffectType.SPEED);
-        p.removePotionEffect(PotionEffectType.REGENERATION);
-        p.removePotionEffect(PotionEffectType.JUMP);
+        removeEffects(p);
         //Adding Effects
         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,Integer.MAX_VALUE,2,false,false));
         p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,Integer.MAX_VALUE,0,false,false));
         p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,Integer.MAX_VALUE,2,false,false));
         p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP,Integer.MAX_VALUE,0,false,false));
-        playertools.setMetadata(p,"class","archer");
+        playertools.setMetadata(p,"class","Archer");
     }
 
     public static void removeEffects(Player p){

@@ -4,8 +4,6 @@ package me.idbi.hcf.MessagesEnums;
 
 import me.idbi.hcf.CustomFiles.ConfigManager;
 import me.idbi.hcf.CustomFiles.MessagesFile;
-import me.idbi.hcf.Main;
-import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;

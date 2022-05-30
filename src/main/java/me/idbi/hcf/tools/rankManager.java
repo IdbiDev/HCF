@@ -89,31 +89,35 @@ public class rankManager {
         return rank;
     }
     public static void setDefaultRank(Main.Faction faction, String name){
+        System.out.println("EGYEMTALÁN MEG VAN HÍVVA?");
         Faction_Rank rank = null;
         for(Faction_Rank r : faction.ranks)
             if(r.name.equals(name)) {
                 rank = r;
+                System.out.println("Rank found for gecim ");
                 break;
             }
         if(rank != null){
-            if(!rank.isDefault && !rank.isLeader){
-                for(Faction_Rank r : faction.ranks)
-                    if(r.isDefault) {
-                        r.isDefault = false;
-                    }
+            if(true){
                 rank.isDefault = true;
+                System.out.println("RePLACE GECI ");
+                SQL_Connection.dbExecute(con,"UPDATE ranks SET isDefault='1' WHERE ID='?'", String.valueOf(rank.id));
             }
         }
+        System.out.println(rank.name);
     }
     public static void setLeaderRank(Main.Faction faction, String name){
         Faction_Rank rank = faction.FindRankByName(name);
         if(rank != null){
-            if(!rank.isDefault && !rank.isLeader){
-                for(Faction_Rank r : faction.ranks)
-                    if(r.isLeader) {
+            if(true){
+                for(Faction_Rank r : faction.ranks) {
+                    if (r.isLeader) {
                         r.isLeader = false;
+                        SQL_Connection.dbExecute(con, "UPDATE ranks SET isLeader=0 WHERE ID='?'", String.valueOf(r.id));
                     }
+                }
                 rank.isLeader = true;
+                SQL_Connection.dbExecute(con,"UPDATE ranks SET isLeader=1 WHERE ID='?'", String.valueOf(rank.id));
             }
         }
     }

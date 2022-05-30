@@ -2,12 +2,12 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.classes.Miner;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-
 
 import java.util.Objects;
 
@@ -23,6 +23,9 @@ public class onPlayerMove implements Listener {
             e.getPlayer().sendMessage(Messages.ENTERED_ZONE.setZone(c).queue());
             playertools.setMetadata(e.getPlayer(),"current_loc",c);
             Scoreboards.refresh(e.getPlayer());
+        }
+        if(playertools.getMetadata(e.getPlayer(),"class").equalsIgnoreCase("miner")){
+            Miner.setInvisMode(e.getPlayer(), e.getTo().getY() <= Miner.min_y_value);
         }
     }
 }

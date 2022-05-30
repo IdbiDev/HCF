@@ -2,9 +2,9 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.playertools;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -72,6 +72,18 @@ public class onPlayerInteract implements Listener {
                 }else {
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_INVALID_ZONE.queue());
                 }
+            }
+        }
+
+        ///Bard
+        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK )&& e.getItem() != null){
+            if(playertools.getMetadata(e.getPlayer(),"class").equalsIgnoreCase("bard")){
+                Bard.OhLetsBreakItDown(e.getPlayer());
+            }
+        }
+        if(e.getAction().equals(Action.RIGHT_CLICK_AIR )&& e.getItem() != null){
+            if(playertools.getMetadata(e.getPlayer(),"class").equalsIgnoreCase("bard")){
+                Bard.OhLetsBreakItDown(e.getPlayer());
             }
         }
     }

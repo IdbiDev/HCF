@@ -29,19 +29,20 @@ public class Faction_Create  {
                 Main.faction_cache.put(x,faction);
                 Main.factionToname.put(x,faction.factioname);
                 Main.nameToFaction.put(faction.factioname,faction);
-                Scoreboards.refresh(p);
+
                 rankManager.Faction_Rank default_rank = rankManager.CreateNewRank(faction,"default");
                 rankManager.Faction_Rank leader_rank = rankManager.CreateNewRank(faction,"leader");
                 rankManager.setDefaultRank(faction,default_rank.name);
                 rankManager.setLeaderRank(faction,leader_rank.name);
                 faction.ApplyPlayerRank(p, leader_rank.name);
+
                 SQL_Connection.dbExecute(con,"UPDATE members SET faction = ?,factionname='?',rank='?' WHERE uuid = '?'", String.valueOf(x), name,"leader",p.getUniqueId().toString());
 
 
                 // Kiíratás global chatre ->
                 //                              xy faction létre jött
                 Bukkit.broadcastMessage(Messages.FACTION_CREATON.getMessage().setFaction(name).repPlayer(p).queue());
-
+                Scoreboards.refresh(p);
 
             } else {
                 p.sendMessage(Messages.EXISTS_FACTION_NAME.getMessage().queue());

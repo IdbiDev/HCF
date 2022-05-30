@@ -19,9 +19,11 @@ public class onPlayerJoin implements Listener {
         //Koba moment
         e.setJoinMessage("");
         if(!Objects.equals(playertools.getMetadata(p, "factionid"), "0")) {
-            playertools.BroadcastFaction(Main.factionToname.get(Integer.valueOf(playertools.getMetadata(p,"factionid"))),
+            Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p,"factionid")));
+            f.BroadcastFaction(
                     Messages.JOIN_FACTION_BC.repPlayer(p).queue());
         }
+
         Scoreboards.refresh(p);
 
     }

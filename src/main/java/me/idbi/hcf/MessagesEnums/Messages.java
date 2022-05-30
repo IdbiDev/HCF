@@ -3,7 +3,6 @@ package me.idbi.hcf.MessagesEnums;
 import me.idbi.hcf.CustomFiles.ConfigManager;
 import me.idbi.hcf.CustomFiles.MessagesFile;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 public class HCF_Timer {
     // Combatlog Timer
-    private static final HashMap<Player, Long>                timers = new HashMap<>();
+    public static final HashMap<Player, Long>                timers = new HashMap<>();
     private static final HashMap<Player, Long>                Archertimers = new HashMap<>();
     private static final HashMap<Player, Long>                eptimers = new HashMap<>();
     // Ms >> Duration
@@ -41,7 +41,7 @@ public class HCF_Timer {
             return false;
         }
     }
-    public static double getCombatTime(Player player) {
+    public static long getCombatTime(Player player) {
         // Ha van rajta CombatTimer
         if(timers.containsKey(player)){
             if(System.currentTimeMillis() >= timers.get(player)){
@@ -96,7 +96,7 @@ public class HCF_Timer {
             return false;
         }
     }
-    public static double getEpTime(Player player) {
+    public static long getEpTime(Player player) {
         // Ha van rajta CombatTimer
         if(eptimers.containsKey(player)){
             if(System.currentTimeMillis() >= eptimers.get(player)){
@@ -105,7 +105,7 @@ public class HCF_Timer {
                 return 0;
             }else{
                 // Ellenkező esetben: Van rajta
-                return System.currentTimeMillis()-eptimers.get(player);
+                return eptimers.get(player)-System.currentTimeMillis();
             }
         }else{
             return 0;

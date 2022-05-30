@@ -4,6 +4,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.classes.ClassSelector;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -19,7 +20,7 @@ public class Misc_Timers {
             public void run(){
 
                 for( Player player : Bukkit.getServer().getOnlinePlayers()){
-                    if(!player.hasMetadata("class")) continue;
+
                     ClassSelector.addClassToPlayer(player);
                 }
             }
@@ -80,6 +81,26 @@ public class Misc_Timers {
                 Main.SaveAll();
             }
         }.runTaskTimer(Main.getPlugin(Main.class),6000,6000);
+    }
+    public static void PvpTag(){
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                for (Map.Entry<LivingEntity, Long> entry : Main.saved_players.entrySet()) {
+                    LivingEntity key = entry.getKey();
+                    long val = entry.getValue();
+                    System.out.println(val + " R");
+                    if(val <= 0) {
+                        key.remove();
+                        Main.saved_players.remove(key);
+                        Main.saved_items.remove(key);
+                        // remove from combat tag, and villager
+                    }else{
+                        Main.saved_players.put(key, val - 1000);
+                    }
+                }
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class),0,20);
     }
 
 }
