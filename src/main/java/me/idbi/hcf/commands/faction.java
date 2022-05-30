@@ -1,5 +1,6 @@
 package me.idbi.hcf.commands;
 
+import me.idbi.hcf.CustomFiles.DiscordFile;
 import me.idbi.hcf.CustomFiles.MessagesFile;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
@@ -107,6 +108,9 @@ public class faction implements CommandExecutor, TabCompleter {
                                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
                             }
                             break;
+                        case "chat":
+                            Faction_Chat.chat(p, args);
+                            break;
                         case "sethome":
                             Faction_Home.setHome(p);
                             break;
@@ -122,9 +126,13 @@ public class faction implements CommandExecutor, TabCompleter {
                                     case "messages":
                                         MessagesFile.reloadMessages();
                                         break;
+                                    case "discord":
+                                        DiscordFile.reloadDiscord();
+                                        break;
                                     case "all":
                                         MessagesFile.reloadMessages();
                                         m.reloadConfig();
+                                        DiscordFile.reloadDiscord();
                                         break;
                                     default:
                                         sender.sendMessage(Messages.NOT_FILE.getMessage().queue());
@@ -174,6 +182,9 @@ public class faction implements CommandExecutor, TabCompleter {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                                 //Kiíratás hogy balfaszul használta a commandot
                             }
+                            break;
+                        default:
+                            p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             break;
                     }
                 } else {

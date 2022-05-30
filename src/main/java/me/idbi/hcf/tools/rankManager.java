@@ -23,6 +23,10 @@ public class rankManager {
         Permissions(String value){
             this.value = value;
         }
+
+        public String getValue() {
+            return this.value;
+        }
     }
     public static class Faction_Rank {
         public String name;

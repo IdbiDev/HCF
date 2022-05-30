@@ -1,5 +1,6 @@
 package me.idbi.hcf.tools;
 
+import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -9,11 +10,11 @@ public class HCF_Timer {
     private static final HashMap<Player, Long>                Archertimers = new HashMap<>();
     private static final HashMap<Player, Long>                eptimers = new HashMap<>();
     // Ms >> Duration
-    private static final int combatTimerDuration =      10000;
+    private static final int combatTimerDuration =      Integer.parseInt(ConfigLibrary.Combat_time.getValue()) * 1000;
     // Ms >> Duration
-    private static final int ArcherTimerDuration =      30000;
+    private static final int ArcherTimerDuration =      Integer.parseInt(ConfigLibrary.Archer_tag.getValue()) * 1000;
 
-    private static final int EpTimerDuration =          15000;
+    private static final int EpTimerDuration = Integer.parseInt(ConfigLibrary.enderpearl_delay.getValue()) * 1000;
 
     public static boolean addCombatTimer(Player player){
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
@@ -50,7 +51,7 @@ public class HCF_Timer {
                 return 0;
             }else{
                 // Ellenkező esetben: Van rajta
-                return System.currentTimeMillis()-timers.get(player);
+                return timers.get(player) - System.currentTimeMillis();
             }
         }else{
             return 0;

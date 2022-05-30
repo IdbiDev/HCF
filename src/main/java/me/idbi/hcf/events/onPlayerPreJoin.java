@@ -8,6 +8,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
 
 public class onPlayerPreJoin implements Listener {
+
     @EventHandler
     public void onPlayerPreJoin(AsyncPlayerPreLoginEvent e) {
         if(Banhandler.isPlayerBannedFromHCF(e.getUniqueId()) && Main.deathban){

@@ -79,7 +79,7 @@ public class InteractShopSign implements Listener {
                                 return;
                             }
 
-                            if (SignShopLibrary.isFull(p, new ItemStack(material, amount, Short))) {
+                            if (isFull(p, new ItemStack(material, amount, Short))) {
                                 p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
                                 return;
                             }

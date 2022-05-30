@@ -1,10 +1,9 @@
 package me.idbi.hcf.events;
 
-import me.idbi.hcf.Main;
+import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.classes.Archer;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.playertools;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -40,8 +39,8 @@ public class onDamage implements Listener {
 
 
             if (damager_faction == victim_faction){
-                //Todo: Friendly Fire
-                damager.sendMessage(Main.servername+ChatColor.RED+"Nem sebezheted a csapattársad!");
+                damager.sendMessage(Messages.TEAMMATE_DAMAGE.queue());
+               //damager.sendMessage(Main.servername+ChatColor.RED+"Nem sebezheted a csapattársad!");
                 System.out.println("Friendly Fire: Off");
                 e.setCancelled(true);
 
@@ -49,8 +48,8 @@ public class onDamage implements Listener {
             }
             //Add combatTimer
             if(HCF_Timer.addCombatTimer(victim)){
-                //Todo: Cobmat tag
-                victim.sendMessage(Main.servername+ChatColor.RED+"Combat taget kaptál! Ne lépj ki!"+ChatColor.GREEN +" [30 sec]");
+                victim.sendMessage(Messages.COMBAT_MESSAGE.queue());
+                //victim.sendMessage(Main.servername+ChatColor.RED+"Combat taget kaptál! Ne lépj ki!"+ChatColor.GREEN +" [30 sec]");
             }
             //Damage if ArcherTag
             if (HCF_Timer.checkArcherTimer(victim)){
@@ -76,8 +75,8 @@ public class onDamage implements Listener {
                 }
 
                 if (damager_faction == victim_faction){
-                    //Todo: Friendly Fire
-                    damager.sendMessage(Main.servername+ChatColor.RED+"Nem sebezheted a csapattársad!");
+                    damager.sendMessage(Messages.TEAMMATE_DAMAGE.queue());
+                   // damager.sendMessage(Main.servername+ChatColor.RED+"Nem sebezheted a csapattársad!");
                     System.out.println("Friendly Fire: Off");
                     e.setCancelled(true);
                     return;

@@ -1,5 +1,7 @@
 package me.idbi.hcf.tools;
 
+import me.idbi.hcf.Elevator.ElevatorCreate;
+import me.idbi.hcf.Elevator.ElevatorInteract;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.SignShop.CreateShopSign;
 import me.idbi.hcf.SignShop.InteractShopSign;
@@ -26,6 +28,11 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new Faction_Home(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new InteractShopSign(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new CreateShopSign(), Main.getPlugin(Main.class));
+
+        getServer().getPluginManager().registerEvents(new ElevatorCreate(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new ElevatorInteract(), Main.getPlugin(Main.class));
+
+        getServer().getPluginManager().registerEvents(new onPlayerChat(), Main.getPlugin(Main.class));
 
 
     }

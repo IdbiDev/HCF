@@ -15,6 +15,7 @@ public enum Messages {
     // Errors
     NO_PERMISSION("%prefix% &cYou don't have permission!"),
     NO_PERMISSION_IN_FACTION("%prefix% &cYou need a higher rank to use this command!"),
+    YOU_CANT_DO("%prefix% &eYou can't do this &c&o%faction_name% &eplace!"),
     NOT_ENOUGH_SLOT("%prefix% &cYou don't have enough space!"),
     NOT_FOUND_PLAYER("%prefix% &cCan't find this player"),
     NOT_FOUND_FACTION("%prefix% &cCan't find this faction"),
@@ -42,9 +43,12 @@ public enum Messages {
     NO_FACTION_EXISTS("%prefix% &cThis faction does not exists!"),
 
     // Commands
-    FACTION_CREATON("%prefix% &aSuccessfully faction creation!"),//ok
+    // CukiMC was created by Idbi
+    FACTION_CREATON("%prefix% &2&o%faction_name% &awas created by &2&o%player%&a!"),
+    FACTION_DISBAND("%prefix% &2&o%faction_name% &awas disbanded by &2&o%player%&a!"),
     FACTION_LEAVE("%prefix% &eYou leaved from faction!"),
     FACTION_CLAIM("%prefix% nem tudom, hogy mi az a claim! :)"),
+    FACTION_CLAIM_PRICE("%prefix% &aPrice: &2&o$%price% &afor &2&o%blocks%"),
 
     //Claim actions
     FACTION_CLAIM_DECLINE("%prefix% &cYou successfully rejected the claim."),
@@ -72,6 +76,7 @@ public enum Messages {
     // Server broadcasts
     FACTION_CREATED("&6&o%faction_name% &esuccessfully created by &6&o%player%&e!"), // Sexy lesz :D azám :D
     DEATH_MESSAGE("&a&o%victim% &ekilled by &a&o%killer%&e."),
+    //PVP_QUIT_MESSAGE("&a&o%player% leaved "),
 
     // Zones interact You've exited
     LEAVE_ZONE("§eYou've exited from §6§o%zone_name%"),
@@ -95,7 +100,9 @@ public enum Messages {
     DOESNT_HOME("&cYour faction doesn't have home!"),
 
     // Faction chat
-    FACTION_CHAT("&7[&e%faction_name%&7] &6%player%&f: &a%message%"),
+    FACTION_CHAT("&7[&e%faction_name%&7] &6&o%player%&7: &e%message%"),
+    FACTION_CHAT_TOGGLE_ON("%prefix% &aYou are now in &2&ofaction chat&a!"),
+    FACTION_CHAT_TOGGLE_OFF("%prefix% &cYou are now in &c&oALL chat&c!"),
 
     // Faction permissions messages
     PROMOTE_MESSAGE("&6&o%executor% &epromoted you to &6&o%rank%&e!"),
@@ -139,7 +146,11 @@ public enum Messages {
     TAKE_MONEY("%prefix% &6&o%executor%&e took &6&o%amount% &efrom you!"),
 
     SET_FACTION_LEADER_BY_ADMIN("%prefix% &6&o%executor%&e set &6&o%player% &eto faction leader!"),
-    DELETE_FACTION_BY_ADMIN("%prefix% &6&o%executor%&e deleted the &6&o%faction_name% &efaction!");
+    DELETE_FACTION_BY_ADMIN("%prefix% &6&o%executor%&e deleted the &6&o%faction_name% &efaction!"),
+
+    CANT_DAMAGE_ADMIN("%prefix% &cYou can't attack while you are in duty mode"),
+    COMBAT_MESSAGE("%prefix% &7You are now in combat &a[30 sec]"),
+    TEAMMATE_DAMAGE("%prefix% &cYou can't damage your teammate!");
 
     private String msg, defaultMsg;
     private String message;
@@ -208,9 +219,9 @@ public enum Messages {
         return this;
     }
 
-    public Messages setMessage(Player p, String message) {
-        this.message = msg.replace("%message%", message).replace("%player%", p.getName());
-        this.msg = message;
+    public Messages setMessage(String message) {
+        this.message = msg.replace("%message%", message);
+        this.msg = this.message;
         return this;
     }
 
@@ -234,7 +245,7 @@ public enum Messages {
     }
 
     public Messages setItem(ItemStack item) {
-        message = msg.replace("%item%", item.getType().name().substring(0, 1) + item.getType().name().substring(1).toLowerCase());
+        message = msg.replace("%item%", (item.getType().name().substring(0, 1) + item.getType().name().substring(1).toLowerCase()).replace("_", " "));
         this.msg = message;
         return this;
     }

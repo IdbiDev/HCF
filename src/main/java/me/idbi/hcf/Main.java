@@ -2,7 +2,9 @@ package me.idbi.hcf;
 
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.CustomFiles.ConfigManager;
+import me.idbi.hcf.CustomFiles.DiscordFile;
 import me.idbi.hcf.CustomFiles.MessagesFile;
+import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.tools.*;
@@ -54,6 +56,10 @@ public final class Main extends JavaPlugin {
         //System.out.println(0/0*0^0);
         MessagesFile.setup();
         ConfigManager.getManager().setup();
+        DiscordFile.setup();
+//        DiscordFile.getDiscord().options().copyDefaults(true);
+//        DiscordFile.saveDiscord();
+//        saveDefaultConfig();
         // Setup variables
         deathban = Boolean.parseBoolean(ConfigLibrary.Deathban.getValue());
         claim_price_multiplier = Double.parseDouble(ConfigLibrary.Claim_price_multiplier.getValue());
@@ -69,6 +75,8 @@ public final class Main extends JavaPlugin {
         new SQL_Generator();
         // Variables
         Faction_Home.teleportPlayers = new ArrayList<>();
+
+        SetupBot.setup();
 
         // Config
         ArrayList<String > scoreboardList = new ArrayList<String>() {{
@@ -88,6 +96,9 @@ public final class Main extends JavaPlugin {
         getConfig().addDefault("Freeze.Ban", true);
         getConfig().addDefault("Freeze.Reason", "You leaved when you are froze!");
         getConfig().addDefault("Freeze.BanTimeSeconds", 300);
+        getConfig().addDefault("PvP-Quit.Ban", true);
+        getConfig().addDefault("PvP-Quit.Reason", "You leaved when you are in pvp!");
+        getConfig().addDefault("PvP-Quit.BanTimeSeconds", 900);
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         saveConfig();

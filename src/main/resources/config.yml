@@ -1,0 +1,54 @@
+##############################
+### HCF+ by Adbi and kbalu ###
+##############################
+
+Debug: 'true'
+
+# Database
+DATABASE_HOST: 192.168.0.17
+DATABASE_PORT: 3306
+DATABASE_DATABSE: CukiMC
+DATABASE_USER: adbi
+DATABASE_PASSWORD: adbi
+
+# Main scoreboard
+Scoreboard_title: '&6HCF+ &7- &eMap &6#1'
+Scoreboard:
+  - "&7\u250c\u2500"
+  - "&7\u2502 &eFaction: &6%faction%"
+  - "&7\u2502 &eLocation: &6%location%"
+  - "&7\u2502 &eMoney: &6$%money%"
+  - "&7\u2502 &eClass: &6%class%"
+  - "&7\u2514\u2500"
+  - empty
+  - "&7\u258d &eSpawn Tag: &6%spawntag%"
+  - "&7\u258d &ePearl: &6%ep_cd%"
+  - "&7\u258d &eBard energy: &6%bard_energy%"
+
+# Freeze (/freeze <player>)
+Freeze:
+  Ban: true
+  Reason: 'You leaved when you are froze!'
+  BanTimeSeconds: 300
+
+# HCF world name
+World_name: 'world'
+
+# If true, then ban player when are died
+Deathban: 'false'
+Death_time_seconds: '30'
+
+Claim_price_multiplier: '1.5'
+
+# Faction home teleport
+teleport_delay_in_seconds: '10'
+
+# Combat time in seconds
+Combat_time: '30'
+
+# When archer shoot a player
+# Tag timer in seconds
+Archer_tag: 30
+
+# Starting balance for new factions
+Faction_default_balance: '1000'

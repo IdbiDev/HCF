@@ -32,9 +32,14 @@ public class onPlayerInteract implements Listener {
                 HCF_Claiming.setEndPosition(Integer.parseInt( playertools.getMetadata(e.getPlayer(),"factionid")),e.getClickedBlock().getX(),e.getClickedBlock().getZ());
                 e.setCancelled(true);
                 HCF_Claiming.CreateNewFakeTower(e.getPlayer(),e.getClickedBlock().getLocation());
-                if(HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1){
-                    //Todo: Fizetendő
-                    e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: $"+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
+                if(HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
+
+                    e.getPlayer().sendMessage(Messages.FACTION_CLAIM_PRICE
+                            .setPrice(HCF_Claiming.calcMoneyOfArea(e.getPlayer()))
+                            .queue()
+                            .replace("%blocks%", String.valueOf(HCF_Claiming.calcBlocks(e.getPlayer())))
+                    );
+                    //e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: $"+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
                 }
             }
         }
@@ -45,9 +50,14 @@ public class onPlayerInteract implements Listener {
                 e.setCancelled(true);
                 HCF_Claiming.CreateNewFakeTower(e.getPlayer(),e.getClickedBlock().getLocation());
                 HCF_Claiming.setStartPosition(Integer.parseInt( playertools.getMetadata(e.getPlayer(),"factionid")),e.getClickedBlock().getX(),e.getClickedBlock().getZ());
-                if(HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1){
-                    //Todo: Fizetendő
-                    e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: "+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
+                if(HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
+
+                    e.getPlayer().sendMessage(Messages.FACTION_CLAIM_PRICE
+                            .setPrice(HCF_Claiming.calcMoneyOfArea(e.getPlayer()))
+                            .queue()
+                            .replace("%blocks%", String.valueOf(HCF_Claiming.calcBlocks(e.getPlayer())))
+                    );
+                    //e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: "+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
                 }
             }
         }

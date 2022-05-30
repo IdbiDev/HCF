@@ -1,5 +1,6 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
+import me.idbi.hcf.Discord.LogLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
@@ -39,6 +40,7 @@ public class Faction_Create  {
                 SQL_Connection.dbExecute(con,"UPDATE members SET faction = ?,factionname='?',rank='?' WHERE uuid = '?'", String.valueOf(x), name,"leader",p.getUniqueId().toString());
 
 
+                LogLibrary.sendFactionCreate(p, faction.factioname);
                 // Kiíratás global chatre ->
                 //                              xy faction létre jött
                 Bukkit.broadcastMessage(Messages.FACTION_CREATON.getMessage().setFaction(name).repPlayer(p).queue());

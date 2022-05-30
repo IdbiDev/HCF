@@ -18,6 +18,9 @@ public enum ConfigLibrary {
     Death_time_seconds("30"),
     Claim_price_multiplier("1.5"),
     teleport_delay_in_seconds("10"),
+    enderpearl_delay("30"),
+    Combat_time("30"),
+    Archer_tag("30"),
     Faction_default_balance("1000"),
     Scoreboard_title("&6HCF+ &7- &eMap &6#1"),
 
