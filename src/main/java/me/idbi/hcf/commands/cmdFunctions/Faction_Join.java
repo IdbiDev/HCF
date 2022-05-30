@@ -18,7 +18,7 @@ public class Faction_Join {
         if(playertools.getMetadata(p,"factionid").equals("0")){
             Integer id_faction = 0;
             for (Map.Entry<Integer, String> entry : Main.factionToname.entrySet()) {
-                if(Objects.equals(entry.getValue(), factionname)){
+                if(entry.getValue().equalsIgnoreCase(factionname)){
                     id_faction = entry.getKey();
                     break;
                 }
@@ -35,7 +35,9 @@ public class Faction_Join {
                 p.sendMessage(Messages.JOIN_MESSAGE.queue());
                 faction.ApplyPlayerRank(p,faction.getDefaultRank().name);
                 //Faction -> xy belépett
-                playertools.BroadcastFaction(faction.factioname, Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
+                Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p,"factionid")));
+                f.BroadcastFaction(Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
+                Scoreboards.refresh(p);
             }else{
                 //Nem vagy meghíva ebbe a facionbe
                 p.sendMessage(Messages.NOT_INVITED.queue());

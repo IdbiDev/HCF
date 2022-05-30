@@ -38,7 +38,8 @@ public class onDeath implements Listener {
         }else{
             Banhandler.banPlayerInHCF(victim);
         }
-        playertools.BroadcastFaction(Main.factionToname.get(Integer.parseInt(playertools.getMetadata(victim,"factionid"))),"[§4-§f] §3"+victim.getDisplayName()+" &4 meghalt!");
+        Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(victim,"factionid")));
+        faction.BroadcastFaction("[§4-§f] §3"+victim.getDisplayName()+" &4 meghalt!");
 
         if(!playertools.getMetadata(victim,"factionid").equals("0")){
             if(!Main.DTR_REGEN.containsKey(Integer.parseInt(playertools.getMetadata(victim, "factionid")))){

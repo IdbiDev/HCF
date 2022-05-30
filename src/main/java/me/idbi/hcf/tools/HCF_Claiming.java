@@ -170,6 +170,15 @@ public class HCF_Claiming {
         }
         return -1;
     }
+    public static int calcBlocks(Player p){
+        int faction = Integer.parseInt(playertools.getMetadata(p,"factionid"));
+        if(startpositions.containsKey(faction) && endpositions.containsKey(faction)){
+            Integer[] start = startpositions.get(faction);
+            Integer[] end = endpositions.get(faction);
+            return Math.round((Math.abs(end[0]-start[0]) * Math.abs(end[1]-start[1])));
+        }
+        return -1;
+    }
 
 
     public static class Faction_Claim {

@@ -26,7 +26,8 @@ public class Faction_Invite {
                         p.sendMessage(Messages.INVITED_PLAYER.repPlayer(target).queue());
                         target.sendMessage(Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue());
                         //Invite kiírása a faction számára
-                        playertools.BroadcastFaction(faction.factioname, Messages.FACTION_INVITE_BROADCAST.repExecutor(p).repPlayer(target).queue());
+                        Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p,"factionid")));
+                        f.BroadcastFaction(Messages.FACTION_INVITE_BROADCAST.repExecutor(p).repPlayer(target).queue());
 
                     } else {
                         // This player is already invited

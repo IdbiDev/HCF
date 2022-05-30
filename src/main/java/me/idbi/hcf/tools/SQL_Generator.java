@@ -51,6 +51,7 @@ public class SQL_Generator {
                     "  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,\n" +
                     "  `permissions` varchar(255) NOT NULL DEFAULT '{\"0\":true}',\n" +
                     "  `isDefault` int(2) NOT NULL DEFAULT 0,\n" +
+                    "  `isLeader` int(2) NOT NULL DEFAULT 0,\n" +
                     "  PRIMARY KEY (`ID`)\n" +
                     ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
     };

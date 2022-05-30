@@ -38,6 +38,7 @@ public class playertools {
             setMetadata(player,"adminDuty",true);
             setMetadata(player,"rank","none");
             setMetadata(player,"freeze",false);
+            setMetadata(player,"factionchat",false);
             String c = HCF_Claiming.sendFactionTerretory(player);
             setMetadata(player,"current_loc",c);
            // rankManager.addRankToPlayer(player);
@@ -230,13 +231,7 @@ public class playertools {
         }
     }
 
-    public static void BroadcastFaction(String name,String message){
-        Player[] members = getFactionOnlineMembers(name);
-        for (Player member : members) {
-            member.sendMessage(message);
-        }
 
-    }
 
     public static HashMap<String, String> getPlayersKills() {
         HashMap<String, String> returnHashMap = new HashMap<>();
@@ -312,9 +307,13 @@ public class playertools {
                         faction.ranks.add(rank);
                         if(rank_rs.getInt("isLeader") == 1){
                             rank.isLeader = true;
+                        }else{
+                            rank.isLeader = false;
                         }
                         if(rank_rs.getInt("isDefault") == 1){
                             rank.isDefault = true;
+                        }else{
+                            rank.isDefault = false;
                         }
                     }
                 }
