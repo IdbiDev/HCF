@@ -4,15 +4,13 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
+import me.idbi.hcf.tools.displayTeams;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.*;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +35,8 @@ public class Scoreboards {
             public void run() {
                 for (Player p : Bukkit.getWorld(ConfigLibrary.World_name.getValue()).getPlayers()) {
                     Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-                    //ScoreboardManager manager = Bukkit.getScoreboardManager();
+
+
 
                     Objective obj = sb.registerNewObjective("dummy", "igen");
                     obj.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -123,12 +122,21 @@ public class Scoreboards {
         }
 
         p.setScoreboard(sb);
+        displayTeams.refreshPlayer(p);
+//        if(!playertools.getMetadata(p, "factionid").equals("0")) {
+//            displayTeams.addPlayerToTeam(p);
+//            return;
+//        }
+//
+//        displayTeams.removePlayerFromTeam(p);
     }
+
     public static void RefreshAll(){
         for(Player p : Bukkit.getOnlinePlayers()){
             Scoreboards.refresh(p);
         }
     }
+
     public static ArrayList<List<String>> sortLists() {
         List<String> str = ConfigLibrary.getScoreboard();
         List<String> fix = new ArrayList<>();

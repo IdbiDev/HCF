@@ -5,6 +5,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.SQL_Connection;
+import me.idbi.hcf.tools.displayTeams;
 import me.idbi.hcf.tools.playertools;
 import me.idbi.hcf.tools.rankManager;
 import org.bukkit.Bukkit;
@@ -39,11 +40,13 @@ public class Faction_Create  {
 
                 SQL_Connection.dbExecute(con,"UPDATE members SET faction = ?,factionname='?',rank='?' WHERE uuid = '?'", String.valueOf(x), name,"leader",p.getUniqueId().toString());
 
-
                 LogLibrary.sendFactionCreate(p, faction.factioname);
                 // Kiíratás global chatre ->
                 //                              xy faction létre jött
                 Bukkit.broadcastMessage(Messages.FACTION_CREATON.getMessage().setFaction(name).repPlayer(p).queue());
+
+                displayTeams.createTeam(faction);
+                displayTeams.addPlayerToTeam(p);
                 Scoreboards.refresh(p);
 
             } else {

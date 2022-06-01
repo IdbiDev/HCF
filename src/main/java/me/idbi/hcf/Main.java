@@ -15,6 +15,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public final class Main extends JavaPlugin {
     public static HashMap<Integer, Long> DTR_REGEN = new HashMap<>();
     public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
     public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
+    public static HashMap<Main.Faction, Scoreboard> teams = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -103,6 +106,8 @@ public final class Main extends JavaPlugin {
         saveDefaultConfig();
         saveConfig();
 
+        // Displaynames
+
         //Commandok / Eventek setupolása
         setupEvents.SetupEvents();
         setupCommands.setupCommands();
@@ -121,9 +126,10 @@ public final class Main extends JavaPlugin {
         Misc_Timers.DTR_Timer();
         Misc_Timers.Bard_Energy();
         Misc_Timers.PvpTag();
-        //Scoreboards.scoreboard();
 
         Misc_Timers.AutoSave();
+
+        displayTeams.setupAllTeams();
     }
 
     @Override

@@ -2,9 +2,7 @@
 bot: true
 
 # Discord
-token: token
-guild-id: 123456789
-log-channel-id: 123456789
+webhook_url: url
 
 # Log toggles
 commands: true

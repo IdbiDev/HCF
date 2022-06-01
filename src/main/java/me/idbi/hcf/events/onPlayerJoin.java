@@ -3,6 +3,7 @@ package me.idbi.hcf.events;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.displayTeams;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
@@ -27,6 +28,8 @@ public class onPlayerJoin implements Listener {
                     Messages.JOIN_FACTION_BC.repPlayer(p).queue());
         }
 
+        displayTeams.setupPlayer(e.getPlayer());
+        displayTeams.addPlayerToTeam(e.getPlayer());
         Scoreboards.refresh(p);
 
         for(Map.Entry<LivingEntity, Long> entity : Main.saved_players.entrySet()) {

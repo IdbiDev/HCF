@@ -47,8 +47,9 @@ public class playertools {
             if(!playerMap.get("faction").equals(0)){
                 Main.faction_cache.get(Integer.valueOf(String.valueOf(playerMap.get("faction")))).ApplyPlayerRank(player, String.valueOf(playerMap.get("rank")));
             }
-            Scoreboards.refresh(player);
 
+            Scoreboards.refresh(player);
+            player.setDisplayName("§c" + player);
         }else{
             // Játékos létrehozása SQL-ben, majd újra betöltjük
             SQL_Connection.dbExecute(con,"INSERT INTO members SET name='?',uuid='?',online=0",player.getName(),player.getUniqueId().toString());

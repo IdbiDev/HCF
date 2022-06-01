@@ -179,6 +179,7 @@ public class faction implements CommandExecutor, TabCompleter {
                             try {
                                 Faction_Disband.disband(p, args[1]);
                             } catch (Exception e){
+                                e.printStackTrace();
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                                 //Kiíratás hogy balfaszul használta a commandot
                             }

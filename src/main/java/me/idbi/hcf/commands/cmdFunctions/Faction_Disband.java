@@ -5,6 +5,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.SQL_Connection;
+import me.idbi.hcf.tools.displayTeams;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,6 +27,9 @@ public class Faction_Disband {
             System.out.println("Nem vagy faction lrader");
             return;
         }
+        displayTeams.removePlayerFromTeam(p);
+        displayTeams.removeTeam(selectedFaction);
+
         Main.faction_cache.remove(selectedFaction.factionid);
         Main.nameToFaction.remove(selectedFaction.factioname);
         Main.factionToname.remove(selectedFaction.factionid);
@@ -40,6 +44,7 @@ public class Faction_Disband {
             Scoreboards.refresh(player);
         }
         //Todo: faction feloszlatva nem admin áltatl
+
         LogLibrary.sendFactionDisband(p, selectedFaction.factioname);
         Bukkit.broadcastMessage(Messages.FACTION_DISBAND
                         .repPlayer(p)
