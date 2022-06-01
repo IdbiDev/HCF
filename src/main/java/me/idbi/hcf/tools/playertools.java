@@ -41,6 +41,7 @@ public class playertools {
             setMetadata(player,"factionchat",false);
             String c = HCF_Claiming.sendFactionTerretory(player);
             setMetadata(player,"current_loc",c);
+            setMetadata(player,"spawnclaiming",false);
            // rankManager.addRankToPlayer(player);
             SQL_Connection.dbExecute(con,"UPDATE members SET online='?' WHERE uuid='?'","1",player.getUniqueId().toString());
             if(!playerMap.get("faction").equals(0)){
@@ -130,7 +131,7 @@ public class playertools {
             obj.setData(key,data);
         }else{
             if(Main.debug)
-                Bukkit.getLogger().severe("§4 Nem tartalamzza a playert a cache! >> " + p.getDisplayName());
+                Bukkit.getLogger().severe("SET Nem tartalamzza a playert a cache! >> " + p.getDisplayName());
         }
     }
     public static String getMetadata(Player p, String key){
@@ -139,7 +140,7 @@ public class playertools {
             return obj.getData(key);
         }else{
             if(Main.debug)
-                Bukkit.getLogger().severe("§4 Nem tartalamzza a playert a cache! >> " + p.getDisplayName());
+                Bukkit.getLogger().severe("GET Nem tartalamzza a playert a cache! >> " + p.getDisplayName() + "KEY >> " + key);
             return "0";
         }
     }

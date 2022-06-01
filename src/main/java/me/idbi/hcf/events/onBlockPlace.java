@@ -16,7 +16,7 @@ public class onBlockPlace implements Listener {
         Player p = e.getPlayer();
         Block block = e.getBlock();
         if(HCF_Claiming.checkEnemyClaimAction(block.getX(),block.getZ(),Integer.parseInt( playertools.getMetadata(p,"factionid")))  && playertools.getDTR(Integer.parseInt(playertools.getMetadata(p,"factionid"))) > 0){
-            p.sendMessage(Messages.YOU_CANT_DO.setFaction(Main.faction_cache.get(Integer.parseInt( playertools.getMetadata(p,"factionid"))).factioname).queue());
+            p.sendMessage(Messages.YOU_CANT_DO.setFaction(HCF_Claiming.sendFactionTerretoryByXZ(block.getX(),block.getZ())).queue());
             e.setCancelled(true);
         }
 

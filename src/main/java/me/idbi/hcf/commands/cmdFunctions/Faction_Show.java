@@ -30,11 +30,12 @@ public class Faction_Show {
         String factionStatus = (playertools.isFactionOnline(faction.factioname)
                 ? Messages.STATUS_DESIGN_ONLINE.queue()
                 : Messages.STATUS_DESIGN_OFFLINE.queue());
-
-        String leaderName = ((Bukkit.getPlayer(faction.leader)) != null
-                ? Bukkit.getPlayer(UUID.fromString(faction.leader)).getName()
-                : Bukkit.getOfflinePlayer(UUID.fromString(faction.leader)).getName());
-
+        String leaderName = "";
+        try {
+            leaderName = ((Bukkit.getPlayer(faction.leader)) != null
+                    ? Bukkit.getPlayer(UUID.fromString(faction.leader)).getName()
+                    : Bukkit.getOfflinePlayer(UUID.fromString(faction.leader)).getName());
+        }catch (IllegalArgumentException ignore){}
         Location homeLoc;
         if(faction.homeLocation == null)
             homeLoc = new Location(Bukkit.getWorld(ConfigLibrary.World_name.getValue()), 0, 0, 0, 0, 0);

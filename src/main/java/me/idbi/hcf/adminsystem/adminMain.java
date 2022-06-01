@@ -3,11 +3,14 @@ package me.idbi.hcf.adminsystem;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.sql.Connection;
 
@@ -202,6 +205,24 @@ public class adminMain {
             p.sendMessage(Messages.FREEZE_PLAYER_OFF.repExecutor(admin).queue());
         }
         playertools.setMetadata(p,"freeze",!state);
+    }
+
+    public static void SpawnPlace(Player admin,String state){
+        if(state.equalsIgnoreCase("start")){
+            //Todo: Started claiming the spawn, use your left and right button on the
+            playertools.setMetadata(admin,"spawnclaiming",true);
+            HCF_Claiming.SpawnPrepare(admin);
+        }else if(state.equalsIgnoreCase("claim")){
+            if(HCF_Claiming.FinishClaiming(0)){
+                //Todo: Kurvva sikerült
+                playertools.setMetadata(admin,"spawnclaiming",false);
+            }else{
+                //Todo: nem sikerült, balfasz vagy és nem raktad le
+                playertools.setMetadata(admin,"spawnclaiming",false);
+            }
+        }else if(state.equalsIgnoreCase("stop")){
+            playertools.setMetadata(admin,"spawnclaiming",false);
+        }
     }
 
 }

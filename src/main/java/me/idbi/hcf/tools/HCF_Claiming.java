@@ -1,12 +1,18 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.MessagesEnums.ListMessages;
+import me.idbi.hcf.MessagesEnums.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HCF_Claiming {
@@ -50,25 +56,18 @@ public class HCF_Claiming {
             Integer[] end = endpositions.get(faction);
             //for (Map.Entry<Integer, Faction_Claim> entry : Main.faction_cache.get(faction).claims.entrySet()) {
             for(HCF_Claiming.Faction_Claim val : Main.faction_cache.get(faction).claims){
-                    boolean claimX;
-                    boolean claimZ;
-                    //X coords check
-                    claimX = validClaim(val.startX, start[0], val.endX, end[0]);
-                    //Z coords check
-                    claimZ = validClaim(val.startZ,  start[1], val.endZ, end[1]);
-                    // Enemy check
-                    if (!claimX && !claimZ) {
-                        if(Main.debug)
-                            System.out.println("Claiming >> Enemy zone");
-                        return false;
-                    }
+                if(doOverlap(new Point(val.startX, val.endX), new Point(val.startZ,val.endZ), new Point(start[0],end[0]), new Point(start[1],end[1]))){
+                    System.out.println("Overlap");
+                    return false;
+                }
             }
-
-            SQL_Connection.dbExecute(Main.getConnection("commands.Claim"),"INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?'",
+            int claimid = SQL_Connection.dbExecute(Main.getConnection("commands.Claim"),"INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?'",
                     String.valueOf(faction),start[0].toString(),start[1].toString(),end[0].toString(),end[1].toString());
             if(Main.debug)
                 System.out.println("Claiming >> Success");
-            playertools.cacheFactionClaims();
+            Main.Faction f = Main.faction_cache.get(faction);
+            HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(start[0],end[0],start[1],end[1],claimid);
+            f.addClaim(claim);
             return true;
         }
         if(Main.debug)
@@ -76,6 +75,28 @@ public class HCF_Claiming {
         return false;
     }
     // Marci <333333
+    static class Point {
+        Point(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+        int x, y;
+    }
+    static  boolean doOverlap(Point l1, Point r1, Point l2, Point r2) {
+
+        // If one rectangle is on left side of other
+        if (l1.x >r2.x || l2.x > r1.x) {
+            return false;
+        }
+
+        // If one rectangle is above other
+        // If one rectangle is above other
+        if (r1.y > l2.y || r2.y > l1.y) {
+            return false;
+        }
+
+        return true;
+    }
     public static boolean validClaim(int startX1, int startX2, int endX1, int endX2)
     {
         if (startX2>startX1 && endX2>startX1){
@@ -99,44 +120,60 @@ public class HCF_Claiming {
     }
     // true -> igen ez enemy claim action
     public static boolean checkEnemyClaimAction(int x, int z,int faction){
-        boolean claimX;
-        boolean claimZ;
-        //for (Map.Entry<Integer, Faction_Claim> entry : Main.faction_cache.get(faction).claims.entrySet()) {
-        if(faction == 0){
-            return true;
-        }
-        for(HCF_Claiming.Faction_Claim val : Main.faction_cache.get(faction).claims){
-            //X coords check
-            claimX = validClaim(val.startX,x, val.endX, x);
-            //Z coords check
-            claimZ = validClaim(val.startZ, z, val.endZ, z);
-            // Enemy check
-            if (!claimX && !claimZ) {
-                return true;
+        Main.Faction MeineFaction = Main.faction_cache.get(faction);
+        for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
+            for(HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims){
+                if (FindPoint(val.startX,val.startZ,val.endX,val.endZ,x,z)) {
+                    if(thisFaction.getKey() == -1){
+                        return true;
+                    }
+                    return faction != thisFaction.getValue().factionid;
+                }
             }
         }
         return false;
     }
+    public static boolean FindPoint(int x1, int y1, int x2,
+                             int y2, int x, int y)
+    {
+        return x > x1 && x < x2 &&
+                y > y1 && y < y2;
+    }
 
     public static String sendFactionTerretory(Player p){
         int faction = Integer.parseInt(playertools.getMetadata(p,"factionid"));
-        boolean claimX;
-        boolean claimZ;
         Main.Faction MeineFaction = Main.faction_cache.get(faction);
         for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
             for(HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims){
-                //X coords check
-                claimX = validClaim(val.startX, p.getLocation().getBlockX(), val.endX,  p.getLocation().getBlockX());
-                //Z coords check
-                claimZ = validClaim(val.startZ,  p.getLocation().getBlockZ(), val.endZ, p.getLocation().getBlockZ());
-                // Enemy check
-                if (!claimX && !claimZ) {
-                    if (faction == MeineFaction.factionid) return ChatColor.GREEN+MeineFaction.factioname;
-                    return ChatColor.RED+Main.factionToname.get(thisFaction.getKey());
+                if(FindPoint(val.startX,val.startZ,val.endX,val.endZ,p.getLocation().getBlockX(),p.getLocation().getBlockZ())) {
+                    if (thisFaction.getKey() == -1) {
+                        return ChatColor.RED + thisFaction.getValue().factioname;
+                    }
+                    if (faction == thisFaction.getValue().factionid)
+                        return ChatColor.GREEN + MeineFaction.factioname;
+                    return ChatColor.RED + Main.factionToname.get(thisFaction.getKey());
+
+                    //X coords check
+                    //claimX = validClaim(val.startX, p.getLocation().getBlockX(), val.endX,  p.getLocation().getBlockX());
+                    //Z coords check
+                    //claimZ = validClaim(val.startZ,  p.getLocation().getBlockZ(), val.endZ, p.getLocation().getBlockZ());
+                    // Enemy check
+
                 }
             }
         }
         return ChatColor.DARK_GREEN+"Wilderness";
+    }
+    public static String sendFactionTerretoryByXZ(int x, int z){
+        for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
+            for(HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims){
+                if(FindPoint(val.startX,val.startZ,val.endX,val.endZ,x,z)) {
+                    return ChatColor.RED + Main.factionToname.get(thisFaction.getKey());
+
+                }
+            }
+        }
+        return ChatColor.DARK_RED+"Unknown";
     }
 
     public static void CreateNewFakeTower(Player p,Location loc){
@@ -198,6 +235,23 @@ public class HCF_Claiming {
         public void getRetardedVersion(){
             System.out.println("meleg");
         }
+    }
+    public static boolean SpawnPrepare(Player p){
+        if(p.getInventory().firstEmpty() != -1){
+            ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
+            ItemMeta meta = wand.getItemMeta();
+
+            List<String> str = Arrays.asList("Cicacsomag");
+
+            meta.setLore(str);
+            wand.setItemMeta(meta);
+            p.getInventory().setItem(p.getInventory().firstEmpty(),wand);
+            return true;
+        }else{
+            p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
+        }
+
+        return false;
     }
 
 }

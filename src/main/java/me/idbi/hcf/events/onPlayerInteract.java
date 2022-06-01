@@ -14,11 +14,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class onPlayerInteract implements Listener {
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent e){
+    public void onPlayerInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
-        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-            if(HCF_Claiming.checkEnemyClaimAction(e.getClickedBlock().getX(),e.getClickedBlock().getZ(), Integer.parseInt( playertools.getMetadata(p,"factionid")) )){
-                if(Main.blacklistedBlocks.contains(e.getClickedBlock().getType()) && playertools.getDTR(Integer.parseInt( playertools.getMetadata(p,"factionid")) ) > 0){
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            if (HCF_Claiming.checkEnemyClaimAction(e.getClickedBlock().getX(), e.getClickedBlock().getZ(), Integer.parseInt(playertools.getMetadata(p, "factionid")))) {
+                if (Main.blacklistedBlocks.contains(e.getClickedBlock().getType()) && playertools.getDTR(Integer.parseInt(playertools.getMetadata(p, "factionid"))) > 0) {
                     e.setCancelled(true);
                     p.sendMessage(Messages.NO_PERMISSION.queue());
                 }
@@ -26,13 +26,13 @@ public class onPlayerInteract implements Listener {
         }
 
         // Magic wand UwU [[Jobb klikk]]
-        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK )&& e.getItem() != null){
-            if(e.getItem().getType() != Material.DIAMOND_HOE) return;
-            if(e.getItem().getItemMeta().hasLore()){
-                HCF_Claiming.setEndPosition(Integer.parseInt( playertools.getMetadata(e.getPlayer(),"factionid")),e.getClickedBlock().getX(),e.getClickedBlock().getZ());
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && !Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
+            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getItemMeta().hasLore()) {
+                HCF_Claiming.setEndPosition(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
                 e.setCancelled(true);
-                HCF_Claiming.CreateNewFakeTower(e.getPlayer(),e.getClickedBlock().getLocation());
-                if(HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
+                HCF_Claiming.CreateNewFakeTower(e.getPlayer(), e.getClickedBlock().getLocation());
+                if (HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
 
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_PRICE
                             .setPrice(HCF_Claiming.calcMoneyOfArea(e.getPlayer()))
@@ -43,14 +43,14 @@ public class onPlayerInteract implements Listener {
                 }
             }
         }
-        if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)&& e.getItem() != null){
-            if(e.getItem().getType() != Material.DIAMOND_HOE) return;
-            if(e.getItem().getItemMeta().hasLore()){
+        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && !Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
+            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getItemMeta().hasLore()) {
 
                 e.setCancelled(true);
-                HCF_Claiming.CreateNewFakeTower(e.getPlayer(),e.getClickedBlock().getLocation());
-                HCF_Claiming.setStartPosition(Integer.parseInt( playertools.getMetadata(e.getPlayer(),"factionid")),e.getClickedBlock().getX(),e.getClickedBlock().getZ());
-                if(HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
+                HCF_Claiming.CreateNewFakeTower(e.getPlayer(), e.getClickedBlock().getLocation());
+                HCF_Claiming.setStartPosition(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+                if (HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
 
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_PRICE
                             .setPrice(HCF_Claiming.calcMoneyOfArea(e.getPlayer()))
@@ -62,39 +62,56 @@ public class onPlayerInteract implements Listener {
             }
         }
         // Elvetés
-        if(e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking()&& e.getItem() != null){
-            if(e.getItem().getType() != Material.DIAMOND_HOE) return;
-            if(e.getItem().getItemMeta().hasLore()){
-                HCF_Claiming.removeClaiming(Integer.parseInt( playertools.getMetadata(e.getPlayer(),"factionid")));
+        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking() && e.getItem() != null) {
+            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getItemMeta().hasLore()) {
+                HCF_Claiming.removeClaiming(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
                 e.getPlayer().getInventory().remove(e.getItem());
                 HCF_Claiming.DeletFakeTowers(e.getPlayer());
                 e.getPlayer().sendMessage(Messages.FACTION_CLAIM_DECLINE.queue());
             }
         }
         // Elfogadás
-        if(e.getAction().equals(Action.RIGHT_CLICK_AIR)&& e.getItem() != null){
-            if(e.getItem().getType() != Material.DIAMOND_HOE) return;
-            if(e.getItem().getItemMeta().hasLore()){
-                if(HCF_Claiming.FinishClaiming(Integer.parseInt( playertools.getMetadata(e.getPlayer(),"factionid")))){
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {
+            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getItemMeta().hasLore()) {
+                if (HCF_Claiming.FinishClaiming(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")))) {
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_ACCEPT.queue());
                     e.getPlayer().getInventory().remove(e.getItem());
                     HCF_Claiming.DeletFakeTowers(e.getPlayer());
-                }else {
+                } else {
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_INVALID_ZONE.queue());
                 }
             }
         }
 
         ///Bard
-        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK )&& e.getItem() != null){
-            if(playertools.getMetadata(e.getPlayer(),"class").equalsIgnoreCase("bard")){
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null) {
+            if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("bard")) {
                 Bard.OhLetsBreakItDown(e.getPlayer());
             }
         }
-        if(e.getAction().equals(Action.RIGHT_CLICK_AIR )&& e.getItem() != null){
-            if(playertools.getMetadata(e.getPlayer(),"class").equalsIgnoreCase("bard")){
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {
+            if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("bard")) {
                 Bard.OhLetsBreakItDown(e.getPlayer());
+            }
+        }
+        // Magic wand UwU [[Jobb klikk]]
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
+            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getItemMeta().hasLore()) {
+                HCF_Claiming.setEndPosition(0, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+                e.setCancelled(true);
+            }
+        }
+        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
+            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getItemMeta().hasLore()) {
+
+                e.setCancelled(true);
+                HCF_Claiming.setStartPosition(0, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             }
         }
     }
 }
+
