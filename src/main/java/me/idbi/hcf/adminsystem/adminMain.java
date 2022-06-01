@@ -8,9 +8,7 @@ import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.sql.Connection;
 

@@ -16,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -50,8 +49,7 @@ public final class Main extends JavaPlugin {
         //Todo:
         /*
             Configba:
-                - Faction kezdőpénz
-                -
+                -   Bard energy itemenként
             STB:
                 - Parancsok elnevezése
 
@@ -126,6 +124,7 @@ public final class Main extends JavaPlugin {
         Misc_Timers.DTR_Timer();
         Misc_Timers.Bard_Energy();
         Misc_Timers.PvpTag();
+        Misc_Timers.pvpTimer();
 
         Misc_Timers.AutoSave();
 
@@ -178,8 +177,6 @@ public final class Main extends JavaPlugin {
     public static void SaveFactions() {
         for(Map.Entry<Integer, Faction> faction : faction_cache.entrySet()){
             Main.Faction f = faction.getValue();
-            if(Main.debug)
-                System.out.println("Saving \""+ f.factioname + "\" Faction!");
             SQL_Connection.dbExecute(con,"UPDATE factions SET money='?',DTR='?',name='?' WHERE ID = '?'",String.valueOf(f.balance), String.valueOf(f.DTR), f.factioname, String.valueOf(f.factionid));
         }
     }
@@ -190,8 +187,6 @@ public final class Main extends JavaPlugin {
             Player p = value.getKey();
             if(p == null)
                 continue;
-            if(Main.debug)
-                System.out.println("Saving "+ p.getDisplayName() + " Player!");
             SQL_Connection.dbExecute(con,"UPDATE members SET faction='?',rank='?',money='?',factionname='?' WHERE UUID='?'",p_Obj.getData("factionid"),p_Obj.getData("rank"),p_Obj.getData("money"), p_Obj.getData("faction"),p.getUniqueId().toString());
             // Safe
             //SQL_Connection.dbUpdate(con,"factions",keys,values, "uuid='"+p.getUniqueId().toString()+"'");
@@ -273,7 +268,6 @@ public final class Main extends JavaPlugin {
                     player_ranks.put(p,rank);
                     playertools.setMetadata(p,"rank",rank.name);
                     SQL_Connection.dbExecute(con,"UPDATE members SET rank='?' WHERE uuid='?'",rank.name,p.getUniqueId().toString());
-                    System.out.println("Found player with rank");
                     break;
                 }
             }

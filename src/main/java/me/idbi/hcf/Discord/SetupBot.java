@@ -1,16 +1,7 @@
 package me.idbi.hcf.Discord;
 
-import me.idbi.hcf.CustomFiles.DiscordFile;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.Webhook;
-import net.dv8tion.jda.api.entities.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
-import org.bukkit.Bukkit;
-
-import javax.security.auth.login.LoginException;
+import me.idbi.hcf.CustomFiles.DiscordFile;
 
 public class SetupBot {
 

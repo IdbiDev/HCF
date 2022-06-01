@@ -42,6 +42,7 @@ public class playertools {
             String c = HCF_Claiming.sendFactionTerretory(player);
             setMetadata(player,"current_loc",c);
             setMetadata(player,"spawnclaiming",false);
+            setMetadata(player,"bardenergy",0f);
            // rankManager.addRankToPlayer(player);
             SQL_Connection.dbExecute(con,"UPDATE members SET online='?' WHERE uuid='?'","1",player.getUniqueId().toString());
             if(!playerMap.get("faction").equals(0)){
@@ -69,8 +70,8 @@ public class playertools {
     public static List<Player> getFactionMembersInDistance(Player p, double distance){
         String faction = getMetadata(p,"faction");
         List<Player> players = new ArrayList<>();
-        for (Player player : Bukkit.getServer().getOnlinePlayers()){
-            if (p.getLocation().distance(player.getLocation()) <= distance && getMetadata(player,"faction").equals(faction)){
+        for (Player player : getFactionOnlineMembers(faction)){
+            if (p.getLocation().distance(player.getLocation()) <= distance){
                 players.add(player);
             }
         }
@@ -225,7 +226,6 @@ public class playertools {
                         Integer.parseInt(map.get("Z").toString()),
                         Integer.parseInt(map.get("YAW").toString()),
                         Integer.parseInt(map.get("PITCH").toString()));
-                System.out.println(loc);
                 faction.setHomeLocation(loc);
             }
         } catch (SQLException e) {

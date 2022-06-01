@@ -7,23 +7,35 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import static me.idbi.hcf.tools.playertools.getFactionMembersInDistance;
 
 
 public class Bard {
-    public static HashMap<Material, PotionEffectType> barditems = new HashMap<Material, PotionEffectType>();
+    //public static HashMap<Material, PotionEffectType> barditems = new HashMap<Material, PotionEffectType>();
+    public static ArrayList<Bard_Item> bard_items = new ArrayList<>();
+    static class Bard_Item{
+        Material mat;
+        PotionEffectType effect;
+        int cost;
+        public Bard_Item(Material mat,PotionEffectType type,int cost){
+            this.mat = mat;
+            this.effect = type;
+            this.cost = cost;
+        }
+    }
+    private static Main m = Main.getPlugin(Main.class);
 
     public static void setBardItems(){
-        barditems.put(Material.SUGAR,PotionEffectType.SPEED);
-        barditems.put(Material.IRON_INGOT,PotionEffectType.DAMAGE_RESISTANCE);
-        barditems.put(Material.BLAZE_POWDER,PotionEffectType.INCREASE_DAMAGE);
-        barditems.put(Material.FEATHER,PotionEffectType.JUMP);
-
-        barditems.put(Material.REDSTONE,PotionEffectType.REGENERATION);
-        barditems.put(Material.GHAST_TEAR,PotionEffectType.ABSORPTION);
+        bard_items.add(new Bard_Item(Material.BLAZE_POWDER,PotionEffectType.INCREASE_DAMAGE, m.getConfig().getInt("strength")));
+        bard_items.add(new Bard_Item(Material.SUGAR,PotionEffectType.SPEED, m.getConfig().getInt("speed")));
+        bard_items.add(new Bard_Item(Material.FEATHER,PotionEffectType.JUMP, m.getConfig().getInt("jump_boost")));
+        bard_items.add(new Bard_Item(Material.IRON_INGOT,PotionEffectType.DAMAGE_RESISTANCE, m.getConfig().getInt("resistance")));
+        bard_items.add(new Bard_Item(Material.MAGMA_CREAM,PotionEffectType.FIRE_RESISTANCE, m.getConfig().getInt("fire_resistance")));
+        bard_items.add(new Bard_Item(Material.REDSTONE,PotionEffectType.REGENERATION, m.getConfig().getInt("regeneration")));
+        bard_items.add(new Bard_Item(Material.GHAST_TEAR,PotionEffectType.ABSORPTION, m.getConfig().getInt("absorption")));
     }
     public static boolean CheckArmor(Player p){
         try{
@@ -66,45 +78,48 @@ public class Bard {
             //Ha semmi nincs a kezébe, skippeljük
             if (bardplayer.getInventory().getItem(i) == null) continue;
             //Ha van, és bard item akkor
-            if(barditems.containsKey(bardplayer.getInventory().getItem(i).getType())){
-                //Végig megyünk az összes frakciótársan a közelbe
-                for (Player p:getFactionMembersInDistance(bardplayer,10)) {
-                    PotionEffectType potion = barditems.get(Objects.requireNonNull(bardplayer.getInventory().getItem(i)).getType());
+            Bard_Item item = findBardItem(bardplayer.getInventory().getItem(i));
+            if(item != null){
+                //Végig megyünk az összes frakciótárson a közelbe
+                for (Player p : getFactionMembersInDistance(bardplayer,10)) {
+                    PotionEffectType potion = item.effect;
                     p.addPotionEffect(new PotionEffect(potion,180,0,false,false));
-                    System.out.println(p.getDisplayName()+" got "+potion.getName()+" effect from "+bardplayer.getDisplayName());
                 }
             }
         }
     }
     public static void OhLetsBreakItDown(Player bardplayer) {
        ItemStack main = bardplayer.getItemInHand();
+       Bard_Item item;
        if(main != null){
-            if(barditems.containsKey(main.getType())){
+           item = findBardItem(main);
+            if(item != null){
+                main.setAmount(main.getAmount() - 1);
+                bardplayer.getInventory().setItemInHand(main);
+                double currentEnergy = Double.parseDouble(playertools.getMetadata(bardplayer,"bardenergy"));
+                if((currentEnergy-item.cost >= 0)){
+                    //Todo: You dont have enough energy to activate this. [Required item.cost]
+                    return;
+                }
+                playertools.setMetadata(bardplayer,"bardenergy",currentEnergy-item.cost);
                 for (Player p : getFactionMembersInDistance(bardplayer,15)) {
-                    PotionEffectType potion = barditems.get(main.getType());
-                    bardplayer.getActivePotionEffects().forEach(potionEffect -> {
+                    PotionEffectType potion = item.effect;
+                    p.getActivePotionEffects().forEach(potionEffect -> {
                         if(potionEffect.getType().equals(potion)){
-                            p.addPotionEffect(new PotionEffect(potion,potionEffect.getDuration()+180,potionEffect.getAmplifier()+1,false,false));
-                            System.out.println(p.getDisplayName()+" got+++++ "+potion.getName()+" effect from "+bardplayer.getDisplayName());
+                            p.removePotionEffect(potion);
+                            p.addPotionEffect(new PotionEffect(potion,180,potionEffect.getAmplifier()+1,false,false));
                         }
                     });
                 }
             }
        }
-        /*for(int i = 0;i<=8;i++){
-            //Ha semmi nincs a kezébe, skippeljük
-            if (bardplayer.getInventory().getItem(i) == null) continue;
-            //Ha van, és bard item akkor
-            if(barditems.containsKey(bardplayer.getInventory().getItem(i).getType())){
-                //Végig megyünk az összes frakciótársan a közelbe
-                for (Player p:getFactionMembersInDistance(bardplayer,10)) {
-                    PotionEffectType potion = barditems.get(Objects.requireNonNull(bardplayer.getInventory().getItem(i)).getType());
-                    p.addPotionEffect(new PotionEffect(potion,180,0,false,false));
-                    System.out.println(p.getDisplayName()+" got "+potion.getName()+" effect from "+bardplayer.getDisplayName());
-                }
-            }
-        }*/
     }
-
-
+    private static Bard_Item findBardItem(ItemStack stack){
+        for(Bard_Item item : bard_items){
+            if(item.mat.equals(stack.getType())){
+                return item;
+            }
+        }
+        return null;
+    }
 }

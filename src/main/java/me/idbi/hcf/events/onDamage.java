@@ -29,10 +29,11 @@ public class onDamage implements Listener {
             int victim_faction = Integer.parseInt(playertools.getMetadata(victim,"factionid"));
 
             if(damager_faction == 0 && victim_faction == 0){
-                System.out.println("0 - 0");
                 if(HCF_Timer.addCombatTimer(victim)){
                     victim.sendMessage(Messages.COMBAT_MESSAGE.queue());
-                    //victim.sendMessage(Main.servername+ChatColor.RED+"Combat taget kaptál! Ne lépj ki!"+ChatColor.GREEN +" [30 sec]");
+                }
+                if(HCF_Timer.addCombatTimer(damager)){
+                    damager.sendMessage(Messages.COMBAT_MESSAGE.queue());
                 }
                 return;
             }
@@ -40,8 +41,6 @@ public class onDamage implements Listener {
 
             if (damager_faction == victim_faction){
                 damager.sendMessage(Messages.TEAMMATE_DAMAGE.queue());
-               //damager.sendMessage(Main.servername+ChatColor.RED+"Nem sebezheted a csapattársad!");
-                System.out.println("Friendly Fire: Off");
                 e.setCancelled(true);
 
                 return;
@@ -49,7 +48,9 @@ public class onDamage implements Listener {
             //Add combatTimer
             if(HCF_Timer.addCombatTimer(victim)){
                 victim.sendMessage(Messages.COMBAT_MESSAGE.queue());
-                //victim.sendMessage(Main.servername+ChatColor.RED+"Combat taget kaptál! Ne lépj ki!"+ChatColor.GREEN +" [30 sec]");
+            }
+            if(HCF_Timer.addCombatTimer(damager)){
+                damager.sendMessage(Messages.COMBAT_MESSAGE.queue());
             }
             //Damage if ArcherTag
             if (HCF_Timer.checkArcherTimer(victim)){
@@ -77,7 +78,6 @@ public class onDamage implements Listener {
                 if (damager_faction == victim_faction){
                     damager.sendMessage(Messages.TEAMMATE_DAMAGE.queue());
                    // damager.sendMessage(Main.servername+ChatColor.RED+"Nem sebezheted a csapattársad!");
-                    System.out.println("Friendly Fire: Off");
                     e.setCancelled(true);
                     return;
                 }

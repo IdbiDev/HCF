@@ -1,6 +1,7 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.classes.ClassSelector;
 import org.bukkit.Bukkit;
@@ -10,7 +11,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
 import java.util.Map;
-import java.util.Objects;
+
+import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
 
 public class Misc_Timers {
     private static final Connection con = Main.getConnection("timers.Misc");
@@ -31,8 +33,8 @@ public class Misc_Timers {
             @Override
             public void run() {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                    if(!player.hasMetadata("class")) continue;
-                    if (playertools.getMetadata(player, "class").equals("bard"))
+                    if(!playertools.HasMetaData(player,"class")) continue;
+                    if (playertools.getMetadata(player, "class").equalsIgnoreCase("bard"))
                         Bard.ApplyBardEffectOnActionBar(player);
                 }
             }
@@ -63,21 +65,21 @@ public class Misc_Timers {
             @Override
             public void run(){
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                    if(!player.hasMetadata("class")) continue;
-                    if (Objects.equals(playertools.getMetadata(player, "class"), "bard"));
-                    if(!(Double.parseDouble(Objects.requireNonNull(playertools.getMetadata(player, "bardenergy"))) >= 100f)){
-                        playertools.setMetadata(player,"bardenergy",Double.parseDouble(playertools.getMetadata(player,"bardenergy")+0.1f));
+                    if(!playertools.HasMetaData(player,"class")) continue;
+                    if (!playertools.getMetadata(player, "class").equalsIgnoreCase("bard")) continue;
+                    if(!(Double.parseDouble(playertools.getMetadata(player, "bardenergy")) >= 100f)){
+                        playertools.setMetadata(player,"bardenergy",Double.parseDouble(playertools.getMetadata(player,"bardenergy"))+0.1f);
                     }
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class),0,20);
     }
 
+
     public static void AutoSave(){
         new BukkitRunnable(){
             @Override
             public void run(){
-                System.out.println("Autosave");
                 Main.SaveAll();
             }
         }.runTaskTimer(Main.getPlugin(Main.class),6000,6000);
@@ -89,7 +91,6 @@ public class Misc_Timers {
                 for (Map.Entry<LivingEntity, Long> entry : Main.saved_players.entrySet()) {
                     LivingEntity key = entry.getKey();
                     long val = entry.getValue();
-                    System.out.println(val + " R");
                     if(val <= 0) {
                         key.remove();
                         Main.saved_players.remove(key);
@@ -98,6 +99,17 @@ public class Misc_Timers {
                     }else{
                         Main.saved_players.put(key, val - 1000);
                     }
+                }
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class),0,20);
+    }
+    public static void pvpTimer(){
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    if(!checkCombatTimer(player)) continue;
+                    Scoreboards.refresh(player);
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class),0,20);

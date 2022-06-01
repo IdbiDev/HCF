@@ -24,6 +24,7 @@ public class HCF_Timer {
             return true;
         }else
         {
+            timers.put(player, System.currentTimeMillis() + combatTimerDuration);
             return false;
         }
     }
@@ -45,12 +46,14 @@ public class HCF_Timer {
     public static long getCombatTime(Player player) {
         // Ha van rajta CombatTimer
         if(timers.containsKey(player)){
+                //5600                            5000+500
             if(System.currentTimeMillis() >= timers.get(player)){
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 timers.remove(player);
                 return 0;
             }else{
                 // Ellenkező esetben: Van rajta
+                //     5000 + 500ms      -     5000ms
                 return timers.get(player) - System.currentTimeMillis();
             }
         }else{

@@ -24,7 +24,17 @@ public class onPlayerInteract implements Listener {
                 }
             }
         }
-
+        ///Bard
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null) {
+            if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("bard")) {
+                Bard.OhLetsBreakItDown(e.getPlayer());
+            }
+        }
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {
+            if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("bard")) {
+                Bard.OhLetsBreakItDown(e.getPlayer());
+            }
+        }
         // Magic wand UwU [[Jobb klikk]]
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && !Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
@@ -85,17 +95,7 @@ public class onPlayerInteract implements Listener {
             }
         }
 
-        ///Bard
-        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null) {
-            if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("bard")) {
-                Bard.OhLetsBreakItDown(e.getPlayer());
-            }
-        }
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {
-            if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("bard")) {
-                Bard.OhLetsBreakItDown(e.getPlayer());
-            }
-        }
+
         // Magic wand UwU [[Jobb klikk]]
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;

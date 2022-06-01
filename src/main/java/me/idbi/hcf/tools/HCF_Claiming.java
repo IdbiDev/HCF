@@ -1,7 +1,6 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

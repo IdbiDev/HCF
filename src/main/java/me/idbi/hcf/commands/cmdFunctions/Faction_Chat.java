@@ -3,7 +3,6 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.playertools;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Faction_Chat {
