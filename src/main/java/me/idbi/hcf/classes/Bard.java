@@ -1,5 +1,6 @@
 package me.idbi.hcf.classes;
 
+import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
