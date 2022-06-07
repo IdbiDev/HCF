@@ -9,10 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HCF_Claiming {
     private static final HashMap<Integer, Integer[] > startpositions = new HashMap<Integer, Integer[]>();
@@ -252,5 +249,6 @@ public class HCF_Claiming {
 
         return false;
     }
+
 
 }

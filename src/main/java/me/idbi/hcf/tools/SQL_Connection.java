@@ -1,6 +1,7 @@
 package me.idbi.hcf.tools;
 import me.idbi.hcf.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -19,8 +20,7 @@ public class SQL_Connection {
                     System.out.println("Java SQL >> Connected!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            Bukkit.getLogger().severe("§4Invaild Database connection... shutting down!");
+            Bukkit.getLogger().severe(ChatColor.RED+"Invaild Database connection... shutting down!");
             Bukkit.getServer().shutdown();
         }
         return con;

@@ -5,14 +5,16 @@ import me.idbi.hcf.CustomFiles.ConfigManager;
 import me.idbi.hcf.CustomFiles.DiscordFile;
 import me.idbi.hcf.CustomFiles.MessagesFile;
 import me.idbi.hcf.Discord.SetupBot;
+import me.idbi.hcf.Tab.Kraken.Kraken;
 import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.tools.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
@@ -33,7 +35,6 @@ public final class Main extends JavaPlugin {
     public static double claim_price_multiplier;
     public static boolean debug;
     public static int faction_startingmoney;
-
     private static Connection con;
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
@@ -45,6 +46,7 @@ public final class Main extends JavaPlugin {
     public static HashMap<Main.Faction, Scoreboard> teams = new HashMap<>();
 
     @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEnable() {
         //Todo:
         /*
@@ -73,6 +75,8 @@ public final class Main extends JavaPlugin {
                 ConfigLibrary.DATABASE_DATABSE.getValue(),
                 ConfigLibrary.DATABASE_USER.getValue(),
                 ConfigLibrary.DATABASE_PASSWORD.getValue());
+        if(con == null)
+            return;
         new SQL_Generator();
         // Variables
         Faction_Home.teleportPlayers = new ArrayList<>();
@@ -125,13 +129,14 @@ public final class Main extends JavaPlugin {
         Misc_Timers.Bard_Energy();
         Misc_Timers.PvpTag();
         Misc_Timers.pvpTimer();
-
+        Misc_Timers.PotionLimiter();
         Misc_Timers.AutoSave();
 
         displayTeams.setupAllTeams();
     }
 
     @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDisable() {
         // Adatbázis kapcsolat leállítása
         //SaveAll();
@@ -150,30 +155,6 @@ public final class Main extends JavaPlugin {
             System.out.println(who+" >> GetSQLHandler");
         return con;
     }
-    public static ArrayList blacklistedBlocks = new ArrayList() {{
-        add(Material.LEVER);
-        add(Material.STONE_BUTTON);
-        add(Material.WOODEN_DOOR);
-        add(Material.WOOD_BUTTON);
-        add(Material.WOOD_DOOR);
-        add(Material.TRAP_DOOR);
-        add(Material.FENCE_GATE);
-        add(Material.BIRCH_FENCE_GATE);
-        add(Material.BIRCH_DOOR);
-        add(Material.SPRUCE_DOOR);
-        add(Material.SPRUCE_FENCE_GATE);
-        add(Material.JUNGLE_DOOR);
-        add(Material.JUNGLE_FENCE_GATE);
-        add(Material.ACACIA_DOOR);
-        add(Material.ACACIA_FENCE_GATE);
-        add(Material.DARK_OAK_DOOR);
-        add(Material.DARK_OAK_FENCE_GATE);
-        add(Material.CHEST);
-        add(Material.TRAPPED_CHEST);
-        add(Material.ENDER_CHEST);
-        add(Material.HOPPER);
-        add(Material.BREWING_STAND);
-    }};
     public static void SaveFactions() {
         for(Map.Entry<Integer, Faction> faction : faction_cache.entrySet()){
             Main.Faction f = faction.getValue();

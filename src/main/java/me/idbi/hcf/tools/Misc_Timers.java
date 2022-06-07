@@ -1,5 +1,6 @@
 package me.idbi.hcf.tools;
 
+import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.classes.Bard;
@@ -7,6 +8,7 @@ import me.idbi.hcf.classes.ClassSelector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
@@ -114,6 +116,25 @@ public class Misc_Timers {
             }
         }.runTaskTimer(Main.getPlugin(Main.class),0,20);
     }
+    public static void PotionLimiter(){
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    for(PotionEffect effect : player.getActivePotionEffects()){
+                        if(HCF_Rules.PotionLimits.containsKey(effect.getType())){
+                            if(effect.getAmplifier() > HCF_Rules.PotionLimits.get(effect.getType())){
+                                player.removePotionEffect(effect.getType());
+                                player.addPotionEffect(new PotionEffect(effect.getType(),effect.getDuration(),HCF_Rules.PotionLimits.get(effect.getType()),false,false));
+                            }
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class),0,1);
+    }
+
+
 
 }
 

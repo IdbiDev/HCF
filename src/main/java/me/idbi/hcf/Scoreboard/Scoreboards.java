@@ -125,7 +125,7 @@ public class Scoreboards {
         }
 
         p.setScoreboard(sb);
-        displayTeams.refreshPlayer(p);
+        //displayTeams.refreshPlayer(p);
 //        if(!playertools.getMetadata(p, "factionid").equals("0")) {
 //            displayTeams.addPlayerToTeam(p);
 //            return;

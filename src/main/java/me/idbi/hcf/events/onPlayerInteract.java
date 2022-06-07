@@ -1,6 +1,6 @@
 package me.idbi.hcf.events;
 
-import me.idbi.hcf.Main;
+import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.tools.HCF_Claiming;
@@ -18,7 +18,7 @@ public class onPlayerInteract implements Listener {
         Player p = e.getPlayer();
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (HCF_Claiming.checkEnemyClaimAction(e.getClickedBlock().getX(), e.getClickedBlock().getZ(), Integer.parseInt(playertools.getMetadata(p, "factionid")))) {
-                if (Main.blacklistedBlocks.contains(e.getClickedBlock().getType()) && playertools.getDTR(Integer.parseInt(playertools.getMetadata(p, "factionid"))) > 0) {
+                if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType()) && playertools.getDTR(Integer.parseInt(playertools.getMetadata(p, "factionid"))) > 0) {
                     e.setCancelled(true);
                     p.sendMessage(Messages.NO_PERMISSION.queue());
                 }
