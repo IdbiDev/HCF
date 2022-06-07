@@ -2,9 +2,12 @@ package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Elevator.ElevatorCreate;
 import me.idbi.hcf.Elevator.ElevatorInteract;
+import me.idbi.hcf.Enchants.TableEvent;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.SignShop.CreateShopSign;
 import me.idbi.hcf.SignShop.InteractShopSign;
+import me.idbi.hcf.Tab.Kraken.Kraken;
+import me.idbi.hcf.Tab.Tab_ReadConfig;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.events.*;
 
@@ -33,6 +36,11 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new ElevatorInteract(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new onPlayerChat(), Main.getPlugin(Main.class));
+
+        getServer().getPluginManager().registerEvents(new Kraken(Main.getPlugin(Main.class)), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Tab_ReadConfig(), Main.getPlugin(Main.class));
+
+        getServer().getPluginManager().registerEvents(new TableEvent(), Main.getPlugin(Main.class));
 
 
     }

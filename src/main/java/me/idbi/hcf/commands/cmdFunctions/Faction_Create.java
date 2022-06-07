@@ -45,8 +45,8 @@ public class Faction_Create  {
                 //                              xy faction létre jött
                 Bukkit.broadcastMessage(Messages.FACTION_CREATON.getMessage().setFaction(name).repPlayer(p).queue());
 
-                displayTeams.createTeam(faction);
-                displayTeams.addPlayerToTeam(p);
+//                displayTeams.createTeam(faction);
+//                displayTeams.addPlayerToTeam(p);
                 Scoreboards.refresh(p);
 
             } else {

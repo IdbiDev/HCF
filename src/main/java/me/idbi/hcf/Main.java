@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,13 +98,15 @@ public final class Main extends JavaPlugin {
             add("&7▍ &eBard energy: &6%bard_energy%");
         }};
 
-        getConfig().addDefault("Scoreboard", scoreboardList);
-        getConfig().addDefault("Freeze.Ban", true);
-        getConfig().addDefault("Freeze.Reason", "You leaved when you are froze!");
-        getConfig().addDefault("Freeze.BanTimeSeconds", 300);
-        getConfig().addDefault("PvP-Quit.Ban", true);
-        getConfig().addDefault("PvP-Quit.Reason", "You leaved when you are in pvp!");
-        getConfig().addDefault("PvP-Quit.BanTimeSeconds", 900);
+        if(!new File(getDataFolder() + "\\config.yml").exists()) saveResource("config.yml", false);
+        if(!new File(getDataFolder() + "\\Tab.yml").exists()) saveResource("Tab.yml", false);
+//        getConfig().addDefault("Scoreboard", scoreboardList);
+//        getConfig().addDefault("Freeze.Ban", true);
+//        getConfig().addDefault("Freeze.Reason", "You leaved when you are froze!");
+//        getConfig().addDefault("Freeze.BanTimeSeconds", 300);
+//        getConfig().addDefault("PvP-Quit.Ban", true);
+//        getConfig().addDefault("PvP-Quit.Reason", "You leaved when you are in pvp!");
+//        getConfig().addDefault("PvP-Quit.BanTimeSeconds", 900);
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         saveConfig();
@@ -131,8 +134,8 @@ public final class Main extends JavaPlugin {
         Misc_Timers.pvpTimer();
         Misc_Timers.PotionLimiter();
         Misc_Timers.AutoSave();
-
-        displayTeams.setupAllTeams();
+        new Kraken(this);
+        //displayTeams.setupAllTeams();
     }
 
     @Override

@@ -27,8 +27,8 @@ public class Faction_Disband {
             System.out.println("Nem vagy faction lrader");
             return;
         }
-        displayTeams.removePlayerFromTeam(p);
-        displayTeams.removeTeam(selectedFaction);
+//        displayTeams.removePlayerFromTeam(p);
+//        displayTeams.removeTeam(selectedFaction);
 
         Main.faction_cache.remove(selectedFaction.factionid);
         Main.nameToFaction.remove(selectedFaction.factioname);

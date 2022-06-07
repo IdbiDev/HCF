@@ -10,7 +10,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-public class CreateShopSign implements Listener {
+public class
+CreateShopSign implements Listener {
 
     private static ArrayList<String> list = new ArrayList<String>() {{
         add("end portal frame");

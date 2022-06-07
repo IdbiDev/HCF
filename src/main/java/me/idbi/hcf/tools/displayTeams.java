@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class displayTeams {
 
-    public static void setupAllTeams() {
+    /*public static void setupAllTeams() {
         for (Map.Entry<Integer, Main.Faction> fac : Main.faction_cache.entrySet()) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 Scoreboard sb = p.getScoreboard();
@@ -188,5 +188,5 @@ public class displayTeams {
         team.setCanSeeFriendlyInvisibles(true);
         team.setAllowFriendlyFire(false);
         return team;
-    }
+    }*/
 }

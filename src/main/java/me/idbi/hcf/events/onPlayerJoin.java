@@ -28,8 +28,8 @@ public class onPlayerJoin implements Listener {
                     Messages.JOIN_FACTION_BC.repPlayer(p).queue());
         }
 
-        displayTeams.setupPlayer(e.getPlayer());
-        displayTeams.addPlayerToTeam(e.getPlayer());
+//        displayTeams.setupPlayer(e.getPlayer());
+//        displayTeams.addPlayerToTeam(e.getPlayer());
         Scoreboards.refresh(p);
 
         for(Map.Entry<LivingEntity, Long> entity : Main.saved_players.entrySet()) {
