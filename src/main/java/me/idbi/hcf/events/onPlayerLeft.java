@@ -28,23 +28,24 @@ import static me.idbi.hcf.tools.playertools.HasMetaData;
 public class onPlayerLeft implements Listener {
     private final Connection con = Main.getConnection("events.Quit");
     private final Main m = Main.getPlugin(Main.class);
+
     @EventHandler
-    public void onPlayerLeft(PlayerQuitEvent e){
+    public void onPlayerLeft(PlayerQuitEvent e) {
         e.setQuitMessage("");
         // Save deaths,kills money etc
-        if(HasMetaData(e.getPlayer(),"faction")){
-            SQL_Connection.dbExecute(con,"UPDATE members SET name = '?',money='?',kills='?',deaths='?',online=0 WHERE uuid='?'", e.getPlayer().getName(), playertools.getMetadata(e.getPlayer(),"money"), playertools.getMetadata(e.getPlayer(),"kills"),playertools.getMetadata(e.getPlayer(),"deaths"),e.getPlayer().getUniqueId().toString());
-            System.out.println(SQL_Connection.dbExecute(con,"UPDATE members SET online='?' WHERE uuid='?'","0",e.getPlayer().getUniqueId().toString()));
+        if (HasMetaData(e.getPlayer(), "faction")) {
+            SQL_Connection.dbExecute(con, "UPDATE members SET name = '?',money='?',kills='?',deaths='?',online=0 WHERE uuid='?'", e.getPlayer().getName(), playertools.getMetadata(e.getPlayer(), "money"), playertools.getMetadata(e.getPlayer(), "kills"), playertools.getMetadata(e.getPlayer(), "deaths"), e.getPlayer().getUniqueId().toString());
+            System.out.println(SQL_Connection.dbExecute(con, "UPDATE members SET online='?' WHERE uuid='?'", "0", e.getPlayer().getUniqueId().toString()));
             // Koba moment
-            Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(e.getPlayer(),"factionid")));
+            Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
             f.BroadcastFaction(Messages.LEAVE_FACTION_BC.repPlayer(e.getPlayer()).queue());
             //Main.cacheRanks.remove(e.getPlayer());
         }
-        if(Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(),"freeze"))){
+        if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "freeze"))) {
             Bukkit.getBanList(BanList.Type.NAME).addBan(e.getPlayer().getName(),
-                    m.getConfig().getString("Freeze.Reason"),
-                    new Date(System.currentTimeMillis() + m.getConfig().getInt("Freeze.BanTimeSeconds") * 1000L),
-                    null)
+                            m.getConfig().getString("Freeze.Reason"),
+                            new Date(System.currentTimeMillis() + m.getConfig().getInt("Freeze.BanTimeSeconds") * 1000L),
+                            null)
                     .save();
         }
         Main.player_cache.remove(e.getPlayer());
@@ -53,7 +54,7 @@ public class onPlayerLeft implements Listener {
 
 
     public void setCombatLogger(Player p) {
-        if(!HCF_Timer.timers.containsKey(p)){
+        if (!HCF_Timer.timers.containsKey(p)) {
             return;
         }
         long combatTimer = HCF_Timer.getCombatTime(p);
@@ -67,8 +68,8 @@ public class onPlayerLeft implements Listener {
         entity.setCustomNameVisible(true);
         Main.saved_items.put(entity, items);
         Main.saved_players.put(entity, combatTimer);
-        entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,Integer.MAX_VALUE, Integer.MAX_VALUE, false,false));
-        entity.setMetadata("player.UUID",new FixedMetadataValue(Main.getPlugin(Main.class),p.getUniqueId().toString()));
+        entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, Integer.MAX_VALUE, false, false));
+        entity.setMetadata("player.UUID", new FixedMetadataValue(Main.getPlugin(Main.class), p.getUniqueId().toString()));
 
     }
    /* public void CombatLogger(Player p, long combatTime){

@@ -23,13 +23,15 @@ import java.util.Map;
 
 public class Faction_Home implements Listener {
 
-    private static Connection con = Main.getConnection("faction");
+    public static ArrayList<Player> teleportPlayers;
+    private static final Connection con = Main.getConnection("faction");
+
     public static void setHome(Player p) {
-        if(!playertools.hasPermission(p, rankManager.Permissions.SETHOME)){
+        if (!playertools.hasPermission(p, rankManager.Permissions.SETHOME)) {
             //Todo: Message on you dont have permission
             return;
         }
-        Main.Faction faction = Main.faction_cache.get(Integer.valueOf(playertools.getMetadata(p,"factionid")));
+        Main.Faction faction = Main.faction_cache.get(Integer.valueOf(playertools.getMetadata(p, "factionid")));
 
         HashMap map = new HashMap() {{
             put("X", p.getLocation().getBlockX());
@@ -43,16 +45,16 @@ public class Faction_Home implements Listener {
 
         JSONObject object = new JSONObject(map);
 
-        if(faction != null) {
-            SQL_Connection.dbExecute(con,"UPDATE factions SET home = '?' WHERE ID='?'",object.toString(), String.valueOf(faction.factionid));
+        if (faction != null) {
+            SQL_Connection.dbExecute(con, "UPDATE factions SET home = '?' WHERE ID='?'", object.toString(), String.valueOf(faction.factionid));
             p.sendMessage(Messages.SETHOME_MESSAGE.queue());
         }
     }
 
     public static void teleportToHome(Player p) {
-        Main.Faction faction = Main.faction_cache.get(Integer.valueOf(playertools.getMetadata(p,"factionid")));
+        Main.Faction faction = Main.faction_cache.get(Integer.valueOf(playertools.getMetadata(p, "factionid")));
         HashMap<String, Object> json = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID = '?' AND home IS NOT NULL", String.valueOf(faction.factionid));
-        if(json.size() > 0) {
+        if (json.size() > 0) {
             Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(json.get("home").toString()));
             Location loc = new Location(
                     Bukkit.getWorld(ConfigLibrary.World_name.getValue()),
@@ -70,11 +72,10 @@ public class Faction_Home implements Listener {
         }
     }
 
-    public static ArrayList<Player> teleportPlayers;
-
     private static void delayer(Player p, Location loc) {
         new BukkitRunnable() {
             int delay = Integer.parseInt(ConfigLibrary.teleport_delay_in_seconds.getValue()) * 20;
+
             @Override
             public void run() {
                 if (!teleportPlayers.contains(p)) {
@@ -83,7 +84,7 @@ public class Faction_Home implements Listener {
                     return;
                 }
 
-                if(delay <= 0) {
+                if (delay <= 0) {
                     p.sendMessage(Messages.SUCCESSFULLY_TELEPORT.queue());
                     p.teleport(loc.add(0.5, 0, 0.5));
                     cancel();
@@ -96,7 +97,6 @@ public class Faction_Home implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
-        if(teleportPlayers.contains(e.getPlayer()))
-            teleportPlayers.remove(e.getPlayer());
+        teleportPlayers.remove(e.getPlayer());
     }
 }

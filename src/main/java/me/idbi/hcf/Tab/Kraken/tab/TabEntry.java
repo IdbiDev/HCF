@@ -65,11 +65,11 @@ public class TabEntry {
 
         if (text.length() > 16) {
             team.setPrefix(text.substring(0, 16));
-            String suffix = ChatColor.getLastColors(team.getPrefix()) + text.substring(16, text.length());
+            String suffix = ChatColor.getLastColors(team.getPrefix()) + text.substring(16);
             if (suffix.length() > 16) {
                 if (suffix.length() <= 16) {
-                    suffix = text.substring(16, text.length());
-                    team.setSuffix(suffix.substring(0, suffix.length()));
+                    suffix = text.substring(16);
+                    team.setSuffix(suffix);
                 } else {
                     team.setSuffix(suffix.substring(0, 16));
                 }

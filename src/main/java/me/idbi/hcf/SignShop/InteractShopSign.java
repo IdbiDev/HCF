@@ -15,10 +15,22 @@ import org.bukkit.inventory.ItemStack;
 
 public class InteractShopSign implements Listener {
     public static boolean isFull(Player p, ItemStack is) {
-        if(p.getInventory().addItem(is).isEmpty())
-            return false;
-        return true;
+        return !p.getInventory().addItem(is).isEmpty();
     }
+
+    private static int remainingSpace(Player p, ItemStack item) {
+        int amount = 0;
+        for (ItemStack is : p.getInventory().getContents()) {
+            if (is == null) continue;
+            if (is.isSimilar(item)) {
+                if (is.getAmount() < 64) {
+                    amount += 64 - is.getAmount();
+                }
+            }
+        }
+        return amount;
+    }
+
     @EventHandler
     public void onSignClick(PlayerInteractEvent e) {
         Block b = e.getClickedBlock();
@@ -33,39 +45,38 @@ public class InteractShopSign implements Listener {
 
             if (line0.equals("§a[Buy]")) {
                 String line1 = sign.getLine(1); // amount
-                if(line1.matches("^[0-9]+$")) {
+                if (line1.matches("^[0-9]+$")) {
 
                     int amount = Integer.parseInt(line1);
                     String line2 = sign.getLine(2);
                     String line3 = sign.getLine(3);
 
-                    if(line3.matches("^[0-9$]+$")) {
+                    if (line3.matches("^[0-9$]+$")) {
                         Material material;
                         short Short = 0;
                         try {
                             if (line2.matches("^[0-9]+$"))
                                 material = Material.getMaterial(Integer.parseInt(line2));
 
-                            else if(line2.matches("^[0-9:]+$") && line2.contains(":")) {
+                            else if (line2.matches("^[0-9:]+$") && line2.contains(":")) {
                                 material = Material.matchMaterial(line2.split(":")[0]);
                                 Short = java.lang.Short.parseShort(line2.split(":")[1]);
-                            }
-                            else
+                            } else
                                 material = Material.matchMaterial(line2);
 
                             int remainingSpace = remainingSpace(p, new ItemStack(material, amount, Short));
                             int signPrice = Integer.parseInt(line3.replace("$", ""));
-                            int fertigPreise =  (signPrice / amount) * remainingSpace;
+                            int fertigPreise = (signPrice / amount) * remainingSpace;
                             int playerBalance = playertools.getPlayerBalance(p);
 
                             Scoreboards.refresh(p);
-                            if(remainingSpace < amount && remainingSpace > 0) {
+                            if (remainingSpace < amount && remainingSpace > 0) {
                                 if (isFull(p, new ItemStack(material, remainingSpace, Short))) {
                                     p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
                                     return;
                                 }
 
-                                if(playerBalance < fertigPreise) {
+                                if (playerBalance < fertigPreise) {
                                     p.sendMessage(Messages.NOT_ENOUGH_MONEY.queue());
                                     return;
                                 }
@@ -84,11 +95,11 @@ public class InteractShopSign implements Listener {
                                 return;
                             }
 
-                            if(playerBalance >= signPrice) {
+                            if (playerBalance >= signPrice) {
                                 p.sendMessage(Messages.SIGN_SHOP_BOUGHT
                                         .setItem(new ItemStack(material, amount, Short))
                                         .setPrice(signPrice)
-                                                .setAmount(String.valueOf(amount))
+                                        .setAmount(String.valueOf(amount))
                                         .queue());
                                 playertools.setPlayerBalance(p, playerBalance - signPrice);
                             }
@@ -103,7 +114,7 @@ public class InteractShopSign implements Listener {
             //
             else if (line0.equals("§c[Sell]")) {
                 String line1 = sign.getLine(1); // amount
-                if(line1.matches("^[0-9]+$")) {
+                if (line1.matches("^[0-9]+$")) {
 
                     int amount = Integer.parseInt(line1);
                     String line2 = sign.getLine(2);
@@ -115,11 +126,10 @@ public class InteractShopSign implements Listener {
                         try {
                             if (line2.matches("^[0-9]+$"))
                                 material = Material.getMaterial(Integer.parseInt(line2));
-                            else if(line2.matches("^[0-9:]+$") && line2.contains(":")) {
+                            else if (line2.matches("^[0-9:]+$") && line2.contains(":")) {
                                 material = Material.matchMaterial(line2.split(":")[0]);
                                 Short = java.lang.Short.parseShort(line2.split(":")[1]);
-                            }
-                            else
+                            } else
                                 material = Material.matchMaterial(line2);
 
                             int price = Integer.parseInt(line3.replace("$", ""));
@@ -144,18 +154,5 @@ public class InteractShopSign implements Listener {
                 }
             }
         }
-    }
-
-    private static int remainingSpace(Player p, ItemStack item) {
-        int amount = 0;
-        for(ItemStack is : p.getInventory().getContents()) {
-            if(is == null) continue;
-            if(is.isSimilar(item)) {
-                if(is.getAmount() < 64) {
-                    amount += 64 - is.getAmount();
-                }
-            }
-        }
-        return amount;
     }
 }

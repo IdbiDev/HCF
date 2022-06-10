@@ -11,6 +11,46 @@ import org.bukkit.entity.Player;
 public class Faction_WithdrawBank {
     boolean transaction;
 
+    public static void asd(String[] args, Player p) {
+        if (!playertools.hasPermission(p, rankManager.Permissions.WITHDRAW)) {
+            // ToDo: permission handle
+            return;
+        }
+        if (args[1].matches("^[0-9]+$")) {
+            try {
+                Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+                if (Integer.parseInt(args[1]) <= 0) {
+                    p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
+                    return;
+                }
+                if (faction.balance <= 0) {
+                    p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
+                    return;
+                }
+
+                if (faction.balance < Integer.parseInt(args[1])) {
+                    p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
+                    return;
+                }
+                Faction_WithdrawBank withdraw =
+                        new Faction_WithdrawBank().withdrawFaction(
+                                faction,
+                                p,
+                                Integer.parseInt(args[1])
+                        );
+
+                if (withdraw.transactionSuccessfully()) {
+                    p.sendMessage(Messages.FACTION_BANK_WITHDRAW.queue().replace("%amount%", args[1]));
+                    Scoreboards.refresh(p);
+                }
+            } catch (NumberFormatException ex) {
+                p.sendMessage(Messages.FACTION_BANK_NUMBER_ERROR.queue());
+            }
+        } else {
+            p.sendMessage(Messages.FACTION_BANK_NUMBER_ERROR.queue());
+        }
+    }
+
     public Faction_WithdrawBank withdrawFaction(Main.Faction faction, Player p, int amount) {
         try {
             int SumSumAmount = faction.balance - amount;
@@ -30,45 +70,5 @@ public class Faction_WithdrawBank {
 
     public boolean transactionSuccessfully() {
         return transaction;
-    }
-
-    public static void asd(String[] args, Player p) {
-        if(!playertools.hasPermission(p, rankManager.Permissions.WITHDRAW)){
-            // ToDo: permission handle
-            return;
-        }
-        if(args[1].matches("^[0-9]+$")) {
-            try {
-                Main.Faction faction =  Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
-                if(Integer.parseInt(args[1]) <= 0) {
-                    p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
-                    return;
-                }
-                if(faction.balance <= 0) {
-                    p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
-                    return;
-                }
-
-                if(faction.balance < Integer.parseInt(args[1])) {
-                    p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
-                    return;
-                }
-                Faction_WithdrawBank withdraw =
-                        new Faction_WithdrawBank().withdrawFaction(
-                                faction,
-                                p,
-                                Integer.parseInt(args[1])
-                        );
-
-                if(withdraw.transactionSuccessfully()) {
-                    p.sendMessage(Messages.FACTION_BANK_WITHDRAW.queue().replace("%amount%", args[1]));
-                    Scoreboards.refresh(p);
-                }
-            } catch (NumberFormatException ex) {
-                p.sendMessage(Messages.FACTION_BANK_NUMBER_ERROR.queue());
-            }
-        } else {
-            p.sendMessage(Messages.FACTION_BANK_NUMBER_ERROR.queue());
-        }
     }
 }

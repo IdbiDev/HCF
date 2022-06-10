@@ -19,10 +19,10 @@ import java.util.Set;
 @Getter
 public class PlayerTab {
 
-    private static Set<PlayerTab> playerTabs = new HashSet<>();
-    private Player player;
+    private static final Set<PlayerTab> playerTabs = new HashSet<>();
+    private final Player player;
     private Scoreboard scoreboard;
-    private List<TabEntry> entries;
+    private final List<TabEntry> entries;
 
     public PlayerTab(Player player) {
         this.player = player;
@@ -46,55 +46,6 @@ public class PlayerTab {
         }
 
         playerTabs.add(this);
-    }
-
-    public void clear() {
-        for (TabEntry entry : entries) {
-            if (entry.nms() != null) {
-                //PacketPlayOutPlayerInfo packet = PacketPlayOutPlayerInfo.removePlayer(entry.nms());
-                PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entry.nms());
-                ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
-            }
-        }
-
-        for (Player online : Bukkit.getOnlinePlayers()) {
-            PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ((CraftPlayer) online).getHandle());
-            ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
-        }
-
-        entries.clear();
-    }
-
-    private void assemble() {
-
-        for (int i = 0; i < 60; i++) {
-            int x = i % 3;
-            int y = i / 3;
-            new TabEntry(this, getNextBlank(), x, y).send();
-        }
-
-        Bukkit.getPluginManager().callEvent(new PlayerTabCreateEvent(this));
-    }
-
-    public TabEntry getByPosition(int x, int y) {
-        for (TabEntry tabEntry : entries) {
-            if (tabEntry.x() == x && tabEntry.y() == y) {
-                return tabEntry;
-            }
-        }
-        return null;
-    }
-
-    public String getNextBlank() {
-        outer: for (String string : getAllBlanks()) {
-            for (TabEntry tabEntry : entries) {
-                if (tabEntry.text() != null && tabEntry.text().startsWith(string)) {
-                    continue outer;
-                }
-            }
-            return string;
-        }
-        return null;
     }
 
     private static List<String> getAllBlanks() {
@@ -125,5 +76,55 @@ public class PlayerTab {
 
     public static Set<PlayerTab> getPlayerTabs() {
         return playerTabs;
+    }
+
+    public void clear() {
+        for (TabEntry entry : entries) {
+            if (entry.nms() != null) {
+                //PacketPlayOutPlayerInfo packet = PacketPlayOutPlayerInfo.removePlayer(entry.nms());
+                PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entry.nms());
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+            }
+        }
+
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ((CraftPlayer) online).getHandle());
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+        }
+
+        entries.clear();
+    }
+
+    private void assemble() {
+
+        for (int i = 0; i < 60; i++) {
+            int x = i % 3;
+            int y = i / 3;
+            new TabEntry(this, getNextBlank(), x, y).send();
+        }
+
+        Bukkit.getPluginManager().callEvent(new PlayerTabCreateEvent(this));
+    }
+
+    public TabEntry getByPosition(int x, int y) {
+        for (TabEntry tabEntry : entries) {
+            if (tabEntry.x() == x && tabEntry.y() == y) {
+                return tabEntry;
+            }
+        }
+        return null;
+    }
+
+    public String getNextBlank() {
+        outer:
+        for (String string : getAllBlanks()) {
+            for (TabEntry tabEntry : entries) {
+                if (tabEntry.text() != null && tabEntry.text().startsWith(string)) {
+                    continue outer;
+                }
+            }
+            return string;
+        }
+        return null;
     }
 }

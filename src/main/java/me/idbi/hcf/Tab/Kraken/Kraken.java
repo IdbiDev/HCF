@@ -20,8 +20,8 @@ import java.util.HashSet;
 public class Kraken implements Listener {
 
     private static Kraken instance;
-    private JavaPlugin plugin;
-    private KrakenOptions options;
+    private final JavaPlugin plugin;
+    private final KrakenOptions options;
 
     public Kraken(JavaPlugin plugin) {
         this(plugin, KrakenOptions.getDefaultOptions());
@@ -48,6 +48,10 @@ public class Kraken implements Listener {
         }.runTaskLaterAsynchronously(plugin, 4L);
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
+    }
+
+    public static Kraken getInstance() {
+        return instance;
     }
 
     @EventHandler
@@ -87,9 +91,5 @@ public class Kraken implements Listener {
         } else {
             playerTab.clear();
         }
-    }
-
-    public static Kraken getInstance() {
-        return instance;
     }
 }

@@ -11,18 +11,19 @@ import org.bukkit.event.HandlerList;
 public class PlayerTabCreateEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
-    private PlayerTab playerTab;
-    private Player player;
+    private final PlayerTab playerTab;
+    private final Player player;
 
     public PlayerTabCreateEvent(PlayerTab playerTab) {
         this.player = playerTab.getPlayer();
         this.playerTab = playerTab;
     }
-    public HandlerList getHandlers() {
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public HandlerList getHandlers() {
         return handlers;
     }
 

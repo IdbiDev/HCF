@@ -9,10 +9,10 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 
 public class onBowShoot implements Listener {
     @EventHandler
-    public void onBowShoot(EntityShootBowEvent e){
-        if (e.getEntity() instanceof Player){
+    public void onBowShoot(EntityShootBowEvent e) {
+        if (e.getEntity() instanceof Player) {
             Entity projectile = e.getProjectile();
-            playertools.setEntityData(projectile,"archertag",true);
+            playertools.setEntityData(projectile, "archertag", true);
         }
     }
 }

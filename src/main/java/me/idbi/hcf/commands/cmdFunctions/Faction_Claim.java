@@ -15,13 +15,13 @@ import java.util.List;
 
 public class Faction_Claim {
 
-    public static boolean PrepareClaiming(Player p){
-        if(!playertools.getMetadata(p,"factionid").equals("0")){
-            if(!playertools.hasPermission(p, rankManager.Permissions.ALL)){
+    public static boolean PrepareClaiming(Player p) {
+        if (!playertools.getMetadata(p, "factionid").equals("0")) {
+            if (!playertools.hasPermission(p, rankManager.Permissions.ALL)) {
                 //Todo: Message permisiion fos
                 return false;
             }
-            if(p.getInventory().firstEmpty() != -1){
+            if (p.getInventory().firstEmpty() != -1) {
                 ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
                 ItemMeta meta = wand.getItemMeta();
 
@@ -29,14 +29,14 @@ public class Faction_Claim {
 
                 meta.setLore(str);
                 wand.setItemMeta(meta);
-                p.getInventory().setItem(p.getInventory().firstEmpty(),wand);
+                p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
 
                 ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
                 return true;
-            }else{
+            } else {
                 p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
             }
-        }else{
+        } else {
             p.sendMessage(Messages.NOT_IN_FACTION.queue());
 
         }

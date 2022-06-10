@@ -23,8 +23,8 @@ public class Embeds {
                 .setDescription(
                         (killer == null
                                 ? (fallDamage
-                                        ? "**" + victim.getName() + "** death by **fall damage**"
-                                        : "**" + victim.getName() + "** death")
+                                ? "**" + victim.getName() + "** death by **fall damage**"
+                                : "**" + victim.getName() + "** death")
                                 : "**" + victim.getName() + "** killed by **" + killer.getName() + "**.")
                 )
                 .setTimestamp(new Date().toInstant());

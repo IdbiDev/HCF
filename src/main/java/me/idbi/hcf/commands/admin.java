@@ -13,92 +13,92 @@ public class admin implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             if (args.length > 0) {
-                if(p.hasPermission("factions.admin.admin")){
+                if (p.hasPermission("factions.admin.admin")) {
                     switch (args[0]) {
                         case "duty":
-                            adminMain.setAdminDuty(p,!Boolean.parseBoolean(playertools.getMetadata(p,"adminDuty")));
+                            adminMain.setAdminDuty(p, !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty")));
                             break;
                         case "deposit":
-                            try{
-                                adminMain.Deposit(p,args[1], Integer.parseInt(args[2]));
-                            }catch (IndexOutOfBoundsException ignored){
+                            try {
+                                adminMain.Deposit(p, args[1], Integer.parseInt(args[2]));
+                            } catch (IndexOutOfBoundsException ignored) {
                                 System.out.println("Yes");
                             }
                             break;
                         case "withdraw":
-                            try{
-                                adminMain.Withdraw(p,args[1], Integer.parseInt(args[2]));
-                            }catch (IndexOutOfBoundsException ignored){
+                            try {
+                                adminMain.Withdraw(p, args[1], Integer.parseInt(args[2]));
+                            } catch (IndexOutOfBoundsException ignored) {
                                 System.out.println("Yes");
                             }
                             break;
                         case "freeze":
-                            try{
-                                adminMain.FreezePlayer(p,args[1]);
-                            }catch (IndexOutOfBoundsException ignored){
+                            try {
+                                adminMain.FreezePlayer(p, args[1]);
+                            } catch (IndexOutOfBoundsException ignored) {
                                 System.out.println("Yes");
                             }
                             break;
                         case "kick":
                             break;
                         case "setfaction":
-                            try{
-                                adminMain.setPlayerFaction(p,args[1],args[2]);
-                            }catch (IndexOutOfBoundsException ignored){
+                            try {
+                                adminMain.setPlayerFaction(p, args[1], args[2]);
+                            } catch (IndexOutOfBoundsException ignored) {
                                 System.out.println("Yes");
                             }
                             break;
                         case "removefaction":
-                            try{
-                                adminMain.kickPlayerFromFaction(p,args[1],args[2]);
-                            }catch (IndexOutOfBoundsException ignored){
+                            try {
+                                adminMain.kickPlayerFromFaction(p, args[1], args[2]);
+                            } catch (IndexOutOfBoundsException ignored) {
                                 System.out.println("Yes");
                             }
                             break;
                         case "deletefaction":
-                            try{
-                                adminMain.DeleteFaction(p,args[1]);
-                            }catch (IndexOutOfBoundsException ignored){
+                            try {
+                                adminMain.DeleteFaction(p, args[1]);
+                            } catch (IndexOutOfBoundsException ignored) {
                                 System.out.println("Yes");
                             }
                             break;
                         case "setleader":
-                            try{
-                                adminMain.setFactionLeader(p,args[1],args[2]);
-                            }catch (IndexOutOfBoundsException ignored){
+                            try {
+                                adminMain.setFactionLeader(p, args[1], args[2]);
+                            } catch (IndexOutOfBoundsException ignored) {
                                 System.out.println("Yes");
                             }
                             break;
                         case "givemoney":
-                            try{
-                                adminMain.GiveMoney(p,args[1], Integer.parseInt(args[2]));
-                            }catch (IndexOutOfBoundsException ignored){
+                            try {
+                                adminMain.GiveMoney(p, args[1], Integer.parseInt(args[2]));
+                            } catch (IndexOutOfBoundsException ignored) {
                                 System.out.println("Yes");
                             }
                             break;
                         case "takemoney":
-                            try{
-                                adminMain.TakeMoney(p,args[1], Integer.parseInt(args[2]));
-                            }catch (IndexOutOfBoundsException ignored){
+                            try {
+                                adminMain.TakeMoney(p, args[1], Integer.parseInt(args[2]));
+                            } catch (IndexOutOfBoundsException ignored) {
                                 System.out.println("Yes");
                             }
                             break;
                         case "setfactionname":
-                            try{
-                                adminMain.SetFactionname(p,args[1], String.valueOf(args[2]));
-                            }catch (IndexOutOfBoundsException ignored){
+                            try {
+                                adminMain.SetFactionname(p, args[1], String.valueOf(args[2]));
+                            } catch (IndexOutOfBoundsException ignored) {
                                 System.out.println("Yes");
                             }
                             break;
                         case "spawnclaim":
-                            try{
-                                adminMain.SpawnPlace(p,args[1]);
-                            }catch (IndexOutOfBoundsException ignored){
+                            try {
+                                adminMain.SpawnPlace(p, args[1]);
+                            } catch (IndexOutOfBoundsException ignored) {
                                 System.out.println("Balfasz");
                             }
                             break;
                     }
-                }else{
+                } else {
                     //Todo: nem vagy admin
                 }
             }

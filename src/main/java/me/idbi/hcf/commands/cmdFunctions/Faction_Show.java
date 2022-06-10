@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class Faction_Show {
     public static HashMap<Player, Integer> show(Player p, String factionName) {
-        if(factionName.equals("Nincs")) {
+        if (factionName.equals("Nincs")) {
             p.sendMessage(Messages.NO_FACTION_EXISTS.queue());
             return null;
         }
@@ -35,9 +35,10 @@ public class Faction_Show {
             leaderName = ((Bukkit.getPlayer(faction.leader)) != null
                     ? Bukkit.getPlayer(UUID.fromString(faction.leader)).getName()
                     : Bukkit.getOfflinePlayer(UUID.fromString(faction.leader)).getName());
-        }catch (IllegalArgumentException ignore){}
+        } catch (IllegalArgumentException ignore) {
+        }
         Location homeLoc;
-        if(faction.homeLocation == null)
+        if (faction.homeLocation == null)
             homeLoc = new Location(Bukkit.getWorld(ConfigLibrary.World_name.getValue()), 0, 0, 0, 0, 0);
         else homeLoc = faction.homeLocation;
 

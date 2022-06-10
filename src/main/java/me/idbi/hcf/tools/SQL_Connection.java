@@ -1,4 +1,5 @@
 package me.idbi.hcf.tools;
+
 import me.idbi.hcf.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,37 +17,37 @@ public class SQL_Connection {
             con = DriverManager.getConnection(
                     "jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
             if (con.isValid(0)) {
-                if(Main.debug)
+                if (Main.debug)
                     System.out.println("Java SQL >> Connected!");
             }
         } catch (Exception e) {
-            Bukkit.getLogger().severe(ChatColor.RED+"Invaild Database connection... shutting down!");
+            Bukkit.getLogger().severe(ChatColor.RED + "Invaild Database connection... shutting down!");
             Bukkit.getServer().shutdown();
         }
         return con;
     }
+
     // Sima query futtatás... args-t használ
-    public static int dbExecute(Connection con,String query,String... args) {
+    public static int dbExecute(Connection con, String query, String... args) {
         // '?'-ek replacelése args-al
         String private_string_query = "";
         int c_arg = 0;
-        for(char c : query.toCharArray()) {
-            if (c == '?'){
+        for (char c : query.toCharArray()) {
+            if (c == '?') {
                 private_string_query += args[c_arg];
                 c_arg++;
-            }else
-            {
+            } else {
                 private_string_query += c;
             }
         }
         // Az elkészített qh-t dobni az sqlnek
         try {
-            PreparedStatement st = con.prepareStatement(private_string_query,Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement st = con.prepareStatement(private_string_query, Statement.RETURN_GENERATED_KEYS);
             st.executeUpdate();
-                ResultSet genkys = st.getGeneratedKeys();
-                if(genkys != null && genkys.next()){
-                    return genkys.getInt(1);
-                }
+            ResultSet genkys = st.getGeneratedKeys();
+            if (genkys != null && genkys.next()) {
+                return genkys.getInt(1);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -55,16 +56,15 @@ public class SQL_Connection {
         return 0;
     }
 
-    public static HashMap<String, Object> dbPoll(Connection con,String query,String... args) {
+    public static HashMap<String, Object> dbPoll(Connection con, String query, String... args) {
         // '?'-ek replacelése args-al
         String private_string_query = "";
         int c_arg = 0;
-        for(char c : query.toCharArray()) {
-            if (c == '?'){
+        for (char c : query.toCharArray()) {
+            if (c == '?') {
                 private_string_query += args[c_arg];
                 c_arg++;
-            }else
-            {
+            } else {
                 private_string_query += c;
             }
         }
@@ -114,9 +114,10 @@ public class SQL_Connection {
         return poll_qh;
 
     }
+
     // Kobának bruh..          tábla név, Listába a keyek, valuek
-    public static int dbInsert(Connection con,String table,String[] keys,String[] values) {
-        String private_string_query = "INSERT INTO " + table + "("+String.join(",",keys)+") VALUES ("+String.join(",",values)+")";
+    public static int dbInsert(Connection con, String table, String[] keys, String[] values) {
+        String private_string_query = "INSERT INTO " + table + "(" + String.join(",", keys) + ") VALUES (" + String.join(",", values) + ")";
         Statement st = null;
         try {
             st = con.createStatement();
@@ -126,13 +127,14 @@ public class SQL_Connection {
         }
         return 0;
     }
+
     // Kobának bruh..          tábla név, Listába a keyek, valuek; whereclause pl: "x=1 AND y=2" tehát a 'WHERE' állítás nem kell
-    public static int dbUpdate(Connection con,String table,String[] keys,String[] values,String whereClause) {
+    public static int dbUpdate(Connection con, String table, String[] keys, String[] values, String whereClause) {
         String private_string_query = "UPDATE " + table + "SET ";
-        for (int i=0;i<keys.length;i++){
-            private_string_query += keys[i]+"="+values[i];
+        for (int i = 0; i < keys.length; i++) {
+            private_string_query += keys[i] + "=" + values[i];
         }
-        private_string_query += " WHERE "+whereClause;
+        private_string_query += " WHERE " + whereClause;
         try {
             Statement st = con.createStatement();
             return st.executeUpdate(private_string_query);

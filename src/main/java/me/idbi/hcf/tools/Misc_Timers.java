@@ -18,24 +18,26 @@ import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
 
 public class Misc_Timers {
     private static final Connection con = Main.getConnection("timers.Misc");
-    public static void CheckArmors(){
-        new BukkitRunnable(){
-            @Override
-            public void run(){
 
-                for( Player player : Bukkit.getServer().getOnlinePlayers()){
+    public static void CheckArmors() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 
                     ClassSelector.addClassToPlayer(player);
                 }
             }
-        }.runTaskTimer(Main.getPlugin(Main.class),0,60);
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 60);
     }
-    public static void addBardEffects(){
+
+    public static void addBardEffects() {
         new BukkitRunnable() {
             @Override
             public void run() {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                    if(!playertools.HasMetaData(player,"class")) continue;
+                    if (!playertools.HasMetaData(player, "class")) continue;
                     if (playertools.getMetadata(player, "class").equalsIgnoreCase("bard"))
                         Bard.ApplyBardEffectOnActionBar(player);
                 }
@@ -43,97 +45,99 @@ public class Misc_Timers {
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 90);
     }
 
-    public static void DTR_Timer(){
-        new BukkitRunnable(){
+    public static void DTR_Timer() {
+        new BukkitRunnable() {
             @Override
-            public void run(){
+            public void run() {
                 for (Map.Entry<Integer, Long> entry : Main.DTR_REGEN.entrySet()) {
                     int key = entry.getKey();
                     long val = entry.getValue();
                     // 4000 <= 5000
-                    if(val <= System.currentTimeMillis()){
+                    if (val <= System.currentTimeMillis()) {
                         Main.DTR_REGEN.remove(key); // lol
-                        if(Main.debug)
-                            System.out.println("DTR Regen >> Removed task cuz reached max DTR Faction: "+Main.factionToname.get(key));
-                        SQL_Connection.dbExecute(con,"UPDATE factions SET DTR=5 WHERE ID='?'",String.valueOf(key));
+                        if (Main.debug)
+                            System.out.println("DTR Regen >> Removed task cuz reached max DTR Faction: " + Main.factionToname.get(key));
+                        SQL_Connection.dbExecute(con, "UPDATE factions SET DTR=5 WHERE ID='?'", String.valueOf(key));
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class),0,20);
+        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 20);
     }
 
-    public static void Bard_Energy(){
-        new BukkitRunnable(){
+    public static void Bard_Energy() {
+        new BukkitRunnable() {
             @Override
-            public void run(){
+            public void run() {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                    if(!playertools.HasMetaData(player,"class")) continue;
+                    if (!playertools.HasMetaData(player, "class")) continue;
                     if (!playertools.getMetadata(player, "class").equalsIgnoreCase("bard")) continue;
-                    if(!(Double.parseDouble(playertools.getMetadata(player, "bardenergy")) >= 100f)){
-                        playertools.setMetadata(player,"bardenergy",Double.parseDouble(playertools.getMetadata(player,"bardenergy"))+0.1f);
+                    if (!(Double.parseDouble(playertools.getMetadata(player, "bardenergy")) >= 100f)) {
+                        playertools.setMetadata(player, "bardenergy", Double.parseDouble(playertools.getMetadata(player, "bardenergy")) + 0.1f);
                     }
                 }
             }
-        }.runTaskTimer(Main.getPlugin(Main.class),0,20);
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }
 
 
-    public static void AutoSave(){
-        new BukkitRunnable(){
+    public static void AutoSave() {
+        new BukkitRunnable() {
             @Override
-            public void run(){
+            public void run() {
                 Main.SaveAll();
             }
-        }.runTaskTimer(Main.getPlugin(Main.class),6000,6000);
+        }.runTaskTimer(Main.getPlugin(Main.class), 6000, 6000);
     }
-    public static void PvpTag(){
-        new BukkitRunnable(){
+
+    public static void PvpTag() {
+        new BukkitRunnable() {
             @Override
-            public void run(){
+            public void run() {
                 for (Map.Entry<LivingEntity, Long> entry : Main.saved_players.entrySet()) {
                     LivingEntity key = entry.getKey();
                     long val = entry.getValue();
-                    if(val <= 0) {
+                    if (val <= 0) {
                         key.remove();
                         Main.saved_players.remove(key);
                         Main.saved_items.remove(key);
                         // remove from combat tag, and villager
-                    }else{
+                    } else {
                         Main.saved_players.put(key, val - 1000);
                     }
                 }
             }
-        }.runTaskTimer(Main.getPlugin(Main.class),0,20);
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }
-    public static void pvpTimer(){
-        new BukkitRunnable(){
+
+    public static void pvpTimer() {
+        new BukkitRunnable() {
             @Override
-            public void run(){
+            public void run() {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                    if(!checkCombatTimer(player)) continue;
+                    if (!checkCombatTimer(player)) continue;
                     Scoreboards.refresh(player);
                 }
             }
-        }.runTaskTimer(Main.getPlugin(Main.class),0,20);
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }
-    public static void PotionLimiter(){
-        new BukkitRunnable(){
+
+    public static void PotionLimiter() {
+        new BukkitRunnable() {
             @Override
-            public void run(){
+            public void run() {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                    for(PotionEffect effect : player.getActivePotionEffects()){
-                        if(HCF_Rules.PotionLimits.containsKey(effect.getType())){
-                            if(effect.getAmplifier() > HCF_Rules.PotionLimits.get(effect.getType())){
+                    for (PotionEffect effect : player.getActivePotionEffects()) {
+                        if (HCF_Rules.PotionLimits.containsKey(effect.getType())) {
+                            if (effect.getAmplifier() > HCF_Rules.PotionLimits.get(effect.getType())) {
                                 player.removePotionEffect(effect.getType());
-                                player.addPotionEffect(new PotionEffect(effect.getType(),effect.getDuration(),HCF_Rules.PotionLimits.get(effect.getType()),false,false));
+                                player.addPotionEffect(new PotionEffect(effect.getType(), effect.getDuration(), HCF_Rules.PotionLimits.get(effect.getType()), false, false));
                             }
                         }
                     }
                 }
             }
-        }.runTaskTimer(Main.getPlugin(Main.class),0,1);
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 1);
     }
-
 
 
 }

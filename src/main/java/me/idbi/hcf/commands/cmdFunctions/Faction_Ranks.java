@@ -8,99 +8,102 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Faction_Ranks {
-    public static void addRank(Player p, String name){
-        if(!playertools.getMetadata(p,"factionid").equals("0")){
-            Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p,"factionid")));
+    public static void addRank(Player p, String name) {
+        if (!playertools.getMetadata(p, "factionid").equals("0")) {
+            Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
             // ToDo: Check rank exists
-            if(playertools.hasPermission(p, rankManager.Permissions.ALL)){
-                rankManager.CreateNewRank(faction,name);
+            if (playertools.hasPermission(p, rankManager.Permissions.ALL)) {
+                rankManager.CreateNewRank(faction, name);
                 p.sendMessage(Messages.FACTION_CREATE_RANK.queue());
-            }else{
+            } else {
                 p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
             }
-        }else{
+        } else {
             p.sendMessage(Messages.NOT_IN_FACTION.queue());
         }
     }
-    public static void setPermissionToRank(Player p, String name,String id){
-        if(!playertools.getMetadata(p,"factionid").equals("0")){
-            Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p,"factionid")));
-            if(playertools.hasPermission(p, rankManager.Permissions.ALL)){
+
+    public static void setPermissionToRank(Player p, String name, String id) {
+        if (!playertools.getMetadata(p, "factionid").equals("0")) {
+            Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+            if (playertools.hasPermission(p, rankManager.Permissions.ALL)) {
                 rankManager.Faction_Rank rank = faction.FindRankByName(name);
-                if(rank != null){
-                    try{
+                if (rank != null) {
+                    try {
                         rankManager.Permissions perm = rankManager.Permissions.BASIC;
-                        for(rankManager.Permissions cica : rankManager.Permissions.values()){
-                            if(cica.getValue().equals(id)){
+                        for (rankManager.Permissions cica : rankManager.Permissions.values()) {
+                            if (cica.getValue().equals(id)) {
                                 perm = cica;
                                 break;
                             }
                         }
                         rank.addPermission(perm);
 
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         //Todo: Balfasz vagy, és elírtad a perm nevét
                         e.printStackTrace();
                     }
 
-                }else{
+                } else {
                     //Todo: Rank nem található ezzel a névvel
                     System.out.println("Rank nope");
                 }
-            }else{
+            } else {
                 p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
             }
-        }else{
+        } else {
             p.sendMessage(Messages.NOT_IN_FACTION.queue());
         }
     }
-    public static void removePermissionFromRank(Player p, String name,String id){
-        if(!playertools.getMetadata(p,"factionid").equals("0")){
-            Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p,"factionid")));
-            if(playertools.hasPermission(p, rankManager.Permissions.ALL)){
+
+    public static void removePermissionFromRank(Player p, String name, String id) {
+        if (!playertools.getMetadata(p, "factionid").equals("0")) {
+            Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+            if (playertools.hasPermission(p, rankManager.Permissions.ALL)) {
                 rankManager.Faction_Rank rank = faction.FindRankByName(name);
-                if(rank != null){
-                    try{
+                if (rank != null) {
+                    try {
                         rankManager.Permissions perm = rankManager.Permissions.BASIC;
-                        for(rankManager.Permissions cica : rankManager.Permissions.values()){
-                            if(cica.getValue().equals(id)){
+                        for (rankManager.Permissions cica : rankManager.Permissions.values()) {
+                            if (cica.getValue().equals(id)) {
                                 perm = cica;
                                 break;
                             }
                         }
                         rank.removePermission(perm);
 
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         //Todo: Balfasz vagy, és elírtad a perm nevét
                     }
-                }else{
+                } else {
                     //Todo: Rank nem található ezzel a névvel
                 }
-            }else{
+            } else {
                 p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
             }
-        }else{
+        } else {
             p.sendMessage(Messages.NOT_IN_FACTION.queue());
         }
     }
-    public static void setPlayerForRank(Player p, String player,String rank){
-        if(!playertools.getMetadata(p,"factionid").equals("0")){
-            Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p,"factionid")));
-            // ToDo: Check rank exists
-            if(playertools.hasPermission(p, rankManager.Permissions.ALL)){
-                Player target = Bukkit.getPlayer(player);
-                if(target != null){
-                    faction.ApplyPlayerRank(target,rank);
 
-                }else{
+    public static void setPlayerForRank(Player p, String player, String rank) {
+        if (!playertools.getMetadata(p, "factionid").equals("0")) {
+            Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+            // ToDo: Check rank exists
+            if (playertools.hasPermission(p, rankManager.Permissions.ALL)) {
+                Player target = Bukkit.getPlayer(player);
+                if (target != null) {
+                    faction.ApplyPlayerRank(target, rank);
+
+                } else {
                     System.out.println("Cicacsomag");
                 }
                 //Todo: Sikeresen player set Rank geci
                 p.sendMessage(Messages.FACTION_CREATE_RANK.queue());
-            }else{
+            } else {
                 p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
             }
-        }else{
+        } else {
             p.sendMessage(Messages.NOT_IN_FACTION.queue());
         }
     }

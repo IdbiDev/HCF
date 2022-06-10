@@ -30,14 +30,31 @@ public enum ConfigLibrary {
     DATABASE_USER("root"),
     DATABASE_PASSWORD("password");
 
-    private String value, defaultValue;
+    private static final Main m = Main.getPlugin(Main.class);
+    private String value;
+    private final String defaultValue;
 
     ConfigLibrary(String value) {
         this.value = value;
         this.defaultValue = value;
     }
 
-    private static Main m = Main.getPlugin(Main.class);
+    public static List<String> getScoreboard() {
+        return m.getConfig().getStringList("Scoreboard");
+    }
+
+    public static List<Material> blacklistedMaterials() {
+        List<String> materialsConfig = m.getConfig().getStringList("Blacklisted-Blocks");
+        ArrayList<Material> materials = new ArrayList<>();
+        for (String material : materialsConfig) {
+            if (Material.matchMaterial(material) != null) {
+                materials.add(Material.matchMaterial(material));
+            } else {
+                Bukkit.getLogger().severe(Messages.NOT_VALID_BLACKLISTED_BLOCKS.getMessage().queue().replace("%material%", material));
+            }
+        }
+        return materials;
+    }
 
     public String getValue() {
         return ChatColor.translateAlternateColorCodes('&', value
@@ -45,27 +62,10 @@ public enum ConfigLibrary {
                 .replace("%prefix%", Messages.PREFIX.getMessage().queue()));
     }
 
-    public static List<String> getScoreboard() {
-        return m.getConfig().getStringList("Scoreboard");
-    }
-
     public String getDefaultValue() {
         return ChatColor.translateAlternateColorCodes('&', defaultValue
                 .replace("%newline%", "\n")
                 .replace("%prefix%", Messages.PREFIX.getMessage().queue()));
-    }
-
-    public static List<Material> blacklistedMaterials() {
-        List<String> materialsConfig = m.getConfig().getStringList("Blacklisted-Blocks");
-        ArrayList<Material> materials = new ArrayList<>();
-        for(String material : materialsConfig) {
-            if(Material.matchMaterial(material) != null) {
-                materials.add(Material.matchMaterial(material));
-            } else {
-                Bukkit.getLogger().severe(Messages.NOT_VALID_BLACKLISTED_BLOCKS.getMessage().queue().replace("%material%", material));
-            }
-        }
-        return materials;
     }
 
     public void save() {

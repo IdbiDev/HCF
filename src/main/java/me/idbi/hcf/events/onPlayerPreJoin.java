@@ -11,8 +11,8 @@ public class onPlayerPreJoin implements Listener {
 
     @EventHandler
     public void onPlayerPreJoin(AsyncPlayerPreLoginEvent e) {
-        if(Banhandler.isPlayerBannedFromHCF(e.getUniqueId()) && Main.deathban){
-            e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,"§4HCF - Deathban\nHátralévő idő:§f\n"+Banhandler.getBanRemainingTime(e.getUniqueId())+" §4perc");
+        if (Banhandler.isPlayerBannedFromHCF(e.getUniqueId()) && Main.deathban) {
+            e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "§4HCF - Deathban\nHátralévő idő:§f\n" + Banhandler.getBanRemainingTime(e.getUniqueId()) + " §4perc");
         }
     }
 }

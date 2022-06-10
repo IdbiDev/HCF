@@ -47,13 +47,25 @@ public enum ListMessages {
             "§9/f reload [file] §7- Reload files"
     ));
 
-    private List<String> list, defaultList;
+    private List<String> list;
+    private final List<String> defaultList;
     private List<String> message;
 
     ListMessages(List<String> list) {
         this.list = list;
         this.defaultList = list;
         this.message = new ArrayList<>();
+    }
+
+    private static Map<String, List<String>> sortbykey(HashMap map) {
+        // TreeMap to store values of HashMap
+        Map<String, List<String>> sorted = new TreeMap<>(map);
+
+        // Copy all data from hashMap into TreeMap
+        sorted.putAll(map);
+
+        // Display the TreeMap which is naturally sorted
+        return sorted;
     }
 
     public List<String> getMessageList() {
@@ -65,6 +77,7 @@ public enum ListMessages {
 
         return returnString;
     }
+
     //                                rank name     playerek a rankban        player name     player kills
     public ListMessages setMembers(HashMap<String, List<String>> categories, HashMap<String, String> players) {
         List<String> listike = new ArrayList<>();
@@ -76,7 +89,7 @@ public enum ListMessages {
             if (line.equalsIgnoreCase("%members_list_categories_and_members%")) {
                 for (Map.Entry<String, List<String>> category : sortedMap.entrySet()) {
 
-                    if(category.getKey().equalsIgnoreCase("Leader")) continue;
+                    if (category.getKey().equalsIgnoreCase("Leader")) continue;
 
                     listike.add(Messages.CATEGORY_DESIGN.queue()
                             .replace("%category%",
@@ -107,10 +120,10 @@ public enum ListMessages {
         return this;
     }
 
-    public ListMessages setupShow (
+    public ListMessages setupShow(
             String factionName, String factionStatus, String leaderName, String factionBalance, String factionKills, String factionDeaths, String factionPos, String factionDtr) {
         List<String> lines = new ArrayList<>();
-        for(String line : list) {
+        for (String line : list) {
             lines.add(line
                     .replace("%faction_name%", factionName)
                     .replace("%faction_status%", factionStatus)
@@ -128,7 +141,7 @@ public enum ListMessages {
     public List<String> queue() {
         List<String> returnString = new ArrayList<>();
 
-        for(String str : message) {
+        for (String str : message) {
             returnString.add(ChatColor.translateAlternateColorCodes('&', str).replace("%prefix%", Messages.PREFIX.queue()));
         }
 
@@ -138,7 +151,7 @@ public enum ListMessages {
     public List<String> getDefaultMessageList() {
         List<String> returnString = new ArrayList<>();
 
-        for(String str : defaultList) {
+        for (String str : defaultList) {
             returnString.add(ChatColor.translateAlternateColorCodes('&', str));
         }
 
@@ -151,20 +164,6 @@ public enum ListMessages {
         msgs.set(this.toString(), list);
 
         MessagesFile.saveMessages();
-    }
-
-    public void load() {
-        FileConfiguration msgs = ConfigManager.getManager().getListMessage();
-
-        if (msgs == null) return;
-
-        if (msgs.getString(this.toString()) == null) {
-            msgs.set(this.toString(), list);
-            save();
-            return;
-        }
-
-        list = msgs.getStringList(this.toString());
     }
 
 //    private static HashMap sort(HashMap map) {
@@ -183,14 +182,17 @@ public enum ListMessages {
 //        return sortedHashMap;
 //    }
 
-    private static Map<String, List<String>> sortbykey(HashMap map) {
-        // TreeMap to store values of HashMap
-        Map<String, List<String>> sorted = new TreeMap<>(map);
+    public void load() {
+        FileConfiguration msgs = ConfigManager.getManager().getListMessage();
 
-        // Copy all data from hashMap into TreeMap
-        sorted.putAll(map);
+        if (msgs == null) return;
 
-        // Display the TreeMap which is naturally sorted
-        return sorted;
+        if (msgs.getString(this.toString()) == null) {
+            msgs.set(this.toString(), list);
+            save();
+            return;
+        }
+
+        list = msgs.getStringList(this.toString());
     }
 }

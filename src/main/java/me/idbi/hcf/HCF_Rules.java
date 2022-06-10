@@ -31,13 +31,13 @@ public class HCF_Rules {
         add(Material.HOPPER);
         add(Material.BREWING_STAND);
     }};
-    public static HashMap<PotionEffectType, Integer> PotionLimits = new HashMap(){{
-        put(PotionEffectType.INCREASE_DAMAGE,2);
-        put(PotionEffectType.SPEED,4);
-        put(PotionEffectType.REGENERATION,2);
-        put(PotionEffectType.DAMAGE_RESISTANCE,3);
-        put(PotionEffectType.ABSORPTION,2);
-        put(PotionEffectType.JUMP,3);
+    public static HashMap<PotionEffectType, Integer> PotionLimits = new HashMap() {{
+        put(PotionEffectType.INCREASE_DAMAGE, 2);
+        put(PotionEffectType.SPEED, 4);
+        put(PotionEffectType.REGENERATION, 2);
+        put(PotionEffectType.DAMAGE_RESISTANCE, 3);
+        put(PotionEffectType.ABSORPTION, 2);
+        put(PotionEffectType.JUMP, 3);
     }};
 
 }

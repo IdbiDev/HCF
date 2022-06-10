@@ -7,13 +7,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class ConfigManager {
 
-    private static ConfigManager mng = new ConfigManager();
-    private Main m = Main.getPlugin(Main.class);
-    public static ConfigManager getManager(){
+    private static final ConfigManager mng = new ConfigManager();
+    private final Main m = Main.getPlugin(Main.class);
+
+    public static ConfigManager getManager() {
         return mng;
     }
 
-    public void setup(){
+    public void setup() {
 
         for (Messages msg : Messages.values()) {
             msg.load();
@@ -29,15 +30,15 @@ public class ConfigManager {
         }
     }
 
-    public FileConfiguration getMessages(){
+    public FileConfiguration getMessages() {
         return MessagesFile.getMessages();
     }
 
-    public FileConfiguration getConfig(){
+    public FileConfiguration getConfig() {
         return m.getConfig();
     }
 
-    public FileConfiguration getListMessage(){
+    public FileConfiguration getListMessage() {
         return MessagesFile.getMessages();
     }
 }

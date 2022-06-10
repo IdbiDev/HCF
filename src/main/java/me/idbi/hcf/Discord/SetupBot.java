@@ -9,7 +9,7 @@ public class SetupBot {
 
     public static void setup() {
         try {
-            if(!DiscordFile.getDiscord().getBoolean("bot"))
+            if (!DiscordFile.getDiscord().getBoolean("bot"))
                 return;
 
             builder = new WebhookClientBuilder(DiscordFile.getDiscord().getString("webhook_url"));

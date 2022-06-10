@@ -1,13 +1,5 @@
 package me.idbi.hcf.tools;
 
-import me.idbi.hcf.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
-
-import java.util.Map;
-
 public class displayTeams {
 
     /*public static void setupAllTeams() {

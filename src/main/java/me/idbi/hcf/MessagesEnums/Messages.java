@@ -124,11 +124,11 @@ public enum Messages {
     CATEGORY_DESIGN("&e%category%:"),
     MEMBER_LIST_DESIGN_ONLINE("&7▬ &a%member% &f[&7%member_kill%&f]"),
     MEMBER_LIST_DESIGN_OFFLINE("&7▬ &7%member% &f[&7%member_kill%&f]"),
-    
+
     // Sign Shop message
     SIGN_SHOP_BOUGHT("%prefix% &aYou bought &2&o%amount%x %item% &afor &2&o$%price%&a."),
     SIGN_SHOP_SOLD("%prefix% &aYou sold &2&o%amount%x %item% &afor &2&o$%price%&a."),
-    
+
     // Admin Duty
     ADMIN_DUTY_ON("%prefix% &aDuty mode: &2&oon"),
     ADMIN_DUTY_OFF("%prefix% &cDuty mode: &4&ooff"),
@@ -165,6 +165,12 @@ public enum Messages {
         message = ChatColor.translateAlternateColorCodes('&', msg
                 .replace("%newline%", "\n")
                 .replace("%prefix%", Messages.PREFIX.msg));
+        return this;
+    }
+
+    public Messages setMessage(String message) {
+        this.message = msg.replace("%message%", message);
+        this.msg = this.message;
         return this;
     }
 
@@ -219,13 +225,6 @@ public enum Messages {
         return this;
     }
 
-    public Messages setMessage(String message) {
-        this.message = msg.replace("%message%", message);
-        this.msg = this.message;
-        return this;
-    }
-
-
     public Messages setRank(Player p, String rank) {
         message = msg.replace("%rank%", rank).replace("%player%", p.getName());
         this.msg = message;
@@ -245,7 +244,7 @@ public enum Messages {
     }
 
     public Messages setItem(ItemStack item) {
-        message = msg.replace("%item%", (item.getType().name().substring(0, 1) + item.getType().name().substring(1).toLowerCase()).replace("_", " "));
+        message = msg.replace("%item%", (item.getType().name().charAt(0) + item.getType().name().substring(1).toLowerCase()).replace("_", " "));
         this.msg = message;
         return this;
     }

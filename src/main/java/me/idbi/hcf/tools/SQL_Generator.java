@@ -55,9 +55,10 @@ public class SQL_Generator {
                     "  PRIMARY KEY (`ID`)\n" +
                     ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
     };
-    public SQL_Generator(){
-        for(String data : tables){
-           SQL_Connection.dbExecute(con,data);
+
+    public SQL_Generator() {
+        for (String data : tables) {
+            SQL_Connection.dbExecute(con, data);
         }
     }
 

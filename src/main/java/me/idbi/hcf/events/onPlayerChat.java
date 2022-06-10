@@ -11,7 +11,7 @@ public class onPlayerChat implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        if(Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "factionchat"))) {
+        if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "factionchat"))) {
             e.setCancelled(true);
             Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
 

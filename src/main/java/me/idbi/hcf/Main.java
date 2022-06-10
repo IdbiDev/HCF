@@ -5,7 +5,6 @@ import me.idbi.hcf.CustomFiles.ConfigManager;
 import me.idbi.hcf.CustomFiles.DiscordFile;
 import me.idbi.hcf.CustomFiles.MessagesFile;
 import me.idbi.hcf.Discord.SetupBot;
-import me.idbi.hcf.Tab.Kraken.Kraken;
 import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.tools.*;
@@ -30,13 +29,13 @@ import java.util.Objects;
 public final class Main extends JavaPlugin {
     // Beállítások configba
 
+    public static final int world_border_radius = 1000;
     public static String servername;
     public static boolean deathban;
     public static int death_time;
     public static double claim_price_multiplier;
     public static boolean debug;
     public static int faction_startingmoney;
-    private static Connection con;
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
     public static HashMap<Integer, String> factionToname = new HashMap<>();
@@ -45,6 +44,39 @@ public final class Main extends JavaPlugin {
     public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
     public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
     public static HashMap<Main.Faction, Scoreboard> teams = new HashMap<>();
+    private static Connection con;
+
+    // Egyszerű SQL Connection getter
+    public static Connection getConnection(String who) {
+        if (Main.debug)
+            System.out.println(who + " >> GetSQLHandler");
+        return con;
+    }
+
+    public static void SaveFactions() {
+        for (Map.Entry<Integer, Faction> faction : faction_cache.entrySet()) {
+            Main.Faction f = faction.getValue();
+            SQL_Connection.dbExecute(con, "UPDATE factions SET money='?',DTR='?',name='?' WHERE ID = '?'", String.valueOf(f.balance), String.valueOf(f.DTR), f.factioname, String.valueOf(f.factionid));
+        }
+    }
+
+    public static void SavePlayers() {
+        for (Map.Entry<Player, Player_Obj> value : player_cache.entrySet()) {
+
+            Player_Obj p_Obj = value.getValue();
+            Player p = value.getKey();
+            if (p == null)
+                continue;
+            SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?',money='?',factionname='?' WHERE UUID='?'", p_Obj.getData("factionid"), p_Obj.getData("rank"), p_Obj.getData("money"), p_Obj.getData("faction"), p.getUniqueId().toString());
+            // Safe
+            //SQL_Connection.dbUpdate(con,"factions",keys,values, "uuid='"+p.getUniqueId().toString()+"'");
+        }
+    }
+
+    public static void SaveAll() {
+        SaveFactions();
+        SavePlayers();
+    }
 
     @Override
     @EventHandler(priority = EventPriority.LOWEST)
@@ -76,7 +108,7 @@ public final class Main extends JavaPlugin {
                 ConfigLibrary.DATABASE_DATABSE.getValue(),
                 ConfigLibrary.DATABASE_USER.getValue(),
                 ConfigLibrary.DATABASE_PASSWORD.getValue());
-        if(con == null)
+        if (con == null)
             return;
         new SQL_Generator();
         // Variables
@@ -85,7 +117,7 @@ public final class Main extends JavaPlugin {
         SetupBot.setup();
 
         // Config
-        ArrayList<String > scoreboardList = new ArrayList<String>() {{
+        ArrayList<String> scoreboardList = new ArrayList<String>() {{
             add("&7┌─");
             add("&7│ &eFaction: &6%faction%");
             add("&7│ &eLocation: &6%location%");
@@ -98,8 +130,8 @@ public final class Main extends JavaPlugin {
             add("&7▍ &eBard energy: &6%bard_energy%");
         }};
 
-        if(!new File(getDataFolder() + "\\config.yml").exists()) saveResource("config.yml", false);
-        if(!new File(getDataFolder() + "\\Tab.yml").exists()) saveResource("Tab.yml", false);
+        if (!new File(getDataFolder() + "\\config.yml").exists()) saveResource("config.yml", false);
+        if (!new File(getDataFolder() + "\\Tab.yml").exists()) saveResource("Tab.yml", false);
 //        getConfig().addDefault("Scoreboard", scoreboardList);
 //        getConfig().addDefault("Freeze.Ban", true);
 //        getConfig().addDefault("Freeze.Reason", "You leaved when you are froze!");
@@ -121,7 +153,7 @@ public final class Main extends JavaPlugin {
         playertools.cacheFactionClaims();
         playertools.LoadRanks();
         //Setup players
-        for( Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             playertools.LoadPlayer(player);
         }
         //Classok
@@ -134,7 +166,8 @@ public final class Main extends JavaPlugin {
         Misc_Timers.pvpTimer();
         Misc_Timers.PotionLimiter();
         Misc_Timers.AutoSave();
-        new Kraken(this);
+        brewing.Async_Cache_BrewingStands();
+        brewing.SpeedBoost();
         //displayTeams.setupAllTeams();
     }
 
@@ -152,51 +185,28 @@ public final class Main extends JavaPlugin {
 
     }
 
-    // Egyszerű SQL Connection getter
-    public static Connection getConnection(String who){
-        if(Main.debug)
-            System.out.println(who+" >> GetSQLHandler");
-        return con;
-    }
-    public static void SaveFactions() {
-        for(Map.Entry<Integer, Faction> faction : faction_cache.entrySet()){
-            Main.Faction f = faction.getValue();
-            SQL_Connection.dbExecute(con,"UPDATE factions SET money='?',DTR='?',name='?' WHERE ID = '?'",String.valueOf(f.balance), String.valueOf(f.DTR), f.factioname, String.valueOf(f.factionid));
-        }
-    }
-    public static void SavePlayers() {
-        for(Map.Entry<Player, Player_Obj> value : player_cache.entrySet()){
-
-            Player_Obj p_Obj = value.getValue();
-            Player p = value.getKey();
-            if(p == null)
-                continue;
-            SQL_Connection.dbExecute(con,"UPDATE members SET faction='?',rank='?',money='?',factionname='?' WHERE UUID='?'",p_Obj.getData("factionid"),p_Obj.getData("rank"),p_Obj.getData("money"), p_Obj.getData("faction"),p.getUniqueId().toString());
-            // Safe
-            //SQL_Connection.dbUpdate(con,"factions",keys,values, "uuid='"+p.getUniqueId().toString()+"'");
-        }
-    }
-    public static void SaveAll(){
-        SaveFactions();
-        SavePlayers();
-    }
-
 
     // Define classe
 
+    public void setDebugMode(String debugMode) {
+        debug = debugMode.equalsIgnoreCase("true");
+    }
+
     public static class Player_Obj {
         private final HashMap<String, Object> metadata = new HashMap<>();
-        public void setData(String key,Object value){
-            metadata.put(key,value);
+
+        public void setData(String key, Object value) {
+            metadata.put(key, value);
         }
-        public String getData(String key){
-            if(hasData(key))
+
+        public String getData(String key) {
+            if (hasData(key))
                 return metadata.get(key).toString();
-            Bukkit.getLogger().severe(" Error while reading key:" +key);
+            Bukkit.getLogger().severe(" Error while reading key:" + key);
             return "";
         }
 
-        public boolean hasData(String key){
+        public boolean hasData(String key) {
             return metadata.containsKey(key);
         }
     }
@@ -214,7 +224,7 @@ public final class Main extends JavaPlugin {
         public Location homeLocation;
 
         public ArrayList<rankManager.Faction_Rank> ranks = new ArrayList<>();
-        public HashMap<Player,rankManager.Faction_Rank> player_ranks = new HashMap<>();
+        public HashMap<Player, rankManager.Faction_Rank> player_ranks = new HashMap<>();
 
         public Faction(Integer id, String name, String leader, Integer balance) {
             this.factionid = id;
@@ -224,17 +234,19 @@ public final class Main extends JavaPlugin {
             this.balance = balance;
         }
 
-        public void invitePlayer(Player p){
+        public void invitePlayer(Player p) {
             invites.invitePlayerToFaction(p);
         }
-        public void unInvitePlayer(Player p){
+
+        public void unInvitePlayer(Player p) {
             invites.removePlayerFromInvite(p);
         }
-        public boolean isPlayerInvited(Player p){
+
+        public boolean isPlayerInvited(Player p) {
             return invites.isPlayerInvited(p);
         }
 
-        public void addClaim(HCF_Claiming.Faction_Claim claimid){
+        public void addClaim(HCF_Claiming.Faction_Claim claimid) {
             try {
                 claims.add(claimid);
             } catch (NullPointerException ex) {
@@ -242,55 +254,56 @@ public final class Main extends JavaPlugin {
                 claims.add(claimid);
             }
         }
-        public HCF_Claiming.Faction_Claim getFactionClaim(Integer id){
+
+        public HCF_Claiming.Faction_Claim getFactionClaim(Integer id) {
             return claims.get(id);
         }
 
-        public void ApplyPlayerRank(Player p,String name){
-            for(rankManager.Faction_Rank rank : ranks){
-                if(Objects.equals(rank.name, name)){
-                    player_ranks.put(p,rank);
-                    playertools.setMetadata(p,"rank",rank.name);
-                    SQL_Connection.dbExecute(con,"UPDATE members SET rank='?' WHERE uuid='?'",rank.name,p.getUniqueId().toString());
+        public void ApplyPlayerRank(Player p, String name) {
+            for (rankManager.Faction_Rank rank : ranks) {
+                if (Objects.equals(rank.name, name)) {
+                    player_ranks.put(p, rank);
+                    playertools.setMetadata(p, "rank", rank.name);
+                    SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE uuid='?'", rank.name, p.getUniqueId().toString());
                     break;
                 }
             }
         }
-        public rankManager.Faction_Rank FindRankByName(String name){
-            for(rankManager.Faction_Rank rank : ranks){
-                if(Objects.equals(rank.name, name)){
+
+        public rankManager.Faction_Rank FindRankByName(String name) {
+            for (rankManager.Faction_Rank rank : ranks) {
+                if (Objects.equals(rank.name, name)) {
                     return rank;
                 }
             }
             return null;
         }
-        public rankManager.Faction_Rank getDefaultRank(){
-            for (rankManager.Faction_Rank rank : ranks){
-                if(rank.isDefault)
-                    return rank;
-            }
-            return null;
-        }
-        public rankManager.Faction_Rank getLeaderRank(){
-            for (rankManager.Faction_Rank rank : ranks){
-                if(rank.isLeader)
+
+        public rankManager.Faction_Rank getDefaultRank() {
+            for (rankManager.Faction_Rank rank : ranks) {
+                if (rank.isDefault)
                     return rank;
             }
             return null;
         }
 
-        public void setHomeLocation(Location loc){
+        public rankManager.Faction_Rank getLeaderRank() {
+            for (rankManager.Faction_Rank rank : ranks) {
+                if (rank.isLeader)
+                    return rank;
+            }
+            return null;
+        }
+
+        public void setHomeLocation(Location loc) {
             homeLocation = loc;
         }
-        public void BroadcastFaction(String message){
+
+        public void BroadcastFaction(String message) {
             Player[] members = playertools.getFactionOnlineMembers(factioname);
             for (Player member : members) {
                 member.sendMessage(message);
             }
         }
-    }
-
-    public void setDebugMode(String debugMode) {
-        debug = debugMode.equalsIgnoreCase("true");
     }
 }

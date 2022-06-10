@@ -4,7 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
-public class ElevatorCreate  implements Listener {
+public class ElevatorCreate implements Listener {
 
     @EventHandler
     public void onCreateElevator(SignChangeEvent e) {
@@ -20,9 +20,9 @@ public class ElevatorCreate  implements Listener {
                 e.setLine(0, "§9[Elevator]");
             }
 
-            if(line1.equalsIgnoreCase("up")) {
+            if (line1.equalsIgnoreCase("up")) {
                 e.setLine(1, "Up");
-            } else if(line1.equalsIgnoreCase("down")){
+            } else if (line1.equalsIgnoreCase("down")) {
                 e.setLine(1, "Down");
             }
         }

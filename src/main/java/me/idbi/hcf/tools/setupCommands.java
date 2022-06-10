@@ -1,7 +1,6 @@
 package me.idbi.hcf.tools;
 
 
-
 import me.idbi.hcf.Main;
 import me.idbi.hcf.commands.admin;
 import me.idbi.hcf.commands.faction;

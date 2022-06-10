@@ -4,7 +4,6 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
-import me.idbi.hcf.tools.displayTeams;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Scoreboards {
-    private static Main m = Main.getPlugin(Main.class);
+    private static final Main m = Main.getPlugin(Main.class);
 
     public static void scoreboard() {
         List<String> fix = sortLists().get(0);
@@ -38,7 +37,6 @@ public class Scoreboards {
             public void run() {
                 for (Player p : Bukkit.getWorld(ConfigLibrary.World_name.getValue()).getPlayers()) {
                     Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-
 
 
                     Objective obj = sb.registerNewObjective("dummy", "igen");
@@ -94,10 +92,9 @@ public class Scoreboards {
         int scoreNumber = 0;
 
         for (String line : timers) {
-            if(line.contains("%spawntag%") && HCF_Timer.getCombatTime(p) <= 0.0) {
+            if (line.contains("%spawntag%") && HCF_Timer.getCombatTime(p) <= 0.0) {
                 continue;
-            }
-            else if(line.contains("%ep_cd%") && HCF_Timer.getEpTime(p) <= 0.0) {
+            } else if (line.contains("%ep_cd%") && HCF_Timer.getEpTime(p) <= 0.0) {
                 continue;
             }
 //            else if(line.contains("%bard_energy%") && HCF_Timer.getEpTime(p) <= 0.0) {
@@ -134,8 +131,8 @@ public class Scoreboards {
 //        displayTeams.removePlayerFromTeam(p);
     }
 
-    public static void RefreshAll(){
-        for(Player p : Bukkit.getOnlinePlayers()){
+    public static void RefreshAll() {
+        for (Player p : Bukkit.getOnlinePlayers()) {
             Scoreboards.refresh(p);
         }
     }
@@ -165,8 +162,8 @@ public class Scoreboards {
                 .replace("%class%", playertools.getMetadata(p, "class"))
                 //.replace("%bard_energy%", new SimpleDateFormat("s").format(new Date(playertools.getMetadata(p, "bardenergy")) + "s"))
                 .replace("%bard_energy%", new SimpleDateFormat("s").format(new Date()))
-                .replace("%spawntag%", new SimpleDateFormat("s").format(new Date((long) HCF_Timer.getCombatTime(p))) + "s")
-                .replace("%ep_cd%", new SimpleDateFormat("s").format(new Date((long) HCF_Timer.getEpTime(p))) + "s")
+                .replace("%spawntag%", new SimpleDateFormat("s").format(new Date(HCF_Timer.getCombatTime(p))) + "s")
+                .replace("%ep_cd%", new SimpleDateFormat("s").format(new Date(HCF_Timer.getEpTime(p))) + "s")
                 .replace("%location%", HCF_Claiming.sendFactionTerretory(p));
     }
 }

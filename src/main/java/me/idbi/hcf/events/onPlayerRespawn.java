@@ -9,8 +9,8 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class onPlayerRespawn implements Listener {
     @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent e){
-        if(Main.debug)
+    public void onPlayerRespawn(PlayerRespawnEvent e) {
+        if (Main.debug)
             System.out.println("Respawning player.. Loading it ");
         playertools.LoadPlayer(e.getPlayer());
 

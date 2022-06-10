@@ -12,8 +12,8 @@ public class Archer {
     // Archertag Damage Modifier [%]
     public static final double ArcherTagModifyer = 100f;
 
-    public static boolean CheckArmor(Player p){
-        try{
+    public static boolean CheckArmor(Player p) {
+        try {
             //Get Archer armor
             ItemStack helmet = p.getInventory().getHelmet();
             ItemStack chestplate = p.getInventory().getChestplate();
@@ -26,23 +26,23 @@ public class Archer {
             Material bootsType = boots.getType();
             //Check it
             return helmetType == Material.LEATHER_HELMET && chestplateType == Material.LEATHER_CHESTPLATE && leggingsType == Material.LEATHER_LEGGINGS && bootsType == Material.LEATHER_BOOTS;
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             return false;
         }
     }
 
-    public static void setEffect(Player p){
+    public static void setEffect(Player p) {
         // Remove Effects;
         removeEffects(p);
         //Adding Effects
-        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,Integer.MAX_VALUE,2,false,false));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,Integer.MAX_VALUE,0,false,false));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,Integer.MAX_VALUE,2,false,false));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP,Integer.MAX_VALUE,0,false,false));
-        playertools.setMetadata(p,"class","Archer");
+        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, false, false));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 0, false, false));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 2, false, false));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 0, false, false));
+        playertools.setMetadata(p, "class", "Archer");
     }
 
-    public static void removeEffects(Player p){
+    public static void removeEffects(Player p) {
         p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
         p.removePotionEffect(PotionEffectType.SPEED);
         p.removePotionEffect(PotionEffectType.REGENERATION);
