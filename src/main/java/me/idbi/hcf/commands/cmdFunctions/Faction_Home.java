@@ -28,11 +28,15 @@ public class Faction_Home implements Listener {
 
     public static void setHome(Player p) {
         if (!playertools.hasPermission(p, rankManager.Permissions.SETHOME)) {
+            p.sendMessage(Messages.NO_PERMISSION.queue());
             //Todo: Message on you dont have permission
             return;
         }
         Main.Faction faction = Main.faction_cache.get(Integer.valueOf(playertools.getMetadata(p, "factionid")));
-
+        if(faction == null){
+            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+            return;
+        }
         HashMap map = new HashMap() {{
             put("X", p.getLocation().getBlockX());
             put("Y", p.getLocation().getBlockY());
@@ -45,10 +49,8 @@ public class Faction_Home implements Listener {
 
         JSONObject object = new JSONObject(map);
 
-        if (faction != null) {
-            SQL_Connection.dbExecute(con, "UPDATE factions SET home = '?' WHERE ID='?'", object.toString(), String.valueOf(faction.factionid));
-            p.sendMessage(Messages.SETHOME_MESSAGE.queue());
-        }
+        SQL_Connection.dbExecute(con, "UPDATE factions SET home = '?' WHERE ID='?'", object.toString(), String.valueOf(faction.factionid));
+        p.sendMessage(Messages.SETHOME_MESSAGE.queue());
     }
 
     public static void teleportToHome(Player p) {

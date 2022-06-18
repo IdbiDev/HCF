@@ -1,7 +1,9 @@
 package me.idbi.hcf.MessagesEnums;
 
+import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.CustomFiles.ConfigManager;
 import me.idbi.hcf.CustomFiles.MessagesFile;
+import me.idbi.hcf.tools.playertools;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -10,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 public enum Messages {
 
     PREFIX("&8[&2HCF&a+&8] &7>"),
+    PREFIX_CMD("&r[&2HCF&a+&r] &r"),
     RELOAD("&aSuccessfully configuration files reloaded!"),
 
     // Errors
@@ -43,7 +46,6 @@ public enum Messages {
     NO_FACTION_EXISTS("%prefix% &cThis faction does not exists!"),
 
     // Commands
-    // CukiMC was created by Idbi
     FACTION_CREATON("%prefix% &2&o%faction_name% &awas created by &2&o%player%&a!"),
     FACTION_DISBAND("%prefix% &2&o%faction_name% &awas disbanded by &2&o%player%&a!"),
     FACTION_LEAVE("%prefix% &eYou leaved from faction!"),
@@ -54,6 +56,8 @@ public enum Messages {
     FACTION_CLAIM_DECLINE("%prefix% &cYou successfully rejected the claim."),
     FACTION_CLAIM_ACCEPT("%prefix% &aYou successfully claimed"),
     FACTION_CLAIM_INVALID_ZONE("%prefix% &cInvalid claiming zone!"),
+    FACTION_CLAIM_OVERLAP("%prefix% &cYour claim can't overlap an existing claim!"),
+    FACTION_CLAIM_TOO_SMALL("%prefix% &cYour claim is too small! (Min size: 4x4)"),
 
     // Commands - invite
     INVITED_BY("&eYou invited by &6&o%executor% &eto &6&o%faction_name%&e!"),
@@ -88,7 +92,8 @@ public enum Messages {
     DEPOSIT_MESSAGE("%prefix% &eYou deposited &6&o$%amount% &eto faction bank!"),
     EXECUTOR_INVITE_MESSAGE("&eYou invited &6&o%player% &eto your faction!"),
     INVITED_INVITE_MESSAGE("&eYou invited to &6&o%faction_name% &efaction by &6&o%executor%&e!"),
-
+    LEADER_LEAVING_FACTION("&cYou can't leave this faction, bc you are the leader! Use &e&l/f disband &r&cinstead!"),
+    NOT_LEADER("&cYou are not the faction leader!"),
     JOIN_FACTION_BC("&8[&a+&8] &7&l» &6&o%player%"),
     LEAVE_FACTION_BC("&8[&c-&8] &7&l» &6&o%player%"),
 
@@ -98,6 +103,7 @@ public enum Messages {
     SUCCESSFULLY_TELEPORT("&eYou are successfully teleported to your faction's home!"),
     TELEPORT_CANCEL("&cYou moved, teleportation cancelled!"),
     DOESNT_HOME("&cYour faction doesn't have home!"),
+
 
     // Faction chat
     FACTION_CHAT("&7[&e%faction_name%&7] &6&o%player%&7: &e%message%"),
@@ -137,11 +143,14 @@ public enum Messages {
     FREEZE_EXECUTOR_ON("%prefix% &aYou froze &2&o%player%"),
     FREEZE_EXECUTOR_OFF("%prefix% &cYou unfreeze &4&o%player%"),
 
+    SPAWN_CLAIM_SUCCESS("%prefix% &bYou successfully claimed the spawn!"),
+
     FACTION_ADMIN_WITHDRAW_BC("%prefix% &c&l%executor% &cdeposited &c&l%amount% &cto faction's bank!"),
     FACTION_ADMIN_DEPOSIT_BC("%prefix% &c&l%executor% &cwithdrew &c&l%amount% &cfrom faction's bank!"),
-
+    ADMIN_SET_PLAYERFACTION("%prefix%&1 You successfully put &6&o%player% in the %faction_name% faction"),
     SET_FACTION_NAME("%prefix% &eFaction's name changed by &6&o%executor% &eto &6&o%faction_name%&e!"),
 
+    ADMIN_SET_FACTION_NAME("%prefix% &1You have successfully changed the name of the faction to &e%faction_name%"),
     GIVE_MONEY("%prefix% &eYou got &6&o%amount% &efrom &6&o%executor%&e!"),
     TAKE_MONEY("%prefix% &6&o%executor%&e took &6&o%amount% &efrom you!"),
 
@@ -150,7 +159,33 @@ public enum Messages {
 
     CANT_DAMAGE_ADMIN("%prefix% &cYou can't attack while you are in duty mode"),
     COMBAT_MESSAGE("%prefix% &7You are now in combat &a[30 sec]"),
-    TEAMMATE_DAMAGE("%prefix% &cYou can't damage your teammate!");
+    TEAMMATE_DAMAGE("%prefix% &cYou can't damage your teammate!"),
+
+    DEATHBAN_KICK("%prefix%\n&cYou are deathbanned for %sec%"),
+
+    NO_DEATHBAN_KICK("%prefix%\n&cThe server disabled the deathban!"),
+
+    KILL_MESSAGE_BROADCAST("&4&l%killer%&f[%killer_kills%] slained &4&l%victim%&f[%victim_kills%] using [&b&o%killer_weapon%]"),
+
+    KILL_MESSAGE_BROADCAST_WITHOUT_VICTIM("&4&l%victim%&f[%victim_kills%] died"),
+
+    MAX_MEMBERS_REACHED("&4&lYou can't invite more people to the faction because it's full!"),
+
+    ERROR_WHILE_EXECUTING("%prefix% &4&lAn error occurred while running the command! Please check the LOG file, and report it!"),
+    KILL_MESSAGE_FACTION("&4&l%killer%&f killed &4&l%victim%"),
+
+    ENCHANT_CONFIRM_BUTTON("&aConfirm"),
+    ENCHANT_CANCEL_BUTTON("&cCancel"),
+    ENCHANT_NOT_ENOUGH_XP("%prefix% &cYou don't have enough exp!"),
+    CONFIRM_BUTTON_LORE("&6Costs: &e&n%xp_level% level"),
+
+    BARD_DONT_HAVE_ENOUGH_ENERGY("%prefix% &cYou don't have enough energy to activate this. &4&l[Required %amount%]"),
+
+    BARD_USED_POWERUP("%prefix% "),
+
+    CLAIM_POS_START("%prefix% &bClaim start pos: &a&n%loc%"),
+    CLAIM_POS_END("%prefix% &bClaim end pos: &a&n%loc%");
+
 
     private String msg, defaultMsg;
     private String message;
@@ -200,9 +235,42 @@ public enum Messages {
         this.msg = message;
         return this;
     }
+    public Messages repBardEffects(Player bard, String effect,String members) {
+        message = msg.replace("%bard%", bard.getName()).replace("%effect%", effect).replace("%count%",members);
+        this.msg = message;
+        return this;
+    }
+    public Messages repLoc(int x, int z) {
+        message = msg.replace("%loc%", "X:"+x + " Y:"+z);
+        this.msg = message;
+        return this;
+    }
+    public Messages repDeathWithoutKiller(Player victim) {
+        String victim_kills = playertools.getMetadata(victim,"kills");
+        message = msg.replace("%victim%", victim.getName())
+                .replace("%victim_kills%",victim_kills);
+        this.msg = message;
+        return this;
+    }
+    public Messages repDeathWithKills(Player victim, Player killer) {
+        String killer_kills = playertools.getMetadata(killer,"kills");
+        String victim_kills = playertools.getMetadata(victim,"kills");
+        message = msg.replace("%victim%", victim.getName())
+                .replace("%killer%", killer.getName())
+                .replace("%killer_kills%",killer_kills)
+                .replace("%victim_kills%",victim_kills)
+                .replace("%killer_weapon%",killer.getItemInHand().getItemMeta().getDisplayName());
+        this.msg = message;
+        return this;
+    }
 
     public Messages repPlayer(Player p) {
         message = msg.replace("%player%", p.getName());
+        this.msg = message;
+        return this;
+    }
+    public Messages repDeathTime() {
+        message = msg.replace("%player%",String.valueOf(Integer.parseInt(ConfigLibrary.Death_time_seconds.getValue()) / 60));
         this.msg = message;
         return this;
     }

@@ -1,6 +1,7 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
+import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import org.bukkit.Bukkit;
@@ -204,14 +205,9 @@ public class playertools {
         return false;*/
     }
 
-
     @Deprecated
-    public static int getDTR(int faction) {
-        HashMap<String, Object> factionmap = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID = '?'", String.valueOf(faction));
-        if (!factionmap.isEmpty()) {
-            return (int) factionmap.get("DTR");
-        }
-        return 0;
+    public static double getDTR(int faction) {
+        return Main.faction_cache.get(faction).DTR;
     }
 
 
@@ -226,6 +222,8 @@ public class playertools {
                 Main.Faction faction = new Main.Faction(rs.getInt("ID"), rs.getString("name"), rs.getString("leader"), rs.getInt("money"));
                 Main.faction_cache.put(rs.getInt("ID"), faction);
                 Main.nameToFaction.put(rs.getString("name"), faction);
+                faction.memberCount = playertools.countMembers(faction);
+                faction.DTR = Double.parseDouble(playertools.CalculateDTR(faction));
                 if (rs.getString("home") == null)
                     continue;
                 Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(rs.getString("home")));
@@ -325,6 +323,33 @@ public class playertools {
             e.printStackTrace();
         }
 
+    }/*
+        Member              MAX DTR
+        1                       1.5
+        2                       2.0
+        3                       3.5
+        4                       4.0
+        5                       5.5
+
+    */
+
+    public static String CalculateDTR(Main.Faction faction){
+        return String.valueOf(HCF_Rules.DTR_MEMBERS.get(faction.memberCount));
+    }
+    public static int countMembers(Main.Faction faction) {
+        int count = 0;
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction=?");
+            ps.setInt(1,faction.factionid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count++;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return count;
     }
 
 

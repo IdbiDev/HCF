@@ -1,6 +1,7 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.MessagesEnums.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -10,25 +11,26 @@ import java.util.HashMap;
 public class SQL_Connection {
 
     // Adatbázis kapcsolat... host port databae user password >> Nem nagy cucc
-    public static Connection dbConnect(String host, String port, String database, String username, String password) {
+    public synchronized static Connection dbConnect(String host, String port, String database, String username, String password) {
         Connection con = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection(
-                    "jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
-            if (con.isValid(0)) {
-                if (Main.debug)
-                    System.out.println("Java SQL >> Connected!");
-            }
-        } catch (Exception e) {
-            Bukkit.getLogger().severe(ChatColor.RED + "Invaild Database connection... shutting down!");
-            Bukkit.getServer().shutdown();
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection(
+                "jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+        if (con.isValid(0)) {
+            if (Main.debug)
+                Main.sendCmdMessage(ChatColor.GREEN+"Sucessfully connected to the database!");
         }
-        return con;
+    } catch (Exception e) {
+            Main.sendCmdMessage(ChatColor.DARK_RED + "Invaild Database connection... shutting down!");
+            Bukkit.getServer().shutdown();
     }
+        return con;
+}
 
     // Sima query futtatás... args-t használ
-    public static int dbExecute(Connection con, String query, String... args) {
+
+    public synchronized static int dbExecute(Connection con, String query, String... args) {
         // '?'-ek replacelése args-al
         String private_string_query = "";
         int c_arg = 0;
@@ -56,7 +58,7 @@ public class SQL_Connection {
         return 0;
     }
 
-    public static HashMap<String, Object> dbPoll(Connection con, String query, String... args) {
+    public synchronized static HashMap<String, Object> dbPoll(Connection con, String query, String... args) {
         // '?'-ek replacelése args-al
         String private_string_query = "";
         int c_arg = 0;

@@ -1,6 +1,7 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.MessagesEnums.Messages;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -12,7 +13,7 @@ public class Banhandler {
 
     public static void banPlayerInHCF(Player player) {
         SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", player.getUniqueId().toString(), String.valueOf(System.currentTimeMillis() + (Main.death_time * 60000)));
-        player.kickPlayer("§4HCF - Deathban\nMeghaltál, ezért §f" + Main.death_time + "§4 percre\n ki vagy tiltva a szerverről!");
+        player.kickPlayer(Messages.DEATHBAN_KICK.queue());
     }
 
     public static boolean isPlayerBannedFromHCF(UUID uuid) {

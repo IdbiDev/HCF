@@ -24,7 +24,7 @@ public class Faction_Disband {
         Main.Faction selectedFaction = Main.nameToFaction.get(playertools.getMetadata(p, "faction"));
         if (!Objects.equals(selectedFaction.leader, p.getUniqueId().toString())) {
             //Todo: Nope factionLeader
-            System.out.println("Nem vagy faction lrader");
+            p.sendMessage(Messages.NOT_LEADER.queue());
             return;
         }
 //        displayTeams.removePlayerFromTeam(p);
@@ -43,8 +43,6 @@ public class Faction_Disband {
             playertools.setMetadata(player, "rank", "none");
             Scoreboards.refresh(player);
         }
-        //Todo: faction feloszlatva nem admin áltatl
-
         LogLibrary.sendFactionDisband(p, selectedFaction.factioname);
         Bukkit.broadcastMessage(Messages.FACTION_DISBAND
                 .repPlayer(p)

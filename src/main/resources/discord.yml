@@ -1,8 +1,8 @@
 # Set to false, if you want to do not start the bot
-bot: true
+bot: false
 
 # Discord
-webhook_url: url
+webhook_url: https://canary.discord.com/api/webhooks/981220488963584071/N53SYqSGik4bR82xXpVjYGugbDPM3brogW6xBlcqMAELcg0LCH2XI-wBfFGXryMsf4F6
 
 # Log toggles
 commands: true

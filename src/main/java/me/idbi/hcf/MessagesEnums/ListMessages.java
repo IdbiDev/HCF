@@ -32,6 +32,13 @@ public enum ListMessages {
             "&eTo accept the claim, press &6&oSHIFT + RIGHT &eclick!", // right click
             "&eTo discard the claim, press &6&oSHIFT + LEFT &eclick!" // left click
     )),
+    CLAIM_INFO_ADMIN(Arrays.asList(
+            "%prefix% &6Spawn claiming information:",
+            "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
+            "&7&l» &ePress &6&o[LEFT] &eclick on the ground, to place the other position!", // pos2
+            "&eTo accept the claim, use &b&n/a spawnclaim claim", // right click
+            "&eTo discard the claim, use &c&n/a spawnclaim end" // left click
+    )),
 
     COMMAND_LIST(Arrays.asList(
             "§9/f create §7- Create your faction",

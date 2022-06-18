@@ -5,6 +5,7 @@ import me.idbi.hcf.CustomFiles.ConfigManager;
 import me.idbi.hcf.CustomFiles.DiscordFile;
 import me.idbi.hcf.CustomFiles.MessagesFile;
 import me.idbi.hcf.Discord.SetupBot;
+import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.tools.*;
@@ -20,6 +21,9 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,13 +33,16 @@ import java.util.Objects;
 public final class Main extends JavaPlugin {
     // Beállítások configba
 
-    public static final int world_border_radius = 1000;
-    public static String servername;
+    public static int world_border_radius;
     public static boolean deathban;
     public static int death_time;
     public static double claim_price_multiplier;
+
     public static boolean debug;
     public static int faction_startingmoney;
+
+    public static int max_members_pro_faction;
+
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
     public static HashMap<Integer, String> factionToname = new HashMap<>();
@@ -102,6 +109,8 @@ public final class Main extends JavaPlugin {
         death_time = Integer.parseInt(ConfigLibrary.Death_time_seconds.getValue());
         debug = Boolean.parseBoolean(ConfigLibrary.Debug.getValue());
         faction_startingmoney = Integer.parseInt(ConfigLibrary.Faction_default_balance.getValue());
+        max_members_pro_faction = Integer.parseInt(ConfigLibrary.MAX_FACTION_MEMBERS.getValue());
+        world_border_radius = Integer.parseInt(ConfigLibrary.WORLD_BORDER_DISTANCE.getValue());
         con = SQL_Connection.dbConnect(
                 ConfigLibrary.DATABASE_HOST.getValue(),
                 ConfigLibrary.DATABASE_PORT.getValue(),
@@ -172,7 +181,7 @@ public final class Main extends JavaPlugin {
     }
 
     @Override
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDisable() {
         // Adatbázis kapcsolat leállítása
         //SaveAll();
@@ -211,14 +220,18 @@ public final class Main extends JavaPlugin {
         }
     }
 
+
     // Készülőben Illetve talán mégse kéne XD
     public static class Faction {
+
         public Integer factionid;
+
         public String factioname;
+
         public String leader;
         public Integer balance;
         public ArrayList<HCF_Claiming.Faction_Claim> claims = new ArrayList<>();
-        public int DTR = 3;
+        public double DTR = 0;
         public inviteManager.factionInvite invites;
 
         public Location homeLocation;
@@ -226,15 +239,21 @@ public final class Main extends JavaPlugin {
         public ArrayList<rankManager.Faction_Rank> ranks = new ArrayList<>();
         public HashMap<Player, rankManager.Faction_Rank> player_ranks = new HashMap<>();
 
+        public int memberCount;
+
         public Faction(Integer id, String name, String leader, Integer balance) {
             this.factionid = id;
             this.factioname = name;
             this.leader = leader;
             this.invites = new inviteManager.factionInvite(factionid);
             this.balance = balance;
-        }
 
+        }
         public void invitePlayer(Player p) {
+            if(memberCount+1>max_members_pro_faction){
+                p.sendMessage(Messages.MAX_MEMBERS_REACHED.queue());
+                return;
+            }
             invites.invitePlayerToFaction(p);
         }
 
@@ -305,5 +324,47 @@ public final class Main extends JavaPlugin {
                 member.sendMessage(message);
             }
         }
+
+        public int getKills(){
+            int total = 0;
+            try {
+                PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction = ?");
+                ps.setInt(1,factionid);
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    total += rs.getInt("kills");
+
+                }
+            }catch (SQLException ignored)
+            {
+
+            }
+            return total;
+        }
+        public int getDeaths(){
+            int total = 0;
+            try {
+                PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction = ?");
+                ps.setInt(1,factionid);
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    total += rs.getInt("deaths");
+
+                }
+            }catch (SQLException ignored)
+            {
+
+            }
+            return total;
+        }
+
+    }
+    public static void sendCmdMessage(String msg){
+        Bukkit.getServer().getConsoleSender().sendMessage(
+                Messages.PREFIX_CMD.queue()+
+                msg
+        );
     }
 }

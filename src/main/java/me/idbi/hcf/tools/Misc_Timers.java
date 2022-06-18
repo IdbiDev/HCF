@@ -11,13 +11,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.sql.Connection;
 import java.util.Map;
 
 import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
 
 public class Misc_Timers {
-    private static final Connection con = Main.getConnection("timers.Misc");
 
     public static void CheckArmors() {
         new BukkitRunnable() {
@@ -38,8 +36,10 @@ public class Misc_Timers {
             public void run() {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                     if (!playertools.HasMetaData(player, "class")) continue;
-                    if (playertools.getMetadata(player, "class").equalsIgnoreCase("bard"))
+                    if (playertools.getMetadata(player, "class").equalsIgnoreCase("bard")){
                         Bard.ApplyBardEffectOnActionBar(player);
+
+                    }
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 90);
@@ -57,7 +57,7 @@ public class Misc_Timers {
                         Main.DTR_REGEN.remove(key); // lol
                         if (Main.debug)
                             System.out.println("DTR Regen >> Removed task cuz reached max DTR Faction: " + Main.factionToname.get(key));
-                        SQL_Connection.dbExecute(con, "UPDATE factions SET DTR=5 WHERE ID='?'", String.valueOf(key));
+                        Main.faction_cache.get(key).DTR = 3;
                     }
                 }
             }
@@ -71,12 +71,13 @@ public class Misc_Timers {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                     if (!playertools.HasMetaData(player, "class")) continue;
                     if (!playertools.getMetadata(player, "class").equalsIgnoreCase("bard")) continue;
-                    if (!(Double.parseDouble(playertools.getMetadata(player, "bardenergy")) >= 100f)) {
-                        playertools.setMetadata(player, "bardenergy", Double.parseDouble(playertools.getMetadata(player, "bardenergy")) + 0.1f);
+                    if (!(Double.parseDouble(playertools.getMetadata(player, "bardenergy")) >= 100D)) {
+                        Scoreboards.refresh(player);
+                        playertools.setMetadata(player, "bardenergy", Double.parseDouble(playertools.getMetadata(player, "bardenergy")) + 0.1D);
                     }
                 }
             }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
     }
 
 

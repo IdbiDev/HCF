@@ -1,6 +1,7 @@
 package me.idbi.hcf.classes;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,7 +15,6 @@ import static me.idbi.hcf.tools.playertools.getFactionMembersInDistance;
 
 
 public class Bard {
-    //public static HashMap<Material, PotionEffectType> barditems = new HashMap<Material, PotionEffectType>();
     public static ArrayList<Bard_Item> bard_items = new ArrayList<>();
     private static final Main m = Main.getPlugin(Main.class);
 
@@ -90,7 +90,7 @@ public class Bard {
                 bardplayer.getInventory().setItemInHand(main);
                 double currentEnergy = Double.parseDouble(playertools.getMetadata(bardplayer, "bardenergy"));
                 if ((currentEnergy - item.cost >= 0)) {
-                    //Todo: You dont have enough energy to activate this. [Required item.cost]
+                    bardplayer.sendMessage(Messages.BARD_DONT_HAVE_ENOUGH_ENERGY.setAmount(String.valueOf(item.cost)).queue());
                     return;
                 }
                 playertools.setMetadata(bardplayer, "bardenergy", currentEnergy - item.cost);

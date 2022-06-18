@@ -22,13 +22,14 @@ public enum ConfigLibrary {
     Combat_time("30"),
     Archer_tag("30"),
     Faction_default_balance("1000"),
+    WORLD_BORDER_DISTANCE("1000"),
     Scoreboard_title("&6HCF+ &7- &eMap &6#1"),
-
-    DATABASE_HOST("host"),
-    DATABASE_PORT("25565"),
-    DATABASE_DATABSE("dbname"),
+    DATABASE_HOST("localhost"),
+    DATABASE_PORT("3306"),
+    DATABASE_DATABSE("meincraft"),
     DATABASE_USER("root"),
-    DATABASE_PASSWORD("password");
+    DATABASE_PASSWORD("password"),
+    MAX_FACTION_MEMBERS("7");
 
     private static final Main m = Main.getPlugin(Main.class);
     private String value;

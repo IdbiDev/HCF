@@ -18,7 +18,7 @@ public class Faction_Claim {
     public static boolean PrepareClaiming(Player p) {
         if (!playertools.getMetadata(p, "factionid").equals("0")) {
             if (!playertools.hasPermission(p, rankManager.Permissions.ALL)) {
-                //Todo: Message permisiion fos
+                p.sendMessage(Messages.NO_PERMISSION.queue());
                 return false;
             }
             if (p.getInventory().firstEmpty() != -1) {

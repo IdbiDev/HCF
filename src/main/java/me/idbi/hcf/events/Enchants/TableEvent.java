@@ -1,4 +1,4 @@
-package me.idbi.hcf.Enchants;
+package me.idbi.hcf.events.Enchants;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

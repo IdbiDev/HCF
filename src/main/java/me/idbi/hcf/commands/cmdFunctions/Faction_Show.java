@@ -44,8 +44,8 @@ public class Faction_Show {
 
         for (String line : ListMessages.FACTION_SHOW.setupShow(
                         faction.factioname, factionStatus, leaderName, String.valueOf(faction.balance),
-                        "2",
-                        "3",
+                        String.valueOf(faction.getKills()),
+                        String.valueOf(faction.getDeaths()),
                         homeLoc.getBlockX() + ", " + homeLoc.getBlockZ(),
                         String.valueOf(faction.DTR)
                 )

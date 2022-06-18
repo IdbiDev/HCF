@@ -18,7 +18,7 @@ public class onPlayerInteract implements Listener {
         Player p = e.getPlayer();
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (HCF_Claiming.checkEnemyClaimAction(e.getClickedBlock().getX(), e.getClickedBlock().getZ(), Integer.parseInt(playertools.getMetadata(p, "factionid")))) {
-                if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType()) && playertools.getDTR(Integer.parseInt(playertools.getMetadata(p, "factionid"))) > 0) {
+                if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType())) {
                     e.setCancelled(true);
                     p.sendMessage(Messages.NO_PERMISSION.queue());
                 }
@@ -41,7 +41,7 @@ public class onPlayerInteract implements Listener {
             if (e.getItem().getItemMeta().hasLore()) {
                 HCF_Claiming.setEndPosition(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
                 e.setCancelled(true);
-                HCF_Claiming.CreateNewFakeTower(e.getPlayer(), e.getClickedBlock().getLocation());
+                p.sendMessage(Messages.CLAIM_POS_END.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
                 if (HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
 
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_PRICE
@@ -58,8 +58,8 @@ public class onPlayerInteract implements Listener {
             if (e.getItem().getItemMeta().hasLore()) {
 
                 e.setCancelled(true);
-                HCF_Claiming.CreateNewFakeTower(e.getPlayer(), e.getClickedBlock().getLocation());
                 HCF_Claiming.setStartPosition(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+                p.sendMessage(Messages.CLAIM_POS_START.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
                 if (HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
 
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_PRICE
@@ -77,18 +77,16 @@ public class onPlayerInteract implements Listener {
             if (e.getItem().getItemMeta().hasLore()) {
                 HCF_Claiming.removeClaiming(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
                 e.getPlayer().getInventory().remove(e.getItem());
-                HCF_Claiming.DeletFakeTowers(e.getPlayer());
                 e.getPlayer().sendMessage(Messages.FACTION_CLAIM_DECLINE.queue());
             }
         }
         // Elfogadás
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking()) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
-                if (HCF_Claiming.FinishClaiming(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")))) {
+                if (HCF_Claiming.FinishClaiming(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")),e.getPlayer())) {
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_ACCEPT.queue());
                     e.getPlayer().getInventory().remove(e.getItem());
-                    HCF_Claiming.DeletFakeTowers(e.getPlayer());
                 } else {
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_INVALID_ZONE.queue());
                 }
@@ -100,16 +98,17 @@ public class onPlayerInteract implements Listener {
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
-                HCF_Claiming.setEndPosition(0, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+                p.sendMessage(Messages.CLAIM_POS_END.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
+                HCF_Claiming.setEndPosition(-1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
                 e.setCancelled(true);
             }
         }
         if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
-
+                p.sendMessage(Messages.CLAIM_POS_START.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
                 e.setCancelled(true);
-                HCF_Claiming.setStartPosition(0, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+                HCF_Claiming.setStartPosition(-1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             }
         }
     }

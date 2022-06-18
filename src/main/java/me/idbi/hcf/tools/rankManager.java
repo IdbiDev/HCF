@@ -13,7 +13,6 @@ public class rankManager {
     public static Faction_Rank CreateNewRank(Main.Faction faction, String name) {
         for (Faction_Rank rank : faction.ranks) {
             if (rank.name.equals(name)) {
-                System.out.println("Anyádért vagy te buzi te rohadák kettes metrós geci villamos meleg");
                 return null;
             }
         }
@@ -25,18 +24,15 @@ public class rankManager {
     }
 
     public static void setDefaultRank(Main.Faction faction, String name) {
-        System.out.println("EGYEMTALÁN MEG VAN HÍVVA?");
         Faction_Rank rank = null;
         for (Faction_Rank r : faction.ranks)
             if (r.name.equals(name)) {
                 rank = r;
-                System.out.println("Rank found for gecim ");
                 break;
             }
         if (rank != null) {
             if (true) {
                 rank.isDefault = true;
-                System.out.println("RePLACE GECI ");
                 SQL_Connection.dbExecute(con, "UPDATE ranks SET isDefault='1' WHERE ID='?'", String.valueOf(rank.id));
             }
         }
@@ -103,8 +99,6 @@ public class rankManager {
                     clas_permissions.put(rank, isValid);
                 }
             } catch (Exception ignored) {
-                if (Main.debug)
-                    System.out.println("A kurva anyádért nulla ez");
                 ignored.printStackTrace();
             }
 
@@ -124,7 +118,6 @@ public class rankManager {
 
         public boolean hasPermission(Permissions perm) {
             if (clas_permissions.containsKey(Permissions.ALL.value)) {
-                System.out.println("Skipping cuz All permission enabled");
                 return true;
             }
             return clas_permissions.containsKey(perm.value);

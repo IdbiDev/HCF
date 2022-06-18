@@ -1,12 +1,14 @@
 package me.idbi.hcf.adminsystem;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
@@ -148,6 +150,7 @@ public class adminMain {
         //Todo: Broadcast the change
         Main.Faction f = Main.nameToFaction.get(faction);
         f.BroadcastFaction(Messages.SET_FACTION_LEADER_BY_ADMIN.repPlayer(Bukkit.getPlayer(Leader)).repExecutor(admin).queue());
+        admin.sendMessage(Messages.ADMIN_SET_FACTION_NAME.setFaction(faction).queue());
     }
 
     public static void setPlayerFaction(Player admin, String target, String faction) {
@@ -172,6 +175,7 @@ public class adminMain {
         Main.Faction f = Main.nameToFaction.get(faction);
         f.BroadcastFaction(Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
         Scoreboards.refresh(p);
+        admin.sendMessage(Messages.ADMIN_SET_PLAYERFACTION.setFaction(faction).repPlayer(p).queue());
     }
 
     public static void kickPlayerFromFaction(Player admin, String target, String faction) {
@@ -188,6 +192,7 @@ public class adminMain {
         playertools.setMetadata(p, "faction", "Nincs");
         SQL_Connection.dbExecute(con, "UPDATE members SET faction=0,factionname='Nincs' WHERE uuid='?'", p.getUniqueId().toString());
         Scoreboards.refresh(p);
+
 
     }
 
@@ -212,19 +217,26 @@ public class adminMain {
 
     public static void SpawnPlace(Player admin, String state) {
         if (state.equalsIgnoreCase("start")) {
-            //Todo: Started claiming the spawn, use your left and right button on the
+            for (String lines : ListMessages.CLAIM_INFO_ADMIN.getMessageList()) {
+
+                admin.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
+            }
+
             playertools.setMetadata(admin, "spawnclaiming", true);
             HCF_Claiming.SpawnPrepare(admin);
         } else if (state.equalsIgnoreCase("claim")) {
-            if (HCF_Claiming.FinishClaiming(0)) {
+            if (HCF_Claiming.FinishClaiming(-1,admin)) {
                 //Todo: Kurvva sikerült
                 playertools.setMetadata(admin, "spawnclaiming", false);
+                admin.sendMessage(Messages.SPAWN_CLAIM_SUCCESS.queue());
             } else {
                 //Todo: nem sikerült, balfasz vagy és nem raktad le
                 playertools.setMetadata(admin, "spawnclaiming", false);
+                admin.sendMessage(Messages.FACTION_CLAIM_INVALID_ZONE.queue());
             }
         } else if (state.equalsIgnoreCase("stop")) {
             playertools.setMetadata(admin, "spawnclaiming", false);
+            admin.sendMessage(Messages.FACTION_CLAIM_DECLINE.queue());
         }
     }
 
