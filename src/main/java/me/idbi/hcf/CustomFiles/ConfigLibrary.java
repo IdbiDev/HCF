@@ -21,6 +21,8 @@ public enum ConfigLibrary {
     enderpearl_delay("30"),
     Combat_time("30"),
     Archer_tag("30"),
+    Spawn_location("0 100 0 0 0"),
+    Enchant_xp_cost("20"),
     Faction_default_balance("1000"),
     WORLD_BORDER_DISTANCE("1000"),
     Scoreboard_title("&6HCF+ &7- &eMap &6#1"),

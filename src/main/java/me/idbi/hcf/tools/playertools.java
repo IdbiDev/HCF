@@ -43,7 +43,7 @@ public class playertools {
             String c = HCF_Claiming.sendFactionTerretory(player);
             setMetadata(player, "current_loc", c);
             setMetadata(player, "spawnclaiming", false);
-            setMetadata(player, "bardenergy", 0f);
+            setMetadata(player, "bardenergy", 0D);
             // rankManager.addRankToPlayer(player);
             SQL_Connection.dbExecute(con, "UPDATE members SET online='?' WHERE uuid='?'", "1", player.getUniqueId().toString());
             if (!playerMap.get("faction").equals(0)) {
@@ -352,5 +352,19 @@ public class playertools {
         return count;
     }
 
+    public static Location getSpawn() {
+        String[] spawnLocs = ConfigLibrary.Spawn_location.getValue().split(" ");
+        Integer[] ints = getInts(spawnLocs);
+        Location loc = new Location(Bukkit.getWorld(ConfigLibrary.World_name.getValue()), ints[0], ints[1], ints[2], ints[3], ints[4]);
+        return loc;
+    }
 
+    public static Integer[] getInts(String[] string) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for(String str : string) {
+            list.add(Integer.parseInt(str));
+        }
+
+        return list.toArray(new Integer[list.size()]);
+    }
 }

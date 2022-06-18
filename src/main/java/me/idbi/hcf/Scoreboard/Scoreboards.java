@@ -14,6 +14,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,9 +98,9 @@ public class Scoreboards {
             } else if (line.contains("%ep_cd%") && HCF_Timer.getEpTime(p) <= 0.0) {
                 continue;
             }
-//            else if(line.contains("%bard_energy%") && HCF_Timer.getEpTime(p) <= 0.0) {
-//                continue;
-//            }
+            else if(line.contains("%bard_energy%") && Double.parseDouble(playertools.getMetadata(p, "bardenergy")) <= 0.0) {
+                continue;
+            }
 
             if (line.equals("empty"))
                 line = "";
@@ -155,13 +156,20 @@ public class Scoreboards {
         return returnList;
     }
 
+    private static final DecimalFormat dfSharp = new DecimalFormat("0.0");
+
     private static String replaceVariables(String inputString, Player p) {
         return inputString
                 .replace("%money%", playertools.getMetadata(p, "money"))
                 .replace("%faction%", playertools.getMetadata(p, "faction"))
                 .replace("%class%", playertools.getMetadata(p, "class"))
-                //.replace("%bard_energy%", new SimpleDateFormat("s").format(new Date(playertools.getMetadata(p, "bardenergy")) + "s"))
-                .replace("%bard_energy%", new SimpleDateFormat("s").format(new Date()))
+                .replace("%bard_energy%", dfSharp.format(
+                        Double.parseDouble(
+                                playertools.getMetadata(p, "bardenergy")))
+                        .replace(",", "."))
+//                        new SimpleDateFormat("s").format(
+//                                new Date((long) (Double.parseDouble(playertools.getMetadata(p, "bardenergy")) * 1000L)))))
+                //.replace("%bard_energy%", new SimpleDateFormat("s").format(new Date()))
                 .replace("%spawntag%", new SimpleDateFormat("s").format(new Date(HCF_Timer.getCombatTime(p))) + "s")
                 .replace("%ep_cd%", new SimpleDateFormat("s").format(new Date(HCF_Timer.getEpTime(p))) + "s")
                 .replace("%location%", HCF_Claiming.sendFactionTerretory(p));

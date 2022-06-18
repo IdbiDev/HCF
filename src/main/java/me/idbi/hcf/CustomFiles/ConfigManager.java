@@ -18,6 +18,7 @@ public class ConfigManager {
 
         for (Messages msg : Messages.values()) {
             msg.load();
+            //System.out.println(msg.getMessage().queue());
         }
 
         for (ListMessages msg : ListMessages.values()) {

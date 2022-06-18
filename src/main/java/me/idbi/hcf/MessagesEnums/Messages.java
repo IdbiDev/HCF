@@ -189,6 +189,7 @@ public enum Messages {
 
     private String msg, defaultMsg;
     private String message;
+    private String prefix;
 
     Messages(String msg) {
         this.msg = msg;
@@ -199,7 +200,7 @@ public enum Messages {
     public Messages getMessage() {
         message = ChatColor.translateAlternateColorCodes('&', msg
                 .replace("%newline%", "\n")
-                .replace("%prefix%", Messages.PREFIX.msg));
+                .replace("%prefix%",  ChatColor.translateAlternateColorCodes('&', Messages.PREFIX.msg)));
         return this;
     }
 
@@ -209,25 +210,33 @@ public enum Messages {
         return this;
     }
 
+    private String getPrefix() {
+        //return ChatColor.translateAlternateColorCodes('&', Messages.PREFIX.);
+        return "";
+    }
+
     public Messages getDefaultMessage() {
         defaultMsg = ChatColor.translateAlternateColorCodes('&', defaultMsg
                 .replace("%newline%", "\n")
-                .replace("%prefix%", Messages.PREFIX.msg));
+                .replace("%prefix%",  ChatColor.translateAlternateColorCodes('&', prefix)));
         return this;
     }
 
     public String queue() {
-        if (message.equalsIgnoreCase(defaultMsg)) {
-            msg = defaultMsg;
-            message = defaultMsg;
-            return ChatColor.translateAlternateColorCodes('&', msg
-                    .replace("%newline%", "\n")
-                    .replace("%prefix%", Messages.PREFIX.msg));
-        }
-        msg = defaultMsg;
+//        if (message.equalsIgnoreCase(defaultMsg)) {
+//            System.out.println(Messages.PREFIX.message + " " + Messages.PREFIX.msg);
+//            msg = defaultMsg;
+//            message = defaultMsg;
+//            return ChatColor.translateAlternateColorCodes('&', msg
+//                    .replace("%newline%", "\n")
+//                    .replace("%prefix%", ChatColor.translateAlternateColorCodes('&', Messages.PREFIX)));
+//        }
+        message = msg.replace("%prefix%", ChatColor.translateAlternateColorCodes('&', this.prefix));
+        load();
         return ChatColor.translateAlternateColorCodes('&', message
                 .replace("%newline%", "\n")
-                .replace("%prefix%", Messages.PREFIX.msg));
+                //.replace("%prefix%",  ChatColor.translateAlternateColorCodes('&', Messages.PREFIX.msg)));
+        );
     }
 
     public Messages repDeath(Player victim, Player killer) {
@@ -335,6 +344,8 @@ public enum Messages {
         }
 
         msg = msgs.getString(this.toString());
+
+        this.prefix = msgs.getString("PREFIX");
     }
 
     public void save() {

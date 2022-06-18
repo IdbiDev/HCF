@@ -79,7 +79,7 @@ public enum ListMessages {
         List<String> returnString = new ArrayList<>();
 
         for (String str : list) {
-            returnString.add(ChatColor.translateAlternateColorCodes('&', str));
+            returnString.add(ChatColor.translateAlternateColorCodes('&', str.replace("%prefix%", Messages.PREFIX.queue())));
         }
 
         return returnString;
