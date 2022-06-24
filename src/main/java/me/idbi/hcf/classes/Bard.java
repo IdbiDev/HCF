@@ -118,6 +118,12 @@ public class Bard {
         }
     }
 
+    private static String getPotionName(String name) {
+        name = name.replace("_", " ");
+        return name.substring(0, 1).toUpperCase()
+                + name.substring(1).toLowerCase();
+    }
+
     private static Bard_Item findBardItem(ItemStack stack) {
         for (Bard_Item item : bard_items) {
             if (item.mat.equals(stack.getType())) {

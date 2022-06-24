@@ -97,6 +97,7 @@ public enum Messages {
     NOT_LEADER("&cYou are not the faction leader!"),
     JOIN_FACTION_BC("&8[&a+&8] &7&l» &6&o%player%"),
     LEAVE_FACTION_BC("&8[&c-&8] &7&l» &6&o%player%"),
+    FACTION_PLAYER_POSITION("&7-> &6&o%player%'s &eposition: &6&o%location_x%&e, &6&o%location_y%&e, &6&o%location_z%"),
 
     // Faction home
     SETHOME_MESSAGE("&aSuccessfully set home of your faction to your location!"),
@@ -107,7 +108,7 @@ public enum Messages {
 
 
     // Faction chat
-    FACTION_CHAT("&7[&e%faction_name%&7] &6&o%player%&7: &e%message%"),
+    FACTION_CHAT("&7[&e%faction_name%&7] [&e%rank%&7] &6&o%player%&7: &e%message%"),
     FACTION_CHAT_TOGGLE_ON("%prefix% &aYou are now in &2&ofaction chat&a!"),
     FACTION_CHAT_TOGGLE_OFF("%prefix% &cYou are now in &c&oALL chat&c!"),
 
@@ -294,6 +295,15 @@ public enum Messages {
 
     public Messages setZone(String zoneName) {
         message = msg.replace("%zone_name%", zoneName);
+        this.msg = message;
+        return this;
+    }
+
+    public Messages repCoords(int x, int y, int z) {
+        message = msg.replace(msg, msg
+                .replace("%location_x%", x + "")
+                .replace("%location_y%", y + "")
+                .replace("%location_z%", z + ""));
         this.msg = message;
         return this;
     }

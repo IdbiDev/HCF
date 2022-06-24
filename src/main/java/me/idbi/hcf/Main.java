@@ -135,13 +135,13 @@ public final class Main extends JavaPlugin {
             add("&7│ &eClass: &6%class%");
             add("&7└─");
             add("empty");
+            add("&7▍ &eStuck: &6%stuck_timer%");
             add("&7▍ &eSpawn Tag: &6%spawntag%");
             add("&7▍ &ePearl: &6%ep_cd%");
             add("&7▍ &eBard energy: &6%bard_energy%");
         }};
 
         if (!new File(getDataFolder() + "\\config.yml").exists()) saveResource("config.yml", false);
-        if (!new File(getDataFolder() + "\\Tab.yml").exists()) saveResource("Tab.yml", false);
 //        getConfig().addDefault("Scoreboard", scoreboardList);
 //        getConfig().addDefault("Freeze.Ban", true);
 //        getConfig().addDefault("Freeze.Reason", "You leaved when you are froze!");

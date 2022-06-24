@@ -16,10 +16,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Scoreboards {
     private static final Main m = Main.getPlugin(Main.class);
@@ -97,13 +94,14 @@ public class Scoreboards {
                 continue;
             } else if (line.contains("%ep_cd%") && HCF_Timer.getEpTime(p) <= 0.0) {
                 continue;
-            }
-            else if(line.contains("%bard_energy%") && Double.parseDouble(playertools.getMetadata(p, "bardenergy")) <= 0.0) {
+            } else if (line.contains("%stuck_timer%") && HCF_Timer.getStuckTime(p) <= 0.0) {
+                continue;
+            } else if(line.contains("%bard_energy%") && Double.parseDouble(playertools.getMetadata(p, "bardenergy")) <= 0.0) {
                 continue;
             }
 
             if (line.equals("empty"))
-                line = "";
+                line = " ";
 
             Score score = obj.getScore(replaceVariables(line, p));
             score.setScore(scoreNumber);
@@ -113,8 +111,12 @@ public class Scoreboards {
 
 
         for (String line : fix) {
-            if (line.equals("empty"))
-                line = " ";
+            if (line.equals("empty")) {
+                if(scoreNumber == 0) {
+                    continue;
+                }
+                line = "  ";
+            }
 
             Score score = obj.getScore(replaceVariables(line, p));
             score.setScore(scoreNumber);
@@ -143,7 +145,7 @@ public class Scoreboards {
         List<String> fix = new ArrayList<>();
         List<String> timers = new ArrayList<>();
         for (String line : str) {
-            if (line.contains("%spawntag%") || line.contains("%ep_cd%") || line.contains("%bard_energy%")) {
+            if (line.contains("%spawntag%") || line.contains("%ep_cd%") || line.contains("%bard_energy%") || line.contains("%stuck_timer%")) {
                 timers.add(ChatColor.translateAlternateColorCodes('&', line));
                 continue;
             }
@@ -174,5 +176,9 @@ public class Scoreboards {
                 .replace("%stuck_timer%", getDouble(HCF_Timer.getStuckTime(p)))
                 .replace("%ep_cd%", getDouble(HCF_Timer.getEpTime(p)))
                 .replace("%location%", HCF_Claiming.sendFactionTerritory(p));
+    }
+
+    public static String getDouble(long value) {
+        return String.format("%.1f", Double.parseDouble(new SimpleDateFormat("ss.SSS").format(new Date(value)))).replace(",", ".");
     }
 }

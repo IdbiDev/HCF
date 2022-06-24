@@ -58,15 +58,21 @@ public class HCF_Claiming {
                 Point faction_start = startpositions.get(faction);
                 Point faction_end = endpositions.get(faction);
                 //for (Map.Entry<Integer, Faction_Claim> entry : Main.faction_cache.get(faction).claims.entrySet()) {
-                for (Main.Faction f : Main.faction_cache.values()){
-                    if(f.claims.isEmpty()) continue;
+                for (Main.Faction f : Main.faction_cache.values()) {
+
+                    if (f.claims.isEmpty()) continue;
+
                     for (HCF_Claiming.Faction_Claim val : f.claims) {
-                        Point start_this = new Point(val.startX,val.startZ);
-                        Point end_this = new Point(val.endX,val.endZ);
-                        Point start_other = new Point(start[0],start[1]);
-                        Point end_other = new Point(end[0],end[1]);
-                        if(!doOverlap(start_this,end_this,start_other,end_other)){
-                        //if (doOverlap(new Point(val.startX, val.endX), new Point(val.startZ, val.endZ), new Point(start[0], end[0]), new Point(start[1], end[1]))) {
+
+                        Point start_this = new Point(val.startX, val.startZ);
+                        Point end_this = new Point(val.endX, val.endZ);
+
+                        /*Point start_other = new Point(faction_start.x, faction_start.z);
+                        Point end_other = new Point(faction_end.x, faction_end.z);*/
+
+
+                        if (doOverlap(faction_start, faction_end, start_this, end_this)) {
+                            //if (doOverlap(new Point(val.startX, val.endX), new Point(val.startZ, val.endZ), new Point(start[0], end[0]), new Point(start[1], end[1]))) {
                             p.sendMessage(Messages.FACTION_CLAIM_OVERLAP.queue());
                             return false;
                         }
@@ -106,6 +112,7 @@ public class HCF_Claiming {
         return false;
     }
 
+    //                              1. kezdő  1. end   2. kezdő   2. end
     public static boolean doOverlap(Point l1, Point r1, Point l2, Point r2) {
         // If one rectangle is on left side of other
         int firstRectangle_Starting_X = l1.x;
@@ -129,6 +136,41 @@ public class HCF_Claiming {
         }
         return false;
     }
+
+
+    public static boolean megvanakellotavolsag(Point ownClaim1, Point ownClaim2, Point otherClaim1, Point otherClaim2) {
+        if ((ownClaim1.x - otherClaim1.x) > 1
+                || (ownClaim1.x - otherClaim1.x) < -1) {
+            if ((ownClaim1.x - otherClaim2.x) > 1
+                    || (ownClaim1.x - otherClaim2.x) < -1) {
+                if ((ownClaim2.x - otherClaim1.x) > 1
+                        || (ownClaim2.x - otherClaim1.x) < -1) {
+                    if ((ownClaim2.x - otherClaim2.x) > 1
+                            || (ownClaim2.x - otherClaim2.x) < -1) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        ////////////////////////////////////////////
+
+        if ((ownClaim1.z - otherClaim1.z) > 1
+                || (ownClaim1.z - otherClaim1.z) < -1) {
+            if ((ownClaim1.z - otherClaim2.z) > 1
+                    || (ownClaim1.z - otherClaim2.z) < -1) {
+                if ((ownClaim2.z - otherClaim1.z) > 1
+                        || (ownClaim2.z - otherClaim1.z) < -1) {
+                    return (ownClaim2.z - otherClaim2.z) > 1
+                            || (ownClaim2.z - otherClaim2.z) < -1;
+                }
+            }
+        }
+
+
+        return false;
+    }
+
 
     public static boolean validClaim(int startX1, int startX2, int endX1, int endX2) {
         if (startX2 > startX1 && endX2 > startX1) {

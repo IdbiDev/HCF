@@ -13,6 +13,8 @@ commands:
     aliases: [ f, factions ]
   admin:
     aliases: [ a, ad ]
+  fc:
+    aliases: [ fcall, factioncall, factionc ]
 
 permissions:
   factions.reload:
