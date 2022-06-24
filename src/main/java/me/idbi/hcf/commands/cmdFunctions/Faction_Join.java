@@ -38,6 +38,7 @@ public class Faction_Join {
                 Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
                 f.BroadcastFaction(Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
                 Scoreboards.refresh(p);
+                f.refreshDTR();
             } else {
                 //Nem vagy meghíva ebbe a facionbe
                 p.sendMessage(Messages.NOT_INVITED.queue());

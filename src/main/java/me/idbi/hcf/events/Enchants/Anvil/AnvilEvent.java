@@ -1,7 +1,6 @@
 package me.idbi.hcf.events.Enchants.Anvil;
 
 import me.idbi.hcf.HCF_Rules;
-import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

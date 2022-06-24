@@ -26,6 +26,7 @@ public class Bard {
         bard_items.add(new Bard_Item(Material.MAGMA_CREAM, PotionEffectType.FIRE_RESISTANCE, m.getConfig().getInt("fire_resistance")));
         bard_items.add(new Bard_Item(Material.REDSTONE, PotionEffectType.REGENERATION, m.getConfig().getInt("regeneration")));
         bard_items.add(new Bard_Item(Material.GHAST_TEAR, PotionEffectType.ABSORPTION, m.getConfig().getInt("absorption")));
+        bard_items.add(new Bard_Item(Material.GOLD_INGOT, PotionEffectType.FAST_DIGGING, m.getConfig().getInt("haste")));
     }
 
     public static boolean CheckArmor(Player p) {
@@ -60,6 +61,7 @@ public class Bard {
 
         p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
         p.removePotionEffect(PotionEffectType.SPEED);
+        playertools.setMetadata(p, "bardenergy",0);
 
     }
 
@@ -86,13 +88,13 @@ public class Bard {
         if (main != null) {
             item = findBardItem(main);
             if (item != null) {
-                main.setAmount(main.getAmount() - 1);
-                bardplayer.getInventory().setItemInHand(main);
                 double currentEnergy = Double.parseDouble(playertools.getMetadata(bardplayer, "bardenergy"));
-                if ((currentEnergy - item.cost >= 0)) {
+                if ((currentEnergy - item.cost) < 0) {
                     bardplayer.sendMessage(Messages.BARD_DONT_HAVE_ENOUGH_ENERGY.setAmount(String.valueOf(item.cost)).queue());
                     return;
                 }
+                main.setAmount(main.getAmount() - 1);
+                bardplayer.getInventory().setItemInHand(main);
                 playertools.setMetadata(bardplayer, "bardenergy", currentEnergy - item.cost);
                 for (Player p : getFactionMembersInDistance(bardplayer, 15)) {
                     PotionEffectType potion = item.effect;
@@ -103,6 +105,15 @@ public class Bard {
                         }
                     });
                 }
+                bardplayer.sendMessage(Messages.BARD_USED_POWERUP
+                        .setAmount(String.valueOf(item.cost))
+                        .repBardEffects(
+                                bardplayer,
+                                getPotionName(item.effect.getName()),
+                                String.valueOf(getFactionMembersInDistance(bardplayer, 15).size())
+                        )
+                        .queue()
+                );
             }
         }
     }

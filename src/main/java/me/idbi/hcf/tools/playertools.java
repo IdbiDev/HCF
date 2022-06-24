@@ -36,11 +36,11 @@ public class playertools {
             setMetadata(player, "money", playerMap.get("money"));
             setMetadata(player, "class", "none");
             setMetadata(player, "faction", playerMap.get("factionname"));
-            setMetadata(player, "adminDuty", true);
+            setMetadata(player, "adminDuty", false);
             setMetadata(player, "rank", "none");
             setMetadata(player, "freeze", false);
             setMetadata(player, "factionchat", false);
-            String c = HCF_Claiming.sendFactionTerretory(player);
+            String c = HCF_Claiming.sendFactionTerritory(player);
             setMetadata(player, "current_loc", c);
             setMetadata(player, "spawnclaiming", false);
             setMetadata(player, "bardenergy", 0D);
@@ -49,9 +49,7 @@ public class playertools {
             if (!playerMap.get("faction").equals(0)) {
                 Main.faction_cache.get(Integer.valueOf(String.valueOf(playerMap.get("faction")))).ApplyPlayerRank(player, String.valueOf(playerMap.get("rank")));
             }
-
             Scoreboards.refresh(player);
-            player.setDisplayName("§c" + player);
         } else {
             // Játékos létrehozása SQL-ben, majd újra betöltjük
             SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',online=0", player.getName(), player.getUniqueId().toString());
@@ -154,6 +152,16 @@ public class playertools {
             return "0";
         }
     }
+    public static Object getRealMetadata(Player p, String key) {
+        if (Main.player_cache.containsKey(p)) {
+            Main.Player_Obj obj = Main.player_cache.get(p);
+            return obj.getRealData(key);
+        } else {
+            if (Main.debug)
+                Bukkit.getLogger().severe("GET Nem tartalamzza a playert a cache! >> " + p.getDisplayName() + "KEY >> " + key);
+            return null;
+        }
+    }
 
     public static void setEntityData(Metadatable entity, String key, Object value) {
         entity.setMetadata(key, new FixedMetadataValue(Main.getPlugin(Main.class), value));
@@ -162,6 +170,7 @@ public class playertools {
     public static String getEntityData(Metadatable entity, String key) {
         return entity.getMetadata(key).get(0).asString();
     }
+
 
     public static boolean HasMetaData(Player p, String key) {
         if (Main.player_cache.containsKey(p)) {
@@ -183,8 +192,9 @@ public class playertools {
                     try {
                         HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt(3), rs.getInt(5), rs.getInt(4), rs.getInt(6), rs.getInt(2));
                         Main.faction_cache.get(rs.getInt("factionid")).addClaim(claim);
+                        Main.sendCmdMessage(rs.getInt("factionid") + " CLAIM");
                     } catch (Exception ignored) {
-
+                        ignored.printStackTrace();
                     }
                 }
             }
@@ -224,6 +234,7 @@ public class playertools {
                 Main.nameToFaction.put(rs.getString("name"), faction);
                 faction.memberCount = playertools.countMembers(faction);
                 faction.DTR = Double.parseDouble(playertools.CalculateDTR(faction));
+                Main.sendCmdMessage(faction.factioname + " Prepared");
                 if (rs.getString("home") == null)
                     continue;
                 Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(rs.getString("home")));
@@ -355,8 +366,7 @@ public class playertools {
     public static Location getSpawn() {
         String[] spawnLocs = ConfigLibrary.Spawn_location.getValue().split(" ");
         Integer[] ints = getInts(spawnLocs);
-        Location loc = new Location(Bukkit.getWorld(ConfigLibrary.World_name.getValue()), ints[0], ints[1], ints[2], ints[3], ints[4]);
-        return loc;
+        return new Location(Bukkit.getWorld(ConfigLibrary.World_name.getValue()), ints[0], ints[1], ints[2], ints[3], ints[4]);
     }
 
     public static Integer[] getInts(String[] string) {
@@ -366,5 +376,37 @@ public class playertools {
         }
 
         return list.toArray(new Integer[list.size()]);
+    }
+
+    public static int createCustomFaction(String name){
+        //getting the last minus value
+        HashMap<String, Object> map = SQL_Connection.dbPoll(con,"SELECT * FROM `factions` ORDER BY `factions`.`ID` ASC");
+        int id = (int) map.get("ID");
+        SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?',ID='?'", name,String.valueOf(id));
+        Main.Faction faction = new Main.Faction(id, name, "", 0);
+
+        Main.faction_cache.put(id, faction);
+        Main.factionToname.put(id, faction.factioname);
+        Main.nameToFaction.put(faction.factioname, faction);
+        return id;
+    }
+
+
+    //Koba, ne nyírj ki ha nem működik gec XD
+    //Todo: Check + Bugfix ha van
+    public static boolean CheckClaimPlusOne(HCF_Claiming.Point left_c,HCF_Claiming.Point right_c,int diff,HCF_Claiming.Point p1,HCF_Claiming.Point p2){
+        //Getting the bottom left point
+        int minX = Math.min(left_c.x,right_c.x);
+        int minZ = Math.min(left_c.z, right_c.z);
+
+        //Getting the top right point
+        int maxX = Math.max(left_c.x,right_c.x);
+        int maxZ = Math.max(left_c.z, right_c.z);
+
+        //Creating the new claim
+        HCF_Claiming.Point new_claim_start = new HCF_Claiming.Point(minX-diff,minZ-diff);
+        HCF_Claiming.Point new_claim_end = new HCF_Claiming.Point(maxX+diff,maxZ+diff);
+
+        return HCF_Claiming.doOverlap(new_claim_start,new_claim_end,p1,p2);
     }
 }

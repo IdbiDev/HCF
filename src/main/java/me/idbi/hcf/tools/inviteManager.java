@@ -8,7 +8,7 @@ public class inviteManager {
 
     public static class factionInvite {
         private final ArrayList<Player> invitedPlayers = new ArrayList();
-        private final Integer faction;
+        private int faction;
 
         public factionInvite(Integer id) {
             this.faction = id;
@@ -32,8 +32,6 @@ public class inviteManager {
             return invitedPlayers.contains(p);
         }
 
-        public Integer getFactionID() {
-            return faction;
-        }
+
     }
 }

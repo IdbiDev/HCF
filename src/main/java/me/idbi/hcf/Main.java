@@ -37,11 +37,10 @@ public final class Main extends JavaPlugin {
     public static boolean deathban;
     public static int death_time;
     public static double claim_price_multiplier;
-
     public static boolean debug;
     public static int faction_startingmoney;
-
     public static int max_members_pro_faction;
+    public static int stuck_duration;
 
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
@@ -111,6 +110,8 @@ public final class Main extends JavaPlugin {
         faction_startingmoney = Integer.parseInt(ConfigLibrary.Faction_default_balance.getValue());
         max_members_pro_faction = Integer.parseInt(ConfigLibrary.MAX_FACTION_MEMBERS.getValue());
         world_border_radius = Integer.parseInt(ConfigLibrary.WORLD_BORDER_DISTANCE.getValue());
+        stuck_duration =  Integer.parseInt(ConfigLibrary.STUCK_TIMER_DURATION.getValue());
+
         con = SQL_Connection.dbConnect(
                 ConfigLibrary.DATABASE_HOST.getValue(),
                 ConfigLibrary.DATABASE_PORT.getValue(),
@@ -175,6 +176,8 @@ public final class Main extends JavaPlugin {
         Misc_Timers.pvpTimer();
         Misc_Timers.PotionLimiter();
         Misc_Timers.AutoSave();
+        Misc_Timers.StuckTimers();
+        Misc_Timers.PearlTimer();
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
         //displayTeams.setupAllTeams();
@@ -213,6 +216,12 @@ public final class Main extends JavaPlugin {
                 return metadata.get(key).toString();
             Bukkit.getLogger().severe(" Error while reading key:" + key);
             return "";
+        }
+        public Object getRealData(String key) {
+            if (hasData(key))
+                return metadata.get(key);
+            Bukkit.getLogger().severe(" Error while reading key:" + key);
+            return null;
         }
 
         public boolean hasData(String key) {
@@ -271,7 +280,9 @@ public final class Main extends JavaPlugin {
             } catch (NullPointerException ex) {
                 claims = new ArrayList<>();
                 claims.add(claimid);
+                ex.printStackTrace();
             }
+            System.out.println(claims.size());
         }
 
         public HCF_Claiming.Faction_Claim getFactionClaim(Integer id) {
@@ -358,6 +369,9 @@ public final class Main extends JavaPlugin {
 
             }
             return total;
+        }
+        public void refreshDTR(){
+            this.DTR = Double.parseDouble(playertools.CalculateDTR(this));
         }
 
     }

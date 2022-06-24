@@ -12,8 +12,9 @@ public class Banhandler {
     private static final Connection con = Main.getConnection("BanHandler");
 
     public static void banPlayerInHCF(Player player) {
-        SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", player.getUniqueId().toString(), String.valueOf(System.currentTimeMillis() + (Main.death_time * 60000)));
+        SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", player.getUniqueId().toString(), String.valueOf(System.currentTimeMillis() + (Main.death_time * 60000L)));
         player.kickPlayer(Messages.DEATHBAN_KICK.queue());
+
     }
 
     public static boolean isPlayerBannedFromHCF(UUID uuid) {

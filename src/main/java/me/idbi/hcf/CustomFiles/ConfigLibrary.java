@@ -26,6 +26,8 @@ public enum ConfigLibrary {
     Faction_default_balance("1000"),
     WORLD_BORDER_DISTANCE("1000"),
     Scoreboard_title("&6HCF+ &7- &eMap &6#1"),
+
+    STUCK_TIMER_DURATION("30"),
     DATABASE_HOST("localhost"),
     DATABASE_PORT("3306"),
     DATABASE_DATABSE("meincraft"),

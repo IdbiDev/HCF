@@ -58,6 +58,7 @@ public enum Messages {
     FACTION_CLAIM_INVALID_ZONE("%prefix% &cInvalid claiming zone!"),
     FACTION_CLAIM_OVERLAP("%prefix% &cYour claim can't overlap an existing claim!"),
     FACTION_CLAIM_TOO_SMALL("%prefix% &cYour claim is too small! (Min size: 4x4)"),
+    FACTION_CLAIM_OVERLAP_PLUS_ONE("%prefix% &cYour claim can't overlap an existing claim! Skip a block between the two claims"),
 
     // Commands - invite
     INVITED_BY("&eYou invited by &6&o%executor% &eto &6&o%faction_name%&e!"),
@@ -158,7 +159,8 @@ public enum Messages {
     DELETE_FACTION_BY_ADMIN("%prefix% &6&o%executor%&e deleted the &6&o%faction_name% &efaction!"),
 
     CANT_DAMAGE_ADMIN("%prefix% &cYou can't attack while you are in duty mode"),
-    COMBAT_MESSAGE("%prefix% &7You are now in combat &a[30 sec]"),
+    CANT_DAMAGE_PROTECTED_AREA("%prefix% &cYou can't attack while you are in a protected area!"),
+    COMBAT_MESSAGE("%prefix% &7You are now in combat &a[%sec% sec]"),
     TEAMMATE_DAMAGE("%prefix% &cYou can't damage your teammate!"),
 
     DEATHBAN_KICK("%prefix%\n&cYou are deathbanned for %sec%"),
@@ -181,7 +183,13 @@ public enum Messages {
 
     BARD_DONT_HAVE_ENOUGH_ENERGY("%prefix% &cYou don't have enough energy to activate this. &4&l[Required %amount%]"),
 
-    BARD_USED_POWERUP("%prefix% "),
+    BARD_USED_POWERUP("%prefix% &6You used &b%effect% &6for &b&o%amount%&r&6. [&aBuffed teammates: &b&o%count%&r&6]"),
+
+    //STUCK stepbro
+
+    STUCK_STARTED("%prefix% &aStuck timer started! You are getting teleported to a safe zone in &o&e%amount%&r&a seconds! Don't move!"),
+    STUCK_FINISHED("%prefix%  &bYou are successfully teleported to a safe zone!"),
+    STUCK_INTERRUPTED("%prefix% &cYou interrupted the stuck timer!"),
 
     CLAIM_POS_START("%prefix% &bClaim start pos: &a&n%loc%"),
     CLAIM_POS_END("%prefix% &bClaim end pos: &a&n%loc%");

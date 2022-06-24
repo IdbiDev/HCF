@@ -60,5 +60,7 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new TableInteract(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new AnvilEvent(), Main.getPlugin(Main.class));
+
+        //getServer().getPluginManager().registerEvents(new PearlThrowEvent(), Main.getPlugin(Main.class));
     }
 }

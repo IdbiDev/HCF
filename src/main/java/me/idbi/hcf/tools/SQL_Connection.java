@@ -48,7 +48,7 @@ public class SQL_Connection {
             st.executeUpdate();
             ResultSet genkys = st.getGeneratedKeys();
             if (genkys != null && genkys.next()) {
-                return genkys.getInt(1);
+                return (int) genkys.getLong(1);
             }
 
         } catch (SQLException e) {

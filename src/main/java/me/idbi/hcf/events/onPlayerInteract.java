@@ -4,6 +4,7 @@ import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.tools.HCF_Claiming;
+import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,10 +18,28 @@ public class onPlayerInteract implements Listener {
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            if(e.getItem() != null){
+                if(e.getItem().getType().equals(Material.ENDER_PEARL)){
+                    if(HCF_Timer.checkEpTimer(p))
+                        e.setCancelled(true);
+                    else
+                        HCF_Timer.addEpTimer(p);
+                }
+            }
             if (HCF_Claiming.checkEnemyClaimAction(e.getClickedBlock().getX(), e.getClickedBlock().getZ(), Integer.parseInt(playertools.getMetadata(p, "factionid")))) {
                 if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType())) {
                     e.setCancelled(true);
                     p.sendMessage(Messages.NO_PERMISSION.queue());
+                }
+            }
+        }
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
+            if (e.getItem() != null) {
+                if (e.getItem().getType().equals(Material.ENDER_PEARL)) {
+                    if (HCF_Timer.checkEpTimer(p))
+                        e.setCancelled(true);
+                    else
+                        HCF_Timer.addEpTimer(p);
                 }
             }
         }
@@ -72,7 +91,7 @@ public class onPlayerInteract implements Listener {
             }
         }
         // Elvetés
-        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking() && e.getItem() != null) {
+        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking() && e.getItem() != null && !Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
                 HCF_Claiming.removeClaiming(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
@@ -81,7 +100,7 @@ public class onPlayerInteract implements Listener {
             }
         }
         // Elfogadás
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking()) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking() && !Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
                 if (HCF_Claiming.FinishClaiming(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")),e.getPlayer())) {
@@ -99,7 +118,7 @@ public class onPlayerInteract implements Listener {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
                 p.sendMessage(Messages.CLAIM_POS_END.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
-                HCF_Claiming.setEndPosition(-1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+                HCF_Claiming.setEndPosition(1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
                 e.setCancelled(true);
             }
         }
@@ -108,7 +127,7 @@ public class onPlayerInteract implements Listener {
             if (e.getItem().getItemMeta().hasLore()) {
                 p.sendMessage(Messages.CLAIM_POS_START.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
                 e.setCancelled(true);
-                HCF_Claiming.setStartPosition(-1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+                HCF_Claiming.setStartPosition(1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             }
         }
     }

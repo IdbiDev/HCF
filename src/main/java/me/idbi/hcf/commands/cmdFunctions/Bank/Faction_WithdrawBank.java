@@ -14,6 +14,7 @@ public class Faction_WithdrawBank {
     public static void asd(String[] args, Player p) {
         if (!playertools.hasPermission(p, rankManager.Permissions.WITHDRAW)) {
             // ToDo: permission handle
+            p.sendMessage(Messages.NO_PERMISSION.queue());
             return;
         }
         if (args[1].matches("^[0-9]+$")) {

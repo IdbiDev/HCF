@@ -36,9 +36,12 @@ public class faction implements CommandExecutor, TabCompleter {
                         //CreateFaction
                         try {
                             Faction_Create.CreateFaction(p, args[1]);
-                        } catch (Exception e) {
+                        } catch (IndexOutOfBoundsException ignored) {
                             p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             //Kiíratás hogy balfaszul használta a commandot
+                        }catch (Exception e){
+                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            e.printStackTrace();
                         }
                         break;
                     case "show":
@@ -99,10 +102,12 @@ public class faction implements CommandExecutor, TabCompleter {
                     case "join":
                         try {
                             Faction_Join.JoinToFaction(p, args[1]);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } catch (IndexOutOfBoundsException ignored) {
                             p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             //Kiíratás hogy balfaszul használta a commandot
+                        }catch (Exception e){
+                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            e.printStackTrace();
                         }
                         break;
                     case "help":
@@ -122,23 +127,18 @@ public class faction implements CommandExecutor, TabCompleter {
                     case "reload":
                         if (sender.hasPermission("factions.reload")) {
                             switch (args[1]) {
-                                case "config":
-                                    m.reloadConfig();
-                                    break;
-                                case "messages":
-                                    MessagesFile.reloadMessages();
-                                    break;
-                                case "discord":
-                                    DiscordFile.reloadDiscord();
-                                    break;
-                                case "all":
+                                case "config" -> m.reloadConfig();
+                                case "messages" -> MessagesFile.reloadMessages();
+                                case "discord" -> DiscordFile.reloadDiscord();
+                                case "all" -> {
                                     MessagesFile.reloadMessages();
                                     m.reloadConfig();
                                     DiscordFile.reloadDiscord();
-                                    break;
-                                default:
+                                }
+                                default -> {
                                     sender.sendMessage(Messages.NOT_FILE.getMessage().queue());
                                     return false;
+                                }
                             }
                             p.sendMessage(Messages.RELOAD.queue());
                         } else {
@@ -148,42 +148,67 @@ public class faction implements CommandExecutor, TabCompleter {
                     case "addrank":
                         try {
                             Faction_Ranks.addRank(p, args[1]);
-                        } catch (Exception e) {
+                        } catch (IndexOutOfBoundsException ignored) {
                             p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             //Kiíratás hogy balfaszul használta a commandot
+                        }catch (Exception e){
+                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            e.printStackTrace();
                         }
                         break;
                     case "setrankperm":
                         try {
                             Faction_Ranks.setPermissionToRank(p, args[1], args[2]);
-                        } catch (Exception e) {
+                        } catch (IndexOutOfBoundsException asd) {
                             p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             //Kiíratás hogy balfaszul használta a commandot
+                        }catch (Exception e){
+                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            e.printStackTrace();
                         }
                         break;
                     case "removerankperm":
                         try {
                             Faction_Ranks.removePermissionFromRank(p, args[1], args[2]);
-                        } catch (Exception e) {
+                        } catch (IndexOutOfBoundsException asd) {
                             p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             //Kiíratás hogy balfaszul használta a commandot
+                        }catch (Exception e){
+                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            e.printStackTrace();
                         }
                         break;
                     case "setrank":
                         try {
                             Faction_Ranks.setPlayerForRank(p, args[1], args[2]);
-                        } catch (Exception e) {
+                        } catch (IndexOutOfBoundsException asd) {
                             p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             //Kiíratás hogy balfaszul használta a commandot
+                        }catch (Exception e){
+                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            e.printStackTrace();
                         }
                         break;
                     case "disband":
                         try {
                             Faction_Disband.disband(p, args[1]);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } catch (IndexOutOfBoundsException asd) {
                             p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             //Kiíratás hogy balfaszul használta a commandot
+                        }catch (Exception e){
+                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "stuck":
+                        try {
+                            Faction_Stuck.processStuck(p);
+                        } catch (IndexOutOfBoundsException asd) {
+                            p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                            //Kiíratás hogy balfaszul használta a commandot
+                        }catch (Exception e){
+                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            e.printStackTrace();
                         }
                         break;
                     default:

@@ -52,6 +52,7 @@ public class onDeath implements Listener {
                 Main.DTR_REGEN.put(faction.factionid, System.currentTimeMillis() + death_time * 60000L);
                 if (Main.debug)
                     System.out.println("Death >> " + faction.factioname);
+                faction.refreshDTR();
             }
 
         }

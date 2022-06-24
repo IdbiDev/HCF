@@ -26,6 +26,7 @@ public class Faction_Leave {
 
                 f.BroadcastFaction(Messages.BC_LEAVE_MESSAGE.repPlayer(player).queue());
                 Scoreboards.refresh(player);
+                f.refreshDTR();
             } else {
                 //Todo: Factin leader is a fucking retarded bc he wanna leave the faction. Use /f disband
                 player.sendMessage(Messages.LEADER_LEAVING_FACTION.queue());

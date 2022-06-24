@@ -1,30 +1,38 @@
 package me.idbi.hcf.events;
 
+import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.classes.Archer;
+import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.playertools;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class onDamage implements Listener {
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
 
 
-        if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
-            Player damager = (Player) e.getDamager();
-            Player victim = (Player) e.getEntity();
-            ItemStack damagerWeapon = ((Player) e.getDamager()).getItemInHand();
+        if (e.getDamager() instanceof Player damager && e.getEntity() instanceof Player victim) {
             // Check Friendly Fire
             if (Boolean.parseBoolean(playertools.getMetadata(damager, "adminDuty"))) {
                 damager.sendMessage(Messages.CANT_DAMAGE_ADMIN.queue());
                 e.setCancelled(true);
             }
+            String c = ChatColor.stripColor(HCF_Claiming.sendFactionTerritory(victim));
+            try{
+                if (Main.nameToFaction.get(c).factionid == 1) {
+                    e.setCancelled(true);
+                    damager.sendMessage(Messages.CANT_DAMAGE_PROTECTED_AREA.queue());
+                    return;
+                }
+            }catch (NullPointerException ignored){}
+
             int damager_faction = Integer.parseInt(playertools.getMetadata(damager, "factionid"));
             int victim_faction = Integer.parseInt(playertools.getMetadata(victim, "factionid"));
 
@@ -39,10 +47,11 @@ public class onDamage implements Listener {
             }
 
 
+
+
             if (damager_faction == victim_faction) {
                 damager.sendMessage(Messages.TEAMMATE_DAMAGE.queue());
                 e.setCancelled(true);
-
                 return;
             }
             //Add combatTimer
@@ -60,8 +69,7 @@ public class onDamage implements Listener {
             }
 
         }
-        if (e.getDamager() instanceof Projectile && e.getEntity() instanceof Player) {
-            Projectile projectile = (Projectile) e.getDamager();
+        if (e.getDamager() instanceof Projectile projectile && e.getEntity() instanceof Player) {
             Player damager = (Player) projectile.getShooter();
             if (damager != null) {
                 Player victim = (Player) e.getEntity();

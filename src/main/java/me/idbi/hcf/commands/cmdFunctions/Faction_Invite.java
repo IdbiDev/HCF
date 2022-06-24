@@ -12,6 +12,7 @@ public class Faction_Invite {
         if (!playertools.getMetadata(p, "factionid").equalsIgnoreCase("0")) {
             if (!playertools.hasPermission(p, rankManager.Permissions.INVITE)) {
                 //Todo nincs jog
+                p.sendMessage(Messages.NO_PERMISSION.queue());
                 return;
             }
             Player target = Bukkit.getPlayer(name);

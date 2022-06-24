@@ -36,7 +36,6 @@ public class rankManager {
                 SQL_Connection.dbExecute(con, "UPDATE ranks SET isDefault='1' WHERE ID='?'", String.valueOf(rank.id));
             }
         }
-        System.out.println(rank.name);
     }
 
     public static void setLeaderRank(Main.Faction faction, String name) {

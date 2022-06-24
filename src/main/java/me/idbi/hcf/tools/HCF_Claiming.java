@@ -8,38 +8,40 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class HCF_Claiming {
-    private static final HashMap<Integer, Integer[]> startpositions = new HashMap<>();
-    private static final HashMap<Integer, Integer[]> endpositions = new HashMap<>();
+    private static final HashMap<Integer, Point> startpositions = new HashMap<>();
+    private static final HashMap<Integer, Point> endpositions = new HashMap<>();
 
     private static final HashMap<Player, Location> fakePos = new HashMap<>();
 
     public static void setStartPosition(int faction, int x, int z) {
         if (!startpositions.containsKey(faction)) {
-            Integer[] temp = {x, z};
-            startpositions.put(faction, temp);
+            Point p = new Point(x,z);
+            startpositions.put(faction, p);
         } else {
             startpositions.remove(faction);
-            Integer[] temp = {x, z};
-            startpositions.put(faction, temp);
+            Point p = new Point(x,z);
+            startpositions.put(faction, p);
         }
     }
 
     public static void setEndPosition(int faction, int x, int z) {
         try{
             if (!endpositions.containsKey(faction)) {
-                Integer[] temp = {x, z};
-                endpositions.put(faction, temp);
+                Point p = new Point(x,z);
+                endpositions.put(faction, p);
             } else {
                 endpositions.remove(faction);
-                Integer[] temp = {x, z};
-                endpositions.put(faction, temp);
+                Point p = new Point(x,z);
+                endpositions.put(faction, p);
             }
         }catch (Exception ignored){}
 
@@ -53,8 +55,8 @@ public class HCF_Claiming {
     public static boolean FinishClaiming(int faction,Player p) {
         try {
             if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
-                Integer[] start = startpositions.get(faction);
-                Integer[] end = endpositions.get(faction);
+                Point faction_start = startpositions.get(faction);
+                Point faction_end = endpositions.get(faction);
                 //for (Map.Entry<Integer, Faction_Claim> entry : Main.faction_cache.get(faction).claims.entrySet()) {
                 for (Main.Faction f : Main.faction_cache.values()){
                     if(f.claims.isEmpty()) continue;
@@ -68,21 +70,33 @@ public class HCF_Claiming {
                             p.sendMessage(Messages.FACTION_CLAIM_OVERLAP.queue());
                             return false;
                         }
-                        if (Math.round((Math.abs(end[0] - start[0]) * Math.abs(end[1] - start[1]))) <= 4) {
+                        if (calcBlocks(p) < 4) {
                             p.sendMessage(Messages.FACTION_CLAIM_TOO_SMALL.queue());
                             return false;
                         }
+                        if(!playertools.CheckClaimPlusOne(faction_start, faction_end,1, start_this, end_this)) {
+                            p.sendMessage(Messages.FACTION_CLAIM_OVERLAP_PLUS_ONE.queue());
+                            return false;
+                        }
+
                     }
+                }
+                if (playertools.getPlayerBalance(p) - calcMoneyOfArea(p) >= 0) {
+                    playertools.setMetadata(p, "money", playertools.getPlayerBalance(p) - calcMoneyOfArea(p));
+                } else {
+                    p.sendMessage(Messages.NOT_ENOUGH_MONEY.queue());
+                    return false;
                 }
 
                 int claimid = SQL_Connection.dbExecute(Main.getConnection("commands.Claim"), "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?'",
-                        String.valueOf(faction), start[0].toString(), start[1].toString(), end[0].toString(), end[1].toString());
+                        String.valueOf(faction), faction_start.x + "", faction_start.z + "", faction_end.x + "", faction_end.z + "");
                 //HandleSpawn
                 Main.Faction f = Main.faction_cache.get(faction);
                 endpositions.remove(faction);
                 startpositions.remove(faction);
-                HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(start[0], end[0], start[1], end[1], claimid);
+                HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid);
                 f.addClaim(claim);
+
                 return true;
             }
             return false;
@@ -94,19 +108,26 @@ public class HCF_Claiming {
 
     public static boolean doOverlap(Point l1, Point r1, Point l2, Point r2) {
         // If one rectangle is on left side of other
-        if (l1.x > r2.x || l2.x > r1.x) {
-            System.out.println("If one rectangle is on left side of other");
-            return false;
-        }
-        System.out.println("Anyád");
+        int firstRectangle_Starting_X = l1.x;
+        int firstRectangle_Starting_Z = l1.z;
 
-        // If one rectangle is above other
-        if (l1.y < r2.y || l2.y < r1.y) {
-            System.out.println("If one rectangle is above other");
-            return false;
-        }
+        int firstRectangle_Ending_X = r1.x;
+        int firstRectangle_Ending_Z = r1.z;
 
-        return true;
+        int maxX = Math.max(firstRectangle_Starting_X, firstRectangle_Ending_X);
+        int minX = Math.min(firstRectangle_Starting_X, firstRectangle_Ending_X);
+
+        int maxZ = Math.max(firstRectangle_Starting_Z, firstRectangle_Ending_Z);
+        int minZ = Math.min(firstRectangle_Starting_Z, firstRectangle_Ending_Z);
+
+        for(int x = minX; x <= maxX; x++) {
+            for(int z = minZ; z <= maxZ; z++) {
+                if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, x, z)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static boolean validClaim(int startX1, int startX2, int endX1, int endX2) {
@@ -128,7 +149,7 @@ public class HCF_Claiming {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
                 if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
                     if(thisFaction.getValue().DTR <= 0) return false;
-                    if (thisFaction.getKey() == -1) {
+                    if (thisFaction.getKey() <= -1) {
                         return true;
                     }
                     return faction != thisFaction.getValue().factionid;
@@ -138,30 +159,48 @@ public class HCF_Claiming {
         return false;
     }
 
+    //Old find point FUCKED UP IDK MIEZ
+    @Deprecated
+    public static boolean FindPoint_old(int x1, int y1, int x2,
+                                    int y2, int x, int y) {
+        return x >= x1 && x <= x2 &&
+                y >= y1 && y <= y2;
+    }
     public static boolean FindPoint(int x1, int y1, int x2,
                                     int y2, int x, int y) {
-        return x > x1 && x < x2 &&
-                y > y1 && y < y2;
+        Point rc = new Point(x1,y1);
+        Point lc = new Point(x2,y2);
+        Point p = new Point(x,y);
+        return doOverlap(rc,lc,p,p);
     }
 
-    public static String sendFactionTerretory(Player p) {
+    public static String sendFactionTerritory(Player p) {
         int faction = Integer.parseInt(playertools.getMetadata(p, "factionid"));
         Main.Faction MeineFaction = Main.faction_cache.get(faction);
         for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
-                if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, p.getLocation().getBlockX(), p.getLocation().getBlockZ())) {
-                    if (thisFaction.getKey() <= -1) {
-                        return ChatColor.RED + thisFaction.getValue().factioname;
-                    }
+                Point playerPoint= new Point(p.getLocation().getBlockX(),p.getLocation().getBlockZ());
+                Point claimrc= new Point(val.startX, val.startZ);
+                Point claimlc= new Point(val.endX, val.endZ);
+                if(doOverlap(claimrc,claimlc,playerPoint,playerPoint)){
+                //if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, p.getLocation().getBlockX(), p.getLocation().getBlockZ())) {
                     if (faction == thisFaction.getValue().factionid)
                         return ChatColor.GREEN + MeineFaction.factioname;
                     return ChatColor.RED + Main.factionToname.get(thisFaction.getKey());
-
-
                 }
             }
         }
         return ChatColor.DARK_GREEN + "Wilderness";
+    }
+    public static boolean isAreaNeutral(Location loc){
+        for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
+            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
+                if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, loc.getBlockX(), loc.getBlockZ())) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public static String sendFactionTerretoryByXZ(int x, int z) {
@@ -169,7 +208,6 @@ public class HCF_Claiming {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
                 if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
                     return ChatColor.RED + Main.factionToname.get(thisFaction.getKey());
-
                 }
             }
         }
@@ -192,9 +230,9 @@ public class HCF_Claiming {
     public static int calcMoneyOfArea(Player p) {
         int faction = Integer.parseInt(playertools.getMetadata(p, "factionid"));
         if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
-            Integer[] start = startpositions.get(faction);
-            Integer[] end = endpositions.get(faction);
-            return (int) Math.round((Math.abs(end[0] - start[0]) * Math.abs(end[1] - start[1])) * Main.claim_price_multiplier);
+            Point start = startpositions.get(faction);
+            Point end = endpositions.get(faction);
+            return (int) Math.round((Math.abs(end.x - start.x) * Math.abs(end.z - start.z)) * Main.claim_price_multiplier);
         }
         return -1;
     }
@@ -202,9 +240,9 @@ public class HCF_Claiming {
     public static int calcBlocks(Player p) {
         int faction = Integer.parseInt(playertools.getMetadata(p, "factionid"));
         if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
-            Integer[] start = startpositions.get(faction);
-            Integer[] end = endpositions.get(faction);
-            return Math.round((Math.abs(end[0] - start[0]) * Math.abs(end[1] - start[1])));
+            Point start = startpositions.get(faction);
+            Point end = endpositions.get(faction);
+            return Math.round((Math.abs(end.x - start.x) * Math.abs(end.z - start.z)));
         }
         return -1;
     }
@@ -227,13 +265,13 @@ public class HCF_Claiming {
         return false;
     }
 
-    // Marci <333333
-    static class Point {
-        int x, y;
+    // Marci <333333 Adbi
+    public static class Point {
+        int x, z;
 
-        Point(int x, int y) {
+        Point(int x, int z) {
             this.x = x;
-            this.y = y;
+            this.z = z;
         }
     }
 
@@ -251,12 +289,32 @@ public class HCF_Claiming {
             this.endZ = endZ;
             this.faction = faction;
         }
-
-        @Deprecated
-        public void getRetardedVersion() {
-            System.out.println("meleg");
-        }
     }
+
+    public static Location ReturnSafeSpot(Location old){
+        final Location[] loc = {null};
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                int playerx= old.getBlockX();
+                int playery = old.getBlockY();
+                int playerz = old.getBlockZ();
+                for(int blockx=playerx-30;blockx<playerx+30;blockx++){
+                    for(int blocky=playery-30;blocky<playery+30;blocky++){
+                        for(int blockz=playerz-30;blockz<playerz+30;blockz++){
+                            loc[0] = new Location(old.getWorld(),blockx,blocky,blockz);
+                            if(isAreaNeutral(loc[0])){
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }.runTaskAsynchronously(Main.getPlugin(Main.class));
+
+        return loc[0];
+    }
+
 
 
 }

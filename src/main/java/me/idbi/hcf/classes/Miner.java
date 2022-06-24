@@ -3,6 +3,7 @@ package me.idbi.hcf.classes;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -36,10 +37,10 @@ public class Miner {
         removeEffects(p);
         //Adding Effects
         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1, false, false));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 2, false, false));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 1, false, false));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0, false, false));
         p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, 2, false, false));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 1, false, false));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0, false, false));
         playertools.setMetadata(p, "class", "Miner");
     }
 
@@ -52,20 +53,10 @@ public class Miner {
     }
 
     public static void setInvisMode(Player p, boolean state) {
-        Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
-        Player[] teammates = playertools.getFactionOnlineMembers(faction.factioname);
-        Player[] randomPlayers = Bukkit.getOnlinePlayers().toArray(new Player[0]);
-        for (Player player : randomPlayers) {
-            for (Player teammate : teammates) {
-                if (player == teammate) {
-                    continue;
-                }
-                if (state) {
-                    p.hidePlayer(player);
-                } else {
-                    p.showPlayer(player);
-                }
-            }
+        if(state){
+            p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,Integer.MAX_VALUE,1),true);
+        }else{
+            p.removePotionEffect(PotionEffectType.INVISIBILITY);
         }
 
     }

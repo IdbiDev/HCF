@@ -170,8 +170,9 @@ public class Scoreboards {
 //                        new SimpleDateFormat("s").format(
 //                                new Date((long) (Double.parseDouble(playertools.getMetadata(p, "bardenergy")) * 1000L)))))
                 //.replace("%bard_energy%", new SimpleDateFormat("s").format(new Date()))
-                .replace("%spawntag%", new SimpleDateFormat("s").format(new Date(HCF_Timer.getCombatTime(p))) + "s")
-                .replace("%ep_cd%", new SimpleDateFormat("s").format(new Date(HCF_Timer.getEpTime(p))) + "s")
-                .replace("%location%", HCF_Claiming.sendFactionTerretory(p));
+                .replace("%spawntag%", getDouble(HCF_Timer.getCombatTime(p)))
+                .replace("%stuck_timer%", getDouble(HCF_Timer.getStuckTime(p)))
+                .replace("%ep_cd%", getDouble(HCF_Timer.getEpTime(p)))
+                .replace("%location%", HCF_Claiming.sendFactionTerritory(p));
     }
 }

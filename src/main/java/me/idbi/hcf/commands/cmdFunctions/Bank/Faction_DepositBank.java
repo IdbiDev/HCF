@@ -16,6 +16,7 @@ public class Faction_DepositBank {
     public static void asd(String[] args, Player p) {
         if (!playertools.hasPermission(p, rankManager.Permissions.DEPOSIT)) {
             // ToDo: permission handle
+            p.sendMessage(Messages.NO_PERMISSION.queue());
             return;
         }
 

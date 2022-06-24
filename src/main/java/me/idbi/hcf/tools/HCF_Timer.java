@@ -10,12 +10,16 @@ public class HCF_Timer {
     public static final HashMap<Player, Long> timers = new HashMap<>();
     private static final HashMap<Player, Long> Archertimers = new HashMap<>();
     private static final HashMap<Player, Long> eptimers = new HashMap<>();
+
+    public static final HashMap<Player, Long> stuckTimers = new HashMap<>();
     // Ms >> Duration
     private static final int combatTimerDuration = Integer.parseInt(ConfigLibrary.Combat_time.getValue()) * 1000;
     // Ms >> Duration
     private static final int ArcherTimerDuration = Integer.parseInt(ConfigLibrary.Archer_tag.getValue()) * 1000;
 
     private static final int EpTimerDuration = Integer.parseInt(ConfigLibrary.enderpearl_delay.getValue()) * 1000;
+
+    private static final int StuckTimerDuration = Integer.parseInt(ConfigLibrary.STUCK_TIMER_DURATION.getValue()) * 1000;
 
     public static boolean addCombatTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
@@ -29,12 +33,39 @@ public class HCF_Timer {
         }
     }
 
+    public static boolean addStuckTimer(Player player) {
+        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        if (!stuckTimers.containsKey(player)) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            stuckTimers.put(player, System.currentTimeMillis() + StuckTimerDuration);
+            return true;
+        } else {
+            stuckTimers.put(player, System.currentTimeMillis() + StuckTimerDuration);
+            return false;
+        }
+    }
+
     public static boolean checkCombatTimer(Player player) {
         // Ha van rajta CombatTimer
         if (timers.containsKey(player)) {
             if (System.currentTimeMillis() >= timers.get(player)) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 timers.remove(player);
+                return false;
+            } else {
+                // Ellenkező esetben: Van rajta
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+    public static boolean checkStuckTimer(Player player) {
+        // Ha van rajta CombatTimer
+        if (stuckTimers.containsKey(player)) {
+            if (System.currentTimeMillis() >= stuckTimers.get(player)) {
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                stuckTimers.remove(player);
                 return false;
             } else {
                 // Ellenkező esetben: Van rajta
@@ -62,6 +93,23 @@ public class HCF_Timer {
             return 0;
         }
     }
+    public static long getStuckTime(Player player) {
+        // Ha van rajta CombatTimer
+        if (stuckTimers.containsKey(player)) {
+            //5600                            5000+500
+            if (System.currentTimeMillis() >= stuckTimers.get(player)) {
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                stuckTimers.remove(player);
+                return 0;
+            } else {
+                // Ellenkező esetben: Van rajta
+                //     5000 + 500ms      -     5000ms
+                return stuckTimers.get(player) - System.currentTimeMillis();
+            }
+        } else {
+            return 0;
+        }
+    }
 
     public static boolean addArcherTimer(Player player) {
         // Ha már van rajta Archertag, akkor ne addjuk hozzá
@@ -81,6 +129,21 @@ public class HCF_Timer {
             // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta Archertag
             if (System.currentTimeMillis() >= Archertimers.get(player)) {
                 Archertimers.remove(player);
+                return false;
+            } else {
+                // Ellenkező esetben: Van rajta
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+    public static boolean checkEpTimer(Player player) {
+        // Ha van rajta CombatTimer
+        if (eptimers.containsKey(player)) {
+            if (System.currentTimeMillis() >= eptimers.get(player)) {
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                eptimers.remove(player);
                 return false;
             } else {
                 // Ellenkező esetben: Van rajta

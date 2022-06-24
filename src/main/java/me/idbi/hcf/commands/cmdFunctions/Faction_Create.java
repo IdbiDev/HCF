@@ -21,7 +21,6 @@ public class Faction_Create {
             if (!isFactionNameTaken(name)) {
                 //Create Faction
                 int x = SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?', leader='?'", name, p.getUniqueId().toString());
-                //Todo: GetFactionDefault Balance
                 Main.Faction faction = new Main.Faction(x, name, p.getUniqueId().toString(), Main.faction_startingmoney);
 
                 //
@@ -32,22 +31,24 @@ public class Faction_Create {
                 Main.factionToname.put(x, faction.factioname);
                 Main.nameToFaction.put(faction.factioname, faction);
 
-                rankManager.Faction_Rank default_rank = rankManager.CreateNewRank(faction, "default");
-                rankManager.Faction_Rank leader_rank = rankManager.CreateNewRank(faction, "leader");
+                rankManager.Faction_Rank default_rank = rankManager.CreateNewRank(faction, "Default");
+                rankManager.Faction_Rank leader_rank = rankManager.CreateNewRank(faction, "Leader");
+                assert default_rank != null;
                 rankManager.setDefaultRank(faction, default_rank.name);
+                assert leader_rank != null;
                 rankManager.setLeaderRank(faction, leader_rank.name);
                 faction.ApplyPlayerRank(p, leader_rank.name);
 
                 SQL_Connection.dbExecute(con, "UPDATE members SET faction = ?,factionname='?',rank='?' WHERE uuid = '?'", String.valueOf(x), name, "leader", p.getUniqueId().toString());
 
-                LogLibrary.sendFactionCreate(p, faction.factioname);
                 // Kiíratás global chatre ->
                 //                              xy faction létre jött
                 Bukkit.broadcastMessage(Messages.FACTION_CREATON.getMessage().setFaction(name).repPlayer(p).queue());
-
 //                displayTeams.createTeam(faction);
 //                displayTeams.addPlayerToTeam(p);
                 Scoreboards.refresh(p);
+                LogLibrary.sendFactionCreate(p, faction.factioname);
+                faction.refreshDTR();
 
             } else {
                 p.sendMessage(Messages.EXISTS_FACTION_NAME.getMessage().queue());

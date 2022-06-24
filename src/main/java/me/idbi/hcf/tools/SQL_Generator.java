@@ -17,7 +17,7 @@ public class SQL_Generator {
                       `startZ` int(255) NOT NULL DEFAULT 0,
                       `endX` int(255) NOT NULL DEFAULT 0,
                       `endZ` int(255) NOT NULL DEFAULT 0,
-                      `type` text NOT NULL DEFAULT 'faction' COMMENT 'Types: faction;spawn;koth;end;',
+                      `type` varchar(255) NOT NULL DEFAULT 'faction' COMMENT 'Types: faction;spawn;koth;end;',
                       PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,
@@ -67,7 +67,7 @@ public class SQL_Generator {
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,
                 """
-                    INSERT IGNORE INTO `factions` SET ID = '-1', money = 0, name = 'spawn', leader = '';
+                    INSERT IGNORE INTO `factions` SET ID = 1, money = 0, name = 'spawn', leader = '';
                 """
         };
         for (String data : tables) {

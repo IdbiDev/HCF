@@ -2,10 +2,12 @@ package me.idbi.hcf.tools;
 
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.classes.ClassSelector;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -54,10 +56,10 @@ public class Misc_Timers {
                     long val = entry.getValue();
                     // 4000 <= 5000
                     if (val <= System.currentTimeMillis()) {
-                        Main.DTR_REGEN.remove(key); // lol
+                        Main.DTR_REGEN.remove(key);
                         if (Main.debug)
                             System.out.println("DTR Regen >> Removed task cuz reached max DTR Faction: " + Main.factionToname.get(key));
-                        Main.faction_cache.get(key).DTR = 3;
+                        Main.faction_cache.get(key).DTR = Double.parseDouble(playertools.CalculateDTR(Main.faction_cache.get(key)));
                     }
                 }
             }
@@ -101,7 +103,6 @@ public class Misc_Timers {
                         key.remove();
                         Main.saved_players.remove(key);
                         Main.saved_items.remove(key);
-                        // remove from combat tag, and villager
                     } else {
                         Main.saved_players.put(key, val - 1000);
                     }
@@ -119,7 +120,7 @@ public class Misc_Timers {
                     Scoreboards.refresh(player);
                 }
             }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
     }
 
     public static void PotionLimiter() {
@@ -138,6 +139,35 @@ public class Misc_Timers {
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 1);
+    }
+    public static void StuckTimers() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    if (HCF_Timer.checkStuckTimer(player)) {
+                        Scoreboards.refresh(player);
+                        Location loc = HCF_Claiming.ReturnSafeSpot(player.getLocation());
+                        if(loc != null){
+                            player.teleport(loc);
+                            player.sendMessage(Messages.STUCK_FINISHED.queue());
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
+    }
+    public static void PearlTimer() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    if (HCF_Timer.checkEpTimer(player)) {
+                        Scoreboards.refresh(player);
+                    }
+                }
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
     }
 
 
