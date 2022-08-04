@@ -37,5 +37,11 @@ public class onPlayerMove implements Listener {
         if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("miner")) {
             Miner.setInvisMode(e.getPlayer(), e.getTo().getY() <= Miner.min_y_value);
         }
+
+        if(e.getFrom().getBlockX() != e.getTo().getBlockX()
+                || e.getFrom().getBlockY() != e.getTo().getBlockY()
+                || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
+            SpawnShield.CalculateWall(e.getPlayer());
+        }
     }
 }

@@ -6,6 +6,7 @@ import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.classes.ClassSelector;
+import me.idbi.hcf.koth.KOTH;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -168,6 +169,17 @@ public class Misc_Timers {
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
+    }
+    public static void KOTH_Countdown() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(KOTH.GLOBAL_AREA != null && KOTH.GLOBAL_PLAYER != null){
+                    //TODO: Scoreboard format MIN:SS
+                    KOTH.GLOBAL_TIME--;
+                }
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }
 
 

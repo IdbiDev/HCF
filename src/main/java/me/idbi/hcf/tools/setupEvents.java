@@ -61,6 +61,6 @@ public class setupEvents {
 
         getServer().getPluginManager().registerEvents(new AnvilEvent(), Main.getPlugin(Main.class));
 
-        //getServer().getPluginManager().registerEvents(new PearlThrowEvent(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new PearlFixer(), Main.getPlugin(Main.class));
     }
 }

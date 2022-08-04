@@ -26,10 +26,14 @@ public class onDamage implements Listener {
             }
             String c = ChatColor.stripColor(HCF_Claiming.sendFactionTerritory(victim));
             try{
-                if (Main.nameToFaction.get(c).factionid == 1) {
-                    e.setCancelled(true);
-                    damager.sendMessage(Messages.CANT_DAMAGE_PROTECTED_AREA.queue());
-                    return;
+                HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(victim.getLocation().getBlockX(),victim.getLocation().getBlockZ());
+
+                if (claim != null) {
+                    if(claim.attribute.equals("protected")){
+                        e.setCancelled(true);
+                        damager.sendMessage(Messages.CANT_DAMAGE_PROTECTED_AREA.queue());
+                        return;
+                    }
                 }
             }catch (NullPointerException ignored){}
 

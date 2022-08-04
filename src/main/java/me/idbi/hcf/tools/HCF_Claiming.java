@@ -10,11 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.awt.*;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class HCF_Claiming {
     private static final HashMap<Integer, Point> startpositions = new HashMap<>();
@@ -100,7 +97,13 @@ public class HCF_Claiming {
                 Main.Faction f = Main.faction_cache.get(faction);
                 endpositions.remove(faction);
                 startpositions.remove(faction);
-                HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid);
+                HCF_Claiming.Faction_Claim claim;
+                if(faction == 1){
+                    claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid,"protected");
+                }else{
+                    claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid,"normal");
+                }
+
                 f.addClaim(claim);
 
                 return true;
@@ -255,6 +258,16 @@ public class HCF_Claiming {
         }
         return ChatColor.DARK_RED + "Unknown";
     }
+    public static Faction_Claim sendClaimByXZ(int x, int z) {
+        for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
+            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
+                if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
+                   return val;
+                }
+            }
+        }
+        return null;
+    }
 
     public static void CreateNewFakeTower(Player p, Location loc) {
         loc.setY(0);
@@ -294,9 +307,17 @@ public class HCF_Claiming {
             ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
             ItemMeta meta = wand.getItemMeta();
 
-            List<String> str = Arrays.asList("SpawnSetter");
+            meta.setDisplayName("§e§oSpawn Claimer");
+
+            List<String> str = new ArrayList<>();
+            str.add("§aUse §o/admin claimspawn claim");
+            str.add("§7to claim the area.");
+            str.add("§cUse §o/admin claimspawn stop");
+            str.add("§7to exit from the claim mode");
+            str.add("§cDo NOT modify the faction with the ID 1");
 
             meta.setLore(str);
+
             wand.setItemMeta(meta);
             p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
             return true;
@@ -309,27 +330,29 @@ public class HCF_Claiming {
 
     // Marci <333333 Adbi
     public static class Point {
-        int x, z;
+        public int x, z;
 
-        Point(int x, int z) {
+        public Point(int x, int z) {
             this.x = x;
             this.z = z;
         }
     }
 
     public static class Faction_Claim {
-        int startX;
-        int endX;
-        int startZ;
-        int endZ;
-        int faction;
-
-        public Faction_Claim(int startX, int endX, int startZ, int endZ, int faction) {
+        public int startX;
+        public int endX;
+        public int startZ;
+        public int endZ;
+        public int faction;
+        //Attributes: Protected, KOTH, normal,Special
+        public String attribute;
+        public Faction_Claim(int startX, int endX, int startZ, int endZ, int faction,String attribute) {
             this.startX = startX;
             this.endX = endX;
             this.startZ = startZ;
             this.endZ = endZ;
             this.faction = faction;
+            this.attribute = attribute;
         }
     }
 

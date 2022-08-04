@@ -8,6 +8,7 @@ import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
+import me.idbi.hcf.koth.KOTH;
 import me.idbi.hcf.tools.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -111,6 +112,7 @@ public final class Main extends JavaPlugin {
         max_members_pro_faction = Integer.parseInt(ConfigLibrary.MAX_FACTION_MEMBERS.getValue());
         world_border_radius = Integer.parseInt(ConfigLibrary.WORLD_BORDER_DISTANCE.getValue());
         stuck_duration =  Integer.parseInt(ConfigLibrary.STUCK_TIMER_DURATION.getValue());
+        KOTH.GLOBAL_TIME =  Integer.parseInt(ConfigLibrary.KOTH_TIME.getValue()) * 60;
 
         con = SQL_Connection.dbConnect(
                 ConfigLibrary.DATABASE_HOST.getValue(),
@@ -178,6 +180,7 @@ public final class Main extends JavaPlugin {
         Misc_Timers.AutoSave();
         Misc_Timers.StuckTimers();
         Misc_Timers.PearlTimer();
+        Misc_Timers.KOTH_Countdown();
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
         //displayTeams.setupAllTeams();

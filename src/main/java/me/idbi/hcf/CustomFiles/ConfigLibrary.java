@@ -28,6 +28,7 @@ public enum ConfigLibrary {
     Scoreboard_title("&6HCF+ &7- &eMap &6#1"),
 
     STUCK_TIMER_DURATION("30"),
+    KOTH_TIME("15"),
     DATABASE_HOST("localhost"),
     DATABASE_PORT("3306"),
     DATABASE_DATABSE("meincraft"),

@@ -1,5 +1,7 @@
 package me.idbi.hcf;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionEffectType;
@@ -9,6 +11,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class HCF_Rules {
+    public static ImmutableSet blockedPearlTypes;
     public final static ArrayList blacklistedBlocks = new ArrayList() {{
         add(Material.LEVER);
         add(Material.STONE_BUTTON);
@@ -140,6 +143,16 @@ public class HCF_Rules {
         }
         return enchant_obj;
     }
+    public static void setupPearlGlitch(){
+        blockedPearlTypes = Sets.immutableEnumSet((Enum)Material.THIN_GLASS,
+                (Enum[])new Material[] {
+                        Material.IRON_FENCE, Material.FENCE, Material.NETHER_FENCE,
+                        Material.FENCE_GATE, Material.ACACIA_STAIRS, Material.BIRCH_WOOD_STAIRS, Material.BRICK_STAIRS,
+                        Material.COBBLESTONE_STAIRS, Material.DARK_OAK_STAIRS, Material.JUNGLE_WOOD_STAIRS,
+                        Material.NETHER_BRICK_STAIRS, Material.QUARTZ_STAIRS, Material.SANDSTONE_STAIRS,
+                        Material.SMOOTH_STAIRS, Material.SPRUCE_WOOD_STAIRS, Material.WOOD_STAIRS });
+    }
+
 
 
 }

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Faction_Claim {
@@ -25,8 +25,12 @@ public class Faction_Claim {
                 ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
                 ItemMeta meta = wand.getItemMeta();
 
-                List<String> str = Arrays.asList("Cicacsomag");
+                meta.setDisplayName("&uClaim tool");
 
+                List<String> str = new ArrayList<>();
+
+                str.add("Use &uleft&r and &uright&r click");
+                str.add("to select the area.");
                 meta.setLore(str);
                 wand.setItemMeta(meta);
                 p.getInventory().setItem(p.getInventory().firstEmpty(), wand);

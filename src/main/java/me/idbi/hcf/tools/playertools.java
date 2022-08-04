@@ -188,9 +188,9 @@ public class playertools {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM claims");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                if (rs.getString("type").equals("faction")) {
+                if (true) {
                     try {
-                        HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt(3), rs.getInt(5), rs.getInt(4), rs.getInt(6), rs.getInt(2));
+                        HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt(3), rs.getInt(5), rs.getInt(4), rs.getInt(6), rs.getInt(2),rs.getString("type"));
                         Main.faction_cache.get(rs.getInt("factionid")).addClaim(claim);
                         Main.sendCmdMessage(rs.getInt("factionid") + " CLAIM");
                     } catch (Exception ignored) {
@@ -380,9 +380,7 @@ public class playertools {
 
     public static int createCustomFaction(String name){
         //getting the last minus value
-        HashMap<String, Object> map = SQL_Connection.dbPoll(con,"SELECT * FROM `factions` ORDER BY `factions`.`ID` ASC");
-        int id = (int) map.get("ID");
-        SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?',ID='?'", name,String.valueOf(id));
+        int id = SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?'", name);
         Main.Faction faction = new Main.Faction(id, name, "", 0);
 
         Main.faction_cache.put(id, faction);
