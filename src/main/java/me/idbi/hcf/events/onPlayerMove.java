@@ -5,6 +5,7 @@ import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.classes.Miner;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
+import me.idbi.hcf.tools.SpawnShield;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
