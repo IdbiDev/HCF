@@ -171,7 +171,7 @@ public enum ListMessages {
     public List<String> queue() {
         List<String> returnString = new ArrayList<>();
 
-        for (String str : message) {
+        for (String str : list) {
             returnString.add(ChatColor.translateAlternateColorCodes('&', str).replace("%prefix%", Messages.PREFIX.queue()));
         }
 

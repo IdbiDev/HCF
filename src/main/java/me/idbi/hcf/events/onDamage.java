@@ -1,6 +1,7 @@
 package me.idbi.hcf.events;
 
 
+import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.classes.Archer;
 import me.idbi.hcf.tools.HCF_Claiming;
@@ -41,10 +42,10 @@ public class onDamage implements Listener {
 
             if (damager_faction == 0 && victim_faction == 0) {
                 if (HCF_Timer.addCombatTimer(victim)) {
-                    victim.sendMessage(Messages.COMBAT_MESSAGE.queue());
+                    victim.sendMessage(Messages.COMBAT_MESSAGE.queue().replace("%sec%", ConfigLibrary.Combat_time.getValue()));
                 }
                 if (HCF_Timer.addCombatTimer(damager)) {
-                    damager.sendMessage(Messages.COMBAT_MESSAGE.queue());
+                    damager.sendMessage(Messages.COMBAT_MESSAGE.queue().replace("%sec%", ConfigLibrary.Combat_time.getValue()));
                 }
                 return;
             }
@@ -59,10 +60,10 @@ public class onDamage implements Listener {
             }
             //Add combatTimer
             if (HCF_Timer.addCombatTimer(victim)) {
-                victim.sendMessage(Messages.COMBAT_MESSAGE.queue());
+                victim.sendMessage(Messages.COMBAT_MESSAGE.queue().replace("%sec%", ConfigLibrary.Combat_time.getValue()));
             }
             if (HCF_Timer.addCombatTimer(damager)) {
-                damager.sendMessage(Messages.COMBAT_MESSAGE.queue());
+                damager.sendMessage(Messages.COMBAT_MESSAGE.queue().replace("%sec%", ConfigLibrary.Combat_time.getValue()));
             }
             //Damage if ArcherTag
             if (HCF_Timer.checkArcherTimer(victim)) {

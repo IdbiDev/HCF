@@ -23,7 +23,6 @@ public class onSignPlace implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Bukkit.broadcastMessage(event.getClickedBlock().getData() + "");
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
@@ -52,11 +51,12 @@ public class onSignPlace implements Listener {
             //Bukkit.broadcastMessage(event.getBlockFace().name());
             if(event.getBlockFace() == BlockFace.UP || event.getBlockFace() == BlockFace.DOWN) {
                 block.setType(Material.SIGN_POST);
+                block.setData(getDirection(event.getPlayer()));
             } else {
                 block.setType(Material.WALL_SIGN);
+                block.setData(data);
             }
 
-            block.setData(data);
 
             BlockState state = block.getState();
             if(state instanceof Sign sign) {
@@ -73,8 +73,16 @@ public class onSignPlace implements Listener {
                 }
                 sign.update(true);
                 block.getState().update(true, true);
+
+                removeItem(event.getPlayer(), 1);
             }
         }
+    }
+
+    public static void removeItem(Player p, int amount) {
+        ItemStack is = p.getItemInHand();
+        is.setAmount(Math.max((is.getAmount() - amount), 0));
+        p.setItemInHand(is);
     }
 
     public static ItemStack deathSign(Player killer, Player victim) {
@@ -94,38 +102,47 @@ public class onSignPlace implements Listener {
         return is;
     }
 
-    private BlockFace getDirection(Player player) {
-        double rotation = (player.getLocation().getYaw() - 90) % 360;
+    private byte getDirection(Player player) {
+        double rotation = (player.getLocation().getYaw()) % 360;
         if (rotation < 0) {
             rotation += 360.0;
             if (0 <= rotation && rotation < 22.5) {
-                return BlockFace.NORTH;
+                //return BlockFace.NORTH;
+                return 8;
             }
             if (22.5 <= rotation && rotation < 67.5) {
-                return BlockFace.NORTH_EAST;
+                //return BlockFace.NORTH_EAST;
+                return 10;
             }
             if (67.5 <= rotation && rotation < 112.5) {
-                return BlockFace.EAST;
+                //return BlockFace.EAST;
+                return 12;
             }
             if (112.5 <= rotation && rotation < 157.5) {
-                return BlockFace.SOUTH_EAST;
+                //return BlockFace.SOUTH_EAST;
+                return 14;
             }
             if (157.5 <= rotation && rotation < 202.5) {
-                return BlockFace.SOUTH;
+               // return BlockFace.SOUTH;
+                return 0;
             }
             if (202.5 <= rotation && rotation < 247.5) {
-                return BlockFace.SOUTH_WEST;
+                //return BlockFace.SOUTH_WEST;
+                return 2;
             }
             if (247.5 <= rotation && rotation < 292.5) {
-                return BlockFace.WEST;
+                //return BlockFace.WEST;
+                return 4;
             }
             if (292.5 <= rotation && rotation < 337.5) {
-                return BlockFace.NORTH_WEST;
+                //return BlockFace.NORTH_WEST;
+                return 6;
             }
             if (337.5 <= rotation && rotation < 359) {
-                return BlockFace.NORTH;
+                //return BlockFace.NORTH;
+                return 8;
             }
         }
-        return null;
+        return 8;
     }
 }

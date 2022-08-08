@@ -283,8 +283,11 @@ public enum Messages {
         return this;
     }
     public Messages repDeathWithKills(Player victim, Player killer) {
-        System.out.println(killer.getItemInHand().hasItemMeta());
-        String weaponName = (killer.getItemInHand().getItemMeta().hasDisplayName() ? killer.getItemInHand().getItemMeta().getDisplayName() : killer.getItemInHand().getType().name().toLowerCase());
+        String weaponName = (killer.getItemInHand().hasItemMeta()) ?
+                (killer.getItemInHand().getItemMeta().hasDisplayName()
+                        ? killer.getItemInHand().getItemMeta().getDisplayName()
+                        : killer.getItemInHand().getType().name().toLowerCase())
+                : killer.getItemInHand().getType().name().toLowerCase();
         String killer_kills = playertools.getMetadata(killer,"kills");
         String victim_kills = playertools.getMetadata(victim,"kills");
         message = msg.replace("%victim%", victim.getName())
