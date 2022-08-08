@@ -28,8 +28,7 @@ public class faction implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         //if (cmd.getName().equalsIgnoreCase("faction")) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
+        if (sender instanceof Player p) {
             if (args.length > 0) {
                 switch (args[0]) {
                     case "create":

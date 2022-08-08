@@ -86,6 +86,13 @@ public class koth implements CommandExecutor, TabCompleter {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             }
                             break;
+                        case "help":
+                            //System.out.println(ListMessages.KOTH_COMMAND_LIST.queue());
+                            for (String lines : ListMessages.KOTH_COMMAND_LIST.queue()) {
+                                System.out.println(lines);
+                                p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
+                            }
+                            break;
                     }
                 }
             }else{
@@ -104,7 +111,8 @@ public class koth implements CommandExecutor, TabCompleter {
                         "setreward",
                         "create",
                         "setcapturezone",
-                        "setnatrualzone"
+                        "setnatrualzone",
+                        "help"
                 );
             }
         }

@@ -138,6 +138,11 @@ public class admin implements CommandExecutor, TabCompleter {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
+                        case "help":
+                            for (String lines : ListMessages.ADMIN_COMMAND_LIST.queue()) {
+                                p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
+                            }
+                            break;
                     }
                 } else {
                     p.sendMessage(Messages.NO_PERMISSION.queue());
@@ -168,7 +173,8 @@ public class admin implements CommandExecutor, TabCompleter {
                         "takemoney",
                         "setfactionname",
                         "spawnclaim",
-                        "eotw"
+                        "eotw",
+                        "help"
                 );
             } else if(args.length == 2) {
                 if(args[0].equalsIgnoreCase("spawnclaim")) {
