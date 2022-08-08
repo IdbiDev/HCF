@@ -328,7 +328,7 @@ public class HCF_Claiming {
         return false;
     }
 
-    // Marci <333333 Adbi
+    // Marci <333333 Adbi Igen adrián?
     public static class Point {
         public int x, z;
 

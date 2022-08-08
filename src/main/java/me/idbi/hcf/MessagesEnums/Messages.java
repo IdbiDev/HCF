@@ -193,7 +193,13 @@ public enum Messages {
     STUCK_INTERRUPTED("%prefix% &cYou interrupted the stuck timer!"),
 
     CLAIM_POS_START("%prefix% &bClaim start pos: &a&n%loc%"),
-    CLAIM_POS_END("%prefix% &bClaim end pos: &a&n%loc%");
+    CLAIM_POS_END("%prefix% &bClaim end pos: &a&n%loc%"),
+
+    // KOTH SOTW EOTW
+    ENABLE_EOTW("%prefix% &aEOTW started!"),
+    // kotd
+    UPDATED_KOTH_REWARDS("%prefix% &aSuccessfully saved rewards!"),
+    CLAIM_KOTH_REWARDS("%prefix% &aYou claimed KOTH rewards!");
 
 
     private String msg, defaultMsg;

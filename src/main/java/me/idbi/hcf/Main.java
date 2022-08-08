@@ -1,9 +1,7 @@
 package me.idbi.hcf;
 
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
-import me.idbi.hcf.CustomFiles.ConfigManager;
-import me.idbi.hcf.CustomFiles.DiscordFile;
-import me.idbi.hcf.CustomFiles.MessagesFile;
+
+import me.idbi.hcf.CustomFiles.*;
 import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.classes.Bard;
@@ -43,6 +41,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static int faction_startingmoney;
     public static int max_members_pro_faction;
     public static int stuck_duration;
+    public static long EOTWStarted;
 
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
 
@@ -125,6 +124,7 @@ public final class Main extends JavaPlugin implements Listener {
             return;
         new SQL_Generator();
         // Variables
+        player_block_changes = new HashMap<>();
         Faction_Home.teleportPlayers = new ArrayList<>();
 
         SetupBot.setup();
@@ -155,6 +155,8 @@ public final class Main extends JavaPlugin implements Listener {
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         saveConfig();
+
+        KothRewardsFile.setup();
 
         // Displaynames
 

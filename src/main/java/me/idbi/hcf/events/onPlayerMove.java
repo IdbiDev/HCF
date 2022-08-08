@@ -42,7 +42,7 @@ public class onPlayerMove implements Listener {
         if(e.getFrom().getBlockX() != e.getTo().getBlockX()
                 || e.getFrom().getBlockY() != e.getTo().getBlockY()
                 || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
-            SpawnShield.CalculateWall(e.getPlayer());
+            //SpawnShield.CalcWall(e.getPlayer());
         }
     }
 }

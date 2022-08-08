@@ -54,14 +54,12 @@ public class setupEvents {
 
         getServer().getPluginManager().registerEvents(new onPlayerChat(), Main.getPlugin(Main.class));
 
-        getServer().getPluginManager().registerEvents(new TableEvent(), Main.getPlugin(Main.class));
-
         getServer().getPluginManager().registerEvents(new onChunkLoaded(), Main.getPlugin(Main.class));
 
+        // Enchant
+        getServer().getPluginManager().registerEvents(new TableEvent(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new EnchantInventory(), Main.getPlugin(Main.class));
-
         getServer().getPluginManager().registerEvents(new TableInteract(), Main.getPlugin(Main.class));
-
         getServer().getPluginManager().registerEvents(new AnvilEvent(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new PearlFixer(), Main.getPlugin(Main.class));

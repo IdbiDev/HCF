@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
+import me.idbi.hcf.tools.Misc_Timers;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,6 +18,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Scoreboards {
     private static final Main m = Main.getPlugin(Main.class);
@@ -98,6 +100,8 @@ public class Scoreboards {
                 continue;
             } else if(line.contains("%bard_energy%") && Double.parseDouble(playertools.getMetadata(p, "bardenergy")) <= 0.0) {
                 continue;
+            } else if(line.contains("%eotw%") && Misc_Timers.getTimeOfEOTW() <= 0L) {
+                continue;
             }
 
             if (line.equals("empty"))
@@ -145,7 +149,11 @@ public class Scoreboards {
         List<String> fix = new ArrayList<>();
         List<String> timers = new ArrayList<>();
         for (String line : str) {
-            if (line.contains("%spawntag%") || line.contains("%ep_cd%") || line.contains("%bard_energy%") || line.contains("%stuck_timer%")) {
+            if (line.contains("%spawntag%")
+                    || line.contains("%ep_cd%")
+                    || line.contains("%bard_energy%")
+                    || line.contains("%stuck_timer%")
+                    || line.contains("%eotw%")) {
                 timers.add(ChatColor.translateAlternateColorCodes('&', line));
                 continue;
             }
@@ -175,10 +183,61 @@ public class Scoreboards {
                 .replace("%spawntag%", getDouble(HCF_Timer.getCombatTime(p)))
                 .replace("%stuck_timer%", getDouble(HCF_Timer.getStuckTime(p)))
                 .replace("%ep_cd%", getDouble(HCF_Timer.getEpTime(p)))
+                .replace("%eotw%", ConvertTime((int) Misc_Timers.getTimeOfEOTW()))
                 .replace("%location%", HCF_Claiming.sendFactionTerritory(p));
     }
 
     public static String getDouble(long value) {
         return String.format("%.1f", Double.parseDouble(new SimpleDateFormat("ss.SSS").format(new Date(value)))).replace(",", ".");
+    }
+
+    public static String ConvertTime(int seconds) {
+        if(seconds <= 0)
+            return "0s";
+
+//        int day = (int) TimeUnit.MINUTES.toDays(minutes);
+//        long hours = TimeUnit.MINUTES.toHours(minutes) - (day * 24);
+//        long minute = TimeUnit.MINUTES.toMinutes(minutes) - (TimeUnit.MINUTES.toHours(minutes) * 60);
+//        int day = (int)TimeUnit.SECONDS.toDays(seconds);
+//        long hours = TimeUnit.SECONDS.toHours(seconds) - (day * 24L);
+//        long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
+//        long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
+
+        int minute = 0;
+        int hours = 0;
+        int second = seconds;
+        if(seconds > 60) {
+            second = seconds % 60;
+            minute = (seconds / 60) % 60;
+            hours = (seconds/60)/60;
+        }
+
+        String strSec= Integer.toString(second);
+        String strmin= Integer.toString(minute);
+        String strHours= Integer.toString(hours);
+
+        String result = "";
+
+//        if (day != 0){
+//            result += day;
+//            result += "d ";
+//        }
+
+        if (hours != 0){
+            result += hours;
+            result += "h ";
+        }
+
+        if (minute != 0){
+            result += minute;
+            result += "m ";
+        }
+
+        if (second != 0 && minute == 0 && hours == 0) {
+            result += second;
+            result += "s";
+        }
+
+        return result;
     }
 }

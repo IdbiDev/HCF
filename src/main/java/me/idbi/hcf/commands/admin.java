@@ -2,6 +2,8 @@ package me.idbi.hcf.commands;
 
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.adminsystem.adminMain;
+import me.idbi.hcf.commands.cmdFunctions.Faction_EOTW;
+import me.idbi.hcf.koth.GUI.KOTHInventory;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -67,6 +69,17 @@ public class admin implements CommandExecutor, TabCompleter {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             }catch (Exception e){
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            }
+                            break;
+                        case "eotw":
+                            try {
+                                Faction_EOTW.EOTW(p);
+                            } catch (IndexOutOfBoundsException asd) {
+                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                                //Kiíratás hogy balfaszul használta a commandot
+                            }catch (Exception e){
+                                p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                                e.printStackTrace();
                             }
                             break;
                         case "deletefaction":
@@ -149,7 +162,8 @@ public class admin implements CommandExecutor, TabCompleter {
                         "givemoney",
                         "takemoney",
                         "setfactionname",
-                        "spawnclaim"
+                        "spawnclaim",
+                        "eotw"
                 );
             } else if(args.length == 2) {
                 if(args[0].equalsIgnoreCase("spawnclaim")) {

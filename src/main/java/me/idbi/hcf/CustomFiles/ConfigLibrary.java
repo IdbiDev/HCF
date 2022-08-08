@@ -34,7 +34,9 @@ public enum ConfigLibrary {
     DATABASE_DATABSE("meincraft"),
     DATABASE_USER("root"),
     DATABASE_PASSWORD("password"),
-    MAX_FACTION_MEMBERS("7");
+    MAX_FACTION_MEMBERS("7"),
+    EOTW_time("60"),
+    World_width("World_width");
 
     private static final Main m = Main.getPlugin(Main.class);
     private String value;
