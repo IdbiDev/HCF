@@ -37,8 +37,6 @@ public class onDeath implements Listener {
             if(faction !=null){
                 faction.BroadcastFaction(Messages.KILL_MESSAGE_FACTION.repDeath(victim,damager).queue());
             }
-
-
         } else {
             e.setDeathMessage(Messages.KILL_MESSAGE_BROADCAST_WITHOUT_VICTIM.repDeathWithoutKiller(victim).queue());
         }
@@ -59,6 +57,9 @@ public class onDeath implements Listener {
             }
 
         }
+
+        if(damager != null)
+            victim.getWorld().dropItemNaturally(victim.getLocation(), onSignPlace.deathSign(damager, victim));
     }
 
     @EventHandler

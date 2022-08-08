@@ -168,7 +168,7 @@ public enum Messages {
 
     NO_DEATHBAN_KICK("%prefix%\n&cThe server disabled the deathban!"),
 
-    KILL_MESSAGE_BROADCAST("&4&l%killer%&f[%killer_kills%] slained &4&l%victim%&f[%victim_kills%] using [&b&o%killer_weapon%]"),
+    KILL_MESSAGE_BROADCAST("&4&l%killer%&f[%killer_kills%] slained &4&l%victim%&f[%victim_kills%] using [&b&o%killer_weapon%&f]"),
 
     KILL_MESSAGE_BROADCAST_WITHOUT_VICTIM("&4&l%victim%&f[%victim_kills%] died"),
 
@@ -283,13 +283,15 @@ public enum Messages {
         return this;
     }
     public Messages repDeathWithKills(Player victim, Player killer) {
+        System.out.println(killer.getItemInHand().hasItemMeta());
+        String weaponName = (killer.getItemInHand().getItemMeta().hasDisplayName() ? killer.getItemInHand().getItemMeta().getDisplayName() : killer.getItemInHand().getType().name().toLowerCase());
         String killer_kills = playertools.getMetadata(killer,"kills");
         String victim_kills = playertools.getMetadata(victim,"kills");
         message = msg.replace("%victim%", victim.getName())
                 .replace("%killer%", killer.getName())
                 .replace("%killer_kills%",killer_kills)
                 .replace("%victim_kills%",victim_kills)
-                .replace("%killer_weapon%",killer.getItemInHand().getItemMeta().getDisplayName());
+                .replace("%killer_weapon%", weaponName);
         this.msg = message;
         return this;
     }

@@ -69,5 +69,7 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new KOTHCloseEvent(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new KOTHInvClickEvent(), Main.getPlugin(Main.class));
 
+        getServer().getPluginManager().registerEvents(new onSignPlace(), Main.getPlugin(Main.class));
+
     }
 }
