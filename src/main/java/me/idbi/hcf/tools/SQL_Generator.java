@@ -17,7 +17,7 @@ public class SQL_Generator {
                       `startZ` int(255) NOT NULL DEFAULT 0,
                       `endX` int(255) NOT NULL DEFAULT 0,
                       `endZ` int(255) NOT NULL DEFAULT 0,
-                      `type` varchar(255) NOT NULL DEFAULT 'faction' COMMENT 'Types: faction;spawn;koth;end;',
+                      `type` varchar(255) NOT NULL DEFAULT 'normal' COMMENT 'Types: normal;protected;koth;end;',
                       PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,

@@ -41,9 +41,9 @@ public enum ListMessages {
     )),
 
     COMMAND_LIST(Arrays.asList(
-            "§9/f create §7- Create your faction",
+            "§9/f create <Name> §7- Create your faction",
             "§9/f show [Faction] §7- Show faction",
-            "§9/f claim §7- ",
+            "§9/f claim §7- Claiming",
             "§9/f invite <Player> §7- Invite player to your faction",
             "§9/f join §7- Join to a faction",
             "§9/f leave §7- Leave from your faction",
@@ -52,6 +52,29 @@ public enum ListMessages {
             "§9/f sethome §7- Sets a home to your faction",
             "§9/f home §7- Teleport to faction's home",
             "§9/f reload [file] §7- Reload files"
+    )),
+    KOTH_COMMAND_LIST(Arrays.asList(
+            "§9/koth create <Name> §7- Create the koth",
+            "§9/koth setcapturezone <Name> §7- Claim the koth place (CAPTURE ZONE)",
+            "§9/koth setnatrualzone <Name> §7- Claim the koth place (NEUTRAL ZONE)",
+            "§9/koth setreward §7- Set the koth reward with GUI"
+
+    )),
+    ADMIN_COMMAND_LIST(Arrays.asList(
+            "§9/admin duty §7- Entering duty mode",
+            "§9/admin deposit <Faction> <Amount> §7- Deposit x amount money to a faction",
+            "§9/admin withdraw <Faction> <Amount> §7- Withdraw x amount money from a faction",
+            "§9/admin freeze <Player> §7- Freeze/Unfreeze a player",
+            "§9/admin kick <Player> §7- Kick a player from the server",
+            "§9/admin setfaction <Player> <Faction> §7- Add the player to a faction",
+            "§9/admin removefaction <Player> <Faction> §7- Remove the player from a faction",
+            "§9/admin eotw §7- Starts the EOTW (End Of The World) (Time in the config file)",
+            "§9/admin deletefaction <Faction> §7- Delete the selected faction",
+            "§9/admin setleader <Faction> <newLeader> §7- Set the player to a faction leader",
+            "§9/admin givemoney <Player> <Amount> §7- Gives x amount money to a player",
+            "§9/admin takemoney <Player> <Amount> §7- Takes x amount money from a player",
+            "§9/admin setfactionname <Faction> <Name> §7- Sets a faction to a new name",
+            "§9/admin spawnclaim <state> §7- Starts the spawn claiming method!"
     ));
 
     private List<String> list;

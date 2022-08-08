@@ -197,9 +197,15 @@ public enum Messages {
 
     // KOTH SOTW EOTW
     ENABLE_EOTW("%prefix% &aEOTW started!"),
-    // kotd
+    // koth
     UPDATED_KOTH_REWARDS("%prefix% &aSuccessfully saved rewards!"),
-    CLAIM_KOTH_REWARDS("%prefix% &aYou claimed KOTH rewards!");
+    CLAIM_KOTH_REWARDS("%prefix% &aYou claimed KOTH rewards!"),
+    KOTH_INVALID_NAME("%prefix% &cThis koth doesn't exits!"),
+    KOTH_SUCESS_CREATE("%prefix% &aSuccessfully created the &6&o%faction_name%&a koth!"),
+    KOTH_CREATED("%prefix% &aYou have successfully created a koth named &6&o%faction_name%&a!"),
+    KOTH_CAPTURING_STARTED("%prefix% &aSomeone started to occupy the &6&o%faction_name%&a koth!"),
+    KOTH_CAPTURING_ENDED("%prefix% &aThe occupation of koth &6&o%faction_name%&a was abandoned!"),
+    KOTH_CAPTURE_TIMER("%prefix% &aSomeone is capturing kitty koth! (%format_time%)");
 
 
     private String msg, defaultMsg;
@@ -290,6 +296,13 @@ public enum Messages {
 
     public Messages repPlayer(Player p) {
         message = msg.replace("%player%", p.getName());
+        this.msg = message;
+        return this;
+    }
+    public Messages repTime_formatted(int seconds) {
+        long MM = (seconds % 3600) / 60;
+        long SS = seconds % 60;
+        message = msg.replace("%format_time%", String.format("%02d:%02d",MM,SS));
         this.msg = message;
         return this;
     }

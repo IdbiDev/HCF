@@ -6,7 +6,6 @@ import me.idbi.hcf.classes.Archer;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.playertools;
-
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;

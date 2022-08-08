@@ -17,8 +17,10 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 public class Scoreboards {
     private static final Main m = Main.getPlugin(Main.class);

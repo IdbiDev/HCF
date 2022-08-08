@@ -1,12 +1,9 @@
 package me.idbi.hcf.koth.GUI;
 
 import me.idbi.hcf.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class KOTHInvClickEvent implements Listener {

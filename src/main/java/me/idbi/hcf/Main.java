@@ -17,7 +17,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.io.File;
 import java.sql.Connection;

@@ -103,7 +103,7 @@ public class onPlayerInteract implements Listener {
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking() && !Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
-                if (HCF_Claiming.FinishClaiming(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")),e.getPlayer())) {
+                if (HCF_Claiming.FinishClaiming(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")),e.getPlayer(),"normal")) {
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_ACCEPT.queue());
                     e.getPlayer().getInventory().remove(e.getItem());
                 } else {
@@ -131,20 +131,21 @@ public class onPlayerInteract implements Listener {
             }
         }
 
-        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "kothClaiming"))) {
+        //Koth?
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "kothclaim"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
                 p.sendMessage(Messages.CLAIM_POS_END.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
-                HCF_Claiming.setEndPosition(1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+                HCF_Claiming.setEndPosition(Integer.parseInt(playertools.getMetadata(p, "kothid")), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
                 e.setCancelled(true);
             }
         }
-        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "kothClaiming"))) {
+        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "kothclaim"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
                 p.sendMessage(Messages.CLAIM_POS_START.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
                 e.setCancelled(true);
-                HCF_Claiming.setStartPosition(1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+                HCF_Claiming.setStartPosition(Integer.parseInt(playertools.getMetadata(p, "kothid")), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             }
         }
     }

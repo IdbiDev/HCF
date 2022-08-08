@@ -1,10 +1,11 @@
 package me.idbi.hcf.commands;
 
+import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.adminsystem.adminMain;
 import me.idbi.hcf.commands.cmdFunctions.Faction_EOTW;
-import me.idbi.hcf.koth.GUI.KOTHInventory;
 import me.idbi.hcf.tools.playertools;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -140,6 +141,10 @@ public class admin implements CommandExecutor, TabCompleter {
                     }
                 } else {
                     p.sendMessage(Messages.NO_PERMISSION.queue());
+                }
+            }else{
+                for (String lines : ListMessages.ADMIN_COMMAND_LIST.queue()) {
+                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
                 }
             }
         }

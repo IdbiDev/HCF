@@ -225,7 +225,7 @@ public class adminMain {
             playertools.setMetadata(admin, "spawnclaiming", true);
             HCF_Claiming.SpawnPrepare(admin);
         } else if (state.equalsIgnoreCase("claim")) {
-            if (HCF_Claiming.FinishClaiming(1,admin)) {
+            if (HCF_Claiming.FinishClaiming(1,admin,"protected")) {
                 //Todo: Kurvva sikerült
                 playertools.setMetadata(admin, "spawnclaiming", false);
                 admin.sendMessage(Messages.SPAWN_CLAIM_SUCCESS.queue());

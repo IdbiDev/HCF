@@ -1,7 +1,6 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,7 +16,7 @@ public class SpawnShield {
         HCF_Claiming.Point player_point = new HCF_Claiming.Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
         for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
             for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().claims) {
-                if(!(checkCombatTimer(p) && claim.attribute.equalsIgnoreCase("Protected")))
+                if(!(checkCombatTimer(p) && claim.attribute.equalsIgnoreCase("protected")))
                     continue;
 
 

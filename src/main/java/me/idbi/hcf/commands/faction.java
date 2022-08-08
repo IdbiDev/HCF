@@ -5,7 +5,6 @@ import me.idbi.hcf.CustomFiles.MessagesFile;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf.WorldModes.EOTW;
 import me.idbi.hcf.commands.cmdFunctions.Bank.Faction_DepositBank;
 import me.idbi.hcf.commands.cmdFunctions.Bank.Faction_WithdrawBank;
 import me.idbi.hcf.commands.cmdFunctions.*;
@@ -226,7 +225,6 @@ public class faction implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    @Deprecated
     public ArrayList<String> commandList() {
         ArrayList<String> commands = (ArrayList<String>) Arrays.asList(
                 "§9/f create §7- Create your faction",

@@ -10,12 +10,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HCF_Claiming {
-    private static final HashMap<Integer, Point> startpositions = new HashMap<>();
-    private static final HashMap<Integer, Point> endpositions = new HashMap<>();
+    public static final HashMap<Integer, Point> startpositions = new HashMap<>();
+    public static final HashMap<Integer, Point> endpositions = new HashMap<>();
 
     private static final HashMap<Player, Location> fakePos = new HashMap<>();
 
@@ -49,7 +51,7 @@ public class HCF_Claiming {
         endpositions.remove(faction);
     }
 
-    public static boolean FinishClaiming(int faction,Player p) {
+    public static boolean FinishClaiming(int faction,Player p,String attribute) {
         try {
             if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
                 Point faction_start = startpositions.get(faction);
@@ -57,7 +59,7 @@ public class HCF_Claiming {
                 //for (Map.Entry<Integer, Faction_Claim> entry : Main.faction_cache.get(faction).claims.entrySet()) {
                 for (Main.Faction f : Main.faction_cache.values()) {
 
-                    if (f.claims.isEmpty()) continue;
+                    //if (f.claims.isEmpty()) continue;
 
                     for (HCF_Claiming.Faction_Claim val : f.claims) {
 
@@ -87,9 +89,41 @@ public class HCF_Claiming {
                 if (playertools.getPlayerBalance(p) - calcMoneyOfArea(p) >= 0) {
                     playertools.setMetadata(p, "money", playertools.getPlayerBalance(p) - calcMoneyOfArea(p));
                 } else {
-                    p.sendMessage(Messages.NOT_ENOUGH_MONEY.queue());
-                    return false;
+                    if(attribute.equalsIgnoreCase("normal")){
+                        p.sendMessage(Messages.NOT_ENOUGH_MONEY.queue());
+                        return false;
+                    }
                 }
+
+                int claimid = SQL_Connection.dbExecute(Main.getConnection("commands.Claim"), "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?'",
+                        String.valueOf(faction), faction_start.x + "", faction_start.z + "", faction_end.x + "", faction_end.z + "");
+                //HandleSpawn
+                    Main.Faction f = Main.faction_cache.get(faction);
+                    endpositions.remove(faction);
+                    startpositions.remove(faction);
+                    HCF_Claiming.Faction_Claim claim;
+                    claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid,attribute);
+                    f.addClaim(claim);
+                /*if(faction == 1){
+                    claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid,"protected");
+                }else{
+                    claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid,"normal");
+                }*/
+
+
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+        }
+        return false;
+    }
+    public static boolean ForceFinishClaim(int faction,Player p,String attribute) {
+        try {
+            if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
+                Point faction_start = startpositions.get(faction);
+                Point faction_end = endpositions.get(faction);
 
                 int claimid = SQL_Connection.dbExecute(Main.getConnection("commands.Claim"), "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?'",
                         String.valueOf(faction), faction_start.x + "", faction_start.z + "", faction_end.x + "", faction_end.z + "");
@@ -98,19 +132,20 @@ public class HCF_Claiming {
                 endpositions.remove(faction);
                 startpositions.remove(faction);
                 HCF_Claiming.Faction_Claim claim;
-                if(faction == 1){
+                claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid,attribute);
+                f.addClaim(claim);
+                /*if(faction == 1){
                     claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid,"protected");
                 }else{
                     claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid,"normal");
-                }
+                }*/
 
-                f.addClaim(claim);
 
                 return true;
             }
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
+            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
         }
         return false;
     }
@@ -315,6 +350,31 @@ public class HCF_Claiming {
             str.add("§cUse §o/admin claimspawn stop");
             str.add("§7to exit from the claim mode");
             str.add("§cDo NOT modify the faction with the ID 1");
+
+            meta.setLore(str);
+
+            wand.setItemMeta(meta);
+            p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
+            return true;
+        } else {
+            p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
+        }
+
+        return false;
+    }
+    public static boolean CustomClaimPreparer(Player p,int factionid) {
+        if (p.getInventory().firstEmpty() != -1) {
+            ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
+            ItemMeta meta = wand.getItemMeta();
+
+            meta.setDisplayName("§e§oCustom Claimer");
+            Main.Faction f = Main.faction_cache.get(factionid);
+            List<String> str = new ArrayList<>();
+            if(f != null)
+                str.add("§cName: §4"+ f.factioname);
+            str.add("§cDo NOT modify the faction with the ID 1");
+
+
 
             meta.setLore(str);
 

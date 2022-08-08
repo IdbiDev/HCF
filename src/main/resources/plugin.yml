@@ -11,12 +11,19 @@ softdepend:
 commands:
   faction:
     aliases: [ f, factions ]
+    description: All HCF faction commands
+    usage: /<command> help
   admin:
     aliases: [ a, ad ]
+    description: HCF admin commands
+    usage: /<command> help
   fc:
     aliases: [ fcall, factioncall, factionc ]
+    description: Gives your position to your faction!
   koth:
     aliases: [ k, kh, pornhub ]
+    description: HCF Koth commands
+    usage: /<command> help
 
 permissions:
   factions.reload:

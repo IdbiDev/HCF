@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static me.idbi.hcf.koth.KOTH.GLOBAL_TIME;
 import static me.idbi.hcf.koth.KOTH.stopKoth;
 import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
 
@@ -182,10 +183,12 @@ public class Misc_Timers {
                 if(KOTH.GLOBAL_AREA != null && KOTH.GLOBAL_PLAYER != null){
                     //TODO: Scoreboard format MIN:SS
                     KOTH.GLOBAL_TIME--;
+                    if(KOTH.GLOBAL_TIME % 30 == 0)
+                        Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
                     if(KOTH.GLOBAL_TIME <= 0){
+
                         stopKoth();
                     }
-                    Main.sendCmdMessage("KOTH TIME:" + KOTH.GLOBAL_TIME);
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
