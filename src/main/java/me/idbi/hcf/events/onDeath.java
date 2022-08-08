@@ -34,7 +34,10 @@ public class onDeath implements Listener {
         Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(victim, "factionid")));
         if (damager != null) {
             e.setDeathMessage(Messages.KILL_MESSAGE_BROADCAST.repDeathWithKills(victim,damager).queue());
-            faction.BroadcastFaction(Messages.KILL_MESSAGE_FACTION.repDeath(victim,damager).queue());
+            if(faction !=null){
+                faction.BroadcastFaction(Messages.KILL_MESSAGE_FACTION.repDeath(victim,damager).queue());
+            }
+
 
         } else {
             e.setDeathMessage(Messages.KILL_MESSAGE_BROADCAST_WITHOUT_VICTIM.repDeathWithoutKiller(victim).queue());
@@ -47,7 +50,7 @@ public class onDeath implements Listener {
         }
 
 
-        if (faction.factionid != 0) {
+        if (faction !=null) {
             if (!Main.DTR_REGEN.containsKey(faction.factionid)) {
                 Main.DTR_REGEN.put(faction.factionid, System.currentTimeMillis() + death_time * 60000L);
                 if (Main.debug)

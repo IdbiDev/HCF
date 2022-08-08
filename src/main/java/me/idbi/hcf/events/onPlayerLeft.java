@@ -38,7 +38,9 @@ public class onPlayerLeft implements Listener {
             System.out.println(SQL_Connection.dbExecute(con, "UPDATE members SET online='?' WHERE uuid='?'", "0", e.getPlayer().getUniqueId().toString()));
             // Koba moment
             Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
-            f.BroadcastFaction(Messages.LEAVE_FACTION_BC.repPlayer(e.getPlayer()).queue());
+            if(f != null){
+                f.BroadcastFaction(Messages.LEAVE_FACTION_BC.repPlayer(e.getPlayer()).queue());
+            }
             //Main.cacheRanks.remove(e.getPlayer());
         }
         if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "freeze"))) {

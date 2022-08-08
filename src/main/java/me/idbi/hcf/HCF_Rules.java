@@ -72,8 +72,8 @@ public class HCF_Rules {
         put(5, 5.5);
     }};
     public static class Enchant_Obj{
-        private Enchantment enchantment;
-        private int level;
+        private final Enchantment enchantment;
+        private final int level;
         Enchant_Obj(Enchantment enc,int level){
             this.enchantment = enc;
             this.level = level;
@@ -152,6 +152,7 @@ public class HCF_Rules {
                         Material.NETHER_BRICK_STAIRS, Material.QUARTZ_STAIRS, Material.SANDSTONE_STAIRS,
                         Material.SMOOTH_STAIRS, Material.SPRUCE_WOOD_STAIRS, Material.WOOD_STAIRS });
     }
+    public static final String startMessage = "";
 
 
 

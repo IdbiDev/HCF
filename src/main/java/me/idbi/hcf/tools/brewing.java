@@ -18,7 +18,6 @@ public class brewing {
     public static final ArrayList<Furnace> furnaces = new ArrayList<>();
 
     public static void setAllBrewingStands() {
-        long start = (System.currentTimeMillis());
         World w = Bukkit.getWorld(ConfigLibrary.World_name.getValue());
         for (Chunk c : w.getLoadedChunks()) {
             BlockState[] blocks = c.getTileEntities();
@@ -33,7 +32,6 @@ public class brewing {
                 }
             }
         }
-        System.out.println("Finished check: " + (System.currentTimeMillis() - start));
     }
     public static void Async_Cache_BrewingStands() {
         new BukkitRunnable() {

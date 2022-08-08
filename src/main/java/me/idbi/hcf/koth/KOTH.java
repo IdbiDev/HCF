@@ -1,6 +1,8 @@
 package me.idbi.hcf.koth;
 
+import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.koth.GUI.KOTHItemManager;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
@@ -8,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+
 
 public class KOTH implements Listener {
 
@@ -24,25 +27,58 @@ public class KOTH implements Listener {
             if(GLOBAL_PLAYER == null){
                 // ha kothba ment ÉS nem foglalja senki
                 if(GLOBAL_AREA.claim.attribute.equalsIgnoreCase("koth") && HCF_Claiming.doOverlap(start,end,point,point)){
-                    GLOBAL_PLAYER = e.getPlayer();
+                    if(!playertools.getMetadata(e.getPlayer(),"factionid").equals("0")) {
+                        GLOBAL_PLAYER = e.getPlayer();
+                        Main.sendCmdMessage("Player captured");
+                    }
                 }
             }else{
                 if(GLOBAL_AREA.claim.attribute.equalsIgnoreCase("koth") && !HCF_Claiming.doOverlap(start,end,point,point)){
                     if(GLOBAL_PLAYER == e.getPlayer()){
                         GLOBAL_PLAYER = null;
+                        GLOBAL_TIME = Integer.parseInt(ConfigLibrary.KOTH_TIME.getValue()) * 60;
+                        Main.sendCmdMessage("Player got out");
                     }
                 }
             }
 
         }
     }
-    //Todo: VAlahogy kothot csinálni XDDDDD
-    public static class koth_area{
+    public static class koth_area {
         HCF_Claiming.Faction_Claim claim;
         Main.Faction faction;
-        public koth_area(String name,HCF_Claiming.Point start, HCF_Claiming.Point end){
-            faction = Main.faction_cache.get(playertools.createCustomFaction(name));
+        public koth_area(Main.Faction f,HCF_Claiming.Point start, HCF_Claiming.Point end){
+            faction = f;
             claim = new HCF_Claiming.Faction_Claim(start.x,end.x,start.z,end.z,faction.factionid,"koth");
         }
+    }
+
+    public static void createKoth(String name) {
+        int faction = playertools.createCustomFaction(name);
+//        KOTH.koth_area temp = new KOTH.koth_area(
+//                faction,
+//                new HCF_Claiming.Point(claim.startX,claim.startZ),
+//                new HCF_Claiming.Point(claim.endX,claim.endZ)
+//        );
+    }
+
+
+    public static void startKoth(String f){
+        try{
+            //TODO:  Koth started @everyone
+            Main.sendCmdMessage("KOTH: "+   Main.koth_cache.get(f).faction.factioname);
+            GLOBAL_AREA = Main.koth_cache.get(f);
+        }catch (Exception e){
+            Main.sendCmdMessage("Nem található koth ezzel a névvel..");
+        }
+    }
+
+    public static void stopKoth(){
+        GLOBAL_AREA = null;
+        //TODO:  Koth Elfoglalta xy
+        //TODO: Set the items
+        KOTHItemManager.addRewardsToPlayer(GLOBAL_PLAYER);
+        GLOBAL_PLAYER  = null;
+        GLOBAL_TIME = Integer.parseInt(ConfigLibrary.KOTH_TIME.getValue()) * 60;
     }
 }

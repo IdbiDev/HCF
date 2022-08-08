@@ -1,7 +1,7 @@
 name: HCFPlugin
 version: '${project.version}'
 main: me.idbi.hcf.Main
-api-version: 1.18
+#api-version: 1.8
 prefix: 'HCF+'
 authors: [ Idbi, kbalu ]
 description: FÜR PLAYERS WO WANNA PLAY some HCF
@@ -15,6 +15,8 @@ commands:
     aliases: [ a, ad ]
   fc:
     aliases: [ fcall, factioncall, factionc ]
+  koth:
+    aliases: [ k, kh, pornhub ]
 
 permissions:
   factions.reload:

@@ -11,6 +11,9 @@ import me.idbi.hcf.events.Enchants.EnchantInventory;
 import me.idbi.hcf.events.Enchants.TableEvent;
 import me.idbi.hcf.events.Enchants.TableInteract;
 import me.idbi.hcf.events.*;
+import me.idbi.hcf.koth.GUI.KOTHCloseEvent;
+import me.idbi.hcf.koth.GUI.KOTHInvClickEvent;
+import me.idbi.hcf.koth.KOTH;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -62,5 +65,11 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new AnvilEvent(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new PearlFixer(), Main.getPlugin(Main.class));
+
+        // KOTH
+        getServer().getPluginManager().registerEvents(new KOTH(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new KOTHCloseEvent(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new KOTHInvClickEvent(), Main.getPlugin(Main.class));
+
     }
 }

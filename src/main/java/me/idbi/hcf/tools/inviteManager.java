@@ -8,10 +8,9 @@ public class inviteManager {
 
     public static class factionInvite {
         private final ArrayList<Player> invitedPlayers = new ArrayList();
-        private int faction;
 
         public factionInvite(Integer id) {
-            this.faction = id;
+            int faction = id;
         }
 
         public void invitePlayerToFaction(Player p) {

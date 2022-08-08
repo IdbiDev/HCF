@@ -16,6 +16,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
@@ -25,13 +26,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+
+import static me.idbi.hcf.HCF_Rules.startMessage;
+import static me.idbi.hcf.koth.KOTH.startKoth;
 
 
-public final class Main extends JavaPlugin {
+public final class Main extends JavaPlugin implements Listener {
     // Beállítások configba
 
     public static int world_border_radius;
@@ -44,14 +45,20 @@ public final class Main extends JavaPlugin {
     public static int stuck_duration;
 
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
+
+    public static HashMap<String, KOTH.koth_area> koth_cache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
     public static HashMap<Integer, String> factionToname = new HashMap<>();
     public static HashMap<Player, Main.Player_Obj> player_cache = new HashMap<>();
     public static HashMap<Integer, Long> DTR_REGEN = new HashMap<>();
     public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
     public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
-    public static HashMap<Main.Faction, Scoreboard> teams = new HashMap<>();
+    //public static HashMap<Main.Faction, Scoreboard> teams = new HashMap<>();
+
+    public static HashMap<Player, List<Location>> player_block_changes = new HashMap<>();
     private static Connection con;
+
+    public static ArrayList<UUID> kothRewardsGUI;
 
     // Egyszerű SQL Connection getter
     public static Connection getConnection(String who) {
@@ -88,15 +95,9 @@ public final class Main extends JavaPlugin {
     @Override
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEnable() {
-        //Todo:
-        /*
-            Configba:
-                -   Bard energy itemenként
-            STB:
-                - Parancsok elnevezése
-
-         */
-        //System.out.println(0/0*0^0);
+        kothRewardsGUI = new ArrayList<>();
+        EOTWStarted = System.currentTimeMillis() / 1000;
+        long deltatime = System.currentTimeMillis();
         MessagesFile.setup();
         ConfigManager.getManager().setup();
         DiscordFile.setup();
@@ -164,6 +165,7 @@ public final class Main extends JavaPlugin {
         playertools.setFactionCache();
         playertools.cacheFactionClaims();
         playertools.LoadRanks();
+        playertools.prepareKoths();
         //Setup players
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             playertools.LoadPlayer(player);
@@ -181,9 +183,14 @@ public final class Main extends JavaPlugin {
         Misc_Timers.StuckTimers();
         Misc_Timers.PearlTimer();
         Misc_Timers.KOTH_Countdown();
+        Misc_Timers.CleanupFakeWalls();
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
+        startKoth("BauBence");
         //displayTeams.setupAllTeams();
+
+        sendCmdMessage((System.currentTimeMillis()- deltatime) + "ms");
+        sendCmdMessage(startMessage);
     }
 
     @Override
@@ -285,7 +292,6 @@ public final class Main extends JavaPlugin {
                 claims.add(claimid);
                 ex.printStackTrace();
             }
-            System.out.println(claims.size());
         }
 
         public HCF_Claiming.Faction_Claim getFactionClaim(Integer id) {

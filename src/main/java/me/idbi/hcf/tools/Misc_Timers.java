@@ -9,13 +9,17 @@ import me.idbi.hcf.classes.ClassSelector;
 import me.idbi.hcf.koth.KOTH;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import static me.idbi.hcf.koth.KOTH.stopKoth;
 import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
 
 public class Misc_Timers {
@@ -177,11 +181,54 @@ public class Misc_Timers {
                 if(KOTH.GLOBAL_AREA != null && KOTH.GLOBAL_PLAYER != null){
                     //TODO: Scoreboard format MIN:SS
                     KOTH.GLOBAL_TIME--;
+                    if(KOTH.GLOBAL_TIME <= 0){
+                        stopKoth();
+                    }
+                    Main.sendCmdMessage("KOTH TIME:" + KOTH.GLOBAL_TIME);
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }
 
+    public static void CleanupFakeWalls() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    SpawnShield.CalcWall(player);
+                    if(!Main.player_block_changes.containsKey(player)) continue;
+                    List<Location> copy = Main.player_block_changes.get(player);
+                    Location cur = null;
+                    try{
+                        for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
 
+                            Location loc = it.next();
+                            cur = loc;
+                            if (player.getLocation().distance(loc) > 10) {
+                                player.sendBlockChange(loc, Material.AIR, (byte) 0);
+                                if (Main.player_block_changes.containsKey(player)) {
+                                    List<Location> l = Main.player_block_changes.get(player);
+                                    it.remove();
+                                    //l.remove(loc);
+                                    Main.player_block_changes.put(player, l);
+                                }
+                            }
+                        }
+                    }catch (Exception e){
+                        try{
+                            copy.remove(cur);
+                        }catch (Exception ignored){}
+
+                    }
+                }
+            }
+        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 1);
+    }
+
+    public static long getTimeOfEOTW() {
+        long current = System.currentTimeMillis() / 1000;
+        //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
+        return Main.EOTWStarted - current;
+    }
 }
 

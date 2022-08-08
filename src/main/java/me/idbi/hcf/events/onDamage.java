@@ -1,12 +1,12 @@
 package me.idbi.hcf.events;
 
-import me.idbi.hcf.Main;
+
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.classes.Archer;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.playertools;
-import org.bukkit.ChatColor;
+
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -24,7 +24,7 @@ public class onDamage implements Listener {
                 damager.sendMessage(Messages.CANT_DAMAGE_ADMIN.queue());
                 e.setCancelled(true);
             }
-            String c = ChatColor.stripColor(HCF_Claiming.sendFactionTerritory(victim));
+            //String c = ChatColor.stripColor(HCF_Claiming.sendFactionTerritory(victim));
             try{
                 HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(victim.getLocation().getBlockX(),victim.getLocation().getBlockZ());
 

@@ -23,8 +23,10 @@ public class onPlayerJoin implements Listener {
         e.setJoinMessage("");
         if (!Objects.equals(playertools.getMetadata(p, "factionid"), "0")) {
             Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
-            f.BroadcastFaction(
-                    Messages.JOIN_FACTION_BC.repPlayer(p).queue());
+            if(f != null) {
+                f.BroadcastFaction(
+                        Messages.JOIN_FACTION_BC.repPlayer(p).queue());
+            }
         }
 
 //        displayTeams.setupPlayer(e.getPlayer());

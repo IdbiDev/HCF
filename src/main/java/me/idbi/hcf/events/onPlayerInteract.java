@@ -130,6 +130,23 @@ public class onPlayerInteract implements Listener {
                 HCF_Claiming.setStartPosition(1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             }
         }
+
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "kothClaiming"))) {
+            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getItemMeta().hasLore()) {
+                p.sendMessage(Messages.CLAIM_POS_END.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
+                HCF_Claiming.setEndPosition(1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+                e.setCancelled(true);
+            }
+        }
+        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "kothClaiming"))) {
+            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getItemMeta().hasLore()) {
+                p.sendMessage(Messages.CLAIM_POS_START.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
+                e.setCancelled(true);
+                HCF_Claiming.setStartPosition(1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+            }
+        }
     }
 }
 

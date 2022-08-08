@@ -4,6 +4,8 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.koth.KOTH;
+import org.apache.commons.collections4.map.LinkedMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -188,14 +190,11 @@ public class playertools {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM claims");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                if (true) {
-                    try {
-                        HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt(3), rs.getInt(5), rs.getInt(4), rs.getInt(6), rs.getInt(2),rs.getString("type"));
-                        Main.faction_cache.get(rs.getInt("factionid")).addClaim(claim);
-                        Main.sendCmdMessage(rs.getInt("factionid") + " CLAIM");
-                    } catch (Exception ignored) {
-                        ignored.printStackTrace();
-                    }
+                try {
+                    HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt(3), rs.getInt(5), rs.getInt(4), rs.getInt(6), rs.getInt(2),rs.getString("type"));
+                    Main.faction_cache.get(rs.getInt("factionid")).addClaim(claim);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         } catch (SQLException e) {
@@ -234,7 +233,8 @@ public class playertools {
                 Main.nameToFaction.put(rs.getString("name"), faction);
                 faction.memberCount = playertools.countMembers(faction);
                 faction.DTR = Double.parseDouble(playertools.CalculateDTR(faction));
-                Main.sendCmdMessage(faction.factioname + " Prepared");
+                if (Main.debug)
+                    Main.sendCmdMessage(faction.factioname + " Prepared");
                 if (rs.getString("home") == null)
                     continue;
                 Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(rs.getString("home")));
@@ -364,7 +364,7 @@ public class playertools {
     }
 
     public static Location getSpawn() {
-        String[] spawnLocs = ConfigLibrary.Spawn_location.getValue().split(" ");
+            String[] spawnLocs = ConfigLibrary.Spawn_location.getValue().split(" ");
         Integer[] ints = getInts(spawnLocs);
         return new Location(Bukkit.getWorld(ConfigLibrary.World_name.getValue()), ints[0], ints[1], ints[2], ints[3], ints[4]);
     }
@@ -406,5 +406,41 @@ public class playertools {
         HCF_Claiming.Point new_claim_end = new HCF_Claiming.Point(maxX+diff,maxZ+diff);
 
         return HCF_Claiming.doOverlap(new_claim_start,new_claim_end,p1,p2);
+    }
+
+    public static int getDistanceBetweenPoints2D(HCF_Claiming.Point p1, HCF_Claiming.Point p2) {
+        return (Math.abs(p1.x-p2.x) + Math.abs(p1.z-p2.z))-1;
+    }
+    public static void placeBlockChange(Player p,Location loc){
+        if(Main.player_block_changes.containsKey(p)) {
+            List<Location> l = Main.player_block_changes.get(p);
+            l.add(loc);
+            Main.player_block_changes.put(p,l);
+        } else {
+            List<Location> l = new ArrayList<>();
+            l.add(loc);
+            Main.player_block_changes.put(p,l);
+        }
+    }
+
+    public static void prepareKoths(){
+        Main.koth_cache.clear();
+        HashMap<Integer, Main.Faction> hashMap = Main.faction_cache;
+
+        LinkedMap<String, Main.Faction> geci = new LinkedMap<>();
+
+        for (Main.Faction faction : hashMap.values()) {
+            for (HCF_Claiming.Faction_Claim claim : faction.claims) {
+                if (claim.attribute.equalsIgnoreCase("koth")) {
+                    KOTH.koth_area temp = new KOTH.koth_area(
+                            faction,
+                            new HCF_Claiming.Point(claim.startX, claim.startZ),
+                            new HCF_Claiming.Point(claim.endX, claim.endZ)
+                    );
+                    Main.koth_cache.put(faction.factioname, temp);
+                    //eci.put(faction.factioname, temp);
+                }
+            }
+        }
     }
 }
