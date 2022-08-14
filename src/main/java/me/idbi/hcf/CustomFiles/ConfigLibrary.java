@@ -61,7 +61,7 @@ public enum ConfigLibrary {
             if (Material.matchMaterial(material) != null) {
                 materials.add(Material.matchMaterial(material));
             } else {
-                Bukkit.getLogger().severe(Messages.NOT_VALID_BLACKLISTED_BLOCKS.getMessage().queue().replace("%material%", material));
+                Bukkit.getLogger().severe(Messages.NOT_VALID_BLACKLISTED_BLOCKS.queue().replace("%material%", material));
             }
         }
         return materials;
@@ -70,13 +70,13 @@ public enum ConfigLibrary {
     public String getValue() {
         return ChatColor.translateAlternateColorCodes('&', value
                 .replace("%newline%", "\n")
-                .replace("%prefix%", Messages.PREFIX.getMessage().queue()));
+                .replace("%prefix%", Messages.PREFIX.queue()));
     }
 
     public String getDefaultValue() {
         return ChatColor.translateAlternateColorCodes('&', defaultValue
                 .replace("%newline%", "\n")
-                .replace("%prefix%", Messages.PREFIX.getMessage().queue()));
+                .replace("%prefix%", Messages.PREFIX.queue()));
     }
 
     public void save() {

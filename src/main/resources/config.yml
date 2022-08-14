@@ -22,6 +22,8 @@ Scoreboard:
   - "&7\u2514\u2500"
   - "empty"
   - "&7\u258d &eEOTW: &6%eotw%"
+  - "&7\u258d &eGapple: &6%gapple_cd%"
+  - "&7\u258d &eOP: &6%opgapple_cd%"
   - "&7\u258d &eStuck: &6%stuck_timer%"
   - "&7\u258d &eSpawn Tag: &6%spawntag%"
   - "&7\u258d &ePearl: &6%ep_cd%"

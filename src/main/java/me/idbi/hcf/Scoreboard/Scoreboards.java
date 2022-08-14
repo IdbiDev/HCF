@@ -104,6 +104,10 @@ public class Scoreboards {
                 continue;
             } else if(line.contains("%eotw%") && Misc_Timers.getTimeOfEOTW() <= 0L) {
                 continue;
+            } else if(line.contains("%gapple_cd%") && HCF_Timer.get_Golden_Apple_Time(p) <= 0L) {
+                continue;
+            } else if(line.contains("%opgapple_cd%") && HCF_Timer.get_OP_Golden_Apple_Time(p) <= 0L) {
+                continue;
             }
 
             if (line.equals("empty"))
@@ -155,6 +159,8 @@ public class Scoreboards {
                     || line.contains("%ep_cd%")
                     || line.contains("%bard_energy%")
                     || line.contains("%stuck_timer%")
+                    || line.contains("%gapple_cd%")
+                    || line.contains("%opgapple_cd%")
                     || line.contains("%eotw%")) {
                 timers.add(ChatColor.translateAlternateColorCodes('&', line));
                 continue;
@@ -185,6 +191,8 @@ public class Scoreboards {
                 .replace("%spawntag%", getDouble(HCF_Timer.getCombatTime(p)))
                 .replace("%stuck_timer%", getDouble(HCF_Timer.getStuckTime(p)))
                 .replace("%ep_cd%", getDouble(HCF_Timer.getEpTime(p)))
+                .replace("%gapple_cd%", getDouble(HCF_Timer.get_Golden_Apple_Time(p)))
+                .replace("%opgapple_cd%", ConvertTime((int) (HCF_Timer.get_OP_Golden_Apple_Time(p) / 1000)))
                 .replace("%eotw%", ConvertTime((int) Misc_Timers.getTimeOfEOTW()))
                 .replace("%location%", HCF_Claiming.sendFactionTerritory(p));
     }

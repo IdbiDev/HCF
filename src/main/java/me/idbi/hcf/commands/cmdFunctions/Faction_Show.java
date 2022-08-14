@@ -50,7 +50,7 @@ public class Faction_Show {
                         String.valueOf(faction.DTR)
                 )
                 .setMembers(playertools.getRankPlayers(faction.factioname),
-                        playertools.getPlayersKills()).queue()) {
+                        playertools.getPlayersKills()).queueShow()) {
             p.sendMessage(line);
         }
 

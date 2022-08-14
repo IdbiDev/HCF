@@ -71,5 +71,7 @@ public class setupEvents {
 
         getServer().getPluginManager().registerEvents(new onSignPlace(), Main.getPlugin(Main.class));
 
+        getServer().getPluginManager().registerEvents(new onConsumeItem(), Main.getPlugin(Main.class));
+
     }
 }

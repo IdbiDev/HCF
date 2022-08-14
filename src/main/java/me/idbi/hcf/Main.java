@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -97,8 +98,9 @@ public final class Main extends JavaPlugin implements Listener {
         EOTWStarted = System.currentTimeMillis() / 1000;
         long deltatime = System.currentTimeMillis();
         MessagesFile.setup();
-        ConfigManager.getManager().setup();
         DiscordFile.setup();
+        if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", false);
+        ConfigManager.getManager().setup();
 //        DiscordFile.getDiscord().options().copyDefaults(true);
 //        DiscordFile.saveDiscord();
 //        saveDefaultConfig();
@@ -142,8 +144,6 @@ public final class Main extends JavaPlugin implements Listener {
             add("&7▍ &ePearl: &6%ep_cd%");
             add("&7▍ &eBard energy: &6%bard_energy%");
         }};
-
-        if (!new File(getDataFolder() + "\\config.yml").exists()) saveResource("config.yml", false);
 //        getConfig().addDefault("Scoreboard", scoreboardList);
 //        getConfig().addDefault("Freeze.Ban", true);
 //        getConfig().addDefault("Freeze.Reason", "You leaved when you are froze!");
@@ -154,6 +154,13 @@ public final class Main extends JavaPlugin implements Listener {
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         saveConfig();
+
+        // Multiverse detect!!!!!!
+        Plugin multi = getServer().getPluginManager().getPlugin("Multiverse-Core");
+        if(multi != null) {
+            sendCmdMessage("§aMultiverse-Core found. Plugin connected to Multiverse-Core\n§aMultiverse-Core version: §a§o" + multi.getDescription().getVersion());
+        }
+        //
 
         KothRewardsFile.setup();
 

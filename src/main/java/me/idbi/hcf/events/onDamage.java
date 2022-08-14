@@ -7,6 +7,7 @@ import me.idbi.hcf.classes.Archer;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.playertools;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -25,8 +26,9 @@ public class onDamage implements Listener {
                 e.setCancelled(true);
             }
             //String c = ChatColor.stripColor(HCF_Claiming.sendFactionTerritory(victim));
-            try{
+            try {
                 HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(victim.getLocation().getBlockX(),victim.getLocation().getBlockZ());
+                HCF_Claiming.Faction_Claim damagerClaim = HCF_Claiming.sendClaimByXZ(damager.getLocation().getBlockX(), damager.getLocation().getBlockZ());
 
                 if (claim != null) {
                     if(claim.attribute.equals("protected")){
@@ -35,7 +37,16 @@ public class onDamage implements Listener {
                         return;
                     }
                 }
-            }catch (NullPointerException ignored){}
+                if (damagerClaim != null) {
+                    if(damagerClaim.attribute.equals("protected")){
+                        e.setCancelled(true);
+                        damager.sendMessage(Messages.CANT_DAMAGE_PROTECTED_AREA.queue());
+                        return;
+                    }
+                }
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+            }
 
             int damager_faction = Integer.parseInt(playertools.getMetadata(damager, "factionid"));
             int victim_faction = Integer.parseInt(playertools.getMetadata(victim, "factionid"));

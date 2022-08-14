@@ -32,6 +32,22 @@ public enum ListMessages {
             "&eTo accept the claim, press &6&oSHIFT + RIGHT &eclick!", // right click
             "&eTo discard the claim, press &6&oSHIFT + LEFT &eclick!" // left click
     )),
+
+    SPAWN_CLAIM(Arrays.asList(
+            "%prefix% &6Spawn claiming information:",
+            "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
+            "&7&l» &ePress &6&o[LEFT] &eclick on the ground, to place the other position!", // pos2
+            "&eTo accept the claim, press &6&oSHIFT + RIGHT &eclick!", // right click
+            "&eTo discard the claim, press &6&oSHIFT + LEFT &eclick!" // left click
+    )),
+
+    KOTH_CLAIM(Arrays.asList(
+            "%prefix% &6Koth claiming information:",
+            "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
+            "&7&l» &ePress &6&o[LEFT] &eclick on the ground, to place the other position!", // pos2
+            "&eTo accept the claim, press &6&oSHIFT + RIGHT &eclick!", // right click
+            "&eTo discard the claim, press &6&oSHIFT + LEFT &eclick!" // left click
+    )),
     CLAIM_INFO_ADMIN(Arrays.asList(
             "%prefix% &6Spawn claiming information:",
             "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
@@ -154,6 +170,7 @@ public enum ListMessages {
             String factionName, String factionStatus, String leaderName, String factionBalance, String factionKills, String factionDeaths, String factionPos, String factionDtr) {
         List<String> lines = new ArrayList<>();
         for (String line : list) {
+            Bukkit.broadcastMessage(line);
             lines.add(line
                     .replace("%faction_name%", factionName)
                     .replace("%faction_status%", factionStatus)
@@ -172,6 +189,16 @@ public enum ListMessages {
         List<String> returnString = new ArrayList<>();
 
         for (String str : list) {
+            returnString.add(ChatColor.translateAlternateColorCodes('&', str).replace("%prefix%", Messages.PREFIX.queue()));
+        }
+
+        return returnString;
+    }
+
+    public List<String> queueShow() {
+        List<String> returnString = new ArrayList<>();
+
+        for (String str : message) {
             returnString.add(ChatColor.translateAlternateColorCodes('&', str).replace("%prefix%", Messages.PREFIX.queue()));
         }
 

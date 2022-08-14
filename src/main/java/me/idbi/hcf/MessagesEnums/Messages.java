@@ -248,19 +248,10 @@ public enum Messages {
     }
 
     public String queue() {
-//        if (message.equalsIgnoreCase(defaultMsg)) {
-//            System.out.println(Messages.PREFIX.message + " " + Messages.PREFIX.msg);
-//            msg = defaultMsg;
-//            message = defaultMsg;
-//            return ChatColor.translateAlternateColorCodes('&', msg
-//                    .replace("%newline%", "\n")
-//                    .replace("%prefix%", ChatColor.translateAlternateColorCodes('&', Messages.PREFIX)));
-//        }
         message = msg.replace("%prefix%", ChatColor.translateAlternateColorCodes('&', this.prefix));
         load();
         return ChatColor.translateAlternateColorCodes('&', message
                 .replace("%newline%", "\n")
-                //.replace("%prefix%",  ChatColor.translateAlternateColorCodes('&', Messages.PREFIX.msg)));
         );
     }
 
@@ -395,6 +386,7 @@ public enum Messages {
         if (msgs.getString(this.toString()) == null) {
             msgs.set(this.toString(), msg);
             save();
+            this.prefix = msgs.getString("PREFIX");
             return;
         }
 
