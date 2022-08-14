@@ -15,6 +15,8 @@ public enum Messages {
     PREFIX_CMD("&r[&2HCF&a+&r] &r"),
     RELOAD("&aSuccessfully configuration files reloaded!"),
 
+    CHAT_PREFIX_FACTION("&8[&6%faction_name%&8] &e%player% &f> &7%message%"),
+    CHAT_PREFIX_WITHOUT_FACTION("&e%player% &f> &7%message%"),
     // Errors
     NO_PERMISSION("%prefix% &cYou don't have permission!"),
     NO_PERMISSION_IN_FACTION("%prefix% &cYou need a higher rank to use this command!"),
@@ -205,7 +207,9 @@ public enum Messages {
     KOTH_CREATED("%prefix% &aYou have successfully created a koth named &6&o%faction_name%&a!"),
     KOTH_CAPTURING_STARTED("%prefix% &aSomeone started to occupy the &6&o%faction_name%&a koth!"),
     KOTH_CAPTURING_ENDED("%prefix% &aThe occupation of koth &6&o%faction_name%&a was abandoned!"),
-    KOTH_CAPTURE_TIMER("%prefix% &aSomeone is capturing kitty koth! (%format_time%)");
+    KOTH_CAPTURE_TIMER("%prefix% &aSomeone is capturing kitty koth! (%format_time%)"),
+    WARZONE_NO_PERMISSION("%prefix% &eYou can't do this in the warzone!"),
+    CANT_TELEPORT_TO_SAFEZONE("%prefix% &cYou cant teleport to a protected zone while you are in pvp tag");
 
 
     private String msg, defaultMsg;
@@ -301,6 +305,15 @@ public enum Messages {
 
     public Messages repPlayer(Player p) {
         message = msg.replace("%player%", p.getName());
+        this.msg = message;
+        return this;
+    }
+    public Messages setDisplayName(Player p) {
+        if(p.getDisplayName() == null) {
+            message = msg.replace("%player_displayname%", p.getName());
+        } else {
+            message = msg.replace("%player_displayname%", p.getDisplayName());
+        }
         this.msg = message;
         return this;
     }

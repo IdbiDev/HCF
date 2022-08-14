@@ -13,6 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
+import static me.idbi.hcf.Main.WARZONE_SIZE;
+
 public class onBlockBreak implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
@@ -23,6 +25,14 @@ public class onBlockBreak implements Listener {
         if (HCF_Claiming.checkEnemyClaimAction(bx, bz, Integer.parseInt(playertools.getMetadata(p, "factionid"))) ) {
             //p.sendMessage(Main.servername+"§4Ezt nem teheted meg itt!");
             p.sendMessage(Messages.YOU_CANT_DO.setFaction(HCF_Claiming.sendFactionTerretoryByXZ(bx, bz)).queue());
+            e.setCancelled(true);
+            return;
+        }
+        if (playertools.getDistanceBetweenPoints2D(new HCF_Claiming.Point(block.getX(),block.getZ()),
+                new HCF_Claiming.Point(playertools.getSpawn().getBlockX(),
+                        playertools.getSpawn().getBlockZ())) == WARZONE_SIZE) {
+            //p.sendMessage(Main.servername+"§4Ezt nem teheted meg itt!");
+            p.sendMessage(Messages.WARZONE_NO_PERMISSION.queue());
             e.setCancelled(true);
             return;
         }

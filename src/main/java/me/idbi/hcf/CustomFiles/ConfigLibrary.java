@@ -21,6 +21,8 @@ public enum ConfigLibrary {
     enderpearl_delay("30"),
     Combat_time("30"),
     Archer_tag("30"),
+    Golden_Apple_Cooldown("10"),
+    OP_Golden_Apple_Cooldown("3600"),
     Spawn_location("0 100 0 0 0"),
     Enchant_xp_cost("20"),
     Faction_default_balance("1000"),
@@ -36,6 +38,7 @@ public enum ConfigLibrary {
     DATABASE_PASSWORD("password"),
     MAX_FACTION_MEMBERS("7"),
     EOTW_time("60"),
+    WARZONE_SIZE("500"),
     World_width("World_width");
 
     private static final Main m = Main.getPlugin(Main.class);

@@ -36,6 +36,7 @@ public class Faction_Claim {
                 p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
 
                 ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
+                playertools.setMetadata(p, "spawnclaiming", false);
                 return true;
             } else {
                 p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());

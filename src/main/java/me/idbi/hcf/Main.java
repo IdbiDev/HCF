@@ -41,6 +41,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static int max_members_pro_faction;
     public static int stuck_duration;
     public static long EOTWStarted;
+    public static int WARZONE_SIZE;
 
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
 
@@ -55,7 +56,6 @@ public final class Main extends JavaPlugin implements Listener {
 
     public static HashMap<Player, List<Location>> player_block_changes = new HashMap<>();
     private static Connection con;
-
     public static ArrayList<UUID> kothRewardsGUI;
 
     // Egyszerű SQL Connection getter
@@ -112,7 +112,7 @@ public final class Main extends JavaPlugin implements Listener {
         world_border_radius = Integer.parseInt(ConfigLibrary.WORLD_BORDER_DISTANCE.getValue());
         stuck_duration =  Integer.parseInt(ConfigLibrary.STUCK_TIMER_DURATION.getValue());
         KOTH.GLOBAL_TIME =  Integer.parseInt(ConfigLibrary.KOTH_TIME.getValue()) * 60;
-
+        WARZONE_SIZE =  Integer.parseInt(ConfigLibrary.WARZONE_SIZE.getValue()) * 60;
         con = SQL_Connection.dbConnect(
                 ConfigLibrary.DATABASE_HOST.getValue(),
                 ConfigLibrary.DATABASE_PORT.getValue(),
@@ -178,20 +178,19 @@ public final class Main extends JavaPlugin implements Listener {
         Misc_Timers.DTR_Timer();
         Misc_Timers.Bard_Energy();
         Misc_Timers.PvpTag();
-        Misc_Timers.pvpTimer();
+        //Misc_Timers.pvpTimer();
         Misc_Timers.PotionLimiter();
         Misc_Timers.AutoSave();
-        Misc_Timers.StuckTimers();
-        Misc_Timers.PearlTimer();
+        //Misc_Timers.StuckTimers();
+        //Misc_Timers.PearlTimer();
         Misc_Timers.KOTH_Countdown();
         Misc_Timers.CleanupFakeWalls();
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
-        startKoth("BauBence");
+        //startKoth("BauBence");
         //displayTeams.setupAllTeams();
 
         sendCmdMessage((System.currentTimeMillis()- deltatime) + "ms");
-        sendCmdMessage(startMessage);
     }
 
     @Override
@@ -225,13 +224,13 @@ public final class Main extends JavaPlugin implements Listener {
         public String getData(String key) {
             if (hasData(key))
                 return metadata.get(key).toString();
-            Bukkit.getLogger().severe(" Error while reading key:" + key);
+            //Bukkit.getLogger().severe(" Error while reading key:" + key);
             return "";
         }
         public Object getRealData(String key) {
             if (hasData(key))
                 return metadata.get(key);
-            Bukkit.getLogger().severe(" Error while reading key:" + key);
+            //Bukkit.getLogger().severe(" Error while reading key:" + key);
             return null;
         }
 

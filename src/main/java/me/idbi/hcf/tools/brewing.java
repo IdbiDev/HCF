@@ -19,6 +19,11 @@ public class brewing {
 
     public static void setAllBrewingStands() {
         World w = Bukkit.getWorld(ConfigLibrary.World_name.getValue());
+        if(w == null){
+            Main.sendCmdMessage("§cWorld not found! Make sure to select the world name in the config.yml file!\nShutting down..");
+            Bukkit.shutdown();
+            return;
+        }
         for (Chunk c : w.getLoadedChunks()) {
             BlockState[] blocks = c.getTileEntities();
             for(BlockState b : blocks){
@@ -47,12 +52,12 @@ public class brewing {
             @Override
             public void run() {
                 for (BrewingStand stand : brewingStands) {
-                    if (stand.getBrewingTime() != 0) {
+                    if (stand.getBrewingTime()-20 >= 0) {
                         stand.setBrewingTime((short) stand.getBrewingTime() - 20);
                     }
                 }
                 for (Furnace stand : furnaces) {
-                    if (stand.getCookTime() != 200) {
+                    if (stand.getCookTime()+20 <= 200) {
                         stand.setCookTime((short) (stand.getCookTime() + 20));
                     }
                 }

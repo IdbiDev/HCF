@@ -54,7 +54,9 @@ public class onPlayerInteract implements Listener {
                 Bard.OhLetsBreakItDown(e.getPlayer());
             }
         }
-        // Magic wand UwU [[Jobb klikk]]
+
+
+        //SIMA CLAIM
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && !Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
@@ -111,11 +113,11 @@ public class onPlayerInteract implements Listener {
                 }
             }
         }
-
+        //SPAWN CLAIM
 
         // Magic wand UwU [[Jobb klikk]]
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
-            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getType() != Material.GOLD_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
                 p.sendMessage(Messages.CLAIM_POS_END.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
                 HCF_Claiming.setEndPosition(1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
@@ -123,7 +125,7 @@ public class onPlayerInteract implements Listener {
             }
         }
         if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
-            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getType() != Material.GOLD_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
                 p.sendMessage(Messages.CLAIM_POS_START.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
                 e.setCancelled(true);
@@ -133,7 +135,7 @@ public class onPlayerInteract implements Listener {
 
         //Koth?
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "kothclaim"))) {
-            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getType() != Material.IRON_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
                 p.sendMessage(Messages.CLAIM_POS_END.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
                 HCF_Claiming.setEndPosition(Integer.parseInt(playertools.getMetadata(p, "kothid")), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
@@ -141,7 +143,7 @@ public class onPlayerInteract implements Listener {
             }
         }
         if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && Boolean.parseBoolean(playertools.getMetadata(p, "kothclaim"))) {
-            if (e.getItem().getType() != Material.DIAMOND_HOE) return;
+            if (e.getItem().getType() != Material.IRON_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
                 p.sendMessage(Messages.CLAIM_POS_START.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
                 e.setCancelled(true);

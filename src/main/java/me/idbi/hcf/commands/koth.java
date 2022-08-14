@@ -49,7 +49,7 @@ public class koth implements CommandExecutor, TabCompleter {
                                         playertools.setMetadata(p, "kothclaim", true);
                                         playertools.setMetadata(p, "kothid", getKothFromName(args[1]));
                                     }else{
-                                        HCF_Claiming.FinishClaiming(getKothFromName(args[1]),p,"koth");
+                                        HCF_Claiming.ForceFinishClaim(getKothFromName(args[1]),p,"koth");
                                         playertools.setMetadata(p, "kothclaim", false);
                                         playertools.setMetadata(p, "kothid", 0);
                                         endpositions.remove(getKothFromName(args[1]));

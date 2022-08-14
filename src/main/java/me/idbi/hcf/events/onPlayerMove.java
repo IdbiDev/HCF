@@ -18,30 +18,32 @@ import static me.idbi.hcf.tools.playertools.getRealMetadata;
 public class onPlayerMove implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
-        if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "freeze"))) {
-            e.setCancelled(true);
-        }
-        if(HCF_Timer.checkStuckTimer(e.getPlayer())){
-            if(e.getTo().distance((Location) getRealMetadata(e.getPlayer(),"stuck_loc")) > 4){
-                    HCF_Timer.stuckTimers.remove(e.getPlayer());
-                    e.getPlayer().sendMessage(Messages.STUCK_INTERRUPTED.queue());
-            }
-        }
-        String c = HCF_Claiming.sendFactionTerritory(e.getPlayer());
-        if (!Objects.equals(playertools.getMetadata(e.getPlayer(), "current_loc"), c)) {
-            e.getPlayer().sendMessage(Messages.LEAVE_ZONE.setZone(playertools.getMetadata(e.getPlayer(), "current_loc")).queue());
-            e.getPlayer().sendMessage(Messages.ENTERED_ZONE.setZone(c).queue());
-            playertools.setMetadata(e.getPlayer(), "current_loc", c);
-            Scoreboards.refresh(e.getPlayer());
-        }
-        if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("miner")) {
-            Miner.setInvisMode(e.getPlayer(), e.getTo().getY() <= Miner.min_y_value);
-        }
 
         if(e.getFrom().getBlockX() != e.getTo().getBlockX()
                 || e.getFrom().getBlockY() != e.getTo().getBlockY()
                 || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
-            //SpawnShield.CalcWall(e.getPlayer());
         }
+            if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "freeze"))) {
+                e.setCancelled(true);
+            }
+            if(HCF_Timer.checkStuckTimer(e.getPlayer())){
+                if(e.getTo().distance((Location) getRealMetadata(e.getPlayer(),"stuck_loc")) > 4){
+                    HCF_Timer.stuckTimers.remove(e.getPlayer());
+                    e.getPlayer().sendMessage(Messages.STUCK_INTERRUPTED.queue());
+                }
+            }
+            String c = HCF_Claiming.sendFactionTerritory(e.getPlayer());
+            if (!Objects.equals(playertools.getMetadata(e.getPlayer(), "current_loc"), c)) {
+                e.getPlayer().sendMessage(Messages.LEAVE_ZONE.setZone(playertools.getMetadata(e.getPlayer(), "current_loc")).queue());
+                e.getPlayer().sendMessage(Messages.ENTERED_ZONE.setZone(c).queue());
+                playertools.setMetadata(e.getPlayer(), "current_loc", c);
+                Scoreboards.refresh(e.getPlayer());
+            }
+            if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("miner")) {
+                Miner.setInvisMode(e.getPlayer(), e.getTo().getY() <= Miner.min_y_value);
+            }
+
+
+
     }
 }

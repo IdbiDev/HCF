@@ -10,8 +10,9 @@ public class HCF_Timer {
     public static final HashMap<Player, Long> timers = new HashMap<>();
     private static final HashMap<Player, Long> Archertimers = new HashMap<>();
     private static final HashMap<Player, Long> eptimers = new HashMap<>();
-
     public static final HashMap<Player, Long> stuckTimers = new HashMap<>();
+    public static final HashMap<Player, Long> golden_apple_Timers = new HashMap<>();
+    public static final HashMap<Player, Long> OP_Golden_Apple_Timers = new HashMap<>();
     // Ms >> Duration
     private static final int combatTimerDuration = Integer.parseInt(ConfigLibrary.Combat_time.getValue()) * 1000;
     // Ms >> Duration
@@ -20,6 +21,8 @@ public class HCF_Timer {
     private static final int EpTimerDuration = Integer.parseInt(ConfigLibrary.enderpearl_delay.getValue()) * 1000;
 
     private static final int StuckTimerDuration = Integer.parseInt(ConfigLibrary.STUCK_TIMER_DURATION.getValue()) * 1000;
+    private static final int Golden_Apple_Cooldown = Integer.parseInt(ConfigLibrary.Golden_Apple_Cooldown.getValue()) * 1000;
+    private static final int OP_Golden_Apple_Cooldown = Integer.parseInt(ConfigLibrary.OP_Golden_Apple_Cooldown.getValue()) * 1000;
 
     public static boolean addCombatTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
@@ -180,5 +183,59 @@ public class HCF_Timer {
             return 0;
         }
     }
+    public static boolean add_Golden_Apple_Time(Player player) {
+        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        if (!golden_apple_Timers.containsKey(player)) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            golden_apple_Timers.put(player, System.currentTimeMillis() + Golden_Apple_Cooldown);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static long get_Golden_Apple_Time(Player player) {
+        // Ha van rajta CombatTimer
+        if (golden_apple_Timers.containsKey(player)) {
+            if (System.currentTimeMillis() >= golden_apple_Timers.get(player)) {
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                golden_apple_Timers.remove(player);
+                return 0;
+            } else {
+                // Ellenkező esetben: Van rajta
+                return golden_apple_Timers.get(player) - System.currentTimeMillis();
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public static boolean add_OP_Golden_Apple_Time(Player player) {
+        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        if (!OP_Golden_Apple_Timers.containsKey(player)) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            OP_Golden_Apple_Timers.put(player, System.currentTimeMillis() + OP_Golden_Apple_Cooldown);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static long get_OP_Golden_Apple_Time(Player player) {
+        // Ha van rajta CombatTimer
+        if (OP_Golden_Apple_Timers.containsKey(player)) {
+            if (System.currentTimeMillis() >= OP_Golden_Apple_Timers.get(player)) {
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                OP_Golden_Apple_Timers.remove(player);
+                return 0;
+            } else {
+                // Ellenkező esetben: Van rajta
+                return OP_Golden_Apple_Timers.get(player) - System.currentTimeMillis();
+            }
+        } else {
+            return 0;
+        }
+    }
+
 
 }

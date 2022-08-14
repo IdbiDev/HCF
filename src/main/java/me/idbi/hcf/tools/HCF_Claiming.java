@@ -70,7 +70,7 @@ public class HCF_Claiming {
                         Point end_other = new Point(faction_end.x, faction_end.z);*/
 
 
-                        if (doOverlap(faction_start, faction_end, start_this, end_this)) {
+                        if (doOverlap2(faction_start, faction_end, start_this, end_this)) {
                             //if (doOverlap(new Point(val.startX, val.endX), new Point(val.startZ, val.endZ), new Point(start[0], end[0]), new Point(start[1], end[1]))) {
                             p.sendMessage(Messages.FACTION_CLAIM_OVERLAP.queue());
                             return false;
@@ -79,7 +79,7 @@ public class HCF_Claiming {
                             p.sendMessage(Messages.FACTION_CLAIM_TOO_SMALL.queue());
                             return false;
                         }
-                        if(!playertools.CheckClaimPlusOne(faction_start, faction_end,1, start_this, end_this)) {
+                        if(playertools.CheckClaimPlusOne(faction_start, faction_end,1, start_this, end_this)) {
                             p.sendMessage(Messages.FACTION_CLAIM_OVERLAP_PLUS_ONE.queue());
                             return false;
                         }
@@ -134,12 +134,6 @@ public class HCF_Claiming {
                 HCF_Claiming.Faction_Claim claim;
                 claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid,attribute);
                 f.addClaim(claim);
-                /*if(faction == 1){
-                    claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid,"protected");
-                }else{
-                    claim = new HCF_Claiming.Faction_Claim(faction_start.x, faction_end.x, faction_start.z, faction_end.z, claimid,"normal");
-                }*/
-
 
                 return true;
             }
@@ -168,6 +162,31 @@ public class HCF_Claiming {
         for(int x = minX; x <= maxX; x++) {
             for(int z = minZ; z <= maxZ; z++) {
                 if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, x, z)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public static boolean doOverlap2(Point l1, Point r1, Point l2, Point r2) {
+        // If one rectangle is on left side of other
+        int firstRectangle_Starting_X = l1.x;
+        int firstRectangle_Starting_Z = l1.z;
+
+        int firstRectangle_Ending_X = r1.x;
+        int firstRectangle_Ending_Z = r1.z;
+
+        int maxX = Math.max(firstRectangle_Starting_X, firstRectangle_Ending_X);
+        int minX = Math.min(firstRectangle_Starting_X, firstRectangle_Ending_X);
+
+        int maxZ = Math.max(firstRectangle_Starting_Z, firstRectangle_Ending_Z);
+        int minZ = Math.min(firstRectangle_Starting_Z, firstRectangle_Ending_Z);
+
+        for(int x = minX; x <= maxX; x++) {
+            for(int z = minZ; z <= maxZ; z++) {
+                System.out.println("Checking X: " + x+ " Z: " + z);
+                if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, x, z)) {
+                    System.out.println("FOUND POINT X: " + x+ " Z: " + z);
                     return true;
                 }
             }
@@ -320,9 +339,7 @@ public class HCF_Claiming {
     public static int calcMoneyOfArea(Player p) {
         int faction = Integer.parseInt(playertools.getMetadata(p, "factionid"));
         if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
-            Point start = startpositions.get(faction);
-            Point end = endpositions.get(faction);
-            return (int) Math.round((Math.abs(end.x - start.x) * Math.abs(end.z - start.z)) * Main.claim_price_multiplier);
+            return (int) (calcBlocks(p) * Main.claim_price_multiplier);
         }
         return -1;
     }
@@ -339,7 +356,7 @@ public class HCF_Claiming {
 
     public static boolean SpawnPrepare(Player p) {
         if (p.getInventory().firstEmpty() != -1) {
-            ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
+            ItemStack wand = new ItemStack(Material.GOLD_HOE);
             ItemMeta meta = wand.getItemMeta();
 
             meta.setDisplayName("§e§oSpawn Claimer");

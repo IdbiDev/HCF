@@ -400,12 +400,18 @@ public class playertools {
         //Getting the top right point
         int maxX = Math.max(left_c.x,right_c.x);
         int maxZ = Math.max(left_c.z, right_c.z);
+        System.out.println("=====================================PLUS ONE=================================================");
+        System.out.println("minX:"+minX+"   "+"minZ:"+minZ);
+        System.out.println("maxX:"+maxX+"   "+"maxZ:"+maxZ);
 
         //Creating the new claim
         HCF_Claiming.Point new_claim_start = new HCF_Claiming.Point(minX-diff,minZ-diff);
         HCF_Claiming.Point new_claim_end = new HCF_Claiming.Point(maxX+diff,maxZ+diff);
 
-        return HCF_Claiming.doOverlap(new_claim_start,new_claim_end,p1,p2);
+        System.out.println("SSX:"+new_claim_start.x+"   "+"SSZ:"+new_claim_start.z);
+        System.out.println("EEX:"+new_claim_end.x+"   "+"EEZ:"+new_claim_end.z);
+        System.out.println("=====================================DO OVERLAP 2=================================================");
+        return HCF_Claiming.doOverlap2(new_claim_start,new_claim_end,p1,p2);
     }
 
     public static int getDistanceBetweenPoints2D(HCF_Claiming.Point p1, HCF_Claiming.Point p2) {

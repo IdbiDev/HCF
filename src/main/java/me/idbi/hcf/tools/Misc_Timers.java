@@ -73,11 +73,39 @@ public class Misc_Timers {
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 20);
     }
 
+    //LEc see
+    //2Tick
     public static void Bard_Energy() {
         new BukkitRunnable() {
             @Override
             public void run() {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+
+                    //Combat Time
+                    if (checkCombatTimer(player))
+                        Scoreboards.refresh(player);
+                    //Stuck Time
+                    if (HCF_Timer.checkStuckTimer(player)) {
+                        Scoreboards.refresh(player);
+                        Location loc = HCF_Claiming.ReturnSafeSpot(player.getLocation());
+                        if(loc != null){
+                            player.teleport(loc);
+                            player.sendMessage(Messages.STUCK_FINISHED.queue());
+                        }
+                    }
+                    //Ep time
+                    if (HCF_Timer.checkEpTimer(player)) {
+                        Scoreboards.refresh(player);
+                    }
+                    //Golden Apple
+                    if (HCF_Timer.get_Golden_Apple_Time(player) != 0) {
+                        Scoreboards.refresh(player);
+                    }
+                    //OP Golden Apple
+                    if (HCF_Timer.get_OP_Golden_Apple_Time(player) != 0) {
+                        Scoreboards.refresh(player);
+                    }
+                    //Class selector
                     if (!playertools.HasMetaData(player, "class")) continue;
                     if (!playertools.getMetadata(player, "class").equalsIgnoreCase("bard")) continue;
                     if (!(Double.parseDouble(playertools.getMetadata(player, "bardenergy")) >= 100D)) {
@@ -118,17 +146,7 @@ public class Misc_Timers {
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }
 
-    public static void pvpTimer() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                    if (!checkCombatTimer(player)) continue;
-                    Scoreboards.refresh(player);
-                }
-            }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
-    }
+
 
     public static void PotionLimiter() {
         new BukkitRunnable() {
@@ -147,7 +165,7 @@ public class Misc_Timers {
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 1);
     }
-    public static void StuckTimers() {
+    /*public static void StuckTimers() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -176,6 +194,18 @@ public class Misc_Timers {
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
     }
+        public static void pvpTimer() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    if (!checkCombatTimer(player)) continue;
+                    Scoreboards.refresh(player);
+                }
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
+    }
+    */
     public static void KOTH_Countdown() {
         new BukkitRunnable() {
             @Override
