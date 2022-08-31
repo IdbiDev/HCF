@@ -11,9 +11,13 @@ public class Faction_Ranks {
     public static void addRank(Player p, String name) {
         if (!playertools.getMetadata(p, "factionid").equals("0")) {
             Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
-            // ToDo: Check rank exists
             if (playertools.hasPermission(p, rankManager.Permissions.ALL)) {
-                rankManager.CreateNewRank(faction, name);
+                rankManager.Faction_Rank rk;
+                rk = rankManager.CreateNewRank(faction, name);
+                if(rk == null) {
+                    p.sendMessage(Messages.FACTION_RANK_EXISTS.queue());
+                    return;
+                }
                 p.sendMessage(Messages.FACTION_CREATE_RANK.queue());
             } else {
                 p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());

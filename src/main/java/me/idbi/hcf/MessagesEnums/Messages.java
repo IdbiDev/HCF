@@ -13,34 +13,34 @@ public enum Messages {
 
     PREFIX("&8[&2HCF&a+&8] &7>"),
     PREFIX_CMD("&r[&2HCF&a+&r] &r"),
-    RELOAD("&aSuccessfully configuration files reloaded!"),
+    RELOAD("&aSuccessfully reloaded configuration files!"),
 
     CHAT_PREFIX_FACTION("&8[&6%faction_name%&8] &e%player% &f> &7%message%"),
     CHAT_PREFIX_WITHOUT_FACTION("&e%player% &f> &7%message%"),
     // Errors
     NO_PERMISSION("%prefix% &cYou don't have permission!"),
     NO_PERMISSION_IN_FACTION("%prefix% &cYou need a higher rank to use this command!"),
-    YOU_CANT_DO("%prefix% &eYou can't do this &c&o%faction_name% &eplace!"),
+    YOU_CANT_DO("%prefix% &eYou can't do this at &c&o%faction_name%'s &eplace!"),
     NOT_ENOUGH_SLOT("%prefix% &cYou don't have enough space!"),
     NOT_FOUND_PLAYER("%prefix% &cCan't find this player"),
     NOT_FOUND_FACTION("%prefix% &cCan't find this faction"),
 
     UNKNOWN_COMMAND("%prefix% &cUnknown command. Use &c&o/faction &ccommand to see the commands!"),
-    TOO_MANY_ARGS("%prefix% &cToo many arguments!"),
-    NOT_A_NUMBER("%prefix% &cPlease type a valid number"),
+    //TOO_MANY_ARGS("%prefix% &cToo many arguments!"),
+    NOT_A_NUMBER("%prefix% &cPlease use a valid number"),
 
     CANT_DEMOTE("%prefix% &cYou can't demote &c&o%player%"),
     CANT_PROMOTE("%prefix% &cYou can't promote &c&o%player%"),
 
     NOT_FILE("%prefix% &cCan't find this file!"),
 
-    DONT_HAVE_ITEM("%prefix% &cYou don't have enough item in your inventory!"),
+    DONT_HAVE_ITEM("%prefix% &cYou don't have enough items in your inventory!"),
 
     // Errors - faction
     EXISTS_FACTION_NAME("%prefix% &cThis faction name already exists!"),
     YOU_ALREADY_IN_FACTION("%prefix% &cYou are already in faction!"),
     NOT_IN_FACTION("%prefix% &cYou are not in a faction!"),
-    PLAYER_IN_FACTION("%prefix% &cThis player already in a faction!"),
+    PLAYER_IN_FACTION("%prefix% &cThis player is already in a faction!"),
 
     ALREADY_INVITED("&cThis player is already invited"),
     NOT_INVITED("%prefix% &cYou are not invited to this faction!"),
@@ -50,52 +50,50 @@ public enum Messages {
     // Commands
     FACTION_CREATON("%prefix% &2&o%faction_name% &awas created by &2&o%player%&a!"),
     FACTION_DISBAND("%prefix% &2&o%faction_name% &awas disbanded by &2&o%player%&a!"),
-    FACTION_LEAVE("%prefix% &eYou leaved from faction!"),
-    FACTION_CLAIM("%prefix% nem tudom, hogy mi az a claim! :)"),
     FACTION_CLAIM_PRICE("%prefix% &aPrice: &2&o$%price% &afor &2&o%blocks%"),
 
     //Claim actions
-    FACTION_CLAIM_DECLINE("%prefix% &cYou successfully rejected the claim."),
-    FACTION_CLAIM_ACCEPT("%prefix% &aYou successfully claimed"),
+    FACTION_CLAIM_DECLINE("%prefix% &cYou successfully cancelled the claim!"),
+    FACTION_CLAIM_ACCEPT("%prefix% &aYou successfully claimed!"),
     FACTION_CLAIM_INVALID_ZONE("%prefix% &cInvalid claiming zone!"),
     FACTION_CLAIM_OVERLAP("%prefix% &cYour claim can't overlap an existing claim!"),
     FACTION_CLAIM_TOO_SMALL("%prefix% &cYour claim is too small! (Min size: 4x4)"),
-    FACTION_CLAIM_OVERLAP_PLUS_ONE("%prefix% &cYour claim can't overlap an existing claim! Skip a block between the two claims"),
+    FACTION_CLAIM_OVERLAP_PLUS_ONE("%prefix% &cYour claim can't overlap an existing claim! Leave a block between the two claims"),
 
     // Commands - invite
-    INVITED_BY("&eYou invited by &6&o%executor% &eto &6&o%faction_name%&e!"),
+    INVITED_BY("&6&o%executor% &einvited you to join &6&o%faction_name%&e!"),
     INVITED_PLAYER("&eYou invited &6&o%player% &eto the faction!"),
     FACTION_INVITE_BROADCAST("&6&o%executor% &einvited &6&o%player% &eto the faction!"),
 
     // Faction join and quit
-    BC_JOIN_MESSAGE("&6&o%player% &ejoined to the faction!"),
-    BC_LEAVE_MESSAGE("&6&o%player% &eleaved from the faction!"),
-    JOIN_MESSAGE("&eYou joined to the faction!"),
-    LEAVE_MESSAGE("&aYou leaved from the faction!"),
+    BC_JOIN_MESSAGE("&6&o%player% &ejoined the faction!"),
+    BC_LEAVE_MESSAGE("&6&o%player% &eleft the faction!"),
+    JOIN_MESSAGE("&eYou joined the faction!"),
+    LEAVE_MESSAGE("&aYou left the faction!"),
 
     // Faction bank
-    FACTION_BANK_DEPOSIT("%prefix% &aSuccessfully deposited &2&o$%amount% &ato your faction bank."),
-    FACTION_BANK_WITHDRAW("%prefix% &aSuccessfully withdrew &2&o$%amount% &afrom your faction bank."),
+    FACTION_BANK_DEPOSIT("%prefix% &aSuccessfully deposited &2&o$%amount% &ain your faction's bank!"),
+    FACTION_BANK_WITHDRAW("%prefix% &aSuccessfully withdrew &2&o$%amount% &afrom your faction's bank!"),
     FACTION_BANK_NOT_ENOUGH("%prefix% &cYour faction doesn't have enough money!"),
     FACTION_BANK_NUMBER_ERROR("%prefix% &cPlease enter a valid number!"),
     NOT_ENOUGH_MONEY("%prefix% &cYou don't have enough money!"),
 
     // Server broadcasts
-    FACTION_CREATED("&6&o%faction_name% &esuccessfully created by &6&o%player%&e!"), // Sexy lesz :D azám :D
-    DEATH_MESSAGE("&a&o%victim% &ekilled by &a&o%killer%&e."),
+   // FACTION_CREATED("&6&o%faction_name% &esuccessfully created by &6&o%player%&e!"), // Sexy lesz :D azám :D
+   // DEATH_MESSAGE("&a&o%victim% &ekilled by &a&o%killer%&e."),
     //PVP_QUIT_MESSAGE("&a&o%player% leaved "),
 
     // Zones interact You've exited
-    LEAVE_ZONE("§eYou've exited from §6§o%zone_name%"),
-    ENTERED_ZONE("§eYou entered to §6§o%zone_name%"),
+    LEAVE_ZONE("§eYou left §6§o%zone_name%"),
+    ENTERED_ZONE("§eYou entered §6§o%zone_name%"),
 
     // Faction messages
-    KICK_MESSAGE("&a%executor% &ekicked &a%player%&e from the faction!"),
+    /*KICK_MESSAGE("&a%executor% &ekicked &a%player%&e from the faction!"),
     WITHDRAW_MESSAGE("%prefix% &eYou withdrew &6&o$%amount% &efrom faction bank!"),
     DEPOSIT_MESSAGE("%prefix% &eYou deposited &6&o$%amount% &eto faction bank!"),
     EXECUTOR_INVITE_MESSAGE("&eYou invited &6&o%player% &eto your faction!"),
-    INVITED_INVITE_MESSAGE("&eYou invited to &6&o%faction_name% &efaction by &6&o%executor%&e!"),
-    LEADER_LEAVING_FACTION("&cYou can't leave this faction, bc you are the leader! Use &e&l/f disband &r&cinstead!"),
+    INVITED_INVITE_MESSAGE("&eYou invited to &6&o%faction_name% &efaction by &6&o%executor%&e!"),*/
+    LEADER_LEAVING_FACTION("&cYou can't leave this faction, because you are the leader! Use &e&l/f disband &r&cinstead!"),
     NOT_LEADER("&cYou are not the faction leader!"),
     JOIN_FACTION_BC("&8[&a+&8] &7&l» &6&o%player%"),
     LEAVE_FACTION_BC("&8[&c-&8] &7&l» &6&o%player%"),
@@ -103,10 +101,10 @@ public enum Messages {
 
     // Faction home
     SETHOME_MESSAGE("&aSuccessfully set home of your faction to your location!"),
-    TELEPORT_TO_HOME("&eTeleportation will commenence in &6&o%time% seconds&e. &cDo not move!"),
-    SUCCESSFULLY_TELEPORT("&eYou are successfully teleported to your faction's home!"),
+    TELEPORT_TO_HOME("&eTeleportation in &6&o%time% seconds&e. &cDo not move!"),
+    SUCCESSFULLY_TELEPORT("&eSuccessfully teleported to your faction's home!"),
     TELEPORT_CANCEL("&cYou moved, teleportation cancelled!"),
-    DOESNT_HOME("&cYour faction doesn't have home!"),
+    DOESNT_HOME("&cYour faction doesn't have a home set!"),
 
 
     // Faction chat
@@ -121,8 +119,8 @@ public enum Messages {
     EXECUTOR_PROMOTE_MESSAGE("&eYou promoted &6&o%player% &eto &6&o%rank%&e!"),
     EXECUTOR_DEMOTE_MESSAGE("&eYou demoted &6&o%player% &eto &6&o%rank%&e!"),
 
-    FACTION_CREATE_RANK("%prefix% &aSuccessfully rank creation!"),
-    FACTION_RANK_EXISTS("%prefix% &cThis rank is exists!"),
+    FACTION_CREATE_RANK("%prefix% &aRank successfully created!"),
+    FACTION_RANK_EXISTS("%prefix% &cThis rank already exists!"),
 
     // Console error
     NOT_VALID_BLACKLISTED_BLOCKS("§cInvalid material type in config. Excepted material: %material%"),
@@ -142,15 +140,15 @@ public enum Messages {
     // Admin Duty
     ADMIN_DUTY_ON("%prefix% &aDuty mode: &2&oon"),
     ADMIN_DUTY_OFF("%prefix% &cDuty mode: &4&ooff"),
-    FREEZE_PLAYER_ON("%prefix% &aYou froze by &2&o%executor%"),
-    FREEZE_PLAYER_OFF("%prefix% &cYou unfreeze by &4&o%executor%"),
+    FREEZE_PLAYER_ON("%prefix% &aYou got frozen by &2&o%executor%"),
+    FREEZE_PLAYER_OFF("%prefix% &cYou got unfrozen by &4&o%executor%"),
     FREEZE_EXECUTOR_ON("%prefix% &aYou froze &2&o%player%"),
-    FREEZE_EXECUTOR_OFF("%prefix% &cYou unfreeze &4&o%player%"),
+    FREEZE_EXECUTOR_OFF("%prefix% &cYou unfroze &4&o%player%"),
 
     SPAWN_CLAIM_SUCCESS("%prefix% &bYou successfully claimed the spawn!"),
 
-    FACTION_ADMIN_WITHDRAW_BC("%prefix% &c&l%executor% &cdeposited &c&l%amount% &cto faction's bank!"),
-    FACTION_ADMIN_DEPOSIT_BC("%prefix% &c&l%executor% &cwithdrew &c&l%amount% &cfrom faction's bank!"),
+    FACTION_ADMIN_WITHDRAW_BC("%prefix% &c&l%executor% &cdeposited &c&l%amount% &cinto the faction's bank!"),
+    FACTION_ADMIN_DEPOSIT_BC("%prefix% &c&l%executor% &cwithdrew &c&l%amount% &cfrom the faction's bank!"),
     ADMIN_SET_PLAYERFACTION("%prefix%&1 You successfully put &6&o%player% in the %faction_name% faction"),
     SET_FACTION_NAME("%prefix% &eFaction's name changed by &6&o%executor% &eto &6&o%faction_name%&e!"),
 
@@ -188,28 +186,27 @@ public enum Messages {
 
     BARD_USED_POWERUP("%prefix% &6You used &b%effect% &6for &b&o%amount%&r&6. [&aBuffed teammates: &b&o%count%&r&6]"),
 
-    //STUCK stepbro
 
     STUCK_STARTED("%prefix% &aStuck timer started! You are getting teleported to a safe zone in &o&e%amount%&r&a seconds! Don't move!"),
-    STUCK_FINISHED("%prefix%  &bYou are successfully teleported to a safe zone!"),
+    STUCK_FINISHED("%prefix%  &bYou successfully teleported to a safe zone!"),
     STUCK_INTERRUPTED("%prefix% &cYou interrupted the stuck timer!"),
 
-    CLAIM_POS_START("%prefix% &bClaim start pos: &a&n%loc%"),
-    CLAIM_POS_END("%prefix% &bClaim end pos: &a&n%loc%"),
+    CLAIM_POS_START("%prefix% &bClaim start position: &a&n%loc%"),
+    CLAIM_POS_END("%prefix% &bClaim end position: &a&n%loc%"),
 
     // KOTH SOTW EOTW
     ENABLE_EOTW("%prefix% &aEOTW started!"),
     // koth
     UPDATED_KOTH_REWARDS("%prefix% &aSuccessfully saved rewards!"),
     CLAIM_KOTH_REWARDS("%prefix% &aYou claimed KOTH rewards!"),
-    KOTH_INVALID_NAME("%prefix% &cThis koth doesn't exits!"),
+    KOTH_INVALID_NAME("%prefix% &cThis KOTH doesn't exits!"),
     KOTH_SUCESS_CREATE("%prefix% &aSuccessfully created the &6&o%faction_name%&a koth!"),
-    KOTH_CREATED("%prefix% &aYou have successfully created a koth named &6&o%faction_name%&a!"),
-    KOTH_CAPTURING_STARTED("%prefix% &aSomeone started to occupy the &6&o%faction_name%&a koth!"),
-    KOTH_CAPTURING_ENDED("%prefix% &aThe occupation of koth &6&o%faction_name%&a was abandoned!"),
-    KOTH_CAPTURE_TIMER("%prefix% &aSomeone is capturing kitty koth! (%format_time%)"),
-    WARZONE_NO_PERMISSION("%prefix% &eYou can't do this in the warzone!"),
-    CANT_TELEPORT_TO_SAFEZONE("%prefix% &cYou cant teleport to a protected zone while you are in pvp tag");
+    KOTH_CREATED("%prefix% &aYou have successfully created a KOTH named &6&o%faction_name%&a!"),
+    KOTH_CAPTURING_STARTED("%prefix% &aSomeone started to occupy the &6&o%faction_name%&a KOTH!"),
+    KOTH_CAPTURING_ENDED("%prefix% &aThe occupation of KOTH &6&o%faction_name%&a was interrupted!"),
+    KOTH_CAPTURE_TIMER("%prefix% &aSomeone is capturing kitty KOTH! meow :3 (%format_time%)"),
+    WARZONE_NO_PERMISSION("%prefix% &eYou can't do this in the Warzone!"),
+    CANT_TELEPORT_TO_SAFEZONE("%prefix% &cYou can't teleport to a protected zone while you are in PvP tag");
 
 
     private String msg, defaultMsg;

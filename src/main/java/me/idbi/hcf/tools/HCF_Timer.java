@@ -1,6 +1,7 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
+import me.idbi.hcf.Main;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -132,12 +133,15 @@ public class HCF_Timer {
             // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta Archertag
             if (System.currentTimeMillis() >= Archertimers.get(player)) {
                 Archertimers.remove(player);
+                Main.sendCmdMessage("Returning FALSE (checkArcherTimer)");
                 return false;
             } else {
                 // Ellenkező esetben: Van rajta
+                Main.sendCmdMessage("Returning TRUE (checkArcherTimer)");
                 return true;
             }
         } else {
+            Main.sendCmdMessage("Returning FALSE (checkArcherTimer) NOT");
             return false;
         }
     }

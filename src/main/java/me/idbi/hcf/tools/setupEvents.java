@@ -11,6 +11,9 @@ import me.idbi.hcf.events.Enchants.EnchantInventory;
 import me.idbi.hcf.events.Enchants.TableEvent;
 import me.idbi.hcf.events.Enchants.TableInteract;
 import me.idbi.hcf.events.*;
+import me.idbi.hcf.events.claim.Basic_Claim;
+import me.idbi.hcf.events.claim.Koth_Claim;
+import me.idbi.hcf.events.claim.Spawn_Claim;
 import me.idbi.hcf.koth.GUI.KOTHCloseEvent;
 import me.idbi.hcf.koth.GUI.KOTHInvClickEvent;
 import me.idbi.hcf.koth.KOTH;
@@ -72,6 +75,12 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new onSignPlace(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new onConsumeItem(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Basic_Claim(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Spawn_Claim(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Koth_Claim(), Main.getPlugin(Main.class));
+
+        getServer().getPluginManager().registerEvents(new PlacePVPTag(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new ProjectileDamage(), Main.getPlugin(Main.class));
 
     }
 }

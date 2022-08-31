@@ -56,7 +56,7 @@ public class KOTH implements Listener {
     }
 
     public static int createKoth(String name) {
-        return playertools.createCustomFaction(name);
+        return playertools.createCustomFaction(name,"");
 //        KOTH.koth_area temp = new KOTH.koth_area(
 //                faction,
 //                new HCF_Claiming.Point(claim.startX,claim.startZ),

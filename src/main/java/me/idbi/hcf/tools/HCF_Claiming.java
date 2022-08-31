@@ -379,6 +379,27 @@ public class HCF_Claiming {
 
         return false;
     }
+    public static boolean KothPrepare(Player p) {
+        if (p.getInventory().firstEmpty() != -1) {
+            ItemStack wand = new ItemStack(Material.IRON_HOE);
+            ItemMeta meta = wand.getItemMeta();
+
+            meta.setDisplayName("§e§oKoth Claimer");
+
+            List<String> str = new ArrayList<>();
+            str.add("§aMeow");
+
+            meta.setLore(str);
+
+            wand.setItemMeta(meta);
+            p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
+            return true;
+        } else {
+            p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
+        }
+
+        return false;
+    }
     public static boolean CustomClaimPreparer(Player p,int factionid) {
         if (p.getInventory().firstEmpty() != -1) {
             ItemStack wand = new ItemStack(Material.DIAMOND_HOE);

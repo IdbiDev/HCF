@@ -10,6 +10,7 @@ import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -229,14 +230,17 @@ public class adminMain {
                 //Todo: Kurvva sikerült
                 playertools.setMetadata(admin, "spawnclaiming", false);
                 admin.sendMessage(Messages.SPAWN_CLAIM_SUCCESS.queue());
+                admin.getInventory().remove(Material.GOLD_HOE);
             } else {
                 //Todo: nem sikerült, balfasz vagy és nem raktad le
                 playertools.setMetadata(admin, "spawnclaiming", false);
                 admin.sendMessage(Messages.FACTION_CLAIM_INVALID_ZONE.queue());
+                admin.getInventory().remove(Material.GOLD_HOE);
             }
         } else if (state.equalsIgnoreCase("stop")) {
             playertools.setMetadata(admin, "spawnclaiming", false);
             admin.sendMessage(Messages.FACTION_CLAIM_DECLINE.queue());
+            admin.getInventory().remove(Material.GOLD_HOE);
         }
     }
 

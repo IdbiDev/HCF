@@ -194,7 +194,6 @@ public final class Main extends JavaPlugin implements Listener {
         Misc_Timers.CleanupFakeWalls();
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
-        //startKoth("BauBence");
         //displayTeams.setupAllTeams();
 
         sendCmdMessage((System.currentTimeMillis()- deltatime) + "ms");

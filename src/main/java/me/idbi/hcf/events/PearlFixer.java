@@ -52,7 +52,7 @@ public class PearlFixer implements Listener {
 
         }
     }
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.hasItem() &&
                 event.getItem().getType() == Material.ENDER_PEARL) {
@@ -64,7 +64,7 @@ public class PearlFixer implements Listener {
             }
         }
     }
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPearlClip(PlayerTeleportEvent event) {
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
             Location to = event.getTo();

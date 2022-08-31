@@ -14,8 +14,7 @@ import static me.idbi.hcf.tools.brewing.furnaces;
 
 public class onChunkLoaded implements Listener {
     @EventHandler
-    public  void onChunkLoaded(ChunkLoadEvent e){
-        ///Todo: Optimize
+    public void onChunkLoaded(ChunkLoadEvent e){
         BlockState[] blocks = e.getChunk().getTileEntities();
         for(BlockState b : blocks){
             if (b.getType() == Material.BREWING_STAND) {
@@ -36,7 +35,7 @@ public class onChunkLoaded implements Listener {
                 BrewingStand stand = (BrewingStand) b;
                 brewingStands.remove(stand);
             }
-            if (b.getType() == Material.FURNACE) {
+            if (b.getType() == Material.FURNACE || b.getType() == Material.BURNING_FURNACE) {
                 Furnace stand = (Furnace) b;
                 furnaces.remove(stand);
             }

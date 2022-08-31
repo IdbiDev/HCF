@@ -7,6 +7,7 @@ import me.idbi.hcf.koth.GUI.KOTHInventory;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,10 +17,8 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.List;
 
-import static me.idbi.hcf.koth.KOTH.createKoth;
-import static me.idbi.hcf.koth.KOTH.getKothFromName;
-import static me.idbi.hcf.tools.HCF_Claiming.endpositions;
-import static me.idbi.hcf.tools.HCF_Claiming.startpositions;
+import static me.idbi.hcf.koth.KOTH.*;
+import static me.idbi.hcf.tools.HCF_Claiming.*;
 
 public class koth implements CommandExecutor, TabCompleter {
     @Override
@@ -46,20 +45,24 @@ public class koth implements CommandExecutor, TabCompleter {
                             try{
                                 if(getKothFromName(args[1]) != 0){
                                     if(!Boolean.parseBoolean(playertools.getMetadata(p, "kothclaim"))){
-                                        playertools.setMetadata(p, "kothclaim", true);
-                                        playertools.setMetadata(p, "kothid", getKothFromName(args[1]));
+                                        if(KothPrepare(p)){
+                                            playertools.setMetadata(p, "kothclaim", true);
+                                            playertools.setMetadata(p, "kothid", getKothFromName(args[1]));
+                                            Main.sendCmdMessage("MeowCapture");
+                                        }
                                     }else{
                                         HCF_Claiming.ForceFinishClaim(getKothFromName(args[1]),p,"koth");
                                         playertools.setMetadata(p, "kothclaim", false);
                                         playertools.setMetadata(p, "kothid", 0);
                                         endpositions.remove(getKothFromName(args[1]));
                                         startpositions.remove(getKothFromName(args[1]));
+                                        p.getInventory().remove(Material.IRON_HOE);
                                     }
                                 }else{
                                     p.sendMessage(Messages.KOTH_INVALID_NAME.queue());
                                 }
 
-                                p.sendMessage(Messages.KOTH_CREATED.setFaction(args[1]).queue());
+                                //p.sendMessage(Messages.KOTH_CREATED.setFaction(args[1]).queue());
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             }
@@ -68,20 +71,24 @@ public class koth implements CommandExecutor, TabCompleter {
                             try{
                                 if(getKothFromName(args[1]) != 0){
                                     if(!Boolean.parseBoolean(playertools.getMetadata(p, "kothclaim"))){
-                                        playertools.setMetadata(p, "kothclaim", true);
-                                        playertools.setMetadata(p, "kothid", getKothFromName(args[1]));
+                                        if(KothPrepare(p)){
+                                            playertools.setMetadata(p, "kothclaim", true);
+                                            playertools.setMetadata(p, "kothid", getKothFromName(args[1]));
+                                            Main.sendCmdMessage("MOEW setnatrualzone");
+                                        }
                                     }else{
                                         HCF_Claiming.ForceFinishClaim(getKothFromName(args[1]),p,"normal");
                                         playertools.setMetadata(p, "kothclaim", false);
                                         playertools.setMetadata(p, "kothid", 0);
                                         endpositions.remove(getKothFromName(args[1]));
                                         startpositions.remove(getKothFromName(args[1]));
+                                        p.getInventory().remove(Material.IRON_HOE);
                                     }
                                 }else{
                                     p.sendMessage(Messages.KOTH_INVALID_NAME.queue());
                                 }
 
-                                p.sendMessage(Messages.KOTH_SUCESS_CREATE.setFaction(args[1]).queue());
+                                //p.sendMessage(Messages.KOTH_SUCESS_CREATE.setFaction(args[1]).queue());
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             }
@@ -91,6 +98,18 @@ public class koth implements CommandExecutor, TabCompleter {
                             for (String lines : ListMessages.KOTH_COMMAND_LIST.queue()) {
                                 System.out.println(lines);
                                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
+                            }
+                            break;
+                        case "start":
+                            try{
+                                if(getKothFromName(args[1]) != 0){
+                                    startKoth(args[1]);
+                                    //Todo: koth started @everyone
+                                }else{
+                                    p.sendMessage(Messages.KOTH_INVALID_NAME.queue());
+                                }
+                            } catch (IndexOutOfBoundsException ignored) {
+                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             }
                             break;
                     }
