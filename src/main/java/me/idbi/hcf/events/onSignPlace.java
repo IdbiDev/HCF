@@ -29,7 +29,9 @@ public class onSignPlace implements Listener {
         if(event.getPlayer().getItemInHand().getType() == Material.SIGN) {
             if(event.getItem() == null) return;
             if(!event.getItem().hasItemMeta()) return;
-            if(!event.getItem().getItemMeta().getDisplayName().startsWith("§cDeath Sign")) return;
+            if(event.getItem().getItemMeta().hasDisplayName())
+                if (!event.getItem().getItemMeta().getDisplayName().startsWith("§cDeath Sign"))
+                    return;
 
             event.setCancelled(true);
             Block block = event.getClickedBlock().getRelative(event.getBlockFace());

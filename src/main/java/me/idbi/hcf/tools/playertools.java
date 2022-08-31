@@ -423,11 +423,11 @@ public class playertools {
         }
     }
 
-    public static void prepareKoths(){
+    public static void prepareKoths() {
         Main.koth_cache.clear();
         HashMap<Integer, Main.Faction> hashMap = Main.faction_cache;
 
-        LinkedMap<String, Main.Faction> geci = new LinkedMap<>();
+        LinkedMap<String, Main.Faction> geciFaszAdriánBuziViharvertKurvaRiheÖrömlányLikeAdbi = new LinkedMap<>();
 
         for (Main.Faction faction : hashMap.values()) {
             for (HCF_Claiming.Faction_Claim claim : faction.claims) {
