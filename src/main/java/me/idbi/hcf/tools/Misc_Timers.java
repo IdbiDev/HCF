@@ -65,7 +65,7 @@ public class Misc_Timers {
                     if (val <= System.currentTimeMillis()) {
                         Main.DTR_REGEN.remove(key);
                         if (Main.debug)
-                            System.out.println("DTR Regen >> Removed task cuz reached max DTR Faction: " + Main.factionToname.get(key));
+                           Main.sendCmdMessage("DTR REGEN finished: ");
                         Main.faction_cache.get(key).DTR = Double.parseDouble(playertools.CalculateDTR(Main.faction_cache.get(key)));
                     }
                 }
@@ -118,14 +118,7 @@ public class Misc_Timers {
     }
 
 
-    public static void AutoSave() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Main.SaveAll();
-            }
-        }.runTaskTimer(Main.getPlugin(Main.class), 6000, 6000);
-    }
+
 
     public static void PvpTag() {
         new BukkitRunnable() {
@@ -146,6 +139,23 @@ public class Misc_Timers {
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }
 
+    public static void KOTH_Countdown() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(KOTH.GLOBAL_AREA != null && KOTH.GLOBAL_PLAYER != null){
+                    //TODO: Scoreboard format MIN:SS
+                    KOTH.GLOBAL_TIME--;
+                    if(KOTH.GLOBAL_TIME % 30 == 0)
+                        Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
+                    if(KOTH.GLOBAL_TIME <= 0){
+
+                        stopKoth();
+                    }
+                }
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
+    }
 
 
     public static void PotionLimiter() {
@@ -206,23 +216,6 @@ public class Misc_Timers {
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
     }
     */
-    public static void KOTH_Countdown() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if(KOTH.GLOBAL_AREA != null && KOTH.GLOBAL_PLAYER != null){
-                    //TODO: Scoreboard format MIN:SS
-                    KOTH.GLOBAL_TIME--;
-                    if(KOTH.GLOBAL_TIME % 30 == 0)
-                        Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
-                    if(KOTH.GLOBAL_TIME <= 0){
-
-                        stopKoth();
-                    }
-                }
-            }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
-    }
 
     public static void CleanupFakeWalls() {
         new BukkitRunnable() {
@@ -263,6 +256,14 @@ public class Misc_Timers {
         long current = System.currentTimeMillis() / 1000;
         //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
         return Main.EOTWStarted - current;
+    }
+    public static void AutoSave() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Main.SaveAll();
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class), 6000, 6000);
     }
 }
 

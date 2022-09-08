@@ -55,14 +55,12 @@ public class rankManager {
     }
 
     public enum Permissions {
-        ALL("-1"),
-        BASIC("0"),
-        DEPOSIT("1"),
-        INVITE("2"),
-        SETHOME("3"),
-        WITHDRAW("4"),
-        RENAME("5"),
-        KICK("6");
+        ALL("-1"),      // Include faction manager
+        BASIC("0"),     // Basic role
+        INVITE("1"),    // Can or not invite other players
+        SETHOME("2"),   // Can modify the faction home
+        WITHDRAW("3"),  // Can withdraw from the faction balance
+        KICK("4");    // Can rename the faction
 
         private final String value;
 
@@ -81,7 +79,7 @@ public class rankManager {
 
         public boolean isDefault = false;
         public boolean isLeader = true;
-        public HashMap<String, Boolean> clas_permissions = new HashMap<>();
+        public HashMap<String, Boolean> class_permissions = new HashMap<>();
 
         public Faction_Rank(Integer id, String name) {
             this.name = name;
@@ -95,35 +93,37 @@ public class rankManager {
                 for (Map.Entry<String, Object> p : JsonUtils.jsonToMap(jsonObject).entrySet()) {
                     String rank = p.getKey();
                     boolean isValid = Boolean.parseBoolean(String.valueOf(p.getValue()));
-                    clas_permissions.put(rank, isValid);
+                    class_permissions.put(rank, isValid);
                 }
-            } catch (Exception ignored) {
-                ignored.printStackTrace();
+            } catch (Exception uwu) {
+                uwu.printStackTrace();
             }
 
         }
 
         public void addPermission(Permissions perms) {
-            if (!clas_permissions.containsKey(perms.value)) {
-                clas_permissions.put(perms.value, true);
+            if (!class_permissions.containsKey(perms.value)) {
+                class_permissions.put(perms.value, true);
             }
+            System.out.println(class_permissions);
+            System.out.println(perms.value);
             UpdatePermissions();
         }
 
         public void removePermission(Permissions perms) {
-            clas_permissions.remove(perms.value);
+            class_permissions.remove(perms.value);
             UpdatePermissions();
         }
 
         public boolean hasPermission(Permissions perm) {
-            if (clas_permissions.containsKey(Permissions.ALL.value)) {
+            if (class_permissions.containsKey(Permissions.ALL.value)) {
                 return true;
             }
-            return clas_permissions.containsKey(perm.value);
+            return class_permissions.containsKey(perm.value);
         }
 
         public void UpdatePermissions() {
-            JSONObject obj = new JSONObject(clas_permissions);
+            JSONObject obj = new JSONObject(class_permissions);
             SQL_Connection.dbExecute(con, "UPDATE ranks SET permissions = '?' WHERE ID = '?'", obj.toString(), String.valueOf(id));
 
         }

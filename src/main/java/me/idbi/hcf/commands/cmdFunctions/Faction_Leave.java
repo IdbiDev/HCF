@@ -17,7 +17,7 @@ public class Faction_Leave {
         if (!playertools.getMetadata(player, "factionid").equals("0")) {
             if (!Objects.equals(Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(player, "factionid"))).leader, player.getUniqueId().toString())) {
 
-                SQL_Connection.dbExecute(con, "UPDATE members SET faction = ?,factionname='?' WHERE uuid = '?'", "0", "Nincs", player.getUniqueId().toString());
+                SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?' faction = '?',factionname='?' WHERE uuid = '?'", "none","0", "Nincs", player.getUniqueId().toString());
                 // Koba moment :3
                 player.sendMessage(Messages.LEAVE_MESSAGE.queue());
                 Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(player, "factionid")));

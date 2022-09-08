@@ -2,6 +2,7 @@ package me.idbi.hcf.commands;
 
 import me.idbi.hcf.CustomFiles.DiscordFile;
 import me.idbi.hcf.CustomFiles.MessagesFile;
+import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
@@ -210,6 +211,8 @@ public class faction implements CommandExecutor, TabCompleter {
                             e.printStackTrace();
                         }
                         break;
+                    case "manage":
+                        p.openInventory(MainInventory.mainInv());
                     default:
                         p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                         break;

@@ -10,6 +10,7 @@ import me.idbi.hcf.koth.KOTH;
 import me.idbi.hcf.tools.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -121,6 +122,7 @@ public final class Main extends JavaPlugin implements Listener {
                 ConfigLibrary.DATABASE_DATABSE.getValue(),
                 ConfigLibrary.DATABASE_USER.getValue(),
                 ConfigLibrary.DATABASE_PASSWORD.getValue());
+        Plugin multi = getServer().getPluginManager().getPlugin("Multiverse-Core");
         if (con == null)
             return;
         new SQL_Generator();
@@ -154,14 +156,6 @@ public final class Main extends JavaPlugin implements Listener {
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         saveConfig();
-
-        // Multiverse detect!!!!!!
-        Plugin multi = getServer().getPluginManager().getPlugin("Multiverse-Core");
-        if(multi != null) {
-            sendCmdMessage("§aMultiverse-Core found. Plugin connected to Multiverse-Core\n§aMultiverse-Core version: §a§o" + multi.getDescription().getVersion());
-        }
-        //
-
         KothRewardsFile.setup();
 
         // Displaynames
@@ -195,8 +189,11 @@ public final class Main extends JavaPlugin implements Listener {
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
         //displayTeams.setupAllTeams();
+        if(Main.debug)
+            sendCmdMessage("§1Finished loading the plugin! ("+(System.currentTimeMillis()- deltatime) + " ms)");
+        if(multi != null)
+            sendCmdMessage("§aMultiverse-Core found. Plugin connected to Multiverse-Core\n§aMultiverse-Core version: §a§o" + multi.getDescription().getVersion());
 
-        sendCmdMessage((System.currentTimeMillis()- deltatime) + "ms");
     }
 
     @Override
@@ -309,6 +306,14 @@ public final class Main extends JavaPlugin implements Listener {
                 if (Objects.equals(rank.name, name)) {
                     player_ranks.put(p, rank);
                     playertools.setMetadata(p, "rank", rank.name);
+                    SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE uuid='?'", rank.name, p.getUniqueId().toString());
+                    break;
+                }
+            }
+        }
+        public void ApplyOfflinePlayerRank(OfflinePlayer p, String name) {
+            for (rankManager.Faction_Rank rank : ranks) {
+                if (Objects.equals(rank.name, name)) {
                     SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE uuid='?'", rank.name, p.getUniqueId().toString());
                     break;
                 }

@@ -68,7 +68,14 @@ public class playertools {
         }
         return players;
     }
-
+    public static Main.Faction getPlayerFaction(Player p) {
+        int id = Integer.parseInt(getMetadata(p,"factionid"));
+        System.out.println(id);
+        if (id != 0){
+            return Main.faction_cache.get(id);
+        }
+        return null;
+    }
     public static List<Player> getFactionMembersInDistance(Player p, double distance) {
         String faction = getMetadata(p, "faction");
         List<Player> players = new ArrayList<>();
@@ -99,24 +106,15 @@ public class playertools {
         return players.toArray(new Player[0]);
     }
 
-    public static HashMap<String, HashMap<String, String>> getFactionMembers(String name) {
-        HashMap<String, Object> faction = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE name = '?'", name);
-        HashMap<String, HashMap<String, String>> players = new HashMap<>();
+    public static HashMap<String, String> getFactionMembers(int id) {
+        HashMap<String,String> players = new HashMap<>();
         try {
 
             PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction = ?");
-            ps.setString(1, faction.get("ID").toString());
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                HashMap<String, String> stats = new HashMap() {{
-                    put("Rank", rs.getString(4));
-                    put("Kills", rs.getString(5));
-                    put("Deaths", rs.getString(6));
-                    put("Money", rs.getString(7));
-                    put("Online", rs.getString(9));
-
-                }};
-                players.put(rs.getString(2), stats);
+                players.put(rs.getString("name"),rs.getString("uuid"));
             }
             return players;
 
@@ -157,11 +155,11 @@ public class playertools {
     public static Object getRealMetadata(Player p, String key) {
         if (Main.player_cache.containsKey(p)) {
             Main.Player_Obj obj = Main.player_cache.get(p);
-            return obj.getRealData(key);
+            return obj.getData(key);
         } else {
             if (Main.debug)
                 Bukkit.getLogger().severe("GET Nem tartalamzza a playert a cache! >> " + p.getDisplayName() + "KEY >> " + key);
-            return null;
+            return "0";
         }
     }
 
@@ -427,7 +425,7 @@ public class playertools {
         Main.koth_cache.clear();
         HashMap<Integer, Main.Faction> hashMap = Main.faction_cache;
 
-        LinkedMap<String, Main.Faction> geciFaszAdriánBuziViharvertKurvaRiheÖrömlányLikeAdbi = new LinkedMap<>();
+       // LinkedMap<String, Main.Faction> geciFaszAdriánBuziViharvertKurvaRiheÖrömlányLikeAdbi = new LinkedMap<>();
 
         for (Main.Faction faction : hashMap.values()) {
             for (HCF_Claiming.Faction_Claim claim : faction.claims) {

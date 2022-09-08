@@ -5,6 +5,7 @@ import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.playertools;
 import me.idbi.hcf.tools.rankManager;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class Faction_Ranks {
@@ -98,10 +99,11 @@ public class Faction_Ranks {
                 Player target = Bukkit.getPlayer(player);
                 if (target != null) {
                     faction.ApplyPlayerRank(target, rank);
-
                 } else {
-                    System.out.println("Cicacsomag");
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(player);
+                    faction.ApplyOfflinePlayerRank(offlinePlayer,rank);
                 }
+
                 //Todo: Sikeresen player set Rank geci
                 p.sendMessage(Messages.FACTION_CREATE_RANK.queue());
             } else {

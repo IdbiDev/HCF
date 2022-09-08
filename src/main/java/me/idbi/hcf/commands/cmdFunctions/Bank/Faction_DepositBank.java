@@ -14,7 +14,7 @@ public class Faction_DepositBank {
     boolean transaction;
 
     public static void asd(String[] args, Player p) {
-        if (!playertools.hasPermission(p, rankManager.Permissions.DEPOSIT)) {
+        if (!playertools.hasPermission(p, rankManager.Permissions.BASIC)) {
             // ToDo: permission handle
             p.sendMessage(Messages.NO_PERMISSION.queue());
             return;
