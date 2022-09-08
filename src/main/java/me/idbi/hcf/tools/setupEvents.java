@@ -2,6 +2,8 @@ package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Elevator.ElevatorCreate;
 import me.idbi.hcf.Elevator.ElevatorInteract;
+import me.idbi.hcf.FrakcioGUI.GUIEvents.*;
+import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.SignShop.CreateShopSign;
 import me.idbi.hcf.SignShop.InteractShopSign;
@@ -81,6 +83,15 @@ public class setupEvents {
 
         getServer().getPluginManager().registerEvents(new PlacePVPTag(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new ProjectileDamage(), Main.getPlugin(Main.class));
+
+        // Faction GUI
+        getServer().getPluginManager().registerEvents(new Click_MainInventory(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_PlayerManage(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_MemberList(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new KickConfirm(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_RankManager(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_RankMenu(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_PermissionManager(), Main.getPlugin(Main.class));
 
     }
 }

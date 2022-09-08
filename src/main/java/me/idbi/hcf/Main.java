@@ -272,7 +272,7 @@ public final class Main extends JavaPlugin implements Listener {
 
         }
         public void invitePlayer(Player p) {
-            if(memberCount+1>max_members_pro_faction){
+            if(memberCount + 1 > max_members_pro_faction) {
                 p.sendMessage(Messages.MAX_MEMBERS_REACHED.queue());
                 return;
             }

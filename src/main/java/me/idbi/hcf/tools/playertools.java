@@ -17,10 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class playertools {
@@ -440,5 +437,17 @@ public class playertools {
                 }
             }
         }
+    }
+
+    private static Map<String, List<String>> sortbykey(HashMap map) {
+        // TreeMap to store values of HashMap
+        Map<String, List<String>> sorted = new TreeMap<>(map);
+
+        // Copy all data from hashMap into TreeMap
+        sorted.putAll(map);
+
+        // Display the TreeMap which is naturally sorted
+        // Sorted hashMap
+        return sorted;
     }
 }
