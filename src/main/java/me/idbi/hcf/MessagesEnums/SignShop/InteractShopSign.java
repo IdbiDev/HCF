@@ -1,4 +1,4 @@
-package me.idbi.hcf.SignShop;
+package me.idbi.hcf.MessagesEnums.SignShop;
 
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;

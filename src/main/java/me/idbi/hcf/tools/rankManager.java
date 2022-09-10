@@ -98,7 +98,6 @@ public class rankManager {
             } catch (Exception uwu) {
                 uwu.printStackTrace();
             }
-
         }
 
         public void addPermission(Permissions perms) {

@@ -22,16 +22,16 @@ public class Faction_Kick {
                 //Todo: Kick message
                 if(targetPlayer_Offline.isOnline()) {
                     targetPlayer_Online = targetPlayer_Offline.getPlayer();
-                    SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?' faction = '?',factionname='?' WHERE uuid = '?'", "none","0", "Nincs", targetPlayer_Online.getUniqueId().toString());
-                    Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(targetPlayer_Online, "factionid")));
+                    Main.Faction f = playertools.getPlayerFaction(targetPlayer_Online);
                     playertools.setMetadata(targetPlayer_Online, "faction", "Nincs");
                     playertools.setMetadata(targetPlayer_Online, "factionid", "0");
+
                     f.BroadcastFaction(Messages.BC_LEAVE_MESSAGE.repPlayer(targetPlayer_Online).queue());
                     Scoreboards.refresh(targetPlayer_Online);
                     f.refreshDTR();
                 }else {
-                    SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?' faction = '?',factionname='?' WHERE uuid = '?'", "none","0", "Nincs", targetPlayer_Offline.getUniqueId().toString());
-                    Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(player, "factionid")));
+                    SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?',factionname='?' WHERE uuid = '?'", "none","0", "Nincs", targetPlayer_Offline.getUniqueId().toString());
+                    Main.Faction f = playertools.getPlayerFaction(player);
                     f.refreshDTR();
                 }
                 player.sendMessage(Messages.NOT_A_NUMBER.queue());

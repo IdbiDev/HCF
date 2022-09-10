@@ -67,7 +67,6 @@ public class playertools {
     }
     public static Main.Faction getPlayerFaction(Player p) {
         int id = Integer.parseInt(getMetadata(p,"factionid"));
-        System.out.println(id);
         if (id != 0){
             return Main.faction_cache.get(id);
         }
