@@ -7,12 +7,7 @@ import java.util.ArrayList;
 public class inviteManager {
 
     public static class factionInvite {
-        private final ArrayList<Player> invitedPlayers = new ArrayList();
-
-        public factionInvite(Integer id) {
-            int faction = id;
-        }
-
+        private final ArrayList<Player> invitedPlayers = new ArrayList<>();
         public void invitePlayerToFaction(Player p) {
             if (!invitedPlayers.contains(p)) {
                 invitedPlayers.add(p);
@@ -31,6 +26,8 @@ public class inviteManager {
             return invitedPlayers.contains(p);
         }
 
-
+        public ArrayList<Player> getInvitedPlayers(){
+            return invitedPlayers;
+        }
     }
 }

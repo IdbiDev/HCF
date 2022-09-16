@@ -184,9 +184,7 @@ public class HCF_Claiming {
 
         for(int x = minX; x <= maxX; x++) {
             for(int z = minZ; z <= maxZ; z++) {
-                System.out.println("Checking X: " + x+ " Z: " + z);
                 if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, x, z)) {
-                    System.out.println("FOUND POINT X: " + x+ " Z: " + z);
                     return true;
                 }
             }

@@ -154,6 +154,8 @@ public class HCF_Rules {
     }
     public static final String startMessage = "";
 
+    public static final int maxInvites = 14; // >> GUI limit
+
 
 
 }

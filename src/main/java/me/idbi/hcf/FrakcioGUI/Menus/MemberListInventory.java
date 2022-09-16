@@ -1,6 +1,7 @@
 package me.idbi.hcf.FrakcioGUI.Menus;
 
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,7 +24,9 @@ public class MemberListInventory {
         }
 
         //       név,     uuid
-        HashMap<String, String> members = playertools.getFactionMembers(Integer.parseInt(playertools.getMetadata(p,"factionid")));
+        Main.Faction faction = playertools.getPlayerFaction(p);
+        assert faction != null;
+        HashMap<String, String> members = playertools.getFactionMembers(faction.factionid);
 
         for(String memberName : members.keySet()) {
             inv.addItem(GUI_Items.memberHead(memberName));

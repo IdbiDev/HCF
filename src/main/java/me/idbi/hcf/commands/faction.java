@@ -145,9 +145,10 @@ public class faction implements CommandExecutor, TabCompleter {
                             sender.sendMessage(Messages.NO_PERMISSION.getMessage().queue());
                         }
                         break;
-                    case "addrank":
+                    /*case "addrank":
                         try {
-                            Faction_Ranks.addRank(p, args[1]);
+
+                            //Faction_Rank_Manager.addRank(p, args[1]);
                         } catch (IndexOutOfBoundsException ignored) {
                             p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             //Kiíratás hogy balfaszul használta a commandot
@@ -158,7 +159,7 @@ public class faction implements CommandExecutor, TabCompleter {
                         break;
                     case "setrankperm":
                         try {
-                            Faction_Ranks.setPermissionToRank(p, args[1], args[2]);
+                            //Faction_Ranks.setPermissionToRank(p, args[1], args[2]);
                         } catch (IndexOutOfBoundsException asd) {
                             p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             //Kiíratás hogy balfaszul használta a commandot
@@ -169,7 +170,7 @@ public class faction implements CommandExecutor, TabCompleter {
                         break;
                     case "removerankperm":
                         try {
-                            Faction_Ranks.removePermissionFromRank(p, args[1], args[2]);
+                            //Faction_Ranks.removePermissionFromRank(p, args[1], args[2]);
                         } catch (IndexOutOfBoundsException asd) {
                             p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             //Kiíratás hogy balfaszul használta a commandot
@@ -180,7 +181,7 @@ public class faction implements CommandExecutor, TabCompleter {
                         break;
                     case "setrank":
                         try {
-                            Faction_Ranks.setPlayerForRank(p, args[1], args[2]);
+                            //Faction_Ranks.setPlayerForRank(p, args[1], args[2]);
                         } catch (IndexOutOfBoundsException asd) {
                             p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             //Kiíratás hogy balfaszul használta a commandot
@@ -188,7 +189,7 @@ public class faction implements CommandExecutor, TabCompleter {
                             p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             e.printStackTrace();
                         }
-                        break;
+                        break;*/
                     case "disband":
                         try {
                             Faction_Disband.disband(p, args[1]);
@@ -212,7 +213,7 @@ public class faction implements CommandExecutor, TabCompleter {
                         }
                         break;
                     case "manage":
-                        p.openInventory(MainInventory.mainInv());
+                        p.openInventory(MainInventory.mainInv(p));
                     default:
                         p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                         break;

@@ -15,6 +15,9 @@ public class MainInventory {
         inv.setItem(11, GUI_Items.rankManager());
         inv.setItem(15, GUI_Items.playerManager());
 
+        Main.Faction faction = playertools.getPlayerFaction(p);
+        inv.setItem(31, GUI_Items.factinoStats(faction));
+
         return inv;
     }
 }

@@ -27,7 +27,7 @@ public class onPlayerInteract implements Listener {
                         HCF_Timer.addEpTimer(p);
                 }
             }
-            if (HCF_Claiming.checkEnemyClaimAction(e.getClickedBlock().getX(), e.getClickedBlock().getZ(), Integer.parseInt(playertools.getMetadata(p, "factionid")))) {
+            if (HCF_Claiming.checkEnemyClaimAction(e.getClickedBlock().getX(), e.getClickedBlock().getZ(), Integer.parseInt(playertools.getMetadata(p, "factionid"))) && !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
                 if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType())) {
                     e.setCancelled(true);
                     p.sendMessage(Messages.NO_PERMISSION.queue());

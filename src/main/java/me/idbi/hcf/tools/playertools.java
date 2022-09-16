@@ -8,6 +8,7 @@ import me.idbi.hcf.koth.KOTH;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.Metadatable;
@@ -67,6 +68,14 @@ public class playertools {
     }
     public static Main.Faction getPlayerFaction(Player p) {
         int id = Integer.parseInt(getMetadata(p,"factionid"));
+        if (id != 0){
+            return Main.faction_cache.get(id);
+        }
+        return null;
+    }
+    public static Main.Faction getPlayerFaction(OfflinePlayer p) {
+        HashMap<String, Object> playerMap = SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid='?'",p.getUniqueId().toString());
+        int id = (int) playerMap.get("faction");
         if (id != 0){
             return Main.faction_cache.get(id);
         }
@@ -196,7 +205,7 @@ public class playertools {
         }
     }
 
-    public static boolean hasPermission(Player player, rankManager.Permissions perm) {
+    public static boolean hasPermission(Player player, Faction_Rank_Manager.Permissions perm) {
         return true;
         /*int faction = Integer.parseInt(getMetadata(player,"factionid"));
         if(faction != 0){
@@ -226,7 +235,8 @@ public class playertools {
                 Main.faction_cache.put(rs.getInt("ID"), faction);
                 Main.nameToFaction.put(rs.getString("name"), faction);
                 faction.memberCount = playertools.countMembers(faction);
-                faction.DTR = Double.parseDouble(playertools.CalculateDTR(faction));
+                faction.DTR = Double.parseDouble(CalculateDTR(faction));
+                faction.DTR_MAX = Double.parseDouble(CalculateDTR(faction));
                 if (Main.debug)
                     Main.sendCmdMessage(faction.factioname + " Prepared");
                 if (rs.getString("home") == null)
@@ -240,6 +250,8 @@ public class playertools {
                         Integer.parseInt(map.get("YAW").toString()),
                         Integer.parseInt(map.get("PITCH").toString()));
                 faction.setHomeLocation(loc);
+                /*Main.DTR_REGEN.put(faction.factionid, System.currentTimeMillis() + DTR_REGEN_TIME* 1000L);
+                faction.DTR -= Main.DEATH_DTR;*/
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -316,8 +328,7 @@ public class playertools {
                     Integer id = f.getKey();
                     Main.Faction faction = f.getValue();
                     if (id.equals(rank_rs.getInt("faction"))) {
-                        rankManager.Faction_Rank rank = new rankManager.Faction_Rank(rank_rs.getInt("ID"), rank_rs.getString("name"));
-                        rank.loadPermissions();
+                        Faction_Rank_Manager.Rank rank = new Faction_Rank_Manager.Rank(rank_rs.getInt("ID"), rank_rs.getString("name"));
                         faction.ranks.add(rank);
                         rank.isLeader = rank_rs.getInt("isLeader") == 1;
                         rank.isDefault = rank_rs.getInt("isDefault") == 1;
@@ -339,7 +350,22 @@ public class playertools {
     */
 
     public static String CalculateDTR(Main.Faction faction){
-        return String.valueOf(HCF_Rules.DTR_MEMBERS.get(faction.memberCount));
+
+        double addedDTR = 1.5;
+        for(int i = 1; i <= faction.memberCount; i++) {
+            if(faction.memberCount % 5 == 0) {
+                if (Main.MAX_DTR <= addedDTR + 1)
+                    break;
+                addedDTR += 1;
+            }
+            else{
+                //5.5 <= 2.0
+                if (Main.MAX_DTR <= addedDTR+0.5)
+                    break;
+                addedDTR += 0.5;
+            }
+        }
+        return String.valueOf(addedDTR);
     }
     public static int countMembers(Main.Faction faction) {
         int count = 0;
@@ -420,8 +446,6 @@ public class playertools {
     public static void prepareKoths() {
         Main.koth_cache.clear();
         HashMap<Integer, Main.Faction> hashMap = Main.faction_cache;
-
-       // LinkedMap<String, Main.Faction> geciFaszAdriánBuziViharvertKurvaRiheÖrömlányLikeAdbi = new LinkedMap<>();
 
         for (Main.Faction faction : hashMap.values()) {
             for (HCF_Claiming.Faction_Claim claim : faction.claims) {

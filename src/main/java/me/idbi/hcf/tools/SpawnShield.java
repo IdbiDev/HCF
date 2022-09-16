@@ -13,6 +13,7 @@ import static me.idbi.hcf.tools.playertools.getDistanceBetweenPoints2D;
 public class SpawnShield {
 
     public static void CalcWall(Player p) {
+        if(Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) return;
         HCF_Claiming.Point player_point = new HCF_Claiming.Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
         for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
             for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().claims) {

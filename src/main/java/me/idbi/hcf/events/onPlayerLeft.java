@@ -35,7 +35,7 @@ public class onPlayerLeft implements Listener {
         // Save deaths,kills money etc
         if (HasMetaData(e.getPlayer(), "faction")) {
             SQL_Connection.dbExecute(con, "UPDATE members SET name = '?',money='?',kills='?',deaths='?',online=0 WHERE uuid='?'", e.getPlayer().getName(), playertools.getMetadata(e.getPlayer(), "money"), playertools.getMetadata(e.getPlayer(), "kills"), playertools.getMetadata(e.getPlayer(), "deaths"), e.getPlayer().getUniqueId().toString());
-            System.out.println(SQL_Connection.dbExecute(con, "UPDATE members SET online='?' WHERE uuid='?'", "0", e.getPlayer().getUniqueId().toString()));
+            SQL_Connection.dbExecute(con, "UPDATE members SET online='?' WHERE uuid='?'", "0", e.getPlayer().getUniqueId().toString());
             // Koba moment
             Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
             if(f != null){

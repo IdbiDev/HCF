@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import static me.idbi.hcf.Main.DTR_REGEN_TIME;
 import static me.idbi.hcf.Main.death_time;
 
 
@@ -48,10 +49,10 @@ public class onDeath implements Listener {
 
         if (faction !=null) {
             if (!Main.DTR_REGEN.containsKey(faction.factionid)) {
-                Main.DTR_REGEN.put(faction.factionid, System.currentTimeMillis() + death_time * 60000L);
+                Main.DTR_REGEN.put(faction.factionid, System.currentTimeMillis() + DTR_REGEN_TIME * 1000L);
                 if (Main.debug)
                     System.out.println("Death >> " + faction.factioname);
-                faction.refreshDTR();
+                faction.DTR -= Main.DEATH_DTR;
             }
 
         }

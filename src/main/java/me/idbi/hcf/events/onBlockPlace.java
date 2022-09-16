@@ -20,14 +20,14 @@ public class onBlockPlace implements Listener {
     public void onBlockPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
         Block block = e.getBlock();
-        if (HCF_Claiming.checkEnemyClaimAction(block.getX(), block.getZ(), Integer.parseInt(playertools.getMetadata(p, "factionid")))) {
+        if (HCF_Claiming.checkEnemyClaimAction(block.getX(), block.getZ(), Integer.parseInt(playertools.getMetadata(p, "factionid")))&& !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
             p.sendMessage(Messages.YOU_CANT_DO.setFaction(HCF_Claiming.sendFactionTerretoryByXZ(block.getX(), block.getZ())).queue());
             e.setCancelled(true);
             return;
         }
         if (playertools.getDistanceBetweenPoints2D(new HCF_Claiming.Point(block.getX(),block.getZ()),
                 new HCF_Claiming.Point(playertools.getSpawn().getBlockX(),
-                        playertools.getSpawn().getBlockZ())) == WARZONE_SIZE) {
+                        playertools.getSpawn().getBlockZ())) == WARZONE_SIZE && !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
             //p.sendMessage(Main.servername+"§4Ezt nem teheted meg itt!");
             p.sendMessage(Messages.WARZONE_NO_PERMISSION.queue());
             e.setCancelled(true);

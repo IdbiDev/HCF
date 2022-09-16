@@ -3,8 +3,8 @@ package me.idbi.hcf.commands.cmdFunctions;
 
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
-import me.idbi.hcf.tools.rankManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +17,7 @@ public class Faction_Claim {
 
     public static boolean PrepareClaiming(Player p) {
         if (!playertools.getMetadata(p, "factionid").equals("0")) {
-            if (!playertools.hasPermission(p, rankManager.Permissions.ALL)) {
+            if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.ALL)) {
                 p.sendMessage(Messages.NO_PERMISSION.queue());
                 return false;
             }

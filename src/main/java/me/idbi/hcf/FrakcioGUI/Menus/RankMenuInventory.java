@@ -4,7 +4,6 @@ import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RM_Items;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.playertools;
-import me.idbi.hcf.tools.rankManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

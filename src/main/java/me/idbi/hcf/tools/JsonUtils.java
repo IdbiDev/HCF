@@ -7,9 +7,10 @@ import java.util.*;
 
 
 public class JsonUtils {
+    //Lol lopott pls dont kill meh
 
     public static Map<String, Object> jsonToMap(org.json.JSONObject json) {
-        Map<String, Object> retMap = new HashMap<String, Object>();
+        Map<String, Object> retMap = new HashMap<>();
 
         if (json != null) {
             retMap = toMap(json);

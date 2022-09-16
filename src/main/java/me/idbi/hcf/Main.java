@@ -44,6 +44,10 @@ public final class Main extends JavaPlugin implements Listener {
     public static int stuck_duration;
     public static long EOTWStarted;
     public static int WARZONE_SIZE;
+    public static double MAX_DTR;
+    public static double DEATH_DTR;
+
+    public static int DTR_REGEN_TIME;
 
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
 
@@ -70,7 +74,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static void SaveFactions() {
         for (Map.Entry<Integer, Faction> faction : faction_cache.entrySet()) {
             Main.Faction f = faction.getValue();
-            SQL_Connection.dbExecute(con, "UPDATE factions SET money='?',DTR='?',name='?' WHERE ID = '?'", String.valueOf(f.balance), String.valueOf(f.DTR), f.factioname, String.valueOf(f.factionid));
+            SQL_Connection.dbExecute(con, "UPDATE factions SET money='?',name='?' WHERE ID = '?'", String.valueOf(f.balance), f.factioname, String.valueOf(f.factionid));
         }
     }
 
@@ -95,9 +99,9 @@ public final class Main extends JavaPlugin implements Listener {
     @Override
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEnable() {
+        long deltatime = System.currentTimeMillis();
         kothRewardsGUI = new ArrayList<>();
         EOTWStarted = System.currentTimeMillis() / 1000;
-        long deltatime = System.currentTimeMillis();
         MessagesFile.setup();
         DiscordFile.setup();
         if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", false);
@@ -112,10 +116,13 @@ public final class Main extends JavaPlugin implements Listener {
         debug = Boolean.parseBoolean(ConfigLibrary.Debug.getValue());
         faction_startingmoney = Integer.parseInt(ConfigLibrary.Faction_default_balance.getValue());
         max_members_pro_faction = Integer.parseInt(ConfigLibrary.MAX_FACTION_MEMBERS.getValue());
+        DTR_REGEN_TIME = Integer.parseInt(ConfigLibrary.DTR_REGEN_TIME_SECONDS.getValue());
         world_border_radius = Integer.parseInt(ConfigLibrary.WORLD_BORDER_DISTANCE.getValue());
         stuck_duration =  Integer.parseInt(ConfigLibrary.STUCK_TIMER_DURATION.getValue());
         KOTH.GLOBAL_TIME =  Integer.parseInt(ConfigLibrary.KOTH_TIME.getValue()) * 60;
         WARZONE_SIZE =  Integer.parseInt(ConfigLibrary.WARZONE_SIZE.getValue()) * 60;
+        MAX_DTR = Double.parseDouble(ConfigLibrary.MAX_DTR.getValue());
+        DEATH_DTR = Double.parseDouble(ConfigLibrary.DEATH_DTR.getValue());
         con = SQL_Connection.dbConnect(
                 ConfigLibrary.DATABASE_HOST.getValue(),
                 ConfigLibrary.DATABASE_PORT.getValue(),
@@ -254,12 +261,14 @@ public final class Main extends JavaPlugin implements Listener {
         public Integer balance;
         public ArrayList<HCF_Claiming.Faction_Claim> claims = new ArrayList<>();
         public double DTR = 0;
+        public double DTR_MAX = 0;
+        public long DTR_TIMEOUT = 0;
         public inviteManager.factionInvite invites;
 
         public Location homeLocation;
 
-        public ArrayList<rankManager.Faction_Rank> ranks = new ArrayList<>();
-        public HashMap<Player, rankManager.Faction_Rank> player_ranks = new HashMap<>();
+        public ArrayList<Faction_Rank_Manager.Rank> ranks = new ArrayList<>();
+        public HashMap<Player, Faction_Rank_Manager.Rank> player_ranks = new HashMap<>();
 
         public int memberCount;
 
@@ -267,12 +276,12 @@ public final class Main extends JavaPlugin implements Listener {
             this.factionid = id;
             this.factioname = name;
             this.leader = leader;
-            this.invites = new inviteManager.factionInvite(factionid);
+            this.invites = new inviteManager.factionInvite();
             this.balance = balance;
 
         }
         public void invitePlayer(Player p) {
-            if(memberCount + 1 > max_members_pro_faction) {
+            if(memberCount + 1 > max_members_pro_faction || invites.getInvitedPlayers().size()+1 > HCF_Rules.maxInvites ) {
                 p.sendMessage(Messages.MAX_MEMBERS_REACHED.queue());
                 return;
             }
@@ -302,7 +311,7 @@ public final class Main extends JavaPlugin implements Listener {
         }
 
         public void ApplyPlayerRank(Player p, String name) {
-            for (rankManager.Faction_Rank rank : ranks) {
+            for (Faction_Rank_Manager.Rank rank : ranks) {
                 if (Objects.equals(rank.name, name)) {
                     player_ranks.put(p, rank);
                     playertools.setMetadata(p, "rank", rank.name);
@@ -311,8 +320,8 @@ public final class Main extends JavaPlugin implements Listener {
                 }
             }
         }
-        public void ApplyOfflinePlayerRank(OfflinePlayer p, String name) {
-            for (rankManager.Faction_Rank rank : ranks) {
+        public void ApplyPlayerRank(OfflinePlayer p, String name) {
+            for (Faction_Rank_Manager.Rank rank : ranks) {
                 if (Objects.equals(rank.name, name)) {
                     SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE uuid='?'", rank.name, p.getUniqueId().toString());
                     break;
@@ -320,8 +329,8 @@ public final class Main extends JavaPlugin implements Listener {
             }
         }
 
-        public rankManager.Faction_Rank FindRankByName(String name) {
-            for (rankManager.Faction_Rank rank : ranks) {
+        public Faction_Rank_Manager.Rank FindRankByName(String name) {
+            for (Faction_Rank_Manager.Rank rank : ranks) {
                 if (Objects.equals(rank.name, name)) {
                     return rank;
                 }
@@ -329,16 +338,16 @@ public final class Main extends JavaPlugin implements Listener {
             return null;
         }
 
-        public rankManager.Faction_Rank getDefaultRank() {
-            for (rankManager.Faction_Rank rank : ranks) {
+        public Faction_Rank_Manager.Rank getDefaultRank() {
+            for (Faction_Rank_Manager.Rank rank : ranks) {
                 if (rank.isDefault)
                     return rank;
             }
             return null;
         }
 
-        public rankManager.Faction_Rank getLeaderRank() {
-            for (rankManager.Faction_Rank rank : ranks) {
+        public Faction_Rank_Manager.Rank getLeaderRank() {
+            for (Faction_Rank_Manager.Rank rank : ranks) {
                 if (rank.isLeader)
                     return rank;
             }
@@ -353,6 +362,12 @@ public final class Main extends JavaPlugin implements Listener {
             Player[] members = playertools.getFactionOnlineMembers(factioname);
             for (Player member : members) {
                 member.sendMessage(message);
+            }
+        }
+        public void PlayerBroadcast(String message) {
+            Player[] members = playertools.getFactionOnlineMembers(factioname);
+            for (Player member : members) {
+                member.sendMessage();
             }
         }
 
@@ -391,7 +406,7 @@ public final class Main extends JavaPlugin implements Listener {
             return total;
         }
         public void refreshDTR(){
-            this.DTR = Double.parseDouble(playertools.CalculateDTR(this));
+            this.DTR_MAX = Double.parseDouble(playertools.CalculateDTR(this));
         }
 
     }

@@ -4,9 +4,9 @@ import me.idbi.hcf.Discord.LogLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
-import me.idbi.hcf.tools.rankManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -31,12 +31,12 @@ public class Faction_Create {
                 Main.factionToname.put(x, faction.factioname);
                 Main.nameToFaction.put(faction.factioname, faction);
 
-                rankManager.Faction_Rank default_rank = rankManager.CreateNewRank(faction, "Default");
-                rankManager.Faction_Rank leader_rank = rankManager.CreateNewRank(faction, "Leader");
+                Faction_Rank_Manager.Rank default_rank = Faction_Rank_Manager.CreateRank(faction, "Default");
+                Faction_Rank_Manager.Rank leader_rank = Faction_Rank_Manager.CreateRank(faction, "Leader");
                 assert default_rank != null;
-                rankManager.setDefaultRank(faction, default_rank.name);
                 assert leader_rank != null;
-                rankManager.setLeaderRank(faction, leader_rank.name);
+                default_rank.isDefault = true;
+                leader_rank.isLeader = true;
                 faction.ApplyPlayerRank(p, leader_rank.name);
 
                 SQL_Connection.dbExecute(con, "UPDATE members SET faction = ?,factionname='?',rank='?' WHERE uuid = '?'", String.valueOf(x), name, "leader", p.getUniqueId().toString());

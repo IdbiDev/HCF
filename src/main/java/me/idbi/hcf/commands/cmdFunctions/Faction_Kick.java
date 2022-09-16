@@ -3,9 +3,9 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
-import me.idbi.hcf.tools.rankManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -16,7 +16,7 @@ public class Faction_Kick {
     public static Connection con = Main.getConnection("cmd.FactionCreate");
     public static void kick_faction(Player player,String target) {
         if (!playertools.getMetadata(player, "factionid").equals("0")) {
-            if (playertools.hasPermission(player, rankManager.Permissions.KICK)) {
+            if (playertools.hasPermission(player, Faction_Rank_Manager.Permissions.KICK)) {
                 OfflinePlayer targetPlayer_Offline = Bukkit.getOfflinePlayer(target);
                 Player targetPlayer_Online;
                 //Todo: Kick message
@@ -26,12 +26,14 @@ public class Faction_Kick {
                     playertools.setMetadata(targetPlayer_Online, "faction", "Nincs");
                     playertools.setMetadata(targetPlayer_Online, "factionid", "0");
 
+                    assert f != null;
                     f.BroadcastFaction(Messages.BC_LEAVE_MESSAGE.repPlayer(targetPlayer_Online).queue());
                     Scoreboards.refresh(targetPlayer_Online);
                     f.refreshDTR();
                 }else {
                     SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?',factionname='?' WHERE uuid = '?'", "none","0", "Nincs", targetPlayer_Offline.getUniqueId().toString());
                     Main.Faction f = playertools.getPlayerFaction(player);
+                    assert f != null;
                     f.refreshDTR();
                 }
                 player.sendMessage(Messages.NOT_A_NUMBER.queue());

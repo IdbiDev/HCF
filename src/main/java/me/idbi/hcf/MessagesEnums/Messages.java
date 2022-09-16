@@ -13,7 +13,7 @@ public enum Messages {
 
     PREFIX("&8[&2HCF&a+&8] &7>"),
     PREFIX_CMD("&r[&2HCF&a+&r] &r"),
-    RELOAD("&aSuccessfully reloaded configuration files!"),
+    RELOAD("%prefix% &aSuccessfully reloaded configuration files!"),
 
     CHAT_PREFIX_FACTION("&8[&6%faction_name%&8] &e%player% &f> &7%message%"),
     CHAT_PREFIX_WITHOUT_FACTION("&e%player% &f> &7%message%"),
@@ -42,7 +42,9 @@ public enum Messages {
     NOT_IN_FACTION("%prefix% &cYou are not in a faction!"),
     PLAYER_IN_FACTION("%prefix% &cThis player is already in a faction!"),
 
-    ALREADY_INVITED("&cThis player is already invited"),
+    UNINVITE_TARGET("%prefix% &2&o%player%&c canceled your invitation!"),
+    UNINVITE_EXECUTOR("%prefix% &cYou canceled to invite &2&o%player%&c!"),
+    ALREADY_INVITED("%prefix% &cThis player is already invited"),
     NOT_INVITED("%prefix% &cYou are not invited to this faction!"),
 
     NO_FACTION_EXISTS("%prefix% &cThis faction does not exists!"),
@@ -61,15 +63,15 @@ public enum Messages {
     FACTION_CLAIM_OVERLAP_PLUS_ONE("%prefix% &cYour claim can't overlap an existing claim! Leave a block between the two claims"),
 
     // Commands - invite
-    INVITED_BY("&6&o%executor% &einvited you to join &6&o%faction_name%&e!"),
-    INVITED_PLAYER("&eYou invited &6&o%player% &eto the faction!"),
-    FACTION_INVITE_BROADCAST("&6&o%executor% &einvited &6&o%player% &eto the faction!"),
+    INVITED_BY("%prefix% &6&o%executor% &einvited you to join &6&o%faction_name%&e!"),
+    INVITED_PLAYER("%prefix% &eYou invited &6&o%player% &eto the faction!"),
+    FACTION_INVITE_BROADCAST("%prefix% &6&o%executor% &einvited &6&o%player% &eto the faction!"),
 
     // Faction join and quit
-    BC_JOIN_MESSAGE("&6&o%player% &ejoined the faction!"),
-    BC_LEAVE_MESSAGE("&6&o%player% &eleft the faction!"),
-    JOIN_MESSAGE("&eYou joined the faction!"),
-    LEAVE_MESSAGE("&aYou left the faction!"),
+    BC_JOIN_MESSAGE("%prefix% &6&o%player% &ejoined the faction!"),
+    BC_LEAVE_MESSAGE("%prefix% &6&o%player% &eleft the faction!"),
+    JOIN_MESSAGE("%prefix% &eYou joined the faction!"),
+    LEAVE_MESSAGE("%prefix% &aYou left the faction!"),
 
     // Faction bank
     FACTION_BANK_DEPOSIT("%prefix% &aSuccessfully deposited &2&o$%amount% &ain your faction's bank!"),
@@ -93,18 +95,18 @@ public enum Messages {
     DEPOSIT_MESSAGE("%prefix% &eYou deposited &6&o$%amount% &eto faction bank!"),
     EXECUTOR_INVITE_MESSAGE("&eYou invited &6&o%player% &eto your faction!"),
     INVITED_INVITE_MESSAGE("&eYou invited to &6&o%faction_name% &efaction by &6&o%executor%&e!"),*/
-    LEADER_LEAVING_FACTION("&cYou can't leave this faction, because you are the leader! Use &e&l/f disband &r&cinstead!"),
-    NOT_LEADER("&cYou are not the faction leader!"),
+    LEADER_LEAVING_FACTION("%prefix% &cYou can't leave this faction, because you are the leader! Use &e&l/f disband &r&cinstead!"),
+    NOT_LEADER("%prefix% &cYou are not the faction leader!"),
     JOIN_FACTION_BC("&8[&a+&8] &7&l» &6&o%player%"),
     LEAVE_FACTION_BC("&8[&c-&8] &7&l» &6&o%player%"),
-    FACTION_PLAYER_POSITION("&7-> &6&o%player%'s &eposition: &6&o%location_x%&e, &6&o%location_y%&e, &6&o%location_z%"),
+    FACTION_PLAYER_POSITION("%prefix% &7-> &6&o%player%'s &eposition: &6&o%location_x%&e, &6&o%location_y%&e, &6&o%location_z%"),
 
     // Faction home
-    SETHOME_MESSAGE("&aSuccessfully set home of your faction to your location!"),
+    SETHOME_MESSAGE("%prefix% &aSuccessfully set home of your faction to your location!"),
     TELEPORT_TO_HOME("&eTeleportation in &6&o%time% seconds&e. &cDo not move!"),
-    SUCCESSFULLY_TELEPORT("&eSuccessfully teleported to your faction's home!"),
-    TELEPORT_CANCEL("&cYou moved, teleportation cancelled!"),
-    DOESNT_HOME("&cYour faction doesn't have a home set!"),
+    SUCCESSFULLY_TELEPORT("%prefix% &eSuccessfully teleported to your faction's home!"),
+    TELEPORT_CANCEL("%prefix% &cYou moved, teleportation cancelled!"),
+    DOESNT_HOME("%prefix% &cYour faction doesn't have a home set!"),
 
 
     // Faction chat
@@ -113,11 +115,11 @@ public enum Messages {
     FACTION_CHAT_TOGGLE_OFF("%prefix% &cYou are now in &c&oALL chat&c!"),
 
     // Faction permissions messages
-    PROMOTE_MESSAGE("&6&o%executor% &epromoted you to &6&o%rank%&e!"),
-    DEMOTE_MESSAGE("&6&o%executor% &edemoted you to &6&o%rank%&e!"),
+    PROMOTE_MESSAGE("%prefix% &6&o%executor% &epromoted you to &6&o%rank%&e!"),
+    DEMOTE_MESSAGE("%prefix% &6&o%executor% &edemoted you to &6&o%rank%&e!"),
 
-    EXECUTOR_PROMOTE_MESSAGE("&eYou promoted &6&o%player% &eto &6&o%rank%&e!"),
-    EXECUTOR_DEMOTE_MESSAGE("&eYou demoted &6&o%player% &eto &6&o%rank%&e!"),
+    EXECUTOR_PROMOTE_MESSAGE("%prefix% &eYou promoted &6&o%player% &eto &6&o%rank%&e!"),
+    EXECUTOR_DEMOTE_MESSAGE("%prefix% &eYou demoted &6&o%player% &eto &6&o%rank%&e!"),
 
     FACTION_CREATE_RANK("%prefix% &aRank successfully created!"),
     FACTION_RANK_EXISTS("%prefix% &cThis rank already exists!"),
@@ -172,7 +174,7 @@ public enum Messages {
 
     KILL_MESSAGE_BROADCAST_WITHOUT_VICTIM("&4&l%victim%&f[%victim_kills%] died"),
 
-    MAX_MEMBERS_REACHED("&4&lYou can't invite more people to the faction because it's full!"),
+    MAX_MEMBERS_REACHED("%prefix% &4&lYou can't invite more people to the faction because it's full!"),
 
     ERROR_WHILE_EXECUTING("%prefix% &4&lAn error occurred while running the command! Please check the LOG file, and report it!"),
     KILL_MESSAGE_FACTION("&4&l%killer%&f killed &4&l%victim%"),
@@ -206,6 +208,13 @@ public enum Messages {
     KOTH_CAPTURING_ENDED("%prefix% &aThe occupation of KOTH &6&o%faction_name%&a was interrupted!"),
     KOTH_CAPTURE_TIMER("%prefix% &aSomeone is capturing kitty KOTH! meow :3 (%format_time%)"),
     WARZONE_NO_PERMISSION("%prefix% &eYou can't do this in the Warzone!"),
+    GUI_RANK_CREATED("%prefix% &bYou have successfully created rank: &b&o%rank%!"),
+    GUI_RANK_CHANGE("%prefix% &bYou have successfully changed the rank of &b&o%player%&b to: &b&o%rank%!"),
+    GUI_RANK_ALREADY_HAVE("%prefix% &cThis user already have this rank."),
+    GUI_RENAME_TEXT("Enter rank name"),
+    GUI_INVITE_PLAYER("Enter a player name"),
+    GUI_CREATE_RANK_TEXT("Enter rank name"),
+    GUI_INVALID_TYPE_TEXT("Invalid name!"),
     CANT_TELEPORT_TO_SAFEZONE("%prefix% &cYou can't teleport to a protected zone while you are in PvP tag");
 
 
@@ -345,8 +354,8 @@ public enum Messages {
         return this;
     }
 
-    public Messages setRank(Player p, String rank) {
-        message = msg.replace("%rank%", rank).replace("%player%", p.getName());
+    public Messages setRank(String rank) {
+        message = msg.replace("%rank%", rank);
         this.msg = message;
         return this;
     }

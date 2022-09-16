@@ -61,13 +61,15 @@ public class Misc_Timers {
                 for (Map.Entry<Integer, Long> entry : Main.DTR_REGEN.entrySet()) {
                     int key = entry.getKey();
                     long val = entry.getValue();
-                    // 4000 <= 5000
+                    Main.Faction f = Main.faction_cache.get(key);
+                    // 4000+10000 <= 4000
                     if (val <= System.currentTimeMillis()) {
                         Main.DTR_REGEN.remove(key);
                         if (Main.debug)
                            Main.sendCmdMessage("DTR REGEN finished: ");
-                        Main.faction_cache.get(key).DTR = Double.parseDouble(playertools.CalculateDTR(Main.faction_cache.get(key)));
-                    }
+                        f.DTR = f.DTR_MAX;
+                    } //DTR regen: 0 Minutes 10 Seconds
+                    f.DTR_TIMEOUT = val-System.currentTimeMillis();
                 }
             }
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 20);
@@ -147,6 +149,7 @@ public class Misc_Timers {
                     //TODO: Scoreboard format MIN:SS
                     KOTH.GLOBAL_TIME--;
                     if(KOTH.GLOBAL_TIME % 30 == 0)
+                        Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
                         Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
                     if(KOTH.GLOBAL_TIME <= 0){
 

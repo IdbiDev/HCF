@@ -18,7 +18,7 @@ public class KOTHInventory {
         for (int i = 0; i < inv.getSize(); i++) {
             if(i == 0 || i == 1)
                 inv.setItem(i, redGlass());
-            else if(i >= 2 && i <= 6)
+            else if(i <= 6)
                 inv.setItem(i, whiteGlass());
             else if(i == 7 || i == 8)
                 inv.setItem(i, redGlass());

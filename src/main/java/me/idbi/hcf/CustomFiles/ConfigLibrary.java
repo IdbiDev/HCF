@@ -39,6 +39,9 @@ public enum ConfigLibrary {
     MAX_FACTION_MEMBERS("7"),
     EOTW_time("60"),
     WARZONE_SIZE("500"),
+    MAX_DTR("5.5"),
+    DEATH_DTR("1.0"),
+    DTR_REGEN_TIME_SECONDS("60"),
     World_width("World_width");
 
     private static final Main m = Main.getPlugin(Main.class);

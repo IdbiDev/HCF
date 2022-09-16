@@ -1,20 +1,12 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
-import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf.tools.playertools;
-import me.idbi.hcf.tools.rankManager;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-
 public class Faction_Ranks {
-    public static void addRank(Player p, String name) {
+    /*public static void addRank(Player p, String name) {
         if (!playertools.getMetadata(p, "factionid").equals("0")) {
             Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
-            if (playertools.hasPermission(p, rankManager.Permissions.ALL)) {
-                rankManager.Faction_Rank rk;
-                rk = rankManager.CreateNewRank(faction, name);
+            if (playertools.hasPermission(p, Faction_Rank_Manager.Permissions.ALL)) {
+                Faction_Rank_Manager.Rank rk;
+                rk = Faction_Rank_Manager.CreateRank(faction, name);
                 if(rk == null) {
                     p.sendMessage(Messages.FACTION_RANK_EXISTS.queue());
                     return;
@@ -31,12 +23,12 @@ public class Faction_Ranks {
     public static void setPermissionToRank(Player p, String name, String id) {
         if (!playertools.getMetadata(p, "factionid").equals("0")) {
             Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
-            if (playertools.hasPermission(p, rankManager.Permissions.ALL)) {
-                rankManager.Faction_Rank rank = faction.FindRankByName(name);
+            if (playertools.hasPermission(p, Faction_Rank_Manager.Permissions.ALL)) {
+                Faction_Rank_Manager.Rank rank = faction.FindRankByName(name);
                 if (rank != null) {
                     try {
-                        rankManager.Permissions perm = rankManager.Permissions.BASIC;
-                        for (rankManager.Permissions cica : rankManager.Permissions.values()) {
+                        Faction_Rank_Manager.Permissions perm = Faction_Rank_Manager.Permissions.BASIC;
+                        for (Faction_Rank_Manager.Permissions cica : Faction_Rank_Manager.Permissions.values()) {
                             if (cica.getValue().equals(id)) {
                                 perm = cica;
                                 break;
@@ -112,5 +104,5 @@ public class Faction_Ranks {
         } else {
             p.sendMessage(Messages.NOT_IN_FACTION.queue());
         }
-    }
+    }*/
 }
