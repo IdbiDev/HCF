@@ -6,6 +6,9 @@ import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
 import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberManageInventory;
+import me.idbi.hcf.FrakcioGUI.Menus.PlayerRankManagerInventory;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +18,7 @@ public class Click_PlayerManage implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
-        if (!e.getView().getTitle().contains(" Profile")) return;
+        if (!e.getView().getTitle().endsWith(" Profile")) return;
 
         e.setCancelled(true);
 
@@ -35,7 +38,12 @@ public class Click_PlayerManage implements Listener {
         }
 
         if(e.getCurrentItem().isSimilar(PM_Items.rankManager())) {
-
+            OfflinePlayer target = Bukkit.getOfflinePlayer(e.getView().getTitle().split(" ")[0]);
+            if(target.isOnline()) {
+                e.getWhoClicked().openInventory(PlayerRankManagerInventory.inv(target.getPlayer()));
+            } else {
+                e.getWhoClicked().openInventory(PlayerRankManagerInventory.inv(target));
+            }
             return;
         }
     }

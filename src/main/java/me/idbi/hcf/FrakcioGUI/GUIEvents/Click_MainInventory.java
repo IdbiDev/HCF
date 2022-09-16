@@ -1,10 +1,8 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
-import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.RankManagerInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
+import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
+import me.idbi.hcf.FrakcioGUI.Menus.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,7 +12,7 @@ public class Click_MainInventory implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
-        if(!e.getView().getTitle().equalsIgnoreCase(MainInventory.mainInv().getTitle())) return;
+        if(!e.getView().getTitle().equalsIgnoreCase("§8Faction Manager")) return;
 
         e.setCancelled(true);
 
@@ -27,6 +25,10 @@ public class Click_MainInventory implements Listener {
 
         else if(e.getCurrentItem().isSimilar(GUI_Items.playerManager())) {
             e.getWhoClicked().openInventory(MemberListInventory.members((Player) e.getWhoClicked()));
+        }
+
+        else if(e.getCurrentItem().isSimilar(IM_Items.inviteManager())) {
+            e.getWhoClicked().openInventory(InviteManagerInventory.inv());
         }
     }
 }

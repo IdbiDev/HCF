@@ -2,7 +2,7 @@ package me.idbi.hcf.FrakcioGUI.Menus;
 
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RM_Items;
-import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,9 +26,9 @@ public class RankMenuInventory {
         }
 
         List<String> namesGecim = new ArrayList<>();
-        ArrayList<rankManager.Faction_Rank> list = Objects.requireNonNull(playertools.getPlayerFaction(p)).ranks;
+        ArrayList<Faction_Rank_Manager.Rank> list = Objects.requireNonNull(playertools.getPlayerFaction(p)).ranks;
 
-        for(rankManager.Faction_Rank rank : list)
+        for(Faction_Rank_Manager.Rank rank : list)
             namesGecim.add(rank.name);
 
         Collections.sort(namesGecim, new Comparator<String>() {

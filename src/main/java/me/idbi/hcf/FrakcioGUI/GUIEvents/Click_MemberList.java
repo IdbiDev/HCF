@@ -5,6 +5,7 @@ import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberManageInventory;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -22,7 +23,7 @@ public class Click_MemberList implements Listener {
         if(!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
         if(e.getCurrentItem().isSimilar(GUI_Items.back())) {
-            e.getWhoClicked().openInventory(MainInventory.mainInv());
+            e.getWhoClicked().openInventory(MainInventory.mainInv((Player) e.getWhoClicked()));
             return;
         }
 

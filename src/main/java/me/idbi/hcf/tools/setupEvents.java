@@ -3,6 +3,7 @@ package me.idbi.hcf.tools;
 import me.idbi.hcf.Elevator.ElevatorCreate;
 import me.idbi.hcf.Elevator.ElevatorInteract;
 import me.idbi.hcf.FrakcioGUI.GUIEvents.*;
+import me.idbi.hcf.FrakcioGUI.KickConfirm.DeleteRankConfirm;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.SignShop.CreateShopSign;
@@ -92,6 +93,10 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new Click_RankManager(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new Click_RankMenu(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new Click_PermissionManager(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_PlayerRankManager(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new DeleteRankConfirm(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_InviteManager(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_InvitedPlayers(), Main.getPlugin(Main.class));
 
     }
 }

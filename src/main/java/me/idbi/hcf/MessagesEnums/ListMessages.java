@@ -170,7 +170,6 @@ public enum ListMessages {
             String factionName, String factionStatus, String leaderName, String factionBalance, String factionKills, String factionDeaths, String factionPos, String factionDtr) {
         List<String> lines = new ArrayList<>();
         for (String line : list) {
-            Bukkit.broadcastMessage(line);
             lines.add(line
                     .replace("%faction_name%", factionName)
                     .replace("%faction_status%", factionStatus)

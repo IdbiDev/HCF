@@ -321,6 +321,7 @@ public enum Messages {
         this.msg = message;
         return this;
     }
+
     public Messages repDeathTime() {
         message = msg.replace("%player%",String.valueOf(Integer.parseInt(ConfigLibrary.Death_time_seconds.getValue()) / 60));
         this.msg = message;

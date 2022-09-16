@@ -1,5 +1,7 @@
 package me.idbi.hcf.FrakcioGUI.Items;
 
+import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
@@ -55,6 +57,28 @@ public class GUI_Items {
         SkullMeta im = (SkullMeta) is.getItemMeta();
         im.setOwner(name);
         im.setDisplayName("§e" + name);
+        is.setItemMeta(im);
+        return is;
+    }
+
+    public static ItemStack factinoStats(Main.Faction faction) {
+        ItemStack is = new ItemStack(Material.COMPASS);
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName("§2§o" + faction.factioname);
+        String homeLocation = faction.homeLocation.getBlockX() + ", " + faction.homeLocation.getBlockY() + ", " + faction.homeLocation.getBlockZ();
+
+        im.setLore(Arrays.asList(
+                "§7┌──",
+                "§7│ §aDTR §7/ §aMax DTR: §f" + faction.DTR + " §7/ §f" + faction.DTR_MAX,
+                "§7│ §aDTR Regen: §f" + ((faction.DTR == faction.DTR_MAX) ? "-" : playertools.convertLongToTime(faction.DTR_TIMEOUT)),
+                "§7│ §aBalance: §f$" + faction.balance,
+                "§7│ §aMember Count: §f" + faction.memberCount,
+                "§7│ §aHome Location: §f" + homeLocation,
+                "§7├──",
+                "§7│ §aKills: §f" + faction.getKills(),
+                "§7│ §aDeaths: §f" + faction.getDeaths(),
+                "§7└──"
+        ));
         is.setItemMeta(im);
         return is;
     }

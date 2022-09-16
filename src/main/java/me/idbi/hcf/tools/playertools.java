@@ -473,4 +473,12 @@ public class playertools {
         // Sorted hashMap
         return sorted;
     }
+
+
+    public static String convertLongToTime(long time) {
+        time /= 1000;
+        long MM = (time % 3600) / 60;
+        long SS = time % 60;
+        return MM + " minutes " + SS + " seconds";
+    }
 }
