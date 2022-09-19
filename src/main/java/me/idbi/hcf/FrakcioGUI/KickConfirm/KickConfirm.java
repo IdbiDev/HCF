@@ -1,5 +1,6 @@
 package me.idbi.hcf.FrakcioGUI.KickConfirm;
 
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Kick;
 import org.bukkit.Bukkit;
@@ -27,11 +28,13 @@ public class KickConfirm implements Listener {
             String name = e.getView().getTitle().substring(7);
 
             Faction_Kick.kick_faction((Player)e.getWhoClicked(),name);
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "success");
             return;
         }
 
         if(e.getCurrentItem().isSimilar(cancel())) {
             e.getWhoClicked().closeInventory();
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
         }
     }
 

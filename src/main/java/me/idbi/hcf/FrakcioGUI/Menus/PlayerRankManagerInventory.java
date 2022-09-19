@@ -1,7 +1,6 @@
 package me.idbi.hcf.FrakcioGUI.Menus;
 
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
-import me.idbi.hcf.FrakcioGUI.Items.RM_Items;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
@@ -50,7 +49,7 @@ public class PlayerRankManagerInventory {
         });
 
         Main.Faction faction = playertools.getPlayerFaction(p);
-
+        assert faction != null;
         for (String name : namesGecim) {
             String Name = ChatColor.stripColor(name);
             if(faction.player_ranks.get(p).name.equalsIgnoreCase(Name)) {
@@ -119,6 +118,7 @@ public class PlayerRankManagerInventory {
 
         Main.Faction faction = playertools.getPlayerFaction(target);
 
+        assert faction != null;
         Faction_Rank_Manager.Rank rank = faction.player_ranks.get(target);
 
         im.setDisplayName("§7Active Rank: §a§o" + rank.name);

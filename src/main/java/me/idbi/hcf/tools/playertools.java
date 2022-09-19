@@ -1,11 +1,9 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
-import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.koth.KOTH;
-import org.apache.commons.collections4.map.LinkedMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -29,7 +27,6 @@ public class playertools {
         HashMap<String, Object> playerMap = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid = '?'", player.getUniqueId().toString());
         if (playerMap.size() > 0) {
             Main.player_cache.put(player, new Main.Player_Obj());
-            // Találat
             setMetadata(player, "factionid", playerMap.get("faction"));
             setMetadata(player, "kills", playerMap.get("kills"));
             setMetadata(player, "deaths", playerMap.get("deaths"));
@@ -128,6 +125,19 @@ public class playertools {
             return null;
         }
     }
+    public static void RenameFaction(Main.Faction faction,String name){
+        for(Player p : getFactionOnlineMembers(faction.factioname)){
+            setMetadata(p,"faction",name);
+        }
+        String oldname = faction.factioname;
+        faction.factioname = name;
+        Main.faction_cache.put(faction.factionid,faction);
+        Main.nameToFaction.put(faction.factioname,faction);
+        Main.factionToname.put(faction.factionid, faction.factioname);
+        SQL_Connection.dbExecute(con,"UPDATE factions SET name='?' WHERE id='?'",name, String.valueOf(faction.factionid));
+        SQL_Connection.dbExecute(con,"UPDATE members SET factionname='?' WHERE factionname='?'",name, oldname);
+        Scoreboards.RefreshAll();
+    }
 
     public static int getPlayerBalance(Player p) {
         return Integer.parseInt(getMetadata(p, "money"));
@@ -195,7 +205,9 @@ public class playertools {
             while (rs.next()) {
                 try {
                     HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt(3), rs.getInt(5), rs.getInt(4), rs.getInt(6), rs.getInt(2),rs.getString("type"));
-                    Main.faction_cache.get(rs.getInt("factionid")).addClaim(claim);
+                    Main.Faction f =  Main.faction_cache.get(rs.getInt("factionid"));
+                    if(f != null)
+                        f.addClaim(claim);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -206,15 +218,18 @@ public class playertools {
     }
 
     public static boolean hasPermission(Player player, Faction_Rank_Manager.Permissions perm) {
-        return true;
-        /*int faction = Integer.parseInt(getMetadata(player,"factionid"));
-        if(faction != 0){
-            rankManager.Faction_Rank rank = Main.faction_cache.get(faction).player_ranks.get(player);
-            if(rank != null){
-                return rank.hasPermission(perm);
+        Main.Faction f = getPlayerFaction(player);
+        if (f != null){
+            if(f.leader.equalsIgnoreCase(player.getUniqueId().toString())){
+                return true;
             }
+            Faction_Rank_Manager.Rank rank = f.player_ranks.get(player);
+            if(rank.isLeader){
+                return true;
+            }
+            return rank.hasPermission(perm);
         }
-        return false;*/
+        return false;
     }
 
     @Deprecated

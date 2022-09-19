@@ -24,6 +24,7 @@ public class Click_MemberList implements Listener {
 
         if(e.getCurrentItem().isSimilar(GUI_Items.back())) {
             e.getWhoClicked().openInventory(MainInventory.mainInv((Player) e.getWhoClicked()));
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 

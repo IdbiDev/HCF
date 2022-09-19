@@ -5,14 +5,11 @@ import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.InviteManagerInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,6 +29,7 @@ public class Click_InviteManager implements Listener {
 
         if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
             e.getWhoClicked().openInventory(MainInventory.mainInv((Player) e.getWhoClicked()));
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 
@@ -66,21 +64,26 @@ public class Click_InviteManager implements Listener {
                                     p.sendMessage(Messages.INVITED_PLAYER.repPlayer(target).queue());
                                     target.sendMessage(Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue());
                                     faction.BroadcastFaction(Messages.FACTION_INVITE_BROADCAST.repExecutor(p).repPlayer(target).queue());
-
+                                    GUI_Sound.playSound(p,"success");
+                                    GUI_Sound.playSound(target,"success");
                                 } else {
                                     // This player is already invited
                                     p.sendMessage(Messages.ALREADY_INVITED.queue());
+                                    GUI_Sound.playSound(p,"error");
                                 }
                             } else {
                                 p.sendMessage(Messages.PLAYER_IN_FACTION.queue());
+                                GUI_Sound.playSound(p,"error");
                             }
                             //faction.invitePlayer(target);
                             return AnvilGUI.Response.close();
                         } else {
                             p.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
+                            GUI_Sound.playSound(p,"error");
                             return AnvilGUI.Response.close();
                         }
                     } else {
+                        GUI_Sound.playSound(p,"error");
                         return AnvilGUI.Response.text(Messages.GUI_INVALID_TYPE_TEXT.queue());
                     }
                 })

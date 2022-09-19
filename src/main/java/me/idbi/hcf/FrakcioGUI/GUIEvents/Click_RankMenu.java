@@ -4,7 +4,6 @@ import me.idbi.hcf.AnvilGUI.AnvilItems;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RM_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankManagerInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
@@ -32,6 +31,7 @@ public class Click_RankMenu implements Listener {
 
         if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
             e.getWhoClicked().openInventory(MainInventory.mainInv((Player) e.getWhoClicked()));
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 
@@ -53,12 +53,20 @@ public class Click_RankMenu implements Listener {
                 })
                 .onComplete((player, text) -> {                                    //called when the inventory output slot is clicked
                     if(text.matches("^[0-9a-zA-Z]+$")) {
+                        for(String blacklisted_word : Main.blacklistedRankNames){
+                            if(text.toLowerCase().contains(blacklisted_word.toLowerCase())){
+                                GUI_Sound.playSound(player,"error");
+                                return AnvilGUI.Response.text(Messages.GUI_BAD_WORD.queue());
+                            }
+                        }
                         Main.Faction faction = playertools.getPlayerFaction(p);
                         assert faction != null;
                         Faction_Rank_Manager.CreateRank(faction, text);
                         p.sendMessage(Messages.GUI_RANK_CREATED.queue().replace("%rank%", text));
+                        GUI_Sound.playSound(player,"success");
                         return AnvilGUI.Response.close();
                     } else {
+                        GUI_Sound.playSound(player,"error");
                         return AnvilGUI.Response.text(Messages.GUI_INVALID_TYPE_TEXT.queue());
                     }
                 })

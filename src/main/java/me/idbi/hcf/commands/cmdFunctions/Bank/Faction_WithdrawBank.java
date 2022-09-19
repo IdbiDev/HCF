@@ -12,7 +12,7 @@ public class Faction_WithdrawBank {
     boolean transaction;
 
     public static void asd(String[] args, Player p) {
-        if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.WITHDRAW)) {
+        if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_MONEY)) {
             // ToDo: permission handle
             p.sendMessage(Messages.NO_PERMISSION.queue());
             return;

@@ -37,10 +37,13 @@ public class onPlayerLeft implements Listener {
             SQL_Connection.dbExecute(con, "UPDATE members SET name = '?',money='?',kills='?',deaths='?',online=0 WHERE uuid='?'", e.getPlayer().getName(), playertools.getMetadata(e.getPlayer(), "money"), playertools.getMetadata(e.getPlayer(), "kills"), playertools.getMetadata(e.getPlayer(), "deaths"), e.getPlayer().getUniqueId().toString());
             SQL_Connection.dbExecute(con, "UPDATE members SET online='?' WHERE uuid='?'", "0", e.getPlayer().getUniqueId().toString());
             // Koba moment
-            Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
+            Main.Faction f = playertools.getPlayerFaction(e.getPlayer());
             if(f != null){
                 f.BroadcastFaction(Messages.LEAVE_FACTION_BC.repPlayer(e.getPlayer()).queue());
+                f.player_ranks.remove(e.getPlayer());
             }
+
+
             //Main.cacheRanks.remove(e.getPlayer());
         }
         if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "freeze"))) {
@@ -51,6 +54,7 @@ public class onPlayerLeft implements Listener {
                     .save();
         }
         Main.player_cache.remove(e.getPlayer());
+
         setCombatLogger(e.getPlayer());
     }
 

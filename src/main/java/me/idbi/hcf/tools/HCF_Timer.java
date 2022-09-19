@@ -133,15 +133,15 @@ public class HCF_Timer {
             // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta Archertag
             if (System.currentTimeMillis() >= Archertimers.get(player)) {
                 Archertimers.remove(player);
-                Main.sendCmdMessage("Returning FALSE (checkArcherTimer)");
+                
                 return false;
             } else {
                 // Ellenkező esetben: Van rajta
-                Main.sendCmdMessage("Returning TRUE (checkArcherTimer)");
+                
                 return true;
             }
         } else {
-            Main.sendCmdMessage("Returning FALSE (checkArcherTimer) NOT");
+            
             return false;
         }
     }
@@ -239,6 +239,11 @@ public class HCF_Timer {
         } else {
             return 0;
         }
+    }
+
+
+    public static void removePVPTag(Player p){
+        timers.remove(p);
     }
 
 

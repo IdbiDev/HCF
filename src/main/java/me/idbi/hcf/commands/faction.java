@@ -2,6 +2,7 @@ package me.idbi.hcf.commands;
 
 import me.idbi.hcf.CustomFiles.DiscordFile;
 import me.idbi.hcf.CustomFiles.MessagesFile;
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
@@ -239,6 +240,7 @@ public class faction implements CommandExecutor, TabCompleter {
                 "§9/f deposit <Amount> §7- Deposit money to your faction bank!",
                 "§9/f withdraw <Amount> §7- Withdraw money from faction bank!",
                 "§9/f sethome §7- Sets a home to your faction!",
+                "§9/f home §7- Teleport to faction's home!",
                 "§9/f home §7- Teleport to faction's home!",
                 "§9/f reload [file] §7- Reload files!"
         );

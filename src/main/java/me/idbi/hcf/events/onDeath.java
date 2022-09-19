@@ -2,7 +2,11 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf.tools.*;
+import me.idbi.hcf.tools.Banhandler;
+import me.idbi.hcf.tools.HCF_Timer;
+import me.idbi.hcf.tools.SQL_Connection;
+import me.idbi.hcf.tools.playertools;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -13,9 +17,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static me.idbi.hcf.Main.DTR_REGEN_TIME;
-import static me.idbi.hcf.Main.death_time;
 
 
 public class onDeath implements Listener {
@@ -42,6 +46,7 @@ public class onDeath implements Listener {
 
         if (!Main.deathban) {
             victim.kickPlayer(Messages.NO_DEATHBAN_KICK.queue());
+            SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", victim.getUniqueId().toString(), "0");
         } else {
             Banhandler.banPlayerInHCF(victim);
         }
@@ -54,7 +59,6 @@ public class onDeath implements Listener {
                     System.out.println("Death >> " + faction.factioname);
                 faction.DTR -= Main.DEATH_DTR;
             }
-
         }
 
         if(damager != null)
@@ -69,10 +73,11 @@ public class onDeath implements Listener {
             String uuid = e.getEntity().getMetadata("player.UUID").get(0).asString();
             e.setDroppedExp(0);
             e.getDrops().addAll(stacks);
-            //Banhandler.banPlayerInHCF(player);
-            if (Main.deathban) {
+            if (Main.deathban)
                 SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", uuid, String.valueOf(System.currentTimeMillis() + (Main.death_time * 60000L)));
-            }
+            else
+                SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", uuid, "0");
+
             Main.saved_players.remove(e.getEntity());
             Main.saved_items.remove(e.getEntity());
         }

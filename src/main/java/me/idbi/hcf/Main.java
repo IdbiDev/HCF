@@ -27,9 +27,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static me.idbi.hcf.HCF_Rules.startMessage;
-import static me.idbi.hcf.koth.KOTH.startKoth;
-
 
 public final class Main extends JavaPlugin implements Listener {
     // Beállítások configba
@@ -196,11 +193,13 @@ public final class Main extends JavaPlugin implements Listener {
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
         //displayTeams.setupAllTeams();
-        if(Main.debug)
-            sendCmdMessage("§1Finished loading the plugin! ("+(System.currentTimeMillis()- deltatime) + " ms)");
-        if(multi != null)
-            sendCmdMessage("§aMultiverse-Core found. Plugin connected to Multiverse-Core\n§aMultiverse-Core version: §a§o" + multi.getDescription().getVersion());
-
+        if(Main.debug) {
+            sendCmdMessage("§1Finished loading the plugin! (" + (System.currentTimeMillis() - deltatime) + " ms)");
+            long usedmemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+            sendCmdMessage("§1Used memory: "+ usedmemory*0.000001);
+            if (multi != null)
+                sendCmdMessage("§aMultiverse-Core found. Plugin connected to Multiverse-Core\n§aMultiverse-Core version: §a§o" + multi.getDescription().getVersion());
+        }
     }
 
     @Override

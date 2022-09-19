@@ -3,7 +3,10 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf.tools.*;
+import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.JsonUtils;
+import me.idbi.hcf.tools.SQL_Connection;
+import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -24,7 +27,7 @@ public class Faction_Home implements Listener {
     private static final Connection con = Main.getConnection("faction");
 
     public static void setHome(Player p) {
-        if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.SETHOME)) {
+        if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_RANKS)) {
             p.sendMessage(Messages.NO_PERMISSION.queue());
             //Todo: Message on you dont have permission
             return;

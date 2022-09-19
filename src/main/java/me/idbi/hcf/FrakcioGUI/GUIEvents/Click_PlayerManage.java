@@ -3,10 +3,11 @@ package me.idbi.hcf.FrakcioGUI.GUIEvents;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.PM_Items;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
-import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.MemberManageInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.PlayerRankManagerInventory;
+import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -32,6 +33,11 @@ public class Click_PlayerManage implements Listener {
         }
 
         if(e.getCurrentItem().isSimilar(PM_Items.kick())) {
+            if(!playertools.hasPermission((Player) e.getWhoClicked(), Faction_Rank_Manager.Permissions.MANAGE_KICK)){
+                e.getWhoClicked().sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
+                GUI_Sound.playSound((Player) e.getWhoClicked(), "error");
+                return;
+            }
             String[] name = e.getView().getTitle().split(" ");
             e.getWhoClicked().openInventory(KickConfirm.inv(name[0]));
             return;

@@ -4,7 +4,6 @@ import me.idbi.hcf.AnvilGUI.AnvilItems;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RM_Items;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.DeleteRankConfirm;
-import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankPermissionInventory;
 import me.idbi.hcf.Main;
@@ -71,11 +70,19 @@ public class Click_RankManager implements Listener {
                 })
                 .onComplete((player, text) -> {                                    //called when the inventory output slot is clicked
                     if(text.matches("^[0-9a-zA-Z]+$")) {
+                        for(String blacklisted_word : Main.blacklistedRankNames){
+                            if(text.toLowerCase().contains(blacklisted_word.toLowerCase())){
+                                GUI_Sound.playSound(player,"error");
+                                return AnvilGUI.Response.text(Messages.GUI_BAD_WORD.queue());
+                            }
+                        }
                         Main.Faction faction = playertools.getPlayerFaction(p);
                         assert faction != null;
                         Faction_Rank_Manager.RenameRank(faction,rankName,text);
+                        GUI_Sound.playSound(player,"success");
                         return AnvilGUI.Response.close();
                     } else {
+                        GUI_Sound.playSound(player,"error");
                         return AnvilGUI.Response.text(Messages.GUI_INVALID_TYPE_TEXT.queue());
                     }
                 })

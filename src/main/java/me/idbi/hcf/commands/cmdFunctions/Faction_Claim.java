@@ -17,7 +17,7 @@ public class Faction_Claim {
 
     public static boolean PrepareClaiming(Player p) {
         if (!playertools.getMetadata(p, "factionid").equals("0")) {
-            if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.ALL)) {
+            if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_ALL)) {
                 p.sendMessage(Messages.NO_PERMISSION.queue());
                 return false;
             }

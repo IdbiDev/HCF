@@ -1,6 +1,7 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
 import me.idbi.hcf.Discord.LogLibrary;
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
@@ -18,6 +19,7 @@ public class Faction_Disband {
     public static void disband(Player p, String faction) {
         if (!Objects.equals(playertools.getMetadata(p, "faction"), faction)) {
             p.sendMessage(Messages.NOT_FOUND_FACTION.queue());
+            GUI_Sound.playSound(p,"error");
             return;
         }
 
@@ -25,6 +27,7 @@ public class Faction_Disband {
         if (!Objects.equals(selectedFaction.leader, p.getUniqueId().toString())) {
             //Todo: Nope factionLeader
             p.sendMessage(Messages.NOT_LEADER.queue());
+            GUI_Sound.playSound(p,"error");
             return;
         }
 //        displayTeams.removePlayerFromTeam(p);
@@ -49,6 +52,7 @@ public class Faction_Disband {
                 .setFaction(selectedFaction.factioname)
                 .queue());
         Scoreboards.refresh(p);
+        GUI_Sound.playSound(p,"success");
         //Bukkit.broadcastMessage(Messages.DELETE_FACTION_BY_ADMIN.repExecutor(p).setFaction(selectedFaction.factioname).queue());
     }
 }

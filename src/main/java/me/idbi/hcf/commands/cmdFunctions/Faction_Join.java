@@ -24,6 +24,7 @@ public class Faction_Join {
                 }
             }
             Main.Faction faction = Main.faction_cache.get(id_faction);
+            if(faction == null) return;
             if (faction.isPlayerInvited(p)) {
                 playertools.setMetadata(p, "factionid", id_faction);
                 playertools.setMetadata(p, "faction", faction.factioname);
@@ -35,10 +36,11 @@ public class Faction_Join {
                 p.sendMessage(Messages.JOIN_MESSAGE.queue());
                 faction.ApplyPlayerRank(p, faction.getDefaultRank().name);
                 //Faction -> xy belépett
-                Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
-                f.BroadcastFaction(Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
+                faction.memberCount++;
+                //Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+                faction.BroadcastFaction(Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
                 Scoreboards.refresh(p);
-                f.refreshDTR();
+                faction.refreshDTR();
             } else {
                 //Nem vagy meghíva ebbe a facionbe
                 p.sendMessage(Messages.NOT_INVITED.queue());

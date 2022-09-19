@@ -35,7 +35,6 @@ public class SQL_Generator {
                       `name` varchar(255) NOT NULL,
                       `money` int(255) NOT NULL DEFAULT 0,
                       `home` text CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT NULL,
-                      `DTR` int(11) NOT NULL DEFAULT 3,
                       `leader` text NOT NULL,
                       PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -45,7 +44,7 @@ public class SQL_Generator {
                       `ID` int(255) NOT NULL AUTO_INCREMENT,
                       `name` varchar(255) NOT NULL,
                       `faction` int(255) NOT NULL DEFAULT 0,
-                      `rank` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT 'alap',
+                      `rank` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT 'none',
                       `kills` int(255) NOT NULL DEFAULT 0,
                       `deaths` int(255) NOT NULL DEFAULT 0,
                       `money` int(255) NOT NULL DEFAULT 5000,
@@ -56,15 +55,21 @@ public class SQL_Generator {
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,
                 """
-                    CREATE TABLE IF NOT EXISTS `ranks` (
-                      `ID` int(11) NOT NULL AUTO_INCREMENT,
-                      `faction` int(11) NOT NULL,
-                      `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-                      `permissions` varchar(255) NOT NULL DEFAULT '{"0":true}',
-                      `isDefault` int(2) NOT NULL DEFAULT 0,
-                      `isLeader` int(2) NOT NULL DEFAULT 0,
-                      PRIMARY KEY (`ID`)
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                        CREATE TABLE IF NOT EXISTS `ranks` (
+                          `ID` int(11) NOT NULL AUTO_INCREMENT,
+                          `faction` int(11) NOT NULL,
+                          `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
+                          `isDefault` tinyint(1) NOT NULL DEFAULT 0,
+                          `isLeader` tinyint(1) NOT NULL DEFAULT 0,
+                          `ALL_Permission` tinyint(1) NOT NULL DEFAULT 0,
+                          `MONEY_Permission` tinyint(1) NOT NULL DEFAULT 1,
+                          `INVITE_Permission` tinyint(1) NOT NULL DEFAULT 0,
+                          `RANK_Permission` tinyint(1) NOT NULL DEFAULT 0,
+                          `PLAYER_Permission` tinyint(1) NOT NULL DEFAULT 0,
+                          `KICK_Permission` tinyint(1) NOT NULL DEFAULT 0,
+                          PRIMARY KEY (`ID`)
+                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
                 """,
                 """
                     INSERT IGNORE INTO `factions` SET ID = 1, money = 0, name = 'spawn', leader = '';

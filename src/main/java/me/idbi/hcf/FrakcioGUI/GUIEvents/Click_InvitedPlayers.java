@@ -1,8 +1,8 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.InviteManagerInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.playertools;
@@ -28,6 +28,7 @@ public class Click_InvitedPlayers implements Listener {
 
         if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
             e.getWhoClicked().openInventory(InviteManagerInventory.inv());
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 
@@ -44,6 +45,8 @@ public class Click_InvitedPlayers implements Listener {
             ((Player) e.getWhoClicked()).sendMessage(Messages.UNINVITE_EXECUTOR.repPlayer(p).queue());
             p.sendMessage(Messages.UNINVITE_TARGET.repPlayer((Player) e.getWhoClicked()).queue());
             e.getWhoClicked().openInventory(InviteManagerInventory.invitedPlayers((Player) e.getWhoClicked()));
+            GUI_Sound.playSound(p,"");
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "success");
             return;
         }
     }

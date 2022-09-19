@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class Faction_Invite {
     public static void InvitePlayerToFaction(Player p, String name) {
         if (!playertools.getMetadata(p, "factionid").equalsIgnoreCase("0")) {
-            if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.INVITE)) {
+            if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_INVITE)) {
                 //Todo nincs jog
                 p.sendMessage(Messages.NO_PERMISSION.queue());
                 return;

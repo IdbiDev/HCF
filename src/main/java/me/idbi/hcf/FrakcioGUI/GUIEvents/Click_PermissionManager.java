@@ -1,8 +1,7 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
-import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.RP_Items;
-import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
@@ -34,6 +33,7 @@ public class Click_PermissionManager implements Listener {
 
         if (e.getCurrentItem().isSimilar(RP_Items.cancel())) {
             e.getWhoClicked().closeInventory();
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 
@@ -49,7 +49,7 @@ public class Click_PermissionManager implements Listener {
             for(Map.Entry<Faction_Rank_Manager.Permissions, Boolean> hashMap : getPermissions(e.getInventory()).entrySet()) {
                 rank.setPermission(hashMap.getKey(), hashMap.getValue());
             }
-
+            GUI_Sound.playSound((Player) e.getWhoClicked(),"success");
             Bukkit.broadcastMessage("Saved");
             return;
         }
@@ -87,15 +87,24 @@ public class Click_PermissionManager implements Listener {
 
     public static Faction_Rank_Manager.Permissions getPermission(int level) {
         return switch (level) {
-            case 1 -> Faction_Rank_Manager.Permissions.ALL;
-            case 2 -> Faction_Rank_Manager.Permissions.BASIC;
-            case 3 -> Faction_Rank_Manager.Permissions.INVITE;
-            case 4 -> Faction_Rank_Manager.Permissions.SETHOME;
-            case 5 -> Faction_Rank_Manager.Permissions.WITHDRAW;
-            case 6 -> Faction_Rank_Manager.Permissions.KICK;
-            default -> Faction_Rank_Manager.Permissions.BASIC;
+            case 1 -> Faction_Rank_Manager.Permissions.MANAGE_ALL;
+            case 5 -> Faction_Rank_Manager.Permissions.MANAGE_MONEY;
+            case 3 -> Faction_Rank_Manager.Permissions.MANAGE_INVITE;
+            case 2 -> Faction_Rank_Manager.Permissions.MANAGE_PLAYERS;
+            case 4 -> Faction_Rank_Manager.Permissions.MANAGE_RANKS;
+            case 6 -> Faction_Rank_Manager.Permissions.MANAGE_KICK;
+            //default -> Faction_Rank_Manager.Permissions.MANAGE_MONEY;
+            default -> throw new IllegalStateException("Unexpected value: " + level);
         };
     }
+    /*
+        MANAGE_ALL,      // Include faction manager
+        MANAGE_MONEY,     // Basic role
+        MANAGE_INVITE,    // Can or not invite other players
+        MANAGE_RANKS,   // Can modify the faction home
+        MANAGE_PLAYERS,  // Can withdraw from the faction balance
+        MANAGE_KICK    // Can rename the faction
+     */
 
     public static boolean getStatus(ItemStack is) {
         if(is.getType() == Material.STAINED_GLASS_PANE) {

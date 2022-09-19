@@ -14,9 +14,11 @@ public class PlacePVPTag implements Listener {
 
     @EventHandler
     public void PlaceTag(EntityDamageByEntityEvent e){
+        //if(e.isCancelled()) return;
         if (e.getDamager() instanceof Player damager && e.getEntity() instanceof Player victim) {
             int damager_faction = Integer.parseInt(playertools.getMetadata(damager, "factionid"));
             int victim_faction = Integer.parseInt(playertools.getMetadata(victim, "factionid"));
+
 
             if (damager_faction == victim_faction) {
                 damager.sendMessage(Messages.TEAMMATE_DAMAGE.queue());
@@ -44,6 +46,7 @@ public class PlacePVPTag implements Listener {
                     damager.sendMessage(Messages.COMBAT_MESSAGE.queue().replace("%sec%", ConfigLibrary.Combat_time.getValue()));
                 }
             }
+
         }
     }
 }

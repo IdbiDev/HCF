@@ -1,8 +1,8 @@
 package me.idbi.hcf.FrakcioGUI.KickConfirm;
 
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.commands.cmdFunctions.Faction_Kick;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
@@ -34,11 +34,13 @@ public class DeleteRankConfirm implements Listener {
             Faction_Rank_Manager.DeleteRank(faction, name);
             e.getWhoClicked().closeInventory();
             Bukkit.broadcastMessage("Törölve");
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "success");
             return;
         }
 
         if(e.getCurrentItem().isSimilar(cancel())) {
             e.getWhoClicked().closeInventory();
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
         }
     }
 

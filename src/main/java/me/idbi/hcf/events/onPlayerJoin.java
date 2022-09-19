@@ -5,6 +5,7 @@ import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,10 +20,31 @@ public class onPlayerJoin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         playertools.LoadPlayer(p);
-        //Koba moment
+
+        if(Main.death_wait_clear.contains(e.getPlayer().getUniqueId())) {
+            e.getPlayer().getInventory().clear();
+            e.getPlayer().getInventory().setArmorContents(null);
+            e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
+            e.getPlayer().setFoodLevel(20);
+            e.getPlayer().setFallDistance(0);
+
+
+            Main.death_wait_clear.remove(e.getPlayer().getUniqueId());
+            String str = ConfigLibrary.Spawn_location.getValue();
+
+            Location spawn = new Location(
+                    Bukkit.getWorld(ConfigLibrary.World_name.getValue()),
+                    Integer.parseInt(str.split(" ")[0]),
+                    Integer.parseInt(str.split(" ")[1]),
+                    Integer.parseInt(str.split(" ")[2]),
+                    Integer.parseInt(str.split(" ")[3]),
+                    Integer.parseInt(str.split(" ")[4])
+            );
+            e.getPlayer().teleport(spawn);
+        }
         e.setJoinMessage("");
         if (!Objects.equals(playertools.getMetadata(p, "factionid"), "0")) {
-            Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+            Main.Faction f = playertools.getPlayerFaction(e.getPlayer());
             if(f != null) {
                 f.BroadcastFaction(
                         Messages.JOIN_FACTION_BC.repPlayer(p).queue());

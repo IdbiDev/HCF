@@ -3,7 +3,6 @@ package me.idbi.hcf.FrakcioGUI.Items;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;

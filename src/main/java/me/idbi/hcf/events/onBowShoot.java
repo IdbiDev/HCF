@@ -12,7 +12,7 @@ public class onBowShoot implements Listener {
     public void onBowShoot(EntityShootBowEvent e) {
         if (e.getEntity() instanceof Player) {
             Entity projectile = e.getProjectile();
-            playertools.setEntityData(projectile, "archertag", true);
+          //  playertools.setEntityData(projectile, "archertag", true);
         }
     }
 }

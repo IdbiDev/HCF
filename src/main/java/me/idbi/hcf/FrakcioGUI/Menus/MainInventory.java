@@ -1,5 +1,6 @@
 package me.idbi.hcf.FrakcioGUI.Menus;
 
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
 import me.idbi.hcf.Main;
@@ -21,8 +22,8 @@ public class MainInventory {
         inv.setItem(15, GUI_Items.playerManager());
 
         Main.Faction faction = playertools.getPlayerFaction(p);
+        assert faction != null;
         inv.setItem(31, GUI_Items.factinoStats(faction));
-
         return inv;
     }
 }

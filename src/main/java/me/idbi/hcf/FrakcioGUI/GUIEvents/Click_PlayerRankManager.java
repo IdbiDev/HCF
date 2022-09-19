@@ -2,7 +2,6 @@ package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
