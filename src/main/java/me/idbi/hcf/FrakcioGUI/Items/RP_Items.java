@@ -60,7 +60,7 @@ public class RP_Items {
     public static ItemStack basic() {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§7Permission: §e§oBasic");
+        im.setDisplayName("§7Permission: §e§oManage Players");
         //is.setDurability((short) 2);
         im.addEnchant(Enchantment.DURABILITY, 2, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -71,7 +71,7 @@ public class RP_Items {
     public static ItemStack invite() {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§7Permission: §e§oInvite");
+        im.setDisplayName("§7Permission: §e§oManage Invites");
         im.addEnchant(Enchantment.DURABILITY, 3, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         //is.setDurability((short) 3);
@@ -84,10 +84,10 @@ public class RP_Items {
         return is;
     }
 
-    public static ItemStack sethome() {
+    public static ItemStack manageRanks() {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§7Permission: §e§oSethome");
+        im.setDisplayName("§7Permission: §e§oManage Ranks");
         //is.setDurability((short) 4);
         im.addEnchant(Enchantment.DURABILITY, 4, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -103,7 +103,7 @@ public class RP_Items {
     public static ItemStack withdraw() {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§7Permission: §e§oWithdraw");
+        im.setDisplayName("§7Permission: §e§oManage Balance");
         im.addEnchant(Enchantment.DURABILITY, 5, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         //is.setDurability((short) 5);
@@ -119,7 +119,7 @@ public class RP_Items {
     public static ItemStack kick() {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§7Permission: §e§oKick");
+        im.setDisplayName("§7Permission: §e§oKick Player");
         im.addEnchant(Enchantment.DURABILITY, 6, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         //is.setDurability((short) 6);

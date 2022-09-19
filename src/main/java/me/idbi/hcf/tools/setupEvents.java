@@ -8,6 +8,7 @@ import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.SignShop.CreateShopSign;
 import me.idbi.hcf.MessagesEnums.SignShop.InteractShopSign;
+import me.idbi.hcf.classes.Assassin;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.events.Enchants.Anvil.AnvilEvent;
 import me.idbi.hcf.events.Enchants.EnchantInventory;
@@ -26,6 +27,8 @@ import static org.bukkit.Bukkit.getServer;
 public class setupEvents {
     public static void SetupEvents() {
         //xd
+        getServer().getPluginManager().registerEvents(new Assassin(), Main.getPlugin(Main.class));
+
         getServer().getPluginManager().registerEvents(new onPlayerJoin(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new onPlayerLeft(), Main.getPlugin(Main.class));

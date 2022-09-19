@@ -103,6 +103,23 @@ public class onSignPlace implements Listener {
         return is;
     }
 
+    public static ItemStack deathSign(String killer, String victim) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+
+        ItemStack is = new ItemStack(Material.SIGN);
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName("§cDeath Sign §f[§7" + victim + "§f]");
+        im.setLore(Arrays.asList(
+                "§5",
+                "§c" + victim,
+                "§fslain by",
+                "§a" + killer,
+                "§f" + formatter.format(new Date())
+        ));
+        is.setItemMeta(im);
+        return is;
+    }
+
     private byte getDirection(Player player) {
         double rotation = (player.getLocation().getYaw()) % 360;
         if (rotation < 0) {

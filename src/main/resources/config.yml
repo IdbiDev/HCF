@@ -72,3 +72,24 @@ haste: 30
 
 # EOTW time in minutes
 EOTW_time: 60
+
+# Blacklisted Rank Names
+Blacklisted-rankNames:
+  - "Dick"
+  - "You"
+  - "Adbi"
+
+enderpearl_delay: '30'
+Golden_Apple_Cooldown: '10'
+OP_Golden_Apple_Cooldown: '3600'
+Spawn_location: 0 64 0 0 0
+Enchant_xp_cost: '20'
+WORLD_BORDER_DISTANCE: '1000'
+STUCK_TIMER_DURATION: '30'
+KOTH_TIME: '15'
+MAX_FACTION_MEMBERS: '7'
+WARZONE_SIZE: '500'
+MAX_DTR: '5.5'
+DEATH_DTR: '1.0'
+DTR_REGEN_TIME_SECONDS: '60'
+

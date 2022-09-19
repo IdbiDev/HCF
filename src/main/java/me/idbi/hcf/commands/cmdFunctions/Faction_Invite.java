@@ -1,9 +1,11 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
+import me.idbi.hcf.ClickableMessages.Clickable_Join;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
+import net.dv8tion.jda.api.entities.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -22,10 +24,16 @@ public class Faction_Invite {
 
                     if (!faction.isPlayerInvited(target)) {
                         faction.invitePlayer(target);
-                        // Broadcast both player the invite success full
+                        // Broadcast both player the invite successfully
 
                         p.sendMessage(Messages.INVITED_PLAYER.repPlayer(target).queue());
-                        target.sendMessage(Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue());
+
+                        Clickable_Join.sendMessage(target,
+                                "/f join " + faction.factioname,
+                                Messages.INVITED_BY.repPlayer(p).queue(),
+                                Messages.HOVER_JOIN.queue());
+
+                        //target.sendMessage(Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue());
                         //Invite kiírása a faction számára
                         Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
                         f.BroadcastFaction(Messages.FACTION_INVITE_BROADCAST.repExecutor(p).repPlayer(target).queue());

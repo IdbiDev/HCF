@@ -153,7 +153,7 @@ public class playertools {
             obj.setData(key, data);
         } else {
             if (Main.debug)
-                Bukkit.getLogger().severe("SET Nem tartalamzza a playert a cache! >> " + p.getDisplayName());
+                Bukkit.getLogger().severe("SET Nem tartalmazza a playert a cache! >> " + p.getDisplayName());
         }
     }
 

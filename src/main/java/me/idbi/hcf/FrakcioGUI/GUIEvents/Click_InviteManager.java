@@ -1,6 +1,8 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.AnvilGUI.AnvilItems;
+import me.idbi.hcf.ClickableMessages.Clickable_Join;
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.InviteManagerInventory;
@@ -35,11 +37,13 @@ public class Click_InviteManager implements Listener {
 
         if(e.getCurrentItem().isSimilar(IM_Items.invitePlayers())) {
             anvilInvite((Player) e.getWhoClicked());
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
 
         if(e.getCurrentItem().isSimilar(IM_Items.invitedPlayers())) {
             e.getWhoClicked().openInventory(InviteManagerInventory.invitedPlayers((Player) e.getWhoClicked()));
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
     }
@@ -62,7 +66,12 @@ public class Click_InviteManager implements Listener {
                                     // Broadcast both player the invite successful
 
                                     p.sendMessage(Messages.INVITED_PLAYER.repPlayer(target).queue());
-                                    target.sendMessage(Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue());
+                                    //target.sendMessage(Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue());
+                                    Clickable_Join.sendMessage(target,
+                                            "/f join " + faction.factioname,
+                                            Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue(),
+                                            Messages.HOVER_JOIN.queue());
+
                                     faction.BroadcastFaction(Messages.FACTION_INVITE_BROADCAST.repExecutor(p).repPlayer(target).queue());
                                     GUI_Sound.playSound(p,"success");
                                     GUI_Sound.playSound(target,"success");

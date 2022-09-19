@@ -74,6 +74,7 @@ public class onPlayerLeft implements Listener {
         entity.setCustomNameVisible(true);
         Main.saved_items.put(entity, items);
         Main.saved_players.put(entity, combatTimer);
+
         entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, Integer.MAX_VALUE, false, false));
         entity.setMetadata("player.UUID", new FixedMetadataValue(Main.getPlugin(Main.class), p.getUniqueId().toString()));
 

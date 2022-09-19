@@ -1,5 +1,6 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
 import me.idbi.hcf.Main;
@@ -30,6 +31,7 @@ public class Click_PlayerRankManager implements Listener {
 
         if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
             e.getWhoClicked().openInventory(MemberListInventory.members((Player) e.getWhoClicked()));
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 
@@ -58,8 +60,10 @@ public class Click_PlayerRankManager implements Listener {
 
                 e.getWhoClicked().closeInventory();
                 e.getWhoClicked().sendMessage(Messages.GUI_RANK_CHANGE.setRank(rankName).queue().replace("%player%", offline.getName()));
+                GUI_Sound.playSound((Player) e.getWhoClicked(), "success");
             } else {
                 e.getWhoClicked().sendMessage(Messages.GUI_RANK_ALREADY_HAVE.queue());
+                GUI_Sound.playSound((Player) e.getWhoClicked(), "error");
             }
         }
     }

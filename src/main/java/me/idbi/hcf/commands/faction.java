@@ -135,6 +135,7 @@ public class faction implements CommandExecutor, TabCompleter {
                                     MessagesFile.reloadMessages();
                                     m.reloadConfig();
                                     DiscordFile.reloadDiscord();
+                                    Main.blacklistedRankNames = m.getConfig().getStringList("Blacklisted-rankNames");
                                 }
                                 default -> {
                                     sender.sendMessage(Messages.NOT_FILE.getMessage().queue());
@@ -214,7 +215,18 @@ public class faction implements CommandExecutor, TabCompleter {
                         }
                         break;
                     case "manage":
-                        p.openInventory(MainInventory.mainInv(p));
+                        try{
+                            if(playertools.getPlayerFaction(p) == null) {
+                                p.sendMessage(Messages.NOT_IN_FACTION.queue());
+                                return false;
+                            }
+                            p.openInventory(MainInventory.mainInv(p));
+                            GUI_Sound.playSound(p,"success");
+                        }catch (Exception e){
+                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            e.printStackTrace();
+                        }
+                        break;
                     default:
                         p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                         break;
@@ -273,6 +285,7 @@ public class faction implements CommandExecutor, TabCompleter {
                         "invite",
                         "addrank",
                         "sethome",
+                        "manage",
                         "home"
                 );
             }

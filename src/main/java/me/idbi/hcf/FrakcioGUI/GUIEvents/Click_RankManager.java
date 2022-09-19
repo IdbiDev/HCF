@@ -1,6 +1,7 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.AnvilGUI.AnvilItems;
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RM_Items;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.DeleteRankConfirm;
@@ -31,6 +32,7 @@ public class Click_RankManager implements Listener {
 
         if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
             e.getWhoClicked().openInventory(RankMenuInventory.inv((Player) e.getWhoClicked()));
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 
@@ -41,12 +43,14 @@ public class Click_RankManager implements Listener {
 
         if (e.getCurrentItem().isSimilar(RM_Items.rename())) {
             anvilRename((Player) e.getWhoClicked(), rankName);
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
 
         if (e.getCurrentItem().isSimilar(RM_Items.permissionManager())) {
             assert f != null;
             e.getWhoClicked().openInventory(RankPermissionInventory.inv(f.FindRankByName(rankName)));
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
 
@@ -60,6 +64,7 @@ public class Click_RankManager implements Listener {
             }
 
             e.getWhoClicked().openInventory(DeleteRankConfirm.inv(rankName));
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
     }

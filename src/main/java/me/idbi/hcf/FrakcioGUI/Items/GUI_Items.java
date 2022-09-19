@@ -64,7 +64,10 @@ public class GUI_Items {
         ItemStack is = new ItemStack(Material.COMPASS);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§2§o" + faction.factioname);
-        String homeLocation = faction.homeLocation.getBlockX() + ", " + faction.homeLocation.getBlockY() + ", " + faction.homeLocation.getBlockZ();
+        String homeLocation;
+        if(faction.homeLocation != null)
+            homeLocation = faction.homeLocation.getBlockX() + ", " + faction.homeLocation.getBlockY() + ", " + faction.homeLocation.getBlockZ();
+        else homeLocation = "-";
 
         im.setLore(Arrays.asList(
                 "§7┌──",
@@ -77,6 +80,19 @@ public class GUI_Items {
                 "§7│ §aKills: §f" + faction.getKills(),
                 "§7│ §aDeaths: §f" + faction.getDeaths(),
                 "§7└──"
+        ));
+        is.setItemMeta(im);
+        return is;
+    }
+
+    public static ItemStack renameFaction() {
+        ItemStack is = new ItemStack(Material.NAME_TAG);
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName("§eRename Faction");
+
+        im.setLore(Arrays.asList(
+                "§5",
+                "§7Click here to rename your faction!"
         ));
         is.setItemMeta(im);
         return is;

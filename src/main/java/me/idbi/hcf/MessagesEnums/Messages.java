@@ -198,6 +198,7 @@ public enum Messages {
 
     // KOTH SOTW EOTW
     ENABLE_EOTW("%prefix% &aEOTW started!"),
+
     // koth
     UPDATED_KOTH_REWARDS("%prefix% &aSuccessfully saved rewards!"),
     CLAIM_KOTH_REWARDS("%prefix% &aYou claimed KOTH rewards!"),
@@ -207,14 +208,24 @@ public enum Messages {
     KOTH_CAPTURING_STARTED("%prefix% &aSomeone started to occupy the &6&o%faction_name%&a KOTH!"),
     KOTH_CAPTURING_ENDED("%prefix% &aThe occupation of KOTH &6&o%faction_name%&a was interrupted!"),
     KOTH_CAPTURE_TIMER("%prefix% &aSomeone is capturing kitty KOTH! meow :3 (%format_time%)"),
+
     WARZONE_NO_PERMISSION("%prefix% &eYou can't do this in the Warzone!"),
+
+    // GUI
     GUI_RANK_CREATED("%prefix% &bYou have successfully created rank: &b&o%rank%!"),
     GUI_RANK_CHANGE("%prefix% &bYou have successfully changed the rank of &b&o%player%&b to: &b&o%rank%!"),
     GUI_RANK_ALREADY_HAVE("%prefix% &cThis user already have this rank."),
     GUI_RENAME_TEXT("Enter rank name"),
+    GUI_RENAME_FACTION_TEXT("Enter faction name"),
     GUI_INVITE_PLAYER("Enter a player name"),
     GUI_CREATE_RANK_TEXT("Enter rank name"),
     GUI_INVALID_TYPE_TEXT("Invalid name!"),
+    GUI_BAD_WORD("Don't use forbidden words."),
+    RENAME_FACTION("%prefix% §aSuccessfully renamed faction "),
+
+    // Hover things
+    HOVER_JOIN("&7Click here to join!"),
+
     CANT_TELEPORT_TO_SAFEZONE("%prefix% &cYou can't teleport to a protected zone while you are in PvP tag");
 
 

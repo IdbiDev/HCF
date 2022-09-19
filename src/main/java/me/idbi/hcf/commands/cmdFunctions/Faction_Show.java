@@ -25,6 +25,7 @@ public class Faction_Show {
         Map<String, Main.Faction> asd = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         asd.putAll(Main.nameToFaction);
 
+        // System.out.println("Faction Name: " + factionName);
         Main.Faction faction = asd.get(factionName);
 
         String factionStatus = (playertools.isFactionOnline(faction.factioname)

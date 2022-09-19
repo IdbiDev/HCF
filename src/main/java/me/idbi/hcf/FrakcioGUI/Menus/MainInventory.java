@@ -20,6 +20,7 @@ public class MainInventory {
         inv.setItem(11, GUI_Items.rankManager());
         inv.setItem(13, IM_Items.inviteManager());
         inv.setItem(15, GUI_Items.playerManager());
+        inv.setItem(35, GUI_Items.renameFaction());
 
         Main.Faction faction = playertools.getPlayerFaction(p);
         assert faction != null;

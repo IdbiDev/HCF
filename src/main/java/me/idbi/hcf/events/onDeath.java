@@ -44,6 +44,7 @@ public class onDeath implements Listener {
             e.setDeathMessage(Messages.KILL_MESSAGE_BROADCAST_WITHOUT_VICTIM.repDeathWithoutKiller(victim).queue());
         }
 
+        HCF_Timer.removePVPTag(victim);
         if (!Main.deathban) {
             victim.kickPlayer(Messages.NO_DEATHBAN_KICK.queue());
             SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", victim.getUniqueId().toString(), "0");
@@ -71,6 +72,15 @@ public class onDeath implements Listener {
         if (Main.saved_players.containsKey(e.getEntity())) {
             ArrayList<ItemStack> stacks = Main.saved_items.get(e.getEntity());
             String uuid = e.getEntity().getMetadata("player.UUID").get(0).asString();
+
+            if(e.getEntity().getKiller() != null)
+                e.getEntity().getWorld().dropItemNaturally(e.getEntity().getLocation(),
+                        onSignPlace.deathSign(
+                                e.getEntity().getKiller().getName(),
+                                Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName()
+                        )
+                );
+
             e.setDroppedExp(0);
             e.getDrops().addAll(stacks);
             if (Main.deathban)

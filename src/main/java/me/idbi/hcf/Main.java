@@ -55,11 +55,14 @@ public final class Main extends JavaPlugin implements Listener {
     public static HashMap<Integer, Long> DTR_REGEN = new HashMap<>();
     public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
     public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
+    public static ArrayList<UUID> death_wait_clear = new ArrayList<>();
     //public static HashMap<Main.Faction, Scoreboard> teams = new HashMap<>();
 
     public static HashMap<Player, List<Location>> player_block_changes = new HashMap<>();
     private static Connection con;
     public static ArrayList<UUID> kothRewardsGUI;
+
+    public static List<String> blacklistedRankNames;
 
     // Egyszerű SQL Connection getter
     public static Connection getConnection(String who) {
@@ -99,6 +102,8 @@ public final class Main extends JavaPlugin implements Listener {
         long deltatime = System.currentTimeMillis();
         kothRewardsGUI = new ArrayList<>();
         EOTWStarted = System.currentTimeMillis() / 1000;
+        blacklistedRankNames = new ArrayList<>();
+        blacklistedRankNames = getConfig().getStringList("Blacklisted-rankNames");
         MessagesFile.setup();
         DiscordFile.setup();
         if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", false);

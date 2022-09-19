@@ -1,5 +1,6 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.PM_Items;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
@@ -29,6 +30,7 @@ public class Click_PlayerManage implements Listener {
 
         if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
             e.getWhoClicked().openInventory(MemberListInventory.members((Player) e.getWhoClicked()));
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 
@@ -40,6 +42,7 @@ public class Click_PlayerManage implements Listener {
             }
             String[] name = e.getView().getTitle().split(" ");
             e.getWhoClicked().openInventory(KickConfirm.inv(name[0]));
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
 
@@ -47,8 +50,10 @@ public class Click_PlayerManage implements Listener {
             OfflinePlayer target = Bukkit.getOfflinePlayer(e.getView().getTitle().split(" ")[0]);
             if(target.isOnline()) {
                 e.getWhoClicked().openInventory(PlayerRankManagerInventory.inv(target.getPlayer()));
+                GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             } else {
                 e.getWhoClicked().openInventory(PlayerRankManagerInventory.inv(target));
+                GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             }
             return;
         }

@@ -20,15 +20,15 @@ public class RankPermissionInventory {
         inv.setItem(4, RP_Items.kick());
         inv.setItem(6, RP_Items.basic());
         inv.setItem(29, RP_Items.invite());
-        inv.setItem(31, RP_Items.sethome());
+        inv.setItem(31, RP_Items.manageRanks());
         inv.setItem(33, RP_Items.withdraw());
 
-        ItemStack ALL = rank.class_permissions.get(Faction_Rank_Manager.Permissions.ALL) ? RP_Items.on() : RP_Items.off();
-        ItemStack kick = rank.class_permissions.get(Faction_Rank_Manager.Permissions.KICK) ? RP_Items.on() : RP_Items.off();
-        ItemStack basic = rank.class_permissions.get(Faction_Rank_Manager.Permissions.BASIC) ? RP_Items.on() : RP_Items.off();
-        ItemStack invite = rank.class_permissions.get(Faction_Rank_Manager.Permissions.INVITE) ? RP_Items.on() : RP_Items.off();
-        ItemStack sethome = rank.class_permissions.get(Faction_Rank_Manager.Permissions.SETHOME) ? RP_Items.on() : RP_Items.off();
-        ItemStack withdraw = rank.class_permissions.get(Faction_Rank_Manager.Permissions.WITHDRAW) ? RP_Items.on() : RP_Items.off();
+        ItemStack ALL = rank.class_permissions.get(Faction_Rank_Manager.Permissions.MANAGE_ALL) ? RP_Items.on() : RP_Items.off();
+        ItemStack kick = rank.class_permissions.get(Faction_Rank_Manager.Permissions.MANAGE_KICK) ? RP_Items.on() : RP_Items.off();
+        ItemStack basic = rank.class_permissions.get(Faction_Rank_Manager.Permissions.MANAGE_PLAYERS) ? RP_Items.on() : RP_Items.off();
+        ItemStack invite = rank.class_permissions.get(Faction_Rank_Manager.Permissions.MANAGE_INVITE) ? RP_Items.on() : RP_Items.off();
+        ItemStack sethome = rank.class_permissions.get(Faction_Rank_Manager.Permissions.MANAGE_RANKS) ? RP_Items.on() : RP_Items.off();
+        ItemStack withdraw = rank.class_permissions.get(Faction_Rank_Manager.Permissions.MANAGE_MONEY) ? RP_Items.on() : RP_Items.off();
 
         inv.setItem(11, ALL);
         inv.setItem(13, kick);

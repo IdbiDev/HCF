@@ -1,6 +1,7 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.AnvilGUI.AnvilItems;
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RM_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
@@ -37,6 +38,7 @@ public class Click_RankMenu implements Listener {
 
         if (e.getCurrentItem().isSimilar(RM_Items.create())) {
             createRankGUI_Anvil((Player) e.getWhoClicked());
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
 
@@ -45,6 +47,7 @@ public class Click_RankMenu implements Listener {
         String rankName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
 
         e.getWhoClicked().openInventory(RankManagerInventory.inv(rankName));
+        GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
     }
 
     public static void createRankGUI_Anvil(Player p) {

@@ -1,5 +1,6 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
+import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberManageInventory;
@@ -33,5 +34,6 @@ public class Click_MemberList implements Listener {
         String playerName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
 
         e.getWhoClicked().openInventory(MemberManageInventory.manage(playerName));
+        GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
     }
 }
