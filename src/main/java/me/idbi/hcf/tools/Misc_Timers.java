@@ -34,12 +34,17 @@ public class Misc_Timers {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 
                     ClassSelector.addClassToPlayer(player);
+                    if (!playertools.HasMetaData(player, "class")) continue;
+                    if (playertools.getMetadata(player, "class").equalsIgnoreCase("bard")){
+                        Bard.ApplyBardEffectOnActionBar(player);
+
+                    }
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 60);
     }
 
-    public static void addBardEffects() {
+    /*public static void addBardEffects() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -52,8 +57,26 @@ public class Misc_Timers {
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 90);
-    }
+    }*/
+    /*public static void PvpTag() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Map.Entry<LivingEntity, Long> entry : Main.saved_players.entrySet()) {
+                    LivingEntity key = entry.getKey();
+                    long val = entry.getValue();
+                    if (val <= 0) {
+                        key.remove();
+                        Main.saved_players.remove(key);
+                        Main.saved_items.remove(key);
+                    } else {
+                        Main.saved_players.put(key, val - 1000);
+                    }
+                }
 
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
+    }*/
     public static void DTR_Timer() {
         new BukkitRunnable() {
             @Override
@@ -71,61 +94,6 @@ public class Misc_Timers {
                     } //DTR regen: 0 Minutes 10 Seconds
                     f.DTR_TIMEOUT = val-System.currentTimeMillis();
                 }
-            }
-        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 20);
-    }
-
-    //LEc see
-    //2Tick
-    public static void Bard_Energy() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-
-                    //Combat Time
-                    if (checkCombatTimer(player))
-                        Scoreboards.refresh(player);
-                    //Stuck Time
-                    if (HCF_Timer.checkStuckTimer(player)) {
-                        Scoreboards.refresh(player);
-                        Location loc = HCF_Claiming.ReturnSafeSpot(player.getLocation());
-                        if(loc != null){
-                            player.teleport(loc);
-                            player.sendMessage(Messages.STUCK_FINISHED.queue());
-                        }
-                    }
-                    //Ep time
-                    if (HCF_Timer.checkEpTimer(player)) {
-                        Scoreboards.refresh(player);
-                    }
-                    //Golden Apple
-                    if (HCF_Timer.get_Golden_Apple_Time(player) != 0) {
-                        Scoreboards.refresh(player);
-                    }
-                    //OP Golden Apple
-                    if (HCF_Timer.get_OP_Golden_Apple_Time(player) != 0) {
-                        Scoreboards.refresh(player);
-                    }
-                    //Class selector
-                    if (!playertools.HasMetaData(player, "class")) continue;
-                    if (!playertools.getMetadata(player, "class").equalsIgnoreCase("bard")) continue;
-                    if (!(Double.parseDouble(playertools.getMetadata(player, "bardenergy")) >= 100D)) {
-                        Scoreboards.refresh(player);
-                        playertools.setMetadata(player, "bardenergy", Double.parseDouble(playertools.getMetadata(player, "bardenergy")) + 0.1D);
-                    }
-                }
-            }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
-    }
-
-
-
-
-    public static void PvpTag() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
                 for (Map.Entry<LivingEntity, Long> entry : Main.saved_players.entrySet()) {
                     LivingEntity key = entry.getKey();
                     long val = entry.getValue();
@@ -137,10 +105,62 @@ public class Misc_Timers {
                         Main.saved_players.put(key, val - 1000);
                     }
                 }
+
             }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
+        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 20);
     }
 
+    //LEc see
+    //2Tick
+    public static void Bard_Energy() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    boolean shouldRefresh = false;
+                    //Stuck Time
+                    if (HCF_Timer.getStuckTime(player) != 0) {
+                        shouldRefresh = true;
+                        //Scoreboards.refresh(player);
+                        Location loc = HCF_Claiming.ReturnSafeSpot(player.getLocation());
+                        if(loc != null){
+                            player.teleport(loc);
+                            player.sendMessage(Messages.STUCK_FINISHED.queue());
+                        }
+                    }
+                    //Combat Time
+                    if (HCF_Timer.getCombatTime(player) != 0)
+                        shouldRefresh = true;
+                        //Scoreboards.refresh(player);
+                    //Ep time
+                    if (HCF_Timer.getEpTime(player) != 0) {
+                        shouldRefresh = true;
+                        //Scoreboards.refresh(player);
+                    }
+                    //Golden Apple
+                    if (HCF_Timer.get_Golden_Apple_Time(player) != 0) {
+                        shouldRefresh = true;
+                        //Scoreboards.refresh(player);
+                    }
+                    //OP Golden Apple
+                    if (HCF_Timer.get_OP_Golden_Apple_Time(player) != 0) {
+                        shouldRefresh = true;
+                        //Scoreboards.refresh(player);
+                    }
+                    if(shouldRefresh)
+                        Scoreboards.refresh(player);
+                    //Class selector
+                    if (!playertools.HasMetaData(player, "class")) continue;
+                    if (!playertools.getMetadata(player, "class").equalsIgnoreCase("bard")) continue;
+                    if (!(Double.parseDouble(playertools.getMetadata(player, "bardenergy")) >= 100D)) {
+                        Scoreboards.refresh(player);
+                        playertools.setMetadata(player, "bardenergy", Double.parseDouble(playertools.getMetadata(player, "bardenergy")) + 0.1D);
+                    }
+                }
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
+    }
+    
     public static void KOTH_Countdown() {
         new BukkitRunnable() {
             @Override
@@ -150,7 +170,7 @@ public class Misc_Timers {
                     KOTH.GLOBAL_TIME--;
                     if(KOTH.GLOBAL_TIME % 30 == 0)
                         Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
-                        Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
+                      //  Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
                     if(KOTH.GLOBAL_TIME <= 0){
 
                         stopKoth();
@@ -224,8 +244,9 @@ public class Misc_Timers {
         new BukkitRunnable() {
             @Override
             public void run() {
+                SpawnShield.CalcWall();
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                    SpawnShield.CalcWall(player);
+
                     if(!Main.player_block_changes.containsKey(player)) continue;
                     List<Location> copy = Main.player_block_changes.get(player);
                     Location cur = null;
@@ -251,6 +272,7 @@ public class Misc_Timers {
 
                     }
                 }
+
             }
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 1);
     }

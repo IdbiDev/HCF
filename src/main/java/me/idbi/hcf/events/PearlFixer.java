@@ -41,7 +41,7 @@ public class PearlFixer implements Listener {
                         HCF_Claiming.Point claimStart = new HCF_Claiming.Point(claim.startX, claim.startZ);
                         HCF_Claiming.Point claimEnd = new HCF_Claiming.Point(claim.endX, claim.endZ);
                         HCF_Claiming.Point getTo = new HCF_Claiming.Point(location.getBlockX(), location.getBlockZ());
-                        if(HCF_Claiming.doOverlap(claimStart,claimEnd,getTo,getTo)){
+                        if(HCF_Claiming.FindPoint_old(claimStart.x,claimStart.z,claimEnd.x,claimEnd.z,getTo.x,getTo.z)){
                             event.setCancelled(true);
                             event.getPlayer().sendMessage(Messages.CANT_TELEPORT_TO_SAFEZONE.queue());
                             break;

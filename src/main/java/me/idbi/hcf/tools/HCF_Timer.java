@@ -2,6 +2,7 @@ package me.idbi.hcf.tools;
 
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -87,6 +88,7 @@ public class HCF_Timer {
             if (System.currentTimeMillis() >= timers.get(player)) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 timers.remove(player);
+                Scoreboards.refresh(player);
                 return 0;
             } else {
                 // Ellenkező esetben: Van rajta
@@ -104,6 +106,7 @@ public class HCF_Timer {
             if (System.currentTimeMillis() >= stuckTimers.get(player)) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 stuckTimers.remove(player);
+                Scoreboards.refresh(player);
                 return 0;
             } else {
                 // Ellenkező esetben: Van rajta
@@ -178,6 +181,7 @@ public class HCF_Timer {
             if (System.currentTimeMillis() >= eptimers.get(player)) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 eptimers.remove(player);
+                Scoreboards.refresh(player);
                 return 0;
             } else {
                 // Ellenkező esetben: Van rajta
@@ -204,6 +208,7 @@ public class HCF_Timer {
             if (System.currentTimeMillis() >= golden_apple_Timers.get(player)) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 golden_apple_Timers.remove(player);
+                Scoreboards.refresh(player);
                 return 0;
             } else {
                 // Ellenkező esetben: Van rajta
@@ -231,6 +236,7 @@ public class HCF_Timer {
             if (System.currentTimeMillis() >= OP_Golden_Apple_Timers.get(player)) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 OP_Golden_Apple_Timers.remove(player);
+                Scoreboards.refresh(player);
                 return 0;
             } else {
                 // Ellenkező esetben: Van rajta

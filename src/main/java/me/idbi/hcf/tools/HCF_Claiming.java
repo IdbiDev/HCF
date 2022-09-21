@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static me.idbi.hcf.tools.playertools.getDistanceBetweenPoints2D;
+
 public class HCF_Claiming {
     public static final HashMap<Integer, Point> startpositions = new HashMap<>();
     public static final HashMap<Integer, Point> endpositions = new HashMap<>();
@@ -70,7 +72,7 @@ public class HCF_Claiming {
                         Point end_other = new Point(faction_end.x, faction_end.z);*/
 
 
-                        if (doOverlap2(faction_start, faction_end, start_this, end_this)) {
+                        if (doOverlap3(faction_start, faction_end, start_this, end_this)) {
                             //if (doOverlap(new Point(val.startX, val.endX), new Point(val.startZ, val.endZ), new Point(start[0], end[0]), new Point(start[1], end[1]))) {
                             p.sendMessage(Messages.FACTION_CLAIM_OVERLAP.queue());
                             return false;
@@ -168,7 +170,7 @@ public class HCF_Claiming {
         }
         return false;
     }
-    public static boolean doOverlap2(Point l1, Point r1, Point l2, Point r2) {
+    public static boolean doOverlap3(Point l1, Point r1, Point l2, Point r2) {
         // If one rectangle is on left side of other
         int firstRectangle_Starting_X = l1.x;
         int firstRectangle_Starting_Z = l1.z;
@@ -176,17 +178,36 @@ public class HCF_Claiming {
         int firstRectangle_Ending_X = r1.x;
         int firstRectangle_Ending_Z = r1.z;
 
-        int maxX = Math.max(firstRectangle_Starting_X, firstRectangle_Ending_X);
+
         int minX = Math.min(firstRectangle_Starting_X, firstRectangle_Ending_X);
-
-        int maxZ = Math.max(firstRectangle_Starting_Z, firstRectangle_Ending_Z);
         int minZ = Math.min(firstRectangle_Starting_Z, firstRectangle_Ending_Z);
+        int maxX = Math.max(firstRectangle_Starting_X, firstRectangle_Ending_X);
+        int maxZ = Math.max(firstRectangle_Starting_Z, firstRectangle_Ending_Z);
 
-        for(int x = minX; x <= maxX; x++) {
-            for(int z = minZ; z <= maxZ; z++) {
-                if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, x, z)) {
-                    return true;
-                }
+        Point bottom_left = new Point(minX,minZ);
+        Point top_right = new Point(maxX, maxZ);
+        Point top_left = new Point(top_right.x, bottom_left.z);
+        Point bottom_right = new Point(bottom_left.x, top_right.z);
+
+        int width = getDistanceBetweenPoints2D(bottom_left, top_left)+1;
+
+        int height = getDistanceBetweenPoints2D(bottom_left, bottom_right)+1;
+
+        for (int x = minX; x <= minX+width; x++) {
+            if(FindPoint_old(l1.x, l1.z, r1.x, r1.z, x, minZ)) {
+                return true;
+            }
+            if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, x, height-1)) {
+                return true;
+            }
+            Main.sendCmdMessage("");
+        }
+        for (int y = minZ; y <= minZ+height; y++) {
+            if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, minX, y)) {
+                return true;
+            }
+            if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, width-1, y)) {
+                return true;
             }
         }
         return false;
@@ -244,7 +265,7 @@ public class HCF_Claiming {
     public static boolean checkEnemyClaimAction(int x, int z, int faction) {
         for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
-                if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
+                if (FindPoint_old(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
                     if(thisFaction.getValue().DTR <= 0) return false;
                     if (thisFaction.getKey() <= -1) {
                         return true;
@@ -257,7 +278,6 @@ public class HCF_Claiming {
     }
 
     //Old find point FUCKED UP IDK MIEZ
-    @Deprecated
     public static boolean FindPoint_old(int x1, int y1, int x2,
                                     int y2, int x, int y) {
         return x >= x1 && x <= x2 &&
@@ -270,7 +290,7 @@ public class HCF_Claiming {
         Point p = new Point(x,y);
         return doOverlap(rc,lc,p,p);
     }
-
+/// TODO:     This need some optimization
     public static String sendFactionTerritory(Player p) {
         int faction = Integer.parseInt(playertools.getMetadata(p, "factionid"));
         Main.Faction MeineFaction = Main.faction_cache.get(faction);
@@ -279,7 +299,7 @@ public class HCF_Claiming {
                 Point playerPoint= new Point(p.getLocation().getBlockX(),p.getLocation().getBlockZ());
                 Point claimrc= new Point(val.startX, val.startZ);
                 Point claimlc= new Point(val.endX, val.endZ);
-                if(doOverlap(claimrc,claimlc,playerPoint,playerPoint)){
+                if(FindPoint_old(claimrc.x,claimrc.z,claimlc.x,claimlc.z,playerPoint.x,playerPoint.z)){
                 //if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, p.getLocation().getBlockX(), p.getLocation().getBlockZ())) {
                     if (faction == thisFaction.getValue().factionid)
                         return ChatColor.GREEN + MeineFaction.factioname;
@@ -292,7 +312,7 @@ public class HCF_Claiming {
     public static boolean isAreaNeutral(Location loc){
         for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
-                if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, loc.getBlockX(), loc.getBlockZ())) {
+                if (FindPoint_old(val.startX, val.startZ, val.endX, val.endZ, loc.getBlockX(), loc.getBlockZ())) {
                     return false;
                 }
             }
@@ -303,7 +323,7 @@ public class HCF_Claiming {
     public static String sendFactionTerretoryByXZ(int x, int z) {
         for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
-                if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
+                if (FindPoint_old(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
                     return ChatColor.RED + Main.factionToname.get(thisFaction.getKey());
                 }
             }
@@ -313,7 +333,7 @@ public class HCF_Claiming {
     public static Faction_Claim sendClaimByXZ(int x, int z) {
         for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
-                if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
+                if (FindPoint_old(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
                    return val;
                 }
             }

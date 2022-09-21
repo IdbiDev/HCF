@@ -102,7 +102,7 @@ public class Assassin implements Listener {
         //- Stage 3
         }
         if (level < -15) {
-            addEffect(p, PotionEffectType.SLOW, 0);
+            addEffect(p, PotionEffectType.SLOW, 1);
             addEffect(p, PotionEffectType.WEAKNESS, 0);
         }
         playertools.setMetadata(p,"Assassin_state",level);

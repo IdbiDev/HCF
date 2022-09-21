@@ -440,11 +440,11 @@ public class playertools {
         HCF_Claiming.Point new_claim_start = new HCF_Claiming.Point(minX-diff,minZ-diff);
         HCF_Claiming.Point new_claim_end = new HCF_Claiming.Point(maxX+diff,maxZ+diff);
 
-        return HCF_Claiming.doOverlap2(new_claim_start,new_claim_end,p1,p2);
+        return HCF_Claiming.doOverlap3(new_claim_start,new_claim_end,p1,p2);
     }
 
     public static int getDistanceBetweenPoints2D(HCF_Claiming.Point p1, HCF_Claiming.Point p2) {
-        return (Math.abs(p1.x-p2.x) + Math.abs(p1.z-p2.z))-1;
+        return (Math.abs(p1.x-p2.x) + Math.abs(p1.z-p2.z));
     }
     public static void placeBlockChange(Player p,Location loc){
         if(Main.player_block_changes.containsKey(p)) {

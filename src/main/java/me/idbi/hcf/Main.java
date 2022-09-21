@@ -184,10 +184,10 @@ public final class Main extends JavaPlugin implements Listener {
         //Classok
         Bard.setBardItems();
         Misc_Timers.CheckArmors();
-        Misc_Timers.addBardEffects();
+        ///Misc_Timers.addBardEffects();
         Misc_Timers.DTR_Timer();
         Misc_Timers.Bard_Energy();
-        Misc_Timers.PvpTag();
+        //Misc_Timers.PvpTag();
         //Misc_Timers.pvpTimer();
         Misc_Timers.PotionLimiter();
         Misc_Timers.AutoSave();
@@ -198,6 +198,7 @@ public final class Main extends JavaPlugin implements Listener {
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
         //displayTeams.setupAllTeams();
+        //SpawnShield.CalcWall();
         if(Main.debug) {
             sendCmdMessage("§1Finished loading the plugin! (" + (System.currentTimeMillis() - deltatime) + " ms)");
             long usedmemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
