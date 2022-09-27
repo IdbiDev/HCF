@@ -1,4 +1,4 @@
-# Set to false, if you want to do not start the bot
+# Set to false, if you don't want to start the bot
 bot: false
 
 # Discord

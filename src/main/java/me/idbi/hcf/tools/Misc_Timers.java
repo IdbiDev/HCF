@@ -23,6 +23,7 @@ import java.util.Map;
 import static me.idbi.hcf.koth.KOTH.GLOBAL_TIME;
 import static me.idbi.hcf.koth.KOTH.stopKoth;
 import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
+import static me.idbi.hcf.tools.SpawnShield.pvpCooldown;
 
 public class Misc_Timers {
 
@@ -244,9 +245,9 @@ public class Misc_Timers {
         new BukkitRunnable() {
             @Override
             public void run() {
-                SpawnShield.CalcWall();
-                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    SpawnShield.CalcWall(player);
                     if(!Main.player_block_changes.containsKey(player)) continue;
                     List<Location> copy = Main.player_block_changes.get(player);
                     Location cur = null;
@@ -275,6 +276,36 @@ public class Misc_Timers {
 
             }
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 1);
+    }
+    public static void DeleteWallsForPlayer(Player player){
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(!Main.player_block_changes.containsKey(player)) return;
+                List<Location> copy = Main.player_block_changes.get(player);
+                Location cur = null;
+                try{
+                    for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
+
+                        Location loc = it.next();
+                        cur = loc;
+                            player.sendBlockChange(loc, Material.AIR, (byte) 0);
+                            if (Main.player_block_changes.containsKey(player)) {
+                                List<Location> l = Main.player_block_changes.get(player);
+                                it.remove();
+                                //l.remove(loc);
+                                Main.player_block_changes.put(player, l);
+                            }
+                    }
+                }catch (Exception e){
+                    try{
+                        copy.remove(cur);
+                    }catch (Exception ignored){}
+
+                }
+            }
+        }.runTaskAsynchronously(Main.getPlugin(Main.class));
+
     }
 
     public static long getTimeOfEOTW() {

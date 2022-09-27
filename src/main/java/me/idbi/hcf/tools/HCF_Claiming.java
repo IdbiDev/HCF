@@ -473,27 +473,27 @@ public class HCF_Claiming {
     }
 
     public static Location ReturnSafeSpot(Location old){
-        final Location[] loc = {null};
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                int playerx= old.getBlockX();
-                int playery = old.getBlockY();
-                int playerz = old.getBlockZ();
-                for(int blockx=playerx-30;blockx<playerx+30;blockx++){
-                    for(int blocky=playery-30;blocky<playery+30;blocky++){
-                        for(int blockz=playerz-30;blockz<playerz+30;blockz++){
-                            loc[0] = new Location(old.getWorld(),blockx,blocky,blockz);
-                            if(isAreaNeutral(loc[0])){
-                                break;
+        Location loc = null;
+        double record = 9999;
+        int playerx= old.getBlockX();
+        int playery = old.getBlockY();
+        int playerz = old.getBlockZ();
+        for(int blockx=playerx-60;blockx<playerx+60;blockx++){
+            for(int blocky=playery-60;blocky<playery+60;blocky++){
+                for(int blockz=playerz-60;blockz<playerz+60;blockz++){
+                    loc = new Location(old.getWorld(),blockx,blocky,blockz);
+                    if(loc.getBlock().getType().equals(Material.AIR)){
+                        if(isAreaNeutral(loc)){
+                            if(old.distance(loc) < record){
+                                record = old.distance(loc);
                             }
                         }
                     }
                 }
             }
-        }.runTaskAsynchronously(Main.getPlugin(Main.class));
+        }
 
-        return loc[0];
+        return loc;
     }
 
 

@@ -8,9 +8,7 @@ import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.koth.KOTH;
 import me.idbi.hcf.tools.*;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,6 +24,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+
+import static me.idbi.hcf.HCF_Rules.maxMembersPerFaction;
 
 
 public final class Main extends JavaPlugin implements Listener {
@@ -85,7 +85,7 @@ public final class Main extends JavaPlugin implements Listener {
             Player p = value.getKey();
             if (p == null)
                 continue;
-            SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?',money='?',factionname='?' WHERE UUID='?'", p_Obj.getData("factionid"), p_Obj.getData("rank"), p_Obj.getData("money"), p_Obj.getData("faction"), p.getUniqueId().toString());
+            SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?',money='?',factionname='?',name='?' WHERE UUID='?'", p_Obj.getData("factionid"), p_Obj.getData("rank"), p_Obj.getData("money"), p_Obj.getData("faction"),p.getName(), p.getUniqueId().toString());
             // Safe
             //SQL_Connection.dbUpdate(con,"factions",keys,values, "uuid='"+p.getUniqueId().toString()+"'");
         }
@@ -206,6 +206,11 @@ public final class Main extends JavaPlugin implements Listener {
             if (multi != null)
                 sendCmdMessage("§aMultiverse-Core found. Plugin connected to Multiverse-Core\n§aMultiverse-Core version: §a§o" + multi.getDescription().getVersion());
         }
+        if(max_members_pro_faction > maxMembersPerFaction){
+            Main.sendCmdMessage(ChatColor.DARK_RED + "The maximum value that can be set is 14.A faction per member should not exceed this!");
+            Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
+            Bukkit.getServer().shutdown();
+        }
     }
 
     @Override
@@ -217,6 +222,21 @@ public final class Main extends JavaPlugin implements Listener {
             con.close();
             con = null;
             faction_cache.clear();
+            for(Player player : Bukkit.getOnlinePlayers()){
+                if(!Main.player_block_changes.containsKey(player)) continue;
+                List<Location> copy = Main.player_block_changes.get(player);
+                for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
+                    Location loc = it.next();
+                    player.sendBlockChange(loc, Material.AIR, (byte) 0);
+                    if (Main.player_block_changes.containsKey(player)) {
+                        List<Location> l = Main.player_block_changes.get(player);
+                        it.remove();
+                        //l.remove(loc);
+                        Main.player_block_changes.put(player, l);
+                    }
+                }
+            }
+
         } catch (Exception ignored) {
         }
 
@@ -286,7 +306,7 @@ public final class Main extends JavaPlugin implements Listener {
 
         }
         public void invitePlayer(Player p) {
-            if(memberCount + 1 > max_members_pro_faction || invites.getInvitedPlayers().size()+1 > HCF_Rules.maxInvites ) {
+            if(memberCount + 1 > max_members_pro_faction || invites.getInvitedPlayers().size()+1 > HCF_Rules.maxInvitesPerFaction ) {
                 p.sendMessage(Messages.MAX_MEMBERS_REACHED.queue());
                 return;
             }
@@ -348,7 +368,11 @@ public final class Main extends JavaPlugin implements Listener {
                 if (rank.isDefault)
                     return rank;
             }
-            return null;
+            Faction_Rank_Manager.Rank default_rank = Faction_Rank_Manager.CreateRank(this, "Default");
+            assert default_rank != null;
+            default_rank.isDefault = true;
+            default_rank.saveRank();
+            return default_rank;
         }
 
         public Faction_Rank_Manager.Rank getLeaderRank() {

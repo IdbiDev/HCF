@@ -97,12 +97,15 @@ public enum Messages {
     INVITED_INVITE_MESSAGE("&eYou invited to &6&o%faction_name% &efaction by &6&o%executor%&e!"),*/
     LEADER_LEAVING_FACTION("%prefix% &cYou can't leave this faction, because you are the leader! Use &e&l/f disband &r&cinstead!"),
     NOT_LEADER("%prefix% &cYou are not the faction leader!"),
+    CANT_KICK_YOURSELF("%prefix% &cYou can't kick yourself!"),
+    CANT_KICK_LEADER("%prefix% &cYou can't the faction leader!"),
     JOIN_FACTION_BC("&8[&a+&8] &7&l» &6&o%player%"),
     LEAVE_FACTION_BC("&8[&c-&8] &7&l» &6&o%player%"),
     FACTION_PLAYER_POSITION("%prefix% &7-> &6&o%player%'s &eposition: &6&o%location_x%&e, &6&o%location_y%&e, &6&o%location_z%"),
 
     // Faction home
     SETHOME_MESSAGE("%prefix% &aSuccessfully set home of your faction to your location!"),
+    SETHOME_UPDATE_FACTION("%prefix% &7&l%player% &f&echanged the faction's home location! &g[&6&o%location_x%&e, &6&o%location_y%&e, &6&o%location_z%]"),
     TELEPORT_TO_HOME("&eTeleportation in &6&o%time% seconds&e. &cDo not move!"),
     SUCCESSFULLY_TELEPORT("%prefix% &eSuccessfully teleported to your faction's home!"),
     TELEPORT_CANCEL("%prefix% &cYou moved, teleportation cancelled!"),

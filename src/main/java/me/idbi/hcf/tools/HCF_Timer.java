@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
+import static me.idbi.hcf.tools.Misc_Timers.DeleteWallsForPlayer;
+
 public class HCF_Timer {
     // Combatlog Timer
     public static final HashMap<Player, Long> timers = new HashMap<>();
@@ -56,12 +58,14 @@ public class HCF_Timer {
             if (System.currentTimeMillis() >= timers.get(player)) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 timers.remove(player);
+                DeleteWallsForPlayer(player);
                 return false;
             } else {
                 // Ellenkező esetben: Van rajta
                 return true;
             }
         } else {
+            DeleteWallsForPlayer(player);
             return false;
         }
     }
@@ -169,6 +173,16 @@ public class HCF_Timer {
         if (!eptimers.containsKey(player)) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             eptimers.put(player, System.currentTimeMillis() + EpTimerDuration);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static boolean addEpTimer(Player player,int cooldown) {
+        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        if (!eptimers.containsKey(player)) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            eptimers.put(player, System.currentTimeMillis() + cooldown * 1000L);
             return true;
         } else {
             return false;

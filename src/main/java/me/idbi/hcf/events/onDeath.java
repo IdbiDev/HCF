@@ -34,13 +34,20 @@ public class onDeath implements Listener {
 
         Player damager = e.getEntity().getKiller();
         Player victim = e.getEntity().getPlayer();
-        Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(victim, "factionid")));
+        Main.Faction faction = playertools.getPlayerFaction(victim);
         if (damager != null) {
             e.setDeathMessage(Messages.KILL_MESSAGE_BROADCAST.repDeathWithKills(victim,damager).queue());
             if(faction !=null){
                 faction.BroadcastFaction(Messages.KILL_MESSAGE_FACTION.repDeath(victim,damager).queue());
             }
+            playertools.setMetadata(damager,"kills",Integer.parseInt(playertools.getMetadata(damager,"kills"))+1);
+            playertools.setMetadata(victim,"deaths",Integer.parseInt(playertools.getMetadata(victim,"deaths")+1));
+
+
+            System.out.println(SQL_Connection.dbExecute(con,"UPDATE members SET kills=kills+1 WHERE uuid='?'",damager.getUniqueId().toString()));
+            System.out.println(SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString()));
         } else {
+            SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString());
             e.setDeathMessage(Messages.KILL_MESSAGE_BROADCAST_WITHOUT_VICTIM.repDeathWithoutKiller(victim).queue());
         }
 
@@ -48,6 +55,7 @@ public class onDeath implements Listener {
         if (!Main.deathban) {
             victim.kickPlayer(Messages.NO_DEATHBAN_KICK.queue());
             SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", victim.getUniqueId().toString(), "0");
+
         } else {
             Banhandler.banPlayerInHCF(victim);
         }

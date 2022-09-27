@@ -89,6 +89,7 @@ public class Faction_Rank_Manager {
         private final Integer id;
         public boolean isDefault = false;
         public boolean isLeader = false;
+        public int priority = 0;
         public HashMap<Permissions, Boolean> class_permissions = new HashMap<>();
         Rank(int id,String name){
             this.name = name;
@@ -138,7 +139,7 @@ public class Faction_Rank_Manager {
             saveRank();
         }
 
-        private void saveRank(){
+        public void saveRank(){
             SQL_Connection.dbExecute(con,"UPDATE ranks SET " +
                             "name = '?'," +
                             "ALL_Permission='?'," +

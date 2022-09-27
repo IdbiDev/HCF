@@ -46,9 +46,11 @@ public class Faction_Create {
                 assert leader_rank != null;
                 default_rank.isDefault = true;
                 leader_rank.isLeader = true;
+                leader_rank.saveRank();
+                default_rank.saveRank();
                 faction.ApplyPlayerRank(p, leader_rank.name);
 
-                SQL_Connection.dbExecute(con, "UPDATE members SET faction = ?,factionname='?',rank='?' WHERE uuid = '?'", String.valueOf(x), name, "leader", p.getUniqueId().toString());
+                SQL_Connection.dbExecute(con, "UPDATE members SET faction = ?,factionname='?',rank='?' WHERE uuid = '?'", String.valueOf(x), name, "Leader", p.getUniqueId().toString());
 
                 // Kiíratás global chatre ->
                 //                              xy faction létre jött

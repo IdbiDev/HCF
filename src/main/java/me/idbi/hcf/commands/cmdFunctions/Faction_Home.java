@@ -3,10 +3,7 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf.tools.Faction_Rank_Manager;
-import me.idbi.hcf.tools.JsonUtils;
-import me.idbi.hcf.tools.SQL_Connection;
-import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.tools.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -27,34 +24,42 @@ public class Faction_Home implements Listener {
     private static final Connection con = Main.getConnection("faction");
 
     public static void setHome(Player p) {
+        Main.Faction faction = playertools.getPlayerFaction(p);
+        if(faction == null){
+            p.sendMessage(Messages.NOT_IN_FACTION.queue());
+            return;
+        }
         if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_RANKS)) {
             p.sendMessage(Messages.NO_PERMISSION.queue());
-            //Todo: Message on you dont have permission
             return;
         }
-        Main.Faction faction = Main.faction_cache.get(Integer.valueOf(playertools.getMetadata(p, "factionid")));
-        if(faction == null){
-            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
-            return;
-        }
-        HashMap map = new HashMap() {{
+        HashMap<String,Integer> map = new HashMap<String,Integer>() {{
             put("X", p.getLocation().getBlockX());
             put("Y", p.getLocation().getBlockY());
             put("Z", p.getLocation().getBlockZ());
             put("YAW", (int) p.getLocation().getYaw());
             put("PITCH", (int) p.getLocation().getPitch());
         }};
+        HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(p.getLocation().getBlockX(),p.getLocation().getBlockZ());
+        if(claim != null) {
+            if (claim.faction == faction.factionid) {
+                faction.setHomeLocation(p.getLocation());
 
-        faction.setHomeLocation(p.getLocation());
+                JSONObject object = new JSONObject(map);
 
-        JSONObject object = new JSONObject(map);
-
-        SQL_Connection.dbExecute(con, "UPDATE factions SET home = '?' WHERE ID='?'", object.toString(), String.valueOf(faction.factionid));
-        p.sendMessage(Messages.SETHOME_MESSAGE.queue());
+                SQL_Connection.dbExecute(con, "UPDATE factions SET home = '?' WHERE ID='?'", object.toString(), String.valueOf(faction.factionid));
+                p.sendMessage(Messages.SETHOME_MESSAGE.queue());
+                faction.BroadcastFaction(Messages.SETHOME_UPDATE_FACTION.repPlayer(p).repCoords(p.getLocation().getBlockX(),p.getLocation().getBlockY(),p.getLocation().getBlockZ()).queue());
+            }
+        }
     }
 
     public static void teleportToHome(Player p) {
-        Main.Faction faction = Main.faction_cache.get(Integer.valueOf(playertools.getMetadata(p, "factionid")));
+        Main.Faction faction = playertools.getPlayerFaction(p);
+        if(faction == null){
+            p.sendMessage(Messages.NOT_IN_FACTION.queue());
+            return;
+        }
         HashMap<String, Object> json = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID = '?' AND home IS NOT NULL", String.valueOf(faction.factionid));
         if (json.size() > 0) {
             Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(json.get("home").toString()));

@@ -9,48 +9,50 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 
 import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
+import static me.idbi.hcf.tools.Misc_Timers.DeleteWallsForPlayer;
 import static me.idbi.hcf.tools.playertools.getDistanceBetweenPoints2D;
 
 public class SpawnShield {
     public static boolean pvpCooldown(){
-        return true;
+        return false;
     }
-    public static void CalcWall() {
-
+    public static void CalcWall(Player p) {
         for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()){
-            for(HCF_Claiming.Faction_Claim claim : thisFaction.getValue().claims){
-                for(Player p : Bukkit.getOnlinePlayers()){
-                    //if(Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) continue;
-                    //Todo: SOTW / PVP COOLDOWN
-                    //Main.sendCmdMessage("SOTW cooldown:%s\tClaim Attribute:%s".formatted(pvpCooldown(),claim.attribute));
-                    if(pvpCooldown()){
-                        if(claim.attribute.equalsIgnoreCase("normal"))
-                            continue;
-                    }
-                    if(claim.attribute.equalsIgnoreCase("protected")){
-                        if(checkCombatTimer(p))
-                            continue;
-                    }
-                    if(!(pvpCooldown() && claim.attribute.equalsIgnoreCase("normal"))){
-                        continue;
-                    }
-                    // Négy sarokpont
+            for(HCF_Claiming.Faction_Claim claim : thisFaction.getValue().claims) {
+                //Main.sendCmdMessage("FACTION: %s\tPLAYER: %s\tCLAIM: %s".formatted(thisFaction.getValue().factioname,p.getDisplayName(),claim.attribute));
+                //if(Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) continue;
+                //Todo: SOTW / PVP COOLDOWN
+                //Main.sendCmdMessage("SOTW cooldown:%s\tClaim Attribute:%s".formatted(pvpCooldown(),claim.attribute));
+                /*if(pvpCooldown()){
+                       if(claim.attribute.equalsIgnoreCase("protected")) {
+                           Main.sendCmdMessage("Continue in pvpCooldown");
+                           continue;
+                       }
+                   }
+                   if(claim.attribute.equalsIgnoreCase("protected")){
+                       if(!checkCombatTimer(p)) {
+                           Main.sendCmdMessage("Continue in checkCombat");
+                           continue;
+                       }
+                   }*/
+                //Main.sendCmdMessage("STATE : %b VALUES: PVPTAG: %b\t CLAIMNORMAL:%b".formatted((pvpCooldown() && claim.attribute.equalsIgnoreCase("normal")),pvpCooldown(),claim.attribute.equalsIgnoreCase("normal")));
+                if((pvpCooldown() && claim.attribute.equalsIgnoreCase("normal")) || (checkCombatTimer(p) && claim.attribute.equalsIgnoreCase("protected"))){
+
+                    HCF_Claiming.Point player_point = new HCF_Claiming.Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ()); // Négy sarokpont
                     HCF_Claiming.Point bottom_left = new HCF_Claiming.Point(claim.startX, claim.startZ);
                     HCF_Claiming.Point top_right = new HCF_Claiming.Point(claim.endX, claim.endZ);
+
                     HCF_Claiming.Point top_left = new HCF_Claiming.Point(top_right.x, bottom_left.z);
                     HCF_Claiming.Point bottom_right = new HCF_Claiming.Point(bottom_left.x, top_right.z);
-                    HCF_Claiming.Point player_point = new HCF_Claiming.Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
 
                     int width = getDistanceBetweenPoints2D(bottom_left, top_left)+1;
-
                     int height = getDistanceBetweenPoints2D(bottom_left, bottom_right)+1;
-
                     int minX = Math.min(top_right.x, bottom_left.x);
                     int minZ = Math.min(top_right.z, bottom_left.z);
                     int record = 9999;
                     HCF_Claiming.Point record_point = new HCF_Claiming.Point(0,0);
                     // -21+
-                    for(int x = minX;x<=minX+width;x++){
+                    for(int x = minX;x<minX+width;x++){
                         int distance = getDistanceBetweenPoints2D(new HCF_Claiming.Point(x, minZ), player_point);
                         if (distance < record) {
                             record = distance;
@@ -66,8 +68,7 @@ public class SpawnShield {
                         }
                         //p.sendBlockChange(new Location(p.getWorld(),x,p.getLocation().getBlockY(),minZ+height-1),Material.BEDROCK,(byte) 0);
                     }
-
-                    for(int z = minZ;z<=minZ+height;z++){
+                    for(int z = minZ;z<minZ+height;z++){
                         int distance = getDistanceBetweenPoints2D(new HCF_Claiming.Point(minX, z), player_point);
                         if (distance < record) {
                             record = distance;
@@ -84,8 +85,7 @@ public class SpawnShield {
                         //p.sendBlockChange(new Location(p.getWorld(),minX+width-1,p.getLocation().getBlockY(),z),Material.BRICK,(byte) 0);
                     }
                     if(getDistanceBetweenPoints2D(record_point,player_point) > 10)
-                        return;
-
+                        continue;
                     String side;
                     if (bottom_left.z == record_point.z || top_left.z == record_point.z) {
                         side = "x";
@@ -95,7 +95,6 @@ public class SpawnShield {
                         side = "z";
                     }
                     //Main.sendCmdMessage("Side: %s Record point Z: %d Bottom right Z: %d Bottom left Z: %d".formatted(side,record_point.z,bottom_right.z,bottom_left.z));
-
                     //System.out.printf("SIDE: " + side);
                     placeWall(p,new Location(p.getWorld(),record_point.x,p.getLocation().getBlockY(),record_point.z),side,claim);
                     //forloop(p, new Location(p.getWorld(), record_point.x, p.getLocation().getBlockY(), record_point.z), side,claim);

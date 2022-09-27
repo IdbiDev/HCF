@@ -51,6 +51,7 @@ public class Miner {
 
     public static void setInvisMode(Player p, boolean state) {
         if(state){
+
             p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,Integer.MAX_VALUE,1),true);
         }else{
             p.removePotionEffect(PotionEffectType.INVISIBILITY);

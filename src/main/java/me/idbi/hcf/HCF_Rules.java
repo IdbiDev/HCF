@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class HCF_Rules {
     public static ImmutableSet blockedPearlTypes;
-    public final static ArrayList blacklistedBlocks = new ArrayList() {{
+    public final static ArrayList<Material> blacklistedBlocks = new ArrayList<Material>() {{
         add(Material.LEVER);
         add(Material.STONE_BUTTON);
         add(Material.WOODEN_DOOR);
@@ -38,7 +38,7 @@ public class HCF_Rules {
         add(Material.FURNACE);
         add(Material.BURNING_FURNACE);
     }};
-    public final static HashMap<PotionEffectType, Integer> PotionLimits = new HashMap() {{
+    public final static HashMap<PotionEffectType, Integer> PotionLimits = new HashMap<PotionEffectType,Integer>() {{
         put(PotionEffectType.INCREASE_DAMAGE, 2);
         put(PotionEffectType.SPEED, 4);
         put(PotionEffectType.REGENERATION, 2);
@@ -62,15 +62,6 @@ public class HCF_Rules {
         put(Enchantment.SILK_TOUCH, -1);
     }};
 
-    public final static HashMap<Integer, String> DTR_MEMBERS = new HashMap() {{
-        //Member / Max DTR
-        put(0, 1.5);
-        put(1, 1.5);
-        put(2, 2.0);
-        put(3, 3.5);
-        put(4, 4.0);
-        put(5, 5.5);
-    }};
     public static class Enchant_Obj{
         private final Enchantment enchantment;
         private final int level;
@@ -154,7 +145,9 @@ public class HCF_Rules {
     }
     public static final String startMessage = "";
 
-    public static final int maxInvites = 14; // >> GUI limit
+    public static final int maxInvitesPerFaction = 14; // >> GUI limit
+    public static final int maxMembersPerFaction = 14; // >> GUI limit
+    public static final int maxRanksPerFaction = 28; // >> GUI limit
 
 
 

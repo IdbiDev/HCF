@@ -23,13 +23,11 @@ public class AnvilEvent implements Listener {
         if (!e.isCancelled()) {
 
 // not really necessary
-            if (e.getWhoClicked() instanceof Player) {
-                Player player = (Player) e.getWhoClicked();
+            if (e.getWhoClicked() instanceof Player player) {
                 Inventory inv = e.getInventory();
 
 // see if we are talking about an anvil here
-                if (inv instanceof AnvilInventory) {
-                    AnvilInventory anvil = (AnvilInventory) inv;
+                if (inv instanceof AnvilInventory anvil) {
                     InventoryView view = e.getView();
                     int rawSlot = e.getRawSlot();
 

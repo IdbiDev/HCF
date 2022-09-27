@@ -39,7 +39,7 @@ public class Faction_Disband {
         SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(selectedFaction.factionid));
         SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(selectedFaction.factionid));
         SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(selectedFaction.factionid));
-        SQL_Connection.dbExecute(con, "UPDATE members SET rank='Nincs',faction=0,factionname='Nincs' WHERE faction='?'", String.valueOf(selectedFaction.factionid));
+        SQL_Connection.dbExecute(con, "UPDATE members SET rank='none',faction=0,factionname='Nincs' WHERE faction='?'", String.valueOf(selectedFaction.factionid));
         for (Player player : playertools.getFactionOnlineMembers(faction)) {
             playertools.setMetadata(player, "faction", "Nincs");
             playertools.setMetadata(player, "factionid", "0");
