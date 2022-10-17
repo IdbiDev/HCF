@@ -4,8 +4,10 @@ import me.idbi.hcf.AnvilGUI.AnvilItems;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RM_Items;
+import me.idbi.hcf.FrakcioGUI.Items.RPrio_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankManagerInventory;
+import me.idbi.hcf.FrakcioGUI.Menus.RankPriorityInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
@@ -33,6 +35,12 @@ public class Click_RankMenu implements Listener {
         if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
             e.getWhoClicked().openInventory(MainInventory.mainInv((Player) e.getWhoClicked()));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
+            return;
+        }
+
+        if (e.getCurrentItem().isSimilar(RPrio_Items.priorityToggleButton())) {
+            e.getWhoClicked().openInventory(RankPriorityInventory.officialInventory(((Player) e.getWhoClicked())));
+            GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
 

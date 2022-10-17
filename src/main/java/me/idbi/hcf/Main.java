@@ -213,6 +213,7 @@ public final class Main extends JavaPlugin implements Listener {
         //SaveAll();
         try {
             for(Player player : Bukkit.getOnlinePlayers()){
+                new PlayerList(player, PlayerList.SIZE_FOUR).clearCustomTabs();
                 if(!Main.player_block_changes.containsKey(player)) continue;
                 List<Location> copy = Main.player_block_changes.get(player);
                 for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {

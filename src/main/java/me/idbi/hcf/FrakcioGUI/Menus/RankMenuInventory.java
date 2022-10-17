@@ -2,6 +2,7 @@ package me.idbi.hcf.FrakcioGUI.Menus;
 
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RM_Items;
+import me.idbi.hcf.FrakcioGUI.Items.RPrio_Items;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
@@ -29,9 +30,7 @@ public class RankMenuInventory {
             inv.addItem(RM_Items.rank(rank.getValue().name));
         }
 
-        for (String name : namesGecim)
-            inv.addItem(RM_Items.rank(name));
-
+        inv.setItem(8, RPrio_Items.priorityToggleButton());
         inv.setItem(45, GUI_Items.back());
         inv.setItem(53, RM_Items.create());
 

@@ -35,7 +35,7 @@ public class PlayerRankManagerInventory {
 
         }
 
-        List<String> namesGecim = new ArrayList<>();
+/*        List<String> namesGecim = new ArrayList<>();
         ArrayList<Faction_Rank_Manager.Rank> list = Objects.requireNonNull(playertools.getPlayerFaction(p)).ranks;
 
         for(Faction_Rank_Manager.Rank rank : list)
@@ -57,6 +57,15 @@ public class PlayerRankManagerInventory {
                 continue;
             }
             inv.addItem(rank(Name, false));
+        }*/
+
+        Main.Faction faction = playertools.getPlayerFaction(p);
+        for(Map.Entry<Integer, Faction_Rank_Manager.Rank> rank : playertools.sortByPriority(playertools.getPlayerFaction(p)).entrySet()) {
+            if(faction.player_ranks.get(p).name.equalsIgnoreCase(rank.getValue().name)) {
+                inv.addItem(rank(rank.getValue().name, true));
+                continue;
+            }
+            inv.addItem(rank(rank.getValue().name, false));
         }
 
         inv.setItem(49, GUI_Items.back());
@@ -80,7 +89,7 @@ public class PlayerRankManagerInventory {
 
         }
 
-        List<String> namesGecim = new ArrayList<>();
+/*        List<String> namesGecim = new ArrayList<>();
         ArrayList<Faction_Rank_Manager.Rank> list = Objects.requireNonNull(playertools.getPlayerFaction(p)).ranks;
 
         for(Faction_Rank_Manager.Rank rank : list)
@@ -103,6 +112,18 @@ public class PlayerRankManagerInventory {
                 continue;
             }
             inv.addItem(rank(Name, false));
+        }*/
+
+        Main.Faction faction = playertools.getPlayerFaction(p);
+
+        HashMap<String,Object> map = SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid='?'",p.getUniqueId().toString());
+
+        for(Map.Entry<Integer, Faction_Rank_Manager.Rank> rank : playertools.sortByPriority(playertools.getPlayerFaction(p)).entrySet()) {
+            if(faction.FindRankByName(map.get("rank").toString()).name.equalsIgnoreCase(rank.getValue().name)) {
+                inv.addItem(rank(rank.getValue().name, true));
+                continue;
+            }
+            inv.addItem(rank(rank.getValue().name, false));
         }
 
         inv.setItem(49, GUI_Items.back());

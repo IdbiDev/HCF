@@ -8,7 +8,8 @@ import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.SignShop.CreateShopSign;
 import me.idbi.hcf.MessagesEnums.SignShop.InteractShopSign;
-import me.idbi.hcf.classes.Assassin;
+import me.idbi.hcf.TabManager.TabManager;
+import me.idbi.hcf.classes.subClasses.Assassin;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.events.Enchants.Anvil.AnvilEvent;
 import me.idbi.hcf.events.Enchants.EnchantInventory;
@@ -100,6 +101,9 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new DeleteRankConfirm(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new Click_InviteManager(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new Click_InvitedPlayers(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_RankPriority(), Main.getPlugin(Main.class));
+
+        getServer().getPluginManager().registerEvents(new TabManager(), Main.getPlugin(Main.class));
 
     }
 }

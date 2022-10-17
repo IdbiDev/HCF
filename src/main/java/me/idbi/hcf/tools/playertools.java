@@ -487,6 +487,7 @@ public class playertools {
     public static boolean isTeammate(Player p,Player p2){
         Main.Faction f1 = getPlayerFaction(p);
         Main.Faction f2 = getPlayerFaction(p2);
+
         if(f1 == null || f2 == null)
             return false;
         return Objects.equals(f1.factionid, f2.factionid);

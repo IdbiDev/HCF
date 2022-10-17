@@ -224,6 +224,7 @@ public enum Messages {
     GUI_CREATE_RANK_TEXT("Enter rank name"),
     GUI_INVALID_TYPE_TEXT("Invalid name!"),
     GUI_BAD_WORD("Don't use forbidden words."),
+    GUI_PRIORITY_SAVED("%prefix% &aYou successfully saved the changes!"),
     RENAME_FACTION("%prefix% §aSuccessfully renamed faction "),
 
     // Hover things
