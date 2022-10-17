@@ -1,6 +1,5 @@
 package me.idbi.hcf.events;
 
-import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.Banhandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

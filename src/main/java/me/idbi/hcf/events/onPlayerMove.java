@@ -2,7 +2,7 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.classes.Miner;
+import me.idbi.hcf.classes.subClasses.Miner;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.SpawnShield;

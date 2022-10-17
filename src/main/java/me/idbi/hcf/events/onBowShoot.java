@@ -1,6 +1,5 @@
 package me.idbi.hcf.events;
 
-import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -120,6 +120,26 @@
             <artifactId>anvilgui</artifactId>
             <version>1.5.3-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <systemPath>C:\Users\kille\Desktop\BuildTools\craftbukkit-1.8.8.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+        <dependency>
+            <groupId>codecrafter47.bungeetablistplus</groupId>
+            <artifactId>bungeetablistplus-api-bungee</artifactId>
+            <version>3.5.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.idbi</groupId>
+            <artifactId>hcf_abilitys</artifactId>
+            <version>1.0</version>
+            <systemPath>C:\Users\kille\Desktop\TsipuEgymeleg\plugins\hcf_abilitys-1.0-SNAPSHOT.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
     </dependencies>
 
 </project>

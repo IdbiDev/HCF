@@ -1,5 +1,6 @@
-package me.idbi.hcf.classes;
+package me.idbi.hcf.classes.subClasses;
 
+import me.idbi.hcf.classes.HCF_Class;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -7,10 +8,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class Miner {
-    public static final double min_y_value = 35;
+import java.util.HashMap;
+import java.util.Map;
 
-    public static boolean CheckArmor(Player p) {
+public class Miner implements HCF_Class {
+    private final HashMap<PotionEffectType,Integer> effect = new HashMap<>(){{
+        put(PotionEffectType.SPEED,1);
+        put(PotionEffectType.DAMAGE_RESISTANCE,1);
+        put(PotionEffectType.NIGHT_VISION,0);
+        put(PotionEffectType.FAST_DIGGING,2);
+        put(PotionEffectType.FIRE_RESISTANCE,0);
+    }};
+    public static final int min_y_value = 45;
+    @Override
+    public boolean CheckArmor(Player p) {
         try {
             //Get Archer armor
             ItemStack helmet = p.getInventory().getHelmet();
@@ -29,29 +40,29 @@ public class Miner {
         }
     }
 
-    public static void setEffect(Player p) {
-        // Remove Effects;
-        removeEffects(p);
-        //Adding Effects
-        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1, false, false));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 1, false, false));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0, false, false));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, 2, false, false));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0, false, false));
+    @Override
+    public void setEffect(Player p) {
+        for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
+            addEffect(p,potionEffectTypeIntegerEntry.getKey(),potionEffectTypeIntegerEntry.getValue());
+        }
         playertools.setMetadata(p, "class", "Miner");
     }
 
-    public static void removeEffects(Player p) {
-        p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-        p.removePotionEffect(PotionEffectType.SPEED);
-        p.removePotionEffect(PotionEffectType.NIGHT_VISION);
-        p.removePotionEffect(PotionEffectType.FAST_DIGGING);
-        p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+    @Override
+    public void addEffect(Player p, PotionEffectType type, int amplifier) {
+        p.removePotionEffect(type);
+        p.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, amplifier, false, false));
     }
 
+    @Override
+    public void removeEffects(Player p) {
+        for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
+            p.removePotionEffect(potionEffectTypeIntegerEntry.getKey());
+        }
+        playertools.setMetadata(p, "class", "None");
+    }
     public static void setInvisMode(Player p, boolean state) {
         if(state){
-
             p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,Integer.MAX_VALUE,1),true);
         }else{
             p.removePotionEffect(PotionEffectType.INVISIBILITY);

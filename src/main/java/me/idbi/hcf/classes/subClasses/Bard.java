@@ -1,7 +1,8 @@
-package me.idbi.hcf.classes;
+package me.idbi.hcf.classes.subClasses;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.classes.HCF_Class;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,26 +11,31 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static me.idbi.hcf.tools.playertools.getFactionMembersInDistance;
 
-
-public class Bard {
-    public static ArrayList<Bard_Item> bard_items = new ArrayList<>();
+public class Bard implements HCF_Class {
+    private final HashMap<PotionEffectType,Integer> effect = new HashMap<>(){{
+        put(PotionEffectType.SPEED,0);
+        put(PotionEffectType.REGENERATION,0);
+        put(PotionEffectType.DAMAGE_RESISTANCE,0);
+    }};
     private static final Main m = Main.getPlugin(Main.class);
+    private static final ArrayList<Bard_Item> bard_items = new ArrayList<>(){{
+        add(new Bard_Item(Material.BLAZE_POWDER, PotionEffectType.INCREASE_DAMAGE, m.getConfig().getInt("strength")));
+        add(new Bard_Item(Material.SUGAR, PotionEffectType.SPEED, m.getConfig().getInt("speed")));
+        add(new Bard_Item(Material.FEATHER, PotionEffectType.JUMP, m.getConfig().getInt("jump_boost")));
+        add(new Bard_Item(Material.IRON_INGOT, PotionEffectType.DAMAGE_RESISTANCE, m.getConfig().getInt("resistance")));
+        add(new Bard_Item(Material.MAGMA_CREAM, PotionEffectType.FIRE_RESISTANCE, m.getConfig().getInt("fire_resistance")));
+        add(new Bard_Item(Material.REDSTONE, PotionEffectType.REGENERATION, m.getConfig().getInt("regeneration")));
+        add(new Bard_Item(Material.GHAST_TEAR, PotionEffectType.ABSORPTION, m.getConfig().getInt("absorption")));
+        add(new Bard_Item(Material.GOLD_INGOT, PotionEffectType.FAST_DIGGING, m.getConfig().getInt("haste")));
 
-    public static void setBardItems() {
-        bard_items.add(new Bard_Item(Material.BLAZE_POWDER, PotionEffectType.INCREASE_DAMAGE, m.getConfig().getInt("strength")));
-        bard_items.add(new Bard_Item(Material.SUGAR, PotionEffectType.SPEED, m.getConfig().getInt("speed")));
-        bard_items.add(new Bard_Item(Material.FEATHER, PotionEffectType.JUMP, m.getConfig().getInt("jump_boost")));
-        bard_items.add(new Bard_Item(Material.IRON_INGOT, PotionEffectType.DAMAGE_RESISTANCE, m.getConfig().getInt("resistance")));
-        bard_items.add(new Bard_Item(Material.MAGMA_CREAM, PotionEffectType.FIRE_RESISTANCE, m.getConfig().getInt("fire_resistance")));
-        bard_items.add(new Bard_Item(Material.REDSTONE, PotionEffectType.REGENERATION, m.getConfig().getInt("regeneration")));
-        bard_items.add(new Bard_Item(Material.GHAST_TEAR, PotionEffectType.ABSORPTION, m.getConfig().getInt("absorption")));
-        bard_items.add(new Bard_Item(Material.GOLD_INGOT, PotionEffectType.FAST_DIGGING, m.getConfig().getInt("haste")));
-    }
-
-    public static boolean CheckArmor(Player p) {
+    }};
+    @Override
+    public boolean CheckArmor(Player p) {
         try {
             //Get Archer armor
             ItemStack helmet = p.getInventory().getHelmet();
@@ -48,24 +54,42 @@ public class Bard {
         }
     }
 
-    public static void setEffect(Player p) {
-        // Remove Effects;
-        removeEffects(p);
-        //Adding Effects
-        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0, false, false));
+    @Override
+    public void setEffect(Player p) {
+        for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
+            addEffect(p,potionEffectTypeIntegerEntry.getKey(),potionEffectTypeIntegerEntry.getValue());
+        }
         playertools.setMetadata(p, "class", "Bard");
-    }
-
-    public static void removeEffects(Player p) {
-
-        p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-        p.removePotionEffect(PotionEffectType.SPEED);
         playertools.setMetadata(p, "bardenergy",0);
-
     }
 
-    public static void ApplyBardEffectOnActionBar(Player bardplayer) {
+    @Override
+    public void addEffect(Player p, PotionEffectType type, int amplifier) {
+        p.removePotionEffect(type);
+        p.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, amplifier, false, false));
+    }
+
+    @Override
+    public void removeEffects(Player p) {
+        for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
+            p.removePotionEffect(potionEffectTypeIntegerEntry.getKey());
+        }
+        playertools.setMetadata(p, "class", "None");
+        playertools.setMetadata(p, "bardenergy",0);
+    }
+
+     private static class Bard_Item {
+        Material mat;
+        PotionEffectType effect;
+        int cost;
+
+        public Bard_Item(Material mat, PotionEffectType type, int cost) {
+            this.mat = mat;
+            this.effect = type;
+            this.cost = cost;
+        }
+    }
+    public static void useSimpleBardEffect(Player bardplayer) {
         //Hotbar loop
         for (int i = 0; i <= 8; i++) {
             //Ha semmi nincs a kezébe, skippeljük
@@ -81,7 +105,20 @@ public class Bard {
             }
         }
     }
+    private static String getPotionName(String name) {
+        name = name.replace("_", " ");
+        return name.substring(0, 1).toUpperCase()
+                + name.substring(1).toLowerCase();
+    }
 
+    private static Bard_Item findBardItem(ItemStack stack) {
+        for (Bard_Item item : bard_items) {
+            if (item.mat.equals(stack.getType())) {
+                return item;
+            }
+        }
+        return null;
+    }
     public static void OhLetsBreakItDown(Player bardplayer) {
         ItemStack main = bardplayer.getItemInHand();
         Bard_Item item;
@@ -115,33 +152,6 @@ public class Bard {
                         .queue()
                 );
             }
-        }
-    }
-
-    private static String getPotionName(String name) {
-        name = name.replace("_", " ");
-        return name.substring(0, 1).toUpperCase()
-                + name.substring(1).toLowerCase();
-    }
-
-    private static Bard_Item findBardItem(ItemStack stack) {
-        for (Bard_Item item : bard_items) {
-            if (item.mat.equals(stack.getType())) {
-                return item;
-            }
-        }
-        return null;
-    }
-
-    static class Bard_Item {
-        Material mat;
-        PotionEffectType effect;
-        int cost;
-
-        public Bard_Item(Material mat, PotionEffectType type, int cost) {
-            this.mat = mat;
-            this.effect = type;
-            this.cost = cost;
         }
     }
 }

@@ -5,6 +5,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.koth.KOTH;
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -363,7 +364,6 @@ public class playertools {
         5                       5.5
 
     */
-
     public static String CalculateDTR(Main.Faction faction){
 
         double addedDTR = 1.5;
@@ -476,25 +476,31 @@ public class playertools {
             }
         }
     }
+
+    public static TreeMap<Integer, Faction_Rank_Manager.Rank> sortByPriority(Main.Faction faction){
+        HashMap<Integer,Faction_Rank_Manager.Rank> sortedMap = new HashMap<Integer,Faction_Rank_Manager.Rank>();
+        for(Faction_Rank_Manager.Rank rank : faction.ranks){
+            sortedMap.put(rank.priority,rank);
+        }
+        return new TreeMap<Integer, Faction_Rank_Manager.Rank>(sortedMap);
+    }
     public static boolean isTeammate(Player p,Player p2){
         Main.Faction f1 = getPlayerFaction(p);
         Main.Faction f2 = getPlayerFaction(p2);
         if(f1 == null || f2 == null)
             return false;
-        if((f1 == null) && (f2 == null))
-            return false;
         return Objects.equals(f1.factionid, f2.factionid);
     }
 
-    private static Map<String, List<String>> sortbykey(HashMap map) {
+    private static Map<String, Faction_Rank_Manager.Rank> sortbykey(HashMap map) {
         // TreeMap to store values of HashMap
-        Map<String, List<String>> sorted = new TreeMap<>(map);
+        Map<String, Faction_Rank_Manager.Rank> sorted = new TreeMap<>(map);
 
         // Copy all data from hashMap into TreeMap
         sorted.putAll(map);
 
         // Display the TreeMap which is naturally sorted
-        // Sorted hashMap
+        //  hashMap
         return sorted;
     }
 
@@ -504,5 +510,26 @@ public class playertools {
         long MM = (time % 3600) / 60;
         long SS = time % 60;
         return MM + " minutes " + SS + " seconds";
+    }
+
+    /*public static void DrawCircle(Location center,double radius,double smoothness,Effect effect){
+        double angle = 0;
+        while (angle < 360){
+            double radiant_angle = Math.toRadians(angle);
+            double angleX = center.getX() + Math.cos(radiant_angle) * radius;
+            double angleZ = center.getZ() + Math.sin(radiant_angle) * radius;
+            angle = angle + smoothness;
+            center.getWorld().playEffect(new Location(center.getWorld(),angleX,center.getY(),angleZ), effect,effect.getId());
+        }
+    }*/
+    public static void DrawCircle(Location center,double radius,double smoothness,Effect effect){
+        double angle = 0;
+        while (angle < 360){
+            double radiant_angle = Math.toRadians(angle);
+            double angleX = center.getX() + Math.cos(radiant_angle) * radius;
+            double angleZ = center.getZ() + Math.sin(radiant_angle) * radius;
+            angle = angle + smoothness;
+            center.getWorld().playEffect(new Location(center.getWorld(),angleX,center.getY(),angleZ), effect,effect.getId());
+        }
     }
 }

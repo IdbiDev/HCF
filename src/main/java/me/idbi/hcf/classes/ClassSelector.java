@@ -1,76 +1,54 @@
 package me.idbi.hcf.classes;
 
-import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.classes.subClasses.Archer;
+import me.idbi.hcf.classes.subClasses.Assassin;
+import me.idbi.hcf.classes.subClasses.Bard;
+import me.idbi.hcf.classes.subClasses.Miner;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
-
 public class ClassSelector {
-    public static void addClassToPlayer(Player player) {
-        try {
-            if (Archer.CheckArmor(player)) {
-                if (!playertools.getMetadata(player, "class").equalsIgnoreCase("Archer")) {
-                    if (Main.debug)
-                        Main.sendCmdMessage("Equiping Archerclass to " + player.getDisplayName());
-                    Archer.setEffect(player);
-                    Scoreboards.refresh(player);
-                }
-            } else if (playertools.getMetadata(player, "class").equals("Archer")) {
-                if (Main.debug)
-                    Main.sendCmdMessage("Removing Archerclass from " + player.getDisplayName());
-                Archer.removeEffects(player);
-                playertools.setMetadata(player, "class", "None");
-                Scoreboards.refresh(player);
-            }
+    final static Assassin assassin_class = new Assassin();
+    final static Archer archer_class = new Archer();
+    final static Bard bard_class = new Bard();
+    final static Miner miner_class = new Miner();
 
-            if (Bard.CheckArmor(player)) {
-                if (!playertools.getMetadata(player, "class").equalsIgnoreCase("Bard")) {
-                    if (Main.debug)
-                        Main.sendCmdMessage("Equiping Bard class to " + player.getDisplayName());
-                    Bard.setEffect(player);
-                    Scoreboards.refresh(player);
-                }
-            } else if (playertools.getMetadata(player, "class").equalsIgnoreCase("Bard")) {
-                if (Main.debug)
-                    Main.sendCmdMessage("Removing Bard class from " + player.getDisplayName());
-                Bard.removeEffects(player);
-                playertools.setMetadata(player, "class", "None");
-                Scoreboards.refresh(player);
-            }
+    public static void addClassToPlayer(Player p){
 
-            if (Miner.CheckArmor(player)) {
-                if (!playertools.getMetadata(player, "class").equalsIgnoreCase("Miner")) {
-                    if (Main.debug)
-                        Main.sendCmdMessage("Equiping Miner class to " + player.getDisplayName());
-                    Miner.setEffect(player);
-                    Scoreboards.refresh(player);
-                }
-            } else if (playertools.getMetadata(player, "class").equalsIgnoreCase("Miner")) {
-                if (Main.debug)
-                    Main.sendCmdMessage("Removing Miner class from " + player.getDisplayName());
-                Miner.removeEffects(player);
-                playertools.setMetadata(player, "class", "None");
-                Scoreboards.refresh(player);
+        //Assassin class
+        if(assassin_class.CheckArmor(p)){
+            if (!playertools.getMetadata(p, "class").equalsIgnoreCase("Assassin")) {
+                assassin_class.setEffect(p);
             }
-
-            if (Assassin.CheckArmor(player)) {
-                if (!playertools.getMetadata(player, "class").equalsIgnoreCase("Assassin")) {
-                    if (Main.debug)
-                        Main.sendCmdMessage("Equiping Assassin class to " + player.getDisplayName());
-                    Assassin.setEffect(player);
-                    Scoreboards.refresh(player);
-                }
-            } else if (playertools.getMetadata(player, "class").equalsIgnoreCase("Assassin")) {
-                if (Main.debug)
-                    Main.sendCmdMessage("Removing Assassin class from " + player.getDisplayName());
-                Assassin.removeEffects(player);
-                playertools.setMetadata(player, "class", "None");
-                Scoreboards.refresh(player);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }else if(playertools.getMetadata(p, "class").equalsIgnoreCase("Assassin")){
+            assassin_class.removeEffects(p);
         }
+        //Archer class
+        if(archer_class.CheckArmor(p)){
+            if (!playertools.getMetadata(p, "class").equalsIgnoreCase("Archer")) {
+                archer_class.setEffect(p);
+            }
+        }else if(playertools.getMetadata(p, "class").equalsIgnoreCase("Archer")){
+            archer_class.removeEffects(p);
+        }
+        //Bard class
+        if(bard_class.CheckArmor(p)){
+            if (!playertools.getMetadata(p, "class").equalsIgnoreCase("Bard")) {
+                bard_class.setEffect(p);
+            }
+        }else if(playertools.getMetadata(p, "class").equalsIgnoreCase("Bard")){
+            bard_class.removeEffects(p);
+        }
+        //Miner class
+        if(miner_class.CheckArmor(p)){
+            if (!playertools.getMetadata(p, "class").equalsIgnoreCase("Miner")) {
+                miner_class.setEffect(p);
+            }
+        }else if(playertools.getMetadata(p, "class").equalsIgnoreCase("Miner")){
+            miner_class.removeEffects(p);
+        }
+
+        Scoreboards.refresh(p);
     }
 }
-

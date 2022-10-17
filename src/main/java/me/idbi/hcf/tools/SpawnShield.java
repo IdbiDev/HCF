@@ -1,7 +1,6 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,7 +8,6 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 
 import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
-import static me.idbi.hcf.tools.Misc_Timers.DeleteWallsForPlayer;
 import static me.idbi.hcf.tools.playertools.getDistanceBetweenPoints2D;
 
 public class SpawnShield {

@@ -2,7 +2,9 @@ package me.idbi.hcf.events.Enchants;
 
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.HCF_Rules;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf_abilitys.Enchantments.EncListeners.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -16,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 public class EnchantInventory implements Listener {
 
@@ -71,7 +74,7 @@ public class EnchantInventory implements Listener {
             if (e.getCurrentItem().isSimilar(confirm())) {
                 Player p = (Player) e.getWhoClicked();
                 if(p.getLevel() < 20) {
-                    p.sendMessage(Messages.ENCHANT_NOT_ENOUGH_XP.queue());
+                    //p.sendMessage(Messages.ENCHANT_NOT_ENOUGH_XP.queue());
                 }
 
                 ItemStack item = e.getView().getTopInventory().getItem(13);
@@ -80,18 +83,21 @@ public class EnchantInventory implements Listener {
                     obj = HCF_Rules.randomEnchant();
                     System.out.println(obj.getEnchantment());
                 }
-
-                item.getEnchantments().forEach((key, value) ->
-                        item.removeEnchantment(key));
+                for (Map.Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
+                    item.removeEnchantment(entry.getKey());
+                }
 
                 item.addEnchantment(obj.getEnchantment(), obj.getLevel());
-
+                if(Main.abilities_loaded)
+                    item = Utils.updateLore(item);
                 p.setLevel(p.getLevel() - 20);
 
                 e.getWhoClicked().getInventory().addItem(item).values().forEach(itemstack ->
                         e.getWhoClicked().getWorld().dropItemNaturally(e.getWhoClicked().getLocation(), itemstack));
 
                 e.getWhoClicked().closeInventory();
+
+                System.out.println(obj.getEnchantment().getName());
             }
         }
     }

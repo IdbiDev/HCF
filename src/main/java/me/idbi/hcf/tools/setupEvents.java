@@ -27,7 +27,7 @@ import static org.bukkit.Bukkit.getServer;
 public class setupEvents {
     public static void SetupEvents() {
         //xd
-        getServer().getPluginManager().registerEvents(new Assassin(), Main.getPlugin(Main.class));
+        //getServer().getPluginManager().registerEvents(new Assassin(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new onPlayerJoin(), Main.getPlugin(Main.class));
 

@@ -6,7 +6,6 @@ import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
@@ -17,7 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.Connection;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlayerRankManagerInventory {
     public static Connection con = Main.getConnection("cmd.FactionCreate");

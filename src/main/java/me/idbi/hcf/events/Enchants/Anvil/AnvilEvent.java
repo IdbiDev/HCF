@@ -95,8 +95,10 @@ public class AnvilEvent implements Listener {
             if(HCF_Rules.allowedLevels.containsKey(enc.getKey())) {
                 int value = HCF_Rules.allowedLevels.get(enc.getKey());
                 int enchantLevel = enc.getValue();
-
-                if(enchantLevel > value)
+                // 2  > -1
+                if(value == -1)
+                    return true;
+                if(enchantLevel >= value)
                     return false;
             } else
                 return false;

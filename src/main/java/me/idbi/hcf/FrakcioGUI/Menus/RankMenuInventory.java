@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.util.*;
+import java.util.Map;
 
 public class RankMenuInventory {
 
@@ -25,18 +25,9 @@ public class RankMenuInventory {
 
         }
 
-        List<String> namesGecim = new ArrayList<>();
-        ArrayList<Faction_Rank_Manager.Rank> list = Objects.requireNonNull(playertools.getPlayerFaction(p)).ranks;
-
-        for(Faction_Rank_Manager.Rank rank : list)
-            namesGecim.add(rank.name);
-
-        Collections.sort(namesGecim, new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                return s1.compareToIgnoreCase(s2);
-            }
-        });
+        for(Map.Entry<Integer, Faction_Rank_Manager.Rank> rank : playertools.sortByPriority(playertools.getPlayerFaction(p)).entrySet()) {
+            inv.addItem(RM_Items.rank(rank.getValue().name));
+        }
 
         for (String name : namesGecim)
             inv.addItem(RM_Items.rank(name));

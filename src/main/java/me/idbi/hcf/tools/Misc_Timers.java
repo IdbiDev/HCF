@@ -5,8 +5,8 @@ import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.classes.Bard;
 import me.idbi.hcf.classes.ClassSelector;
+import me.idbi.hcf.classes.subClasses.Bard;
 import me.idbi.hcf.koth.KOTH;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,8 +22,6 @@ import java.util.Map;
 
 import static me.idbi.hcf.koth.KOTH.GLOBAL_TIME;
 import static me.idbi.hcf.koth.KOTH.stopKoth;
-import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
-import static me.idbi.hcf.tools.SpawnShield.pvpCooldown;
 
 public class Misc_Timers {
 
@@ -37,7 +35,7 @@ public class Misc_Timers {
                     ClassSelector.addClassToPlayer(player);
                     if (!playertools.HasMetaData(player, "class")) continue;
                     if (playertools.getMetadata(player, "class").equalsIgnoreCase("bard")){
-                        Bard.ApplyBardEffectOnActionBar(player);
+                        Bard.useSimpleBardEffect(player);
 
                     }
                 }

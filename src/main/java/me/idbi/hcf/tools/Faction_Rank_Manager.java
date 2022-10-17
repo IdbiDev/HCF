@@ -21,7 +21,7 @@ public class Faction_Rank_Manager {
     private static final Connection con = Main.getConnection("rankManagerNew");
     public static Rank CreateRank(Main.Faction faction, String name) {
         for (Faction_Rank_Manager.Rank rank : faction.ranks)
-            if (rank.name.equals(name))
+            if (rank.name.equalsIgnoreCase(name))
                 return null;
 
 
@@ -31,7 +31,7 @@ public class Faction_Rank_Manager {
         );
         Rank rank = new Rank(id, name);
         faction.ranks.add(rank);
-
+        rank.priority = -9999 + faction.ranks.size();
         rank.saveRank();
         Scoreboards.RefreshAll();
         return rank;
@@ -40,7 +40,7 @@ public class Faction_Rank_Manager {
         Main.Faction faction = playertools.getPlayerFaction(player);
         assert faction != null;
         for (Faction_Rank_Manager.Rank rank : faction.ranks)
-            if (rank.name.equals(name))
+            if (rank.name.equalsIgnoreCase(name))
                 return null;
         int id = SQL_Connection.dbExecute(con, "INSERT INTO ranks SET name = '?', faction='?'",
                 name,
@@ -48,6 +48,7 @@ public class Faction_Rank_Manager {
         );
         Rank rank = new Rank(id, name);
         faction.ranks.add(rank);
+        rank.priority = -9999 + faction.ranks.size();
         rank.saveRank();
         Scoreboards.RefreshAll();
         return rank;
@@ -89,7 +90,7 @@ public class Faction_Rank_Manager {
         private final Integer id;
         public boolean isDefault = false;
         public boolean isLeader = false;
-        public int priority = 0;
+        public int priority;
         public HashMap<Permissions, Boolean> class_permissions = new HashMap<>();
         Rank(int id,String name){
             this.name = name;
@@ -119,12 +120,16 @@ public class Faction_Rank_Manager {
 
                 if((Boolean) permissionmap.get("KICK_Permission"))
                     class_permissions.put(Permissions.MANAGE_KICK,true);
-
-                if((Boolean) permissionmap.get("isDefault"))
+                if((Boolean) permissionmap.get("isDefault")){
                     isDefault = (Boolean) permissionmap.get("isDefault");
-
-                if((Boolean) permissionmap.get("isLeader"))
+                    priority = -9999;
+                }
+                if((Boolean) permissionmap.get("isLeader")){
                     isLeader = (Boolean)  permissionmap.get("isLeader");
+                    priority = 9999;
+                }
+                priority = (int) permissionmap.get("priority");
+
             } catch (Exception uwu) {
                 uwu.printStackTrace();
             }
@@ -149,7 +154,8 @@ public class Faction_Rank_Manager {
                             "PLAYER_Permission='?'," +
                             "KICK_Permission='?'," +
                             "isDefault='?'," +
-                            "isLeader='?'" +
+                            "isLeader='?'," +
+                            "priority='?'" +
                             "WHERE ID = '?'",
                     String.valueOf(this.name),
                     (class_permissions.get(Permissions.MANAGE_ALL)) ? "1" : "0",
@@ -160,6 +166,7 @@ public class Faction_Rank_Manager {
                     (class_permissions.get(Permissions.MANAGE_KICK)) ? "1" : "0",
                     (isDefault) ? "1" : "0",
                     (isLeader) ? "1" : "0",
+                    String.valueOf(priority),
                     String.valueOf(this.id)
             );
         }

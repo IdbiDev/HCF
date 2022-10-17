@@ -5,7 +5,6 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
-import net.dv8tion.jda.api.entities.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

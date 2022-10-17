@@ -14,9 +14,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.server.PluginEnableEvent;
 
 import java.util.Map;
 
+import static me.idbi.hcf.Main.sendCmdMessage;
 import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
 
 public class PearlFixer implements Listener {
@@ -50,6 +52,14 @@ public class PearlFixer implements Listener {
                 }
             }
 
+        }
+    }
+    @EventHandler
+    public void onServerLoad(PluginEnableEvent event){
+
+        if(event.getPlugin().getName().equalsIgnoreCase("HCF-")) {
+            Main.abilities_loaded = true;
+            sendCmdMessage("§aHCF Abilities found,loaded. All features enabled!");
         }
     }
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)

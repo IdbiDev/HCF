@@ -7,7 +7,9 @@ authors: [ Idbi, kbalu ]
 description: FÜR PLAYERS WO WANNA PLAY some HCF
 softdepend:
   - Multiverse-Core
-
+  - HCF-
+loadbefore:
+  - HCF-
 commands:
   faction:
     aliases: [ f, factions ]

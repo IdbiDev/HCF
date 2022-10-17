@@ -2,6 +2,7 @@ package me.idbi.hcf;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import me.idbi.hcf_abilitys.Enchantments.CustomEnchants;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionEffectType;
@@ -60,6 +61,7 @@ public class HCF_Rules {
         put(Enchantment.DIG_SPEED, -1);
         put(Enchantment.PROTECTION_FALL, 3);
         put(Enchantment.SILK_TOUCH, -1);
+        put(CustomEnchants.COMBO, -1);
     }};
 
     public static class Enchant_Obj{
@@ -99,18 +101,19 @@ public class HCF_Rules {
             //Fire Aspect 2
             //Silk Touch 3
             //Flame 4
-            c = new Random().nextInt(4);
+            c = new Random().nextInt(5);
             switch (c) {
                 case 0 -> enchant_obj = new Enchant_Obj(Enchantment.ARROW_INFINITE, 1);
                 case 1 -> enchant_obj = new Enchant_Obj(Enchantment.FIRE_ASPECT, 1);
                 case 2 -> enchant_obj = new Enchant_Obj(Enchantment.SILK_TOUCH, 1);
                 case 3 -> enchant_obj = new Enchant_Obj(Enchantment.ARROW_FIRE, 1);
+                case 4 -> enchant_obj = new Enchant_Obj(Enchantment.getById(100), 1);
             }
         } else if(a<=0.5){
             //Efficiency
             //Punch
             //Knockback
-            c = new Random().nextInt(5);
+            c = new Random().nextInt(6);
             int lvl = (int) (Math.random() * (2 - 1 + 1) + 1);
             switch (c) {
                 case 0 -> enchant_obj = new Enchant_Obj(Enchantment.DIG_SPEED, lvl);
@@ -118,18 +121,20 @@ public class HCF_Rules {
                 case 2 -> enchant_obj = new Enchant_Obj(Enchantment.KNOCKBACK, lvl);
                 case 3 -> enchant_obj = new Enchant_Obj(Enchantment.ARROW_KNOCKBACK, lvl);
                 case 4 -> enchant_obj = new Enchant_Obj(Enchantment.DURABILITY, lvl);
+                case 5 -> enchant_obj = new Enchant_Obj(Enchantment.getById(100), lvl);
             }
         }else{
             //Protection
             //Sharpness
             //Feather falling
-            c = new Random().nextInt(3);
+            c = new Random().nextInt(4);
             //Math.random() * (max - min + 1) + min
             int lvl = (int) (Math.random() * (2 - 1 + 1) + 1);
             switch (c) {
                 case 0 -> enchant_obj = new Enchant_Obj(Enchantment.PROTECTION_ENVIRONMENTAL, lvl);
                 case 1 -> enchant_obj = new Enchant_Obj(Enchantment.DAMAGE_ALL, lvl);
                 case 2 -> enchant_obj = new Enchant_Obj(Enchantment.PROTECTION_FALL, lvl);
+                case 3 -> enchant_obj = new Enchant_Obj(Enchantment.getById(100), lvl);
             }
         }
         return enchant_obj;
@@ -143,8 +148,17 @@ public class HCF_Rules {
                         Material.NETHER_BRICK_STAIRS, Material.QUARTZ_STAIRS, Material.SANDSTONE_STAIRS,
                         Material.SMOOTH_STAIRS, Material.SPRUCE_WOOD_STAIRS, Material.WOOD_STAIRS });
     }
-    public static final String startMessage = "";
-
+    public static final String startMessage = " _    _   _____  ______        _                        _            _ \n" +
+            "| |  | | / ____||  ____| _    | |                      | |          | |\n" +
+            "| |__| || |     | |__  _| |_  | |      ___    __ _   __| |  ___   __| |\n" +
+            "|  __  || |     |  __||_   _| | |     / _ \\  / _` | / _` | / _ \\ / _` |\n" +
+            "| |  | || |____ | |     |_|   | |____| (_) || (_| || (_| ||  __/| (_| |\n" +
+            "|_|  |_| \\_____||_|           |______|\\___/  \\__,_| \\__,_| \\___| \\__,_|\n" +
+            "                                                                       ";
+    public static final String startMessage2 ="  _    _    _    _    _    _    _     _    _    _     _    _    _    _     _    _    _     _    _    _    _  \n" +
+            " / \\  / \\  / \\  / \\  / \\  / \\  / \\   / \\  / \\  / \\   / \\  / \\  / \\  / \\   / \\  / \\  / \\   / \\  / \\  / \\  / \\ \n" +
+            "( C )( r )( e )( a )( t )( e )( d ) ( b )( y )( : ) ( K )( o )( b )( a ) ( a )( n )( d ) ( I )( d )( b )( i )\n" +
+            " \\_/  \\_/  \\_/  \\_/  \\_/  \\_/  \\_/   \\_/  \\_/  \\_/   \\_/  \\_/  \\_/  \\_/   \\_/  \\_/  \\_/   \\_/  \\_/  \\_/  \\_/";
     public static final int maxInvitesPerFaction = 14; // >> GUI limit
     public static final int maxMembersPerFaction = 14; // >> GUI limit
     public static final int maxRanksPerFaction = 28; // >> GUI limit

@@ -1,7 +1,6 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
-import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import org.bukkit.entity.Player;
 

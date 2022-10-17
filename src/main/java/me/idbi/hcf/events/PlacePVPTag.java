@@ -2,9 +2,8 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf.classes.Archer;
+import me.idbi.hcf.classes.subClasses.Archer;
 import me.idbi.hcf.tools.HCF_Timer;
-import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,7 +37,7 @@ public class PlacePVPTag implements Listener {
             if (HCF_Timer.checkArcherTimer(victim)) {
                 double dmg = e.getDamage();
                 System.out.println("Archertag damage");
-                e.setDamage(dmg + (dmg * Archer.ArcherTagModifyer / 100));
+                e.setDamage(dmg + (dmg * Archer.ArcherTagDamageAmplifier / 100));
             }
 
         }

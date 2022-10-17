@@ -8,7 +8,6 @@ import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
-import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -46,6 +45,8 @@ public class Faction_Create {
                 assert leader_rank != null;
                 default_rank.isDefault = true;
                 leader_rank.isLeader = true;
+                default_rank.priority   = -9999;
+                leader_rank.priority    =  9999;
                 leader_rank.saveRank();
                 default_rank.saveRank();
                 faction.ApplyPlayerRank(p, leader_rank.name);

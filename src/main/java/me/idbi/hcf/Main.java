@@ -4,11 +4,12 @@ package me.idbi.hcf;
 import me.idbi.hcf.CustomFiles.*;
 import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf.classes.Bard;
+import me.idbi.hcf.TabManager.PlayerList;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.koth.KOTH;
 import me.idbi.hcf.tools.*;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +26,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static me.idbi.hcf.HCF_Rules.maxMembersPerFaction;
+import static me.idbi.hcf.HCF_Rules.*;
 
 
 public final class Main extends JavaPlugin implements Listener {
@@ -43,7 +44,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static int WARZONE_SIZE;
     public static double MAX_DTR;
     public static double DEATH_DTR;
-
+    public static boolean abilities_loaded = false;
     public static int DTR_REGEN_TIME;
 
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
@@ -100,6 +101,7 @@ public final class Main extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEnable() {
         long deltatime = System.currentTimeMillis();
+
         kothRewardsGUI = new ArrayList<>();
         EOTWStarted = System.currentTimeMillis() / 1000;
         blacklistedRankNames = new ArrayList<>();
@@ -115,7 +117,8 @@ public final class Main extends JavaPlugin implements Listener {
         deathban = Boolean.parseBoolean(ConfigLibrary.Deathban.getValue());
         claim_price_multiplier = Double.parseDouble(ConfigLibrary.Claim_price_multiplier.getValue());
         death_time = Integer.parseInt(ConfigLibrary.Death_time_seconds.getValue());
-        debug = Boolean.parseBoolean(ConfigLibrary.Debug.getValue());
+        //debug = Boolean.parseBoolean(ConfigLibrary.Debug.getValue());
+        debug = false;
         faction_startingmoney = Integer.parseInt(ConfigLibrary.Faction_default_balance.getValue());
         max_members_pro_faction = Integer.parseInt(ConfigLibrary.MAX_FACTION_MEMBERS.getValue());
         DTR_REGEN_TIME = Integer.parseInt(ConfigLibrary.DTR_REGEN_TIME_SECONDS.getValue());
@@ -132,6 +135,7 @@ public final class Main extends JavaPlugin implements Listener {
                 ConfigLibrary.DATABASE_USER.getValue(),
                 ConfigLibrary.DATABASE_PASSWORD.getValue());
         Plugin multi = getServer().getPluginManager().getPlugin("Multiverse-Core");
+
         if (con == null)
             return;
         new SQL_Generator();
@@ -166,51 +170,40 @@ public final class Main extends JavaPlugin implements Listener {
         saveDefaultConfig();
         saveConfig();
         KothRewardsFile.setup();
-
-        // Displaynames
-
-        //Commandok / Eventek setupolása
         setupEvents.SetupEvents();
         setupCommands.setupCommands();
-        //Cache Faction Claims
         playertools.setFactionCache();
         playertools.cacheFactionClaims();
         playertools.LoadRanks();
         playertools.prepareKoths();
-        //Setup players
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             playertools.LoadPlayer(player);
         }
-        //Classok
-        Bard.setBardItems();
         Misc_Timers.CheckArmors();
-        ///Misc_Timers.addBardEffects();
         Misc_Timers.DTR_Timer();
         Misc_Timers.Bard_Energy();
-        //Misc_Timers.PvpTag();
-        //Misc_Timers.pvpTimer();
         Misc_Timers.PotionLimiter();
         Misc_Timers.AutoSave();
-        //Misc_Timers.StuckTimers();
-        //Misc_Timers.PearlTimer();
         Misc_Timers.KOTH_Countdown();
         Misc_Timers.CleanupFakeWalls();
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
-        //displayTeams.setupAllTeams();
         //SpawnShield.CalcWall();
+
         if(Main.debug) {
             sendCmdMessage("§1Finished loading the plugin! (" + (System.currentTimeMillis() - deltatime) + " ms)");
             long usedmemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
             sendCmdMessage("§1Used memory: "+ usedmemory*0.000001);
             if (multi != null)
                 sendCmdMessage("§aMultiverse-Core found. Plugin connected to Multiverse-Core\n§aMultiverse-Core version: §a§o" + multi.getDescription().getVersion());
+
         }
         if(max_members_pro_faction > maxMembersPerFaction){
             Main.sendCmdMessage(ChatColor.DARK_RED + "The maximum value that can be set is 14.A faction per member should not exceed this!");
             Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
             Bukkit.getServer().shutdown();
         }
+        System.out.println("\n"+startMessage+"\n"+startMessage2);
     }
 
     @Override
@@ -219,9 +212,6 @@ public final class Main extends JavaPlugin implements Listener {
         // Adatbázis kapcsolat leállítása
         //SaveAll();
         try {
-            con.close();
-            con = null;
-            faction_cache.clear();
             for(Player player : Bukkit.getOnlinePlayers()){
                 if(!Main.player_block_changes.containsKey(player)) continue;
                 List<Location> copy = Main.player_block_changes.get(player);
@@ -236,11 +226,22 @@ public final class Main extends JavaPlugin implements Listener {
                     }
                 }
             }
+            for (Map.Entry<Integer, Faction> integerFactionEntry : faction_cache.entrySet()) {
+                integerFactionEntry.getValue().saveFactionData();
+                for (Faction_Rank_Manager.Rank rank : integerFactionEntry.getValue().ranks) {
+                    rank.saveRank();
+                }
+            }
+            con.close();
+            con = null;
 
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            System.out.println("A KURVA");
+            e.printStackTrace();
         }
 
     }
+
 
 
     // Define classe
@@ -287,7 +288,7 @@ public final class Main extends JavaPlugin implements Listener {
         public ArrayList<HCF_Claiming.Faction_Claim> claims = new ArrayList<>();
         public double DTR = 0;
         public double DTR_MAX = 0;
-        public long DTR_TIMEOUT = 0;
+        public long DTR_TIMEOUT = 0L;
         public inviteManager.factionInvite invites;
 
         public Location homeLocation;
@@ -304,6 +305,9 @@ public final class Main extends JavaPlugin implements Listener {
             this.invites = new inviteManager.factionInvite();
             this.balance = balance;
 
+        }
+        public void saveFactionData(){
+            SQL_Connection.dbExecute(con,"UPDATE factions SET name='?',money='?',leader='?' WHERE ID='?'",factioname, String.valueOf(balance),leader,String.valueOf(factionid));
         }
         public void invitePlayer(Player p) {
             if(memberCount + 1 > max_members_pro_faction || invites.getInvitedPlayers().size()+1 > HCF_Rules.maxInvitesPerFaction ) {
@@ -355,8 +359,10 @@ public final class Main extends JavaPlugin implements Listener {
         }
 
         public Faction_Rank_Manager.Rank FindRankByName(String name) {
+            // Bukkit.broadcastMessage(name);
+            //Bukkit.broadcastMessage("Meow " + name.toCharArray().length);
             for (Faction_Rank_Manager.Rank rank : ranks) {
-                if (Objects.equals(rank.name, name)) {
+                if (rank.name.equalsIgnoreCase(name)) {
                     return rank;
                 }
             }

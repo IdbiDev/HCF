@@ -4,6 +4,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,7 +22,8 @@ public class fc_position implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(sender instanceof Player p){
-            lecgo();
+            //lecgo();
+            playertools.DrawCircle(((Player) sender).getLocation(),5,2, Effect.HEART);
             if(playertools.getMetadata(p,"factionid").equals("0")){
                 p.sendMessage(Messages.NOT_IN_FACTION.queue());
                 return false;
