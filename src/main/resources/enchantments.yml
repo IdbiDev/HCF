@@ -1,0 +1,97 @@
+sharpness:
+  enabled: true
+  displayName: '&7● &eSharpness %level%'
+
+fire_aspect:
+  enabled: true
+  displayName: '&7● &eFire_aspect %level%'
+
+looting:
+  enabled: true
+  displayName: '&7● &eLooting %level%'
+
+knockback:
+  enabled: true
+  displayName: '&7● &eKnockback %level%'
+
+protection:
+  enabled: true
+  displayName: '&7● &eProtection %level%'
+
+fire_protection:
+  enabled: true
+  displayName: '&7● &eFire_protection %level%'
+
+projectile_projection:
+  enabled: true
+  displayName: '&7● &eProjectile_projection %level%'
+
+feather_falling:
+  enabled: true
+  displayName: '&7● &eFeather_falling %level%'
+
+efficiency:
+  enabled: true
+  displayName: '&7● &eEfficiency %level%'
+silk_touch:
+  enabled: true
+  displayName: '&7● &eSilk_touch %level%'
+fortune:
+  enabled: true
+  displayName: '&7● &eFortune %level%'
+power:
+  enabled: true
+  displayName: '&7● &ePower %level%'
+punch:
+  enabled: true
+  displayName: '&7● &ePunch %level%'
+flame:
+  enabled: true
+  displayName: '&7● &eFlame %level%'
+lure:
+  enabled: true
+  displayName: '&7● &eLure %level%'
+
+luck_of_the_sea:
+  enabled: true
+  displayName: '&7● &eLuck_of_the_sea %level%'
+
+unbreaking:
+  enabled: true
+  displayName: '&7● &eUnbreaking %level%'
+
+pull:
+  enabled: true
+  displayName: '&7● &ePull %level%'
+
+combo:
+  enabled: true
+  displayName: '&7● &eCombo %level%'
+
+curse:
+  enabled: true
+  displayName: '&7● &eCurse %level%'
+
+thunder:
+  enabled: true
+  displayName: '&7● &eThunder %level%'
+
+highway:
+  enabled: true
+  displayName: '&7● &eHighway %level%'
+
+vampire:
+  enabled: true
+  displayName: '&7● &eVampire %level%'
+
+recover:
+  enabled: true
+  displayName: '&7● &eRecover %level%'
+
+piercing:
+  enabled: true
+  displayName: '&7● &ePiercing %level%'
+
+poison_arrow:
+  enabled: true
+  displayName: '&7● &ePoison_arrow %level%'
