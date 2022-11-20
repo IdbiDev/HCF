@@ -99,6 +99,7 @@ public class koth implements CommandExecutor, TabCompleter {
                                 System.out.println(lines);
                                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
                             }
+
                             break;
                         case "start":
                             try{

@@ -191,7 +191,8 @@ public enum Messages {
 
     BARD_USED_POWERUP("%prefix% &6You used &b%effect% &6for &b&o%amount%&r&6. [&aBuffed teammates: &b&o%count%&r&6]"),
 
-
+    CANT_DAMAGE_WHILE_PVPTIMER("%prefix% &cYou can't attack while you have a PvP timer on you!"),
+    CANT_DAMAGE_WHILE_PVPTIMER_VICTIM("%prefix% &cThis player has a PvP timer!"),
     STUCK_STARTED("%prefix% &aStuck timer started! You are getting teleported to a safe zone in &o&e%amount%&r&a seconds! Don't move!"),
     STUCK_FINISHED("%prefix%  &bYou successfully teleported to a safe zone!"),
     STUCK_INTERRUPTED("%prefix% &cYou interrupted the stuck timer!"),

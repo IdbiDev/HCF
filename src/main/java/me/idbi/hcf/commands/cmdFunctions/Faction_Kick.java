@@ -35,8 +35,9 @@ public class Faction_Kick {
                         player.sendMessage(Messages.CANT_KICK_LEADER.queue());
                         return;
                     }
-                    playertools.setMetadata(targetPlayer_Online, "faction", "Nincs");
+                    playertools.setMetadata(targetPlayer_Online, "faction", "None");
                     playertools.setMetadata(targetPlayer_Online, "factionid", "0");
+                    playertools.setMetadata(targetPlayer_Online, "rank", "None");
                     f.player_ranks.remove(targetPlayer_Online);
                     f.memberCount--;
                     f.BroadcastFaction(Messages.BC_LEAVE_MESSAGE.repPlayer(targetPlayer_Online).queue());
@@ -50,8 +51,8 @@ public class Faction_Kick {
                         player.sendMessage(Messages.CANT_KICK_LEADER.queue());
                         return;
                     }
-                    SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?',factionname='?' WHERE uuid = '?'", "none","0", "Nincs", targetPlayer_Offline.getUniqueId().toString());
-
+                    SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?',factionname='?' WHERE uuid = '?'", "None","0", "None", targetPlayer_Offline.getUniqueId().toString());
+                    f.memberCount--;
                     f.refreshDTR();
                     Scoreboards.RefreshAll();
                 }

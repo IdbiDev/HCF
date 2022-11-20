@@ -28,7 +28,7 @@ public class Faction_Invite {
                         p.sendMessage(Messages.INVITED_PLAYER.repPlayer(target).queue());
 
                         Clickable_Join.sendMessage(target,
-                                "/f join " + faction.factioname,
+                                "/f join " + faction.name,
                                 Messages.INVITED_BY.repPlayer(p).queue(),
                                 Messages.HOVER_JOIN.queue());
 

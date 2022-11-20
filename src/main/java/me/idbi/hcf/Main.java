@@ -6,10 +6,12 @@ import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.TabManager.PlayerList;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
+import me.idbi.hcf.koth.AutoKoth;
 import me.idbi.hcf.koth.KOTH;
+import me.idbi.hcf.particles.Shapes;
 import me.idbi.hcf.tools.*;
+import me.idbi.hcf.tools.DisplayName.displayTeams;
 import org.bukkit.*;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,9 +31,9 @@ import java.util.*;
 import static me.idbi.hcf.HCF_Rules.*;
 
 
+
 public final class Main extends JavaPlugin implements Listener {
     // Beállítások configba
-
     public static int world_border_radius;
     public static boolean deathban;
     public static int death_time;
@@ -64,6 +66,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static ArrayList<UUID> kothRewardsGUI;
 
     public static List<String> blacklistedRankNames;
+    public static AutoKoth autoKoth = new AutoKoth();
 
     // Egyszerű SQL Connection getter
     public static Connection getConnection(String who) {
@@ -75,7 +78,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static void SaveFactions() {
         for (Map.Entry<Integer, Faction> faction : faction_cache.entrySet()) {
             Main.Faction f = faction.getValue();
-            SQL_Connection.dbExecute(con, "UPDATE factions SET money='?',name='?' WHERE ID = '?'", String.valueOf(f.balance), f.factioname, String.valueOf(f.factionid));
+            SQL_Connection.dbExecute(con, "UPDATE factions SET money='?',name='?' WHERE ID = '?'", String.valueOf(f.balance), f.name, String.valueOf(f.id));
         }
     }
 
@@ -86,7 +89,7 @@ public final class Main extends JavaPlugin implements Listener {
             Player p = value.getKey();
             if (p == null)
                 continue;
-            SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?',money='?',factionname='?',name='?' WHERE UUID='?'", p_Obj.getData("factionid"), p_Obj.getData("rank"), p_Obj.getData("money"), p_Obj.getData("faction"),p.getName(), p.getUniqueId().toString());
+            SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?',money='?',factionname='?',name='?' WHERE UUID='?'", p_Obj.getData("factionid"), p_Obj.getData("rank"), p_Obj.getData("money"), p_Obj.getData("faction"),ChatColor.stripColor(p.getName()), p.getUniqueId().toString());
             // Safe
             //SQL_Connection.dbUpdate(con,"factions",keys,values, "uuid='"+p.getUniqueId().toString()+"'");
         }
@@ -101,7 +104,6 @@ public final class Main extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEnable() {
         long deltatime = System.currentTimeMillis();
-
         kothRewardsGUI = new ArrayList<>();
         EOTWStarted = System.currentTimeMillis() / 1000;
         blacklistedRankNames = new ArrayList<>();
@@ -186,10 +188,17 @@ public final class Main extends JavaPlugin implements Listener {
         Misc_Timers.AutoSave();
         Misc_Timers.KOTH_Countdown();
         Misc_Timers.CleanupFakeWalls();
+        Misc_Timers.ArcherTagEffect();
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
-        //SpawnShield.CalcWall();
 
+        /*
+        DISPLAYNAME THINGS!
+         */
+        displayTeams.setupAllTeams();
+
+        //SpawnShield.CalcWall();
+        new Shapes(20);
         if(Main.debug) {
             sendCmdMessage("§1Finished loading the plugin! (" + (System.currentTimeMillis() - deltatime) + " ms)");
             long usedmemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
@@ -199,11 +208,14 @@ public final class Main extends JavaPlugin implements Listener {
 
         }
         if(max_members_pro_faction > maxMembersPerFaction){
-            Main.sendCmdMessage(ChatColor.DARK_RED + "The maximum value that can be set is 14.A faction per member should not exceed this!");
+            Main.sendCmdMessage(ChatColor.DARK_RED + "The maximum value that can be set is 14. A faction per member should not exceed this!");
             Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
             Bukkit.getServer().shutdown();
         }
         System.out.println("\n"+startMessage+"\n"+startMessage2);
+        autoKoth.startAutoKoth();
+
+        System.out.println(faction_cache.size());
     }
 
     @Override
@@ -244,7 +256,6 @@ public final class Main extends JavaPlugin implements Listener {
     }
 
 
-
     // Define classe
 
     public void setDebugMode(String debugMode) {
@@ -280,9 +291,9 @@ public final class Main extends JavaPlugin implements Listener {
     // Készülőben Illetve talán mégse kéne XD
     public static class Faction {
 
-        public Integer factionid;
+        public Integer id;
 
-        public String factioname;
+        public String name;
 
         public String leader;
         public Integer balance;
@@ -300,15 +311,15 @@ public final class Main extends JavaPlugin implements Listener {
         public int memberCount;
 
         public Faction(Integer id, String name, String leader, Integer balance) {
-            this.factionid = id;
-            this.factioname = name;
+            this.id = id;
+            this.name = name;
             this.leader = leader;
             this.invites = new inviteManager.factionInvite();
             this.balance = balance;
 
         }
         public void saveFactionData(){
-            SQL_Connection.dbExecute(con,"UPDATE factions SET name='?',money='?',leader='?' WHERE ID='?'",factioname, String.valueOf(balance),leader,String.valueOf(factionid));
+            SQL_Connection.dbExecute(con,"UPDATE factions SET name='?',money='?',leader='?' WHERE ID='?'", name, String.valueOf(balance),leader,String.valueOf(id));
         }
         public void invitePlayer(Player p) {
             if(memberCount + 1 > max_members_pro_faction || invites.getInvitedPlayers().size()+1 > HCF_Rules.maxInvitesPerFaction ) {
@@ -395,13 +406,13 @@ public final class Main extends JavaPlugin implements Listener {
         }
 
         public void BroadcastFaction(String message) {
-            Player[] members = playertools.getFactionOnlineMembers(factioname);
+            Player[] members = playertools.getFactionOnlineMembers(name);
             for (Player member : members) {
                 member.sendMessage(message);
             }
         }
         public void PlayerBroadcast(String message) {
-            Player[] members = playertools.getFactionOnlineMembers(factioname);
+            Player[] members = playertools.getFactionOnlineMembers(name);
             for (Player member : members) {
                 member.sendMessage();
             }
@@ -411,7 +422,7 @@ public final class Main extends JavaPlugin implements Listener {
             int total = 0;
             try {
                 PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction = ?");
-                ps.setInt(1,factionid);
+                ps.setInt(1, id);
                 ResultSet rs = ps.executeQuery();
 
                 while (rs.next()) {
@@ -428,7 +439,7 @@ public final class Main extends JavaPlugin implements Listener {
             int total = 0;
             try {
                 PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction = ?");
-                ps.setInt(1,factionid);
+                ps.setInt(1, id);
                 ResultSet rs = ps.executeQuery();
 
                 while (rs.next()) {
@@ -446,10 +457,48 @@ public final class Main extends JavaPlugin implements Listener {
         }
 
     }
-    public static void sendCmdMessage(String msg){
+    public static void sendCmdMessage(String msg) {
         Bukkit.getServer().getConsoleSender().sendMessage(
                 Messages.PREFIX_CMD.queue()+
                 msg
         );
+    }
+    static class FactionHistory {
+        private Date joined;
+        private Date left;
+        private String cause;
+        private String name;
+        private String lastRole;
+        public FactionHistory(Date joined,Date left,String cause,String name,String lastRole) {
+            this.joined = joined;
+            this.left = left;
+            this.cause = cause;
+            this.name = name;
+            this.lastRole = lastRole;
+        }
+    }
+    static class PlayerStatistic {
+        //Class Times
+        public long TotalBardClassTime;
+        public long TotalAssassinClassTime;
+        public long TotalArcherClassTime;
+        public long TotalMinerClassTime;
+        public long TotalClassTime;
+
+        public ArrayList<FactionHistory> factionHistory = new ArrayList<>();
+        PlayerStatistic(Player player){
+            HashMap<String, Object> map = SQL_Connection.dbPoll(con,"SELECT * FROM playerstatistics WHERE uuid='?'",player.getUniqueId().toString());
+            Map<String, Object> ClassTimes = JsonUtils.jsonToMap(new JSONObject(map.get("ClassTimes")));
+            Map<String, Object> FactionHistory = JsonUtils.jsonToMap(new JSONObject(map.get("FactionHistory")));
+            TotalBardClassTime = Long.parseLong(ClassTimes.get("Bard").toString());
+            TotalAssassinClassTime = Long.parseLong(ClassTimes.get("Assassin").toString());
+            TotalArcherClassTime = Long.parseLong(ClassTimes.get("Archer").toString());
+            TotalMinerClassTime = Long.parseLong(ClassTimes.get("Miner").toString());
+            TotalClassTime = Long.parseLong(ClassTimes.get("Total").toString());
+
+            for(Map.Entry<String,Object> f : FactionHistory.entrySet()){
+                //factionHistory.add(new FactionHistory(new Date()));
+            }
+        }
     }
 }

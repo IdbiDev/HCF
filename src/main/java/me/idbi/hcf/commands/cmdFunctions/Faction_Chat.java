@@ -36,7 +36,7 @@ public class Faction_Chat {
                     .setMessage(
                             String.join(" ", args).replace(args[0] + " ", ""))
                     .repPlayer(p)
-                    .setFaction(faction.factioname)
+                    .setFaction(faction.name)
                     .queue()
                     .replace("%rank%", playertools.getMetadata(p, "rank")));
         }

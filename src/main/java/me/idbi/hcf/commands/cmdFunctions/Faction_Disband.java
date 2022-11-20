@@ -33,23 +33,23 @@ public class Faction_Disband {
 //        displayTeams.removePlayerFromTeam(p);
 //        displayTeams.removeTeam(selectedFaction);
 
-        Main.faction_cache.remove(selectedFaction.factionid);
-        Main.nameToFaction.remove(selectedFaction.factioname);
-        Main.factionToname.remove(selectedFaction.factionid);
-        SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(selectedFaction.factionid));
-        SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(selectedFaction.factionid));
-        SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(selectedFaction.factionid));
-        SQL_Connection.dbExecute(con, "UPDATE members SET rank='none',faction=0,factionname='Nincs' WHERE faction='?'", String.valueOf(selectedFaction.factionid));
+        Main.faction_cache.remove(selectedFaction.id);
+        Main.nameToFaction.remove(selectedFaction.name);
+        Main.factionToname.remove(selectedFaction.id);
+        SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(selectedFaction.id));
+        SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(selectedFaction.id));
+        SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(selectedFaction.id));
+        SQL_Connection.dbExecute(con, "UPDATE members SET rank='none',faction=0,factionname='None' WHERE faction='?'", String.valueOf(selectedFaction.id));
         for (Player player : playertools.getFactionOnlineMembers(faction)) {
-            playertools.setMetadata(player, "faction", "Nincs");
+            playertools.setMetadata(player, "faction", "None");
             playertools.setMetadata(player, "factionid", "0");
             playertools.setMetadata(player, "rank", "none");
             Scoreboards.refresh(player);
         }
-        LogLibrary.sendFactionDisband(p, selectedFaction.factioname);
+        LogLibrary.sendFactionDisband(p, selectedFaction.name);
         Bukkit.broadcastMessage(Messages.FACTION_DISBAND
                 .repPlayer(p)
-                .setFaction(selectedFaction.factioname)
+                .setFaction(selectedFaction.name)
                 .queue());
         Scoreboards.refresh(p);
         GUI_Sound.playSound(p,"success");

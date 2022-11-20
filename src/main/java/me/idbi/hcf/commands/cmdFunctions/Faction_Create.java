@@ -36,8 +36,8 @@ public class Faction_Create {
                 playertools.setMetadata(p, "factionid", x);
 
                 Main.faction_cache.put(x, faction);
-                Main.factionToname.put(x, faction.factioname);
-                Main.nameToFaction.put(faction.factioname, faction);
+                Main.factionToname.put(x, faction.name);
+                Main.nameToFaction.put(faction.name, faction);
 
                 Faction_Rank_Manager.Rank default_rank = Faction_Rank_Manager.CreateRank(faction, "Default");
                 Faction_Rank_Manager.Rank leader_rank = Faction_Rank_Manager.CreateRank(faction, "Leader");
@@ -59,7 +59,7 @@ public class Faction_Create {
 //                displayTeams.createTeam(faction);
 //                displayTeams.addPlayerToTeam(p);
                 Scoreboards.refresh(p);
-                LogLibrary.sendFactionCreate(p, faction.factioname);
+                LogLibrary.sendFactionCreate(p, faction.name);
                 faction.refreshDTR();
                 GUI_Sound.playSound(p,"success");
 

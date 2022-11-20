@@ -63,7 +63,7 @@ public class GUI_Items {
     public static ItemStack factinoStats(Main.Faction faction) {
         ItemStack is = new ItemStack(Material.COMPASS);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§2§o" + faction.factioname);
+        im.setDisplayName("§2§o" + faction.name);
         String homeLocation;
         if(faction.homeLocation != null)
             homeLocation = faction.homeLocation.getBlockX() + ", " + faction.homeLocation.getBlockY() + ", " + faction.homeLocation.getBlockZ();

@@ -27,7 +27,7 @@ public class Faction_Rank_Manager {
 
         int id = SQL_Connection.dbExecute(con, "INSERT INTO ranks SET name = '?', faction='?'",
                 name,
-                String.valueOf(faction.factionid)
+                String.valueOf(faction.id)
         );
         Rank rank = new Rank(id, name);
         faction.ranks.add(rank);
@@ -44,7 +44,7 @@ public class Faction_Rank_Manager {
                 return null;
         int id = SQL_Connection.dbExecute(con, "INSERT INTO ranks SET name = '?', faction='?'",
                 name,
-                String.valueOf(faction.factionid)
+                String.valueOf(faction.id)
         );
         Rank rank = new Rank(id, name);
         faction.ranks.add(rank);
@@ -61,7 +61,7 @@ public class Faction_Rank_Manager {
             if(entry.getValue().name.equals(rank.name))
                 playertools.setMetadata(entry.getKey(), "rank", newName);
         rank.name = newName;
-        SQL_Connection.dbExecute(con,"UPDATE members SET rank='?' WHERE faction='?' AND rank='?'",newName, String.valueOf(faction.factionid),oldName);
+        SQL_Connection.dbExecute(con,"UPDATE members SET rank='?' WHERE faction='?' AND rank='?'",newName, String.valueOf(faction.id),oldName);
         rank.saveRank();
         Scoreboards.RefreshAll();
         return true;
@@ -76,7 +76,7 @@ public class Faction_Rank_Manager {
         }
         SQL_Connection.dbExecute(con,"UPDATE members SET rank='?' WHERE faction='?' AND rank='?'",
                 faction.getDefaultRank().name,
-                String.valueOf(faction.factionid),
+                String.valueOf(faction.id),
                 name
         );
         SQL_Connection.dbExecute(con,"DELETE FROM ranks WHERE ID = '?'", rank.id.toString());

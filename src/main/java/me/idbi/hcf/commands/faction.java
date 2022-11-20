@@ -59,7 +59,7 @@ public class faction implements CommandExecutor, TabCompleter {
                                 }
                             }
                             for (Map.Entry<Integer, Main.Faction> faction : Main.faction_cache.entrySet()) {
-                                if (faction.getValue().factioname.equalsIgnoreCase(args[1])) {
+                                if (faction.getValue().name.equalsIgnoreCase(args[1])) {
                                     Faction_Show.show(p, args[1]);
                                     return false;
                                 }

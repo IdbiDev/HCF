@@ -96,8 +96,8 @@ public class HCF_Claiming {
                     }
                 }
 
-                int claimid = SQL_Connection.dbExecute(Main.getConnection("commands.Claim"), "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?'",
-                        String.valueOf(faction), faction_start.x + "", faction_start.z + "", faction_end.x + "", faction_end.z + "");
+                int claimid = SQL_Connection.dbExecute(Main.getConnection("commands.Claim"), "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?',type='?'",
+                        String.valueOf(faction), faction_start.x + "", faction_start.z + "", faction_end.x + "", faction_end.z + "",attribute);
                 //HandleSpawn
                     Main.Faction f = Main.faction_cache.get(faction);
                     endpositions.remove(faction);
@@ -126,8 +126,8 @@ public class HCF_Claiming {
                 Point faction_start = startpositions.get(faction);
                 Point faction_end = endpositions.get(faction);
 
-                int claimid = SQL_Connection.dbExecute(Main.getConnection("commands.Claim"), "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?'",
-                        String.valueOf(faction), faction_start.x + "", faction_start.z + "", faction_end.x + "", faction_end.z + "");
+                int claimid = SQL_Connection.dbExecute(Main.getConnection("commands.Claim"), "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?' type='?'",
+                        String.valueOf(faction), faction_start.x + "", faction_start.z + "", faction_end.x + "", faction_end.z + "",attribute);
                 //HandleSpawn
                 Main.Faction f = Main.faction_cache.get(faction);
                 endpositions.remove(faction);
@@ -269,7 +269,7 @@ public class HCF_Claiming {
                     if (thisFaction.getKey() <= -1) {
                         return true;
                     }
-                    return faction != thisFaction.getValue().factionid;
+                    return faction != thisFaction.getValue().id;
                 }
             }
         }
@@ -298,10 +298,11 @@ public class HCF_Claiming {
                 Point playerPoint= new Point(p.getLocation().getBlockX(),p.getLocation().getBlockZ());
                 Point claimrc= new Point(val.startX, val.startZ);
                 Point claimlc= new Point(val.endX, val.endZ);
-                if(FindPoint_old(claimrc.x,claimrc.z,claimlc.x,claimlc.z,playerPoint.x,playerPoint.z)){
+                //if(FindPoint(claimrc.x,claimrc.z,claimlc.x,claimlc.z,playerPoint.x,playerPoint.z)){
+                if(doOverlap(claimlc,claimrc,playerPoint,playerPoint)){
                 //if (FindPoint(val.startX, val.startZ, val.endX, val.endZ, p.getLocation().getBlockX(), p.getLocation().getBlockZ())) {
-                    if (faction == thisFaction.getValue().factionid)
-                        return ChatColor.GREEN + MeineFaction.factioname;
+                    if (faction == thisFaction.getValue().id)
+                        return ChatColor.GREEN + MeineFaction.name;
                     return ChatColor.RED + Main.factionToname.get(thisFaction.getKey());
                 }
             }
@@ -426,7 +427,7 @@ public class HCF_Claiming {
             Main.Faction f = Main.faction_cache.get(factionid);
             List<String> str = new ArrayList<>();
             if(f != null)
-                str.add("§cName: §4"+ f.factioname);
+                str.add("§cName: §4"+ f.name);
             str.add("§cDo NOT modify the faction with the ID 1");
 
 

@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class Faction_Show {
     public static HashMap<Player, Integer> show(Player p, String factionName) {
-        if (factionName.equals("Nincs") || factionName.equals("none")) {
+        if (factionName.equalsIgnoreCase("none")) {
             p.sendMessage(Messages.NO_FACTION_EXISTS.queue());
             return null;
         }
@@ -28,7 +28,7 @@ public class Faction_Show {
         // System.out.println("Faction Name: " + factionName);
         Main.Faction faction = asd.get(factionName);
 
-        String factionStatus = (playertools.isFactionOnline(faction.factioname)
+        String factionStatus = (playertools.isFactionOnline(faction.name)
                 ? Messages.STATUS_DESIGN_ONLINE.queue()
                 : Messages.STATUS_DESIGN_OFFLINE.queue());
         String leaderName = "";
@@ -44,13 +44,13 @@ public class Faction_Show {
         else homeLoc = faction.homeLocation;
 
         for (String line : ListMessages.FACTION_SHOW.setupShow(
-                        faction.factioname, factionStatus, leaderName, String.valueOf(faction.balance),
+                        faction.name, factionStatus, leaderName, String.valueOf(faction.balance),
                         String.valueOf(faction.getKills()),
                         String.valueOf(faction.getDeaths()),
                         homeLoc.getBlockX() + ", " + homeLoc.getBlockZ(),
                         String.valueOf(faction.DTR)
                 )
-                .setMembers(playertools.getRankPlayers(faction.factioname),
+                .setMembers(playertools.getRankPlayers(faction.name),
                         playertools.getPlayersKills()).queueShow()) {
             p.sendMessage(line);
         }

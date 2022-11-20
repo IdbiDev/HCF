@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ public class Archer implements HCF_Class {
         put(PotionEffectType.DAMAGE_RESISTANCE,2);
         put(PotionEffectType.JUMP,0);
     }};
+    public static HashMap<Player, BukkitTask> archerTagEffects = new HashMap<>();
     public static final double ArcherTagDamageAmplifier = 100f;
     @Override
     public boolean CheckArmor(Player p) {
@@ -63,4 +65,5 @@ public class Archer implements HCF_Class {
         }
         playertools.setMetadata(p, "class", "None");
     }
+    
 }

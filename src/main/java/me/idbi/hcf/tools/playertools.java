@@ -5,7 +5,6 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.koth.KOTH;
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -35,13 +34,13 @@ public class playertools {
             setMetadata(player, "class", "none");
             setMetadata(player, "faction", playerMap.get("factionname"));
             setMetadata(player, "adminDuty", false);
-            setMetadata(player, "rank", "none");
+            setMetadata(player, "rank", "None");
             setMetadata(player, "freeze", false);
             setMetadata(player, "factionchat", false);
             String c = HCF_Claiming.sendFactionTerritory(player);
             setMetadata(player, "current_loc", c);
             setMetadata(player, "spawnclaiming", false);
-            setMetadata(player, "bardenergy", 0D);
+            setMetadata(player, "bardenergy", 100D);
             // rankManager.addRankToPlayer(player);
             SQL_Connection.dbExecute(con, "UPDATE members SET online='?' WHERE uuid='?'", "1", player.getUniqueId().toString());
             if (!playerMap.get("faction").equals(0)) {
@@ -127,15 +126,15 @@ public class playertools {
         }
     }
     public static void RenameFaction(Main.Faction faction,String name){
-        for(Player p : getFactionOnlineMembers(faction.factioname)){
+        for(Player p : getFactionOnlineMembers(faction.name)){
             setMetadata(p,"faction",name);
         }
-        String oldname = faction.factioname;
-        faction.factioname = name;
-        Main.faction_cache.put(faction.factionid,faction);
-        Main.nameToFaction.put(faction.factioname,faction);
-        Main.factionToname.put(faction.factionid, faction.factioname);
-        SQL_Connection.dbExecute(con,"UPDATE factions SET name='?' WHERE id='?'",name, String.valueOf(faction.factionid));
+        String oldname = faction.name;
+        faction.name = name;
+        Main.faction_cache.put(faction.id,faction);
+        Main.nameToFaction.put(faction.name,faction);
+        Main.factionToname.put(faction.id, faction.name);
+        SQL_Connection.dbExecute(con,"UPDATE factions SET name='?' WHERE id='?'",name, String.valueOf(faction.id));
         SQL_Connection.dbExecute(con,"UPDATE members SET factionname='?' WHERE factionname='?'",name, oldname);
         Scoreboards.RefreshAll();
     }
@@ -254,7 +253,7 @@ public class playertools {
                 faction.DTR = Double.parseDouble(CalculateDTR(faction));
                 faction.DTR_MAX = Double.parseDouble(CalculateDTR(faction));
                 if (Main.debug)
-                    Main.sendCmdMessage(faction.factioname + " Prepared");
+                    Main.sendCmdMessage(faction.name + " Prepared");
                 if (rs.getString("home") == null)
                     continue;
                 Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(rs.getString("home")));
@@ -386,7 +385,7 @@ public class playertools {
         int count = 0;
         try {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction=?");
-            ps.setInt(1,faction.factionid);
+            ps.setInt(1,faction.id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count++;
@@ -419,8 +418,8 @@ public class playertools {
         Main.Faction faction = new Main.Faction(id, name, "", 0);
 
         Main.faction_cache.put(id, faction);
-        Main.factionToname.put(id, faction.factioname);
-        Main.nameToFaction.put(faction.factioname, faction);
+        Main.factionToname.put(id, faction.name);
+        Main.nameToFaction.put(faction.name, faction);
         return id;
     }
 
@@ -470,7 +469,7 @@ public class playertools {
                             new HCF_Claiming.Point(claim.startX, claim.startZ),
                             new HCF_Claiming.Point(claim.endX, claim.endZ)
                     );
-                    Main.koth_cache.put(faction.factioname, temp);
+                    Main.koth_cache.put(faction.name, temp);
                     //eci.put(faction.factioname, temp);
                 }
             }
@@ -490,7 +489,7 @@ public class playertools {
 
         if(f1 == null || f2 == null)
             return false;
-        return Objects.equals(f1.factionid, f2.factionid);
+        return Objects.equals(f1.id, f2.id);
     }
 
     private static Map<String, Faction_Rank_Manager.Rank> sortbykey(HashMap map) {
@@ -523,14 +522,8 @@ public class playertools {
             center.getWorld().playEffect(new Location(center.getWorld(),angleX,center.getY(),angleZ), effect,effect.getId());
         }
     }*/
-    public static void DrawCircle(Location center,double radius,double smoothness,Effect effect){
-        double angle = 0;
-        while (angle < 360){
-            double radiant_angle = Math.toRadians(angle);
-            double angleX = center.getX() + Math.cos(radiant_angle) * radius;
-            double angleZ = center.getZ() + Math.sin(radiant_angle) * radius;
-            angle = angle + smoothness;
-            center.getWorld().playEffect(new Location(center.getWorld(),angleX,center.getY(),angleZ), effect,effect.getId());
-        }
+
+    public static boolean hasTeam(Player p, String team) {
+        return p.getScoreboard().getTeam(team) != null;
     }
 }

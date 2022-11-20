@@ -3,6 +3,7 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.HCF_Claiming;
+import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,7 +37,14 @@ public class onDamage implements Listener {
                     if(damagerClaim.attribute.equals("protected")){
                         e.setCancelled(true);
                         damager.sendMessage(Messages.CANT_DAMAGE_PROTECTED_AREA.queue());
+                        return;
                     }
+                }
+                if(HCF_Timer.getPvPTimerCoolDownSpawn(victim) != 0){
+                    damager.sendMessage(Messages.CANT_DAMAGE_WHILE_PVPTIMER_VICTIM.queue());
+                }
+                if(HCF_Timer.getPvPTimerCoolDownSpawn(damager) != 0){
+                    damager.sendMessage(Messages.CANT_DAMAGE_WHILE_PVPTIMER.queue());
                 }
             } catch (NullPointerException ex) {
                 ex.printStackTrace();

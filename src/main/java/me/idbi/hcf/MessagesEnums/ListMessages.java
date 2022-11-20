@@ -15,13 +15,13 @@ public enum ListMessages {
     FACTION_SHOW(Arrays.asList(
             "&8&m        &c %faction_name% &f[%faction_status%&f] &8&m        ",
             "&7&l✣ &eLeader: &a%leader_name%",
-            "&6Tagok:",
+            "&6Members:",
             "%members_list_categories_and_members%",
             " ",
-            "&7┌ &eSzámla: &a$%faction_balance%",
-            "&7├ &eÖlések: &a%faction_kills%",
-            "&7├ &eHalálok: &a%faction_deaths%",
-            "&7├ &ePozíció: &a%faction_pos%",
+            "&7┌ &eBalance: &a$%faction_balance%",
+            "&7├ &eKills: &a%faction_kills%",
+            "&7├ &eDeaths: &a%faction_deaths%",
+            "&7├ &eHome Location: &a%faction_pos%",
             "&7└ &eDTR: &a%faction_dtr%"
     )),
 

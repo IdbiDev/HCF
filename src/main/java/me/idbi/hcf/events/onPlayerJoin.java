@@ -42,8 +42,10 @@ public class onPlayerJoin implements Listener {
                     Integer.parseInt(str.split(" ")[4])
             );
             e.getPlayer().teleport(spawn);
+            //pvpTimer
         }
         e.setJoinMessage("");
+        
         if (!Objects.equals(playertools.getMetadata(p, "factionid"), "0")) {
             Main.Faction f = playertools.getPlayerFaction(e.getPlayer());
             if(f != null) {

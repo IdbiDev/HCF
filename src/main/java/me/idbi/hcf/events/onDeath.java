@@ -62,10 +62,10 @@ public class onDeath implements Listener {
 
 
         if (faction !=null) {
-            if (!Main.DTR_REGEN.containsKey(faction.factionid)) {
-                Main.DTR_REGEN.put(faction.factionid, System.currentTimeMillis() + DTR_REGEN_TIME * 1000L);
+            if (!Main.DTR_REGEN.containsKey(faction.id)) {
+                Main.DTR_REGEN.put(faction.id, System.currentTimeMillis() + DTR_REGEN_TIME * 1000L);
                 if (Main.debug)
-                    System.out.println("Death >> " + faction.factioname);
+                    System.out.println("Death >> " + faction.name);
                 faction.DTR -= Main.DEATH_DTR;
             }
         }

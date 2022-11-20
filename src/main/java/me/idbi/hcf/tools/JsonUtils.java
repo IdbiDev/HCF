@@ -7,7 +7,7 @@ import java.util.*;
 
 
 public class JsonUtils {
-    //Lol lopott pls dont kill meh
+    //Lol lopott pls dont kill me
 
     public static Map<String, Object> jsonToMap(org.json.JSONObject json) {
         Map<String, Object> retMap = new HashMap<>();
@@ -17,10 +17,8 @@ public class JsonUtils {
         }
         return retMap;
     }
-
     public static Map<String, Object> toMap(org.json.JSONObject object) {
         Map<String, Object> map = new HashMap<String, Object>();
-
         Iterator<String> keysItr = object.keySet().iterator();
         while (keysItr.hasNext()) {
             String key = keysItr.next();

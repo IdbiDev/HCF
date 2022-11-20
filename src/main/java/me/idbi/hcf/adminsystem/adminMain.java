@@ -72,7 +72,7 @@ public class adminMain {
             return;
         }
         Main.Faction selectedFaction = Main.nameToFaction.get(faction);
-        selectedFaction.factioname = newName;
+        selectedFaction.name = newName;
         //Todo: Broadcast the change
         Main.Faction f = Main.nameToFaction.get(faction);
         f.BroadcastFaction(Messages.SET_FACTION_NAME.repExecutor(admin).setFaction(newName).queue());
@@ -119,21 +119,21 @@ public class adminMain {
 
         Main.Faction selectedFaction = Main.nameToFaction.get(faction);
 
-        Main.faction_cache.remove(selectedFaction.factionid);
-        Main.nameToFaction.remove(selectedFaction.factioname);
-        Main.factionToname.remove(selectedFaction.factionid);
-        SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(selectedFaction.factionid));
-        SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(selectedFaction.factionid));
-        SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(selectedFaction.factionid));
-        SQL_Connection.dbExecute(con, "UPDATE members SET rank='Nincs',faction=0,factionname='Nincs' WHERE faction='?'", String.valueOf(selectedFaction.factionid));
+        Main.faction_cache.remove(selectedFaction.id);
+        Main.nameToFaction.remove(selectedFaction.name);
+        Main.factionToname.remove(selectedFaction.id);
+        SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(selectedFaction.id));
+        SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(selectedFaction.id));
+        SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(selectedFaction.id));
+        SQL_Connection.dbExecute(con, "UPDATE members SET rank='None',faction=0,factionname='None' WHERE faction='?'", String.valueOf(selectedFaction.id));
         for (Player player : playertools.getFactionOnlineMembers(faction)) {
-            playertools.setMetadata(player, "faction", "Nincs");
+            playertools.setMetadata(player, "faction", "None");
             playertools.setMetadata(player, "factionid", "0");
             playertools.setMetadata(player, "rank", "none");
 
         }
 
-        Bukkit.broadcastMessage(Messages.DELETE_FACTION_BY_ADMIN.repExecutor(admin).setFaction(selectedFaction.factioname).queue());
+        Bukkit.broadcastMessage(Messages.DELETE_FACTION_BY_ADMIN.repExecutor(admin).setFaction(selectedFaction.name).queue());
     }
 
     public static void setFactionLeader(Player admin, String faction, String Leader) {
@@ -165,9 +165,9 @@ public class adminMain {
         }
         Player p = Bukkit.getPlayer(target);
         Main.Faction selectedFaction = Main.nameToFaction.get(faction);
-        playertools.setMetadata(p, "factionid", selectedFaction.factionid);
-        playertools.setMetadata(p, "faction", selectedFaction.factioname);
-        SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',factionname='?' WHERE uuid='?'", String.valueOf(selectedFaction.factionid), selectedFaction.factioname, p.getUniqueId().toString());
+        playertools.setMetadata(p, "factionid", selectedFaction.id);
+        playertools.setMetadata(p, "faction", selectedFaction.name);
+        SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',factionname='?' WHERE uuid='?'", String.valueOf(selectedFaction.id), selectedFaction.name, p.getUniqueId().toString());
 
         //Sikeres belépés
         p.sendMessage(Messages.JOIN_MESSAGE.queue());
@@ -190,8 +190,8 @@ public class adminMain {
         }
         Player p = Bukkit.getPlayer(target);
         playertools.setMetadata(p, "factionid", "0");
-        playertools.setMetadata(p, "faction", "Nincs");
-        SQL_Connection.dbExecute(con, "UPDATE members SET faction=0,factionname='Nincs' WHERE uuid='?'", p.getUniqueId().toString());
+        playertools.setMetadata(p, "faction", "None");
+        SQL_Connection.dbExecute(con, "UPDATE members SET faction=0,factionname='None' WHERE uuid='?'", p.getUniqueId().toString());
         Scoreboards.refresh(p);
 
 
@@ -226,7 +226,7 @@ public class adminMain {
             playertools.setMetadata(admin, "spawnclaiming", true);
             HCF_Claiming.SpawnPrepare(admin);
         } else if (state.equalsIgnoreCase("claim")) {
-            if (HCF_Claiming.FinishClaiming(1,admin,"protected")) {
+            if (HCF_Claiming.ForceFinishClaim(1,admin,"protected")) {
                 //Todo: Kurvva sikerült
                 playertools.setMetadata(admin, "spawnclaiming", false);
                 admin.sendMessage(Messages.SPAWN_CLAIM_SUCCESS.queue());

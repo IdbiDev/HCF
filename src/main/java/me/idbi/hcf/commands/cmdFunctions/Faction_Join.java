@@ -33,7 +33,7 @@ public class Faction_Join {
                 //Sikeres belépés
                 p.sendMessage(Messages.JOIN_MESSAGE.queue());
                 playertools.setMetadata(p, "factionid", id_faction);
-                playertools.setMetadata(p, "faction", faction.factioname);
+                playertools.setMetadata(p, "faction", faction.name);
                 Faction_Rank_Manager.Rank defa = faction.getDefaultRank();
                 faction.ApplyPlayerRank(p, defa.name);
                 //Faction -> xy belépett
@@ -41,7 +41,7 @@ public class Faction_Join {
                 //Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
                 faction.BroadcastFaction(Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
 
-                SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',factionname='?',rank='?' WHERE uuid='?'", String.valueOf(id_faction), faction.factioname, faction.getDefaultRank().name, p.getUniqueId().toString());
+                SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',factionname='?',rank='?' WHERE uuid='?'", String.valueOf(id_faction), faction.name, faction.getDefaultRank().name, p.getUniqueId().toString());
 
                 Scoreboards.refresh(p);
                 faction.refreshDTR();

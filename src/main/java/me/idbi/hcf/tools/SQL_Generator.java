@@ -44,13 +44,13 @@ public class SQL_Generator {
                       `ID` int(255) NOT NULL AUTO_INCREMENT,
                       `name` varchar(255) NOT NULL,
                       `faction` int(255) NOT NULL DEFAULT 0,
-                      `rank` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT 'none',
+                      `rank` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT 'None',
                       `kills` int(255) NOT NULL DEFAULT 0,
                       `deaths` int(255) NOT NULL DEFAULT 0,
                       `money` int(255) NOT NULL DEFAULT 5000,
                       `uuid` text DEFAULT NULL,
                       `online` int(2) NOT NULL DEFAULT 0,
-                      `factionname` varchar(255) NOT NULL DEFAULT 'Nincs',
+                      `factionname` varchar(255) NOT NULL DEFAULT 'None',
                       PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,
@@ -67,6 +67,7 @@ public class SQL_Generator {
                           `RANK_Permission` tinyint(1) NOT NULL DEFAULT 0,
                           `PLAYER_Permission` tinyint(1) NOT NULL DEFAULT 0,
                           `KICK_Permission` tinyint(1) NOT NULL DEFAULT 0,
+                          `priority` int(11) NOT NULL DEFAULT 0,
                           PRIMARY KEY (`ID`)
                         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

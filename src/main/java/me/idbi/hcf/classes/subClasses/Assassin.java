@@ -136,13 +136,13 @@ public class Assassin implements HCF_Class, Listener {
             }
         }
     }
-    public static void TeleportBehindPlayer(Player damager){
+    public static void TeleportBehindPlayer(Player damager) {
         List<Block> sight = damager.getLineOfSight((Set) null, teleportDistance); //Get the blocks in the player's line of sight (the Set is null to not ignore any blocks)
         Player Victim = null;
         double record = 999;
         for (Block block : sight) { //For each block in the list
             damager.getWorld().playEffect(block.getLocation(), Effect.NOTE,1);
-            if (block.getType() != Material.AIR) { //If the block is not air -> obstruction reached, exit loop/seach
+            if (block.getType() != Material.AIR && !(block.getType().isTransparent() || block.getType() == Material.SIGN)) { //If the block is not air -> obstruction reached, exit loop/seach
                 break;
             }
             Location low = block.getLocation(); //Lower corner of the block

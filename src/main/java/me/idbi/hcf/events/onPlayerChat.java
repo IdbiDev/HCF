@@ -23,7 +23,7 @@ public class onPlayerChat implements Listener {
                 e.getPlayer().sendMessage(Messages.NOT_IN_FACTION.queue());
                 return;
             }
-            String msg = Messages.FACTION_CHAT.setMessage(e.getMessage()).repPlayer(e.getPlayer()).setFaction(faction.factioname).queue();
+            String msg = Messages.FACTION_CHAT.setMessage(e.getMessage()).repPlayer(e.getPlayer()).setFaction(faction.name).queue();
             faction.BroadcastFaction(msg.replace("%rank%", playertools.getMetadata(e.getPlayer(), "rank")));
         }else{
             if(!playertools.getMetadata(e.getPlayer(), "factionid").equals("0")) {

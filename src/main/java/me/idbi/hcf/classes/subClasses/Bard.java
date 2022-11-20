@@ -3,12 +3,17 @@ package me.idbi.hcf.classes.subClasses;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.classes.HCF_Class;
+import me.idbi.hcf.particles.Shapes;
 import me.idbi.hcf.tools.playertools;
+import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,6 +107,9 @@ public class Bard implements HCF_Class {
                     PotionEffectType potion = item.effect;
                     p.addPotionEffect(new PotionEffect(potion, 180, 0, false, false));
                 }
+                if(!bardplayer.isSneaking())
+                    Shapes.DrawCircle(bardplayer.getLocation(),10,2, Effect.HAPPY_VILLAGER);
+                //bardplayer.getWorld().playEffect(new Location(bardplayer.getWorld(),bardplayer.getLocation().getBlockX(),bardplayer.getLocation().getBlockY(),bardplayer.getLocation().getBlockZ()), Effect.HAPPY_VILLAGER,Effect.HAPPY_VILLAGER.getId());
             }
         }
     }
@@ -135,6 +143,8 @@ public class Bard implements HCF_Class {
                 playertools.setMetadata(bardplayer, "bardenergy", currentEnergy - item.cost);
                 for (Player p : getFactionMembersInDistance(bardplayer, 15)) {
                     PotionEffectType potion = item.effect;
+                    if(!bardplayer.isSneaking())
+                        p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
                     p.getActivePotionEffects().forEach(potionEffect -> {
                         if (potionEffect.getType().equals(potion)) {
                             p.removePotionEffect(potion);
@@ -142,6 +152,21 @@ public class Bard implements HCF_Class {
                         }
                     });
                 }
+                new BukkitRunnable(){
+                    private int counts = 0;
+                    private final Location loc = bardplayer.getLocation();
+                    @Override
+                    public void run() {
+                        if(bardplayer.isSneaking()) {
+                            cancel();
+                            return;
+                        }
+                        if(counts+1 > 15)
+                            cancel();
+                        counts++;
+                        Shapes.DrawCircle(loc,counts,2, Effect.HAPPY_VILLAGER);
+                    }
+                }.runTaskTimer(m,0L,0L);
                 bardplayer.sendMessage(Messages.BARD_USED_POWERUP
                         .setAmount(String.valueOf(item.cost))
                         .repBardEffects(

@@ -68,8 +68,8 @@ public class Click_InviteManager implements Listener {
                                     p.sendMessage(Messages.INVITED_PLAYER.repPlayer(target).queue());
                                     //target.sendMessage(Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue());
                                     Clickable_Join.sendMessage(target,
-                                            "/f join " + faction.factioname,
-                                            Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue(),
+                                            "/f join " + faction.name,
+                                            Messages.INVITED_BY.repExecutor(p).setFaction(faction.name).queue(),
                                             Messages.HOVER_JOIN.queue());
 
                                     faction.BroadcastFaction(Messages.FACTION_INVITE_BROADCAST.repExecutor(p).repPlayer(target).queue());

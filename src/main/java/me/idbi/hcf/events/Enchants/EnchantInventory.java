@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf_abilitys.Enchantments.CustomEnchants;
 import me.idbi.hcf_abilitys.Enchantments.EncListeners.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -86,10 +88,16 @@ public class EnchantInventory implements Listener {
                 for (Map.Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
                     item.removeEnchantment(entry.getKey());
                 }
-
-                item.addEnchantment(obj.getEnchantment(), obj.getLevel());
-                if(Main.abilities_loaded)
+                try{
+                    EnchantmentStorageMeta meta_ench = (EnchantmentStorageMeta) item.getItemMeta();
+                    meta_ench.addStoredEnchant(obj.getEnchantment(), obj.getLevel(),true);
+                    item.setItemMeta(meta_ench);
+                }catch (ClassCastException ignored){
+                    item.addEnchantment(obj.getEnchantment(), obj.getLevel());
+                }
+                if(Main.abilities_loaded) {
                     item = Utils.updateLore(item);
+                }
                 p.setLevel(p.getLevel() - 20);
 
                 e.getWhoClicked().getInventory().addItem(item).values().forEach(itemstack ->

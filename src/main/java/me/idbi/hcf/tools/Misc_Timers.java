@@ -9,6 +9,7 @@ import me.idbi.hcf.classes.ClassSelector;
 import me.idbi.hcf.classes.subClasses.Bard;
 import me.idbi.hcf.koth.KOTH;
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -36,7 +37,6 @@ public class Misc_Timers {
                     if (!playertools.HasMetaData(player, "class")) continue;
                     if (playertools.getMetadata(player, "class").equalsIgnoreCase("bard")){
                         Bard.useSimpleBardEffect(player);
-
                     }
                 }
             }
@@ -146,6 +146,11 @@ public class Misc_Timers {
                         shouldRefresh = true;
                         //Scoreboards.refresh(player);
                     }
+                    //PvPTimer
+                    if (HCF_Timer.getPvPTimerCoolDownSpawn(player) != 0) {
+                        shouldRefresh = true;
+                        //Scoreboards.refresh(player);
+                    }
                     if(shouldRefresh)
                         Scoreboards.refresh(player);
                     //Class selector
@@ -153,7 +158,7 @@ public class Misc_Timers {
                     if (!playertools.getMetadata(player, "class").equalsIgnoreCase("bard")) continue;
                     if (!(Double.parseDouble(playertools.getMetadata(player, "bardenergy")) >= 100D)) {
                         Scoreboards.refresh(player);
-                        playertools.setMetadata(player, "bardenergy", Double.parseDouble(playertools.getMetadata(player, "bardenergy")) + 0.1D);
+                        playertools.setMetadata(player, "bardenergy", Double.parseDouble(playertools.getMetadata(player, "bardenergy")) + 50D);
                     }
                 }
             }
@@ -168,7 +173,7 @@ public class Misc_Timers {
                     //TODO: Scoreboard format MIN:SS
                     KOTH.GLOBAL_TIME--;
                     if(KOTH.GLOBAL_TIME % 30 == 0)
-                        Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
+                        Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.name).repTime_formatted(GLOBAL_TIME).queue());
                       //  Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
                     if(KOTH.GLOBAL_TIME <= 0){
 
@@ -274,6 +279,22 @@ public class Misc_Timers {
 
             }
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 1);
+    }
+    public static void ArcherTagEffect() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    try {
+                         if(HCF_Timer.checkArcherTimer(player)){
+                             player.getWorld().playEffect(player.getLocation().add(0,1,0), Effect.COLOURED_DUST,Effect.COLOURED_DUST.getId());
+                         }
+                    } catch (Exception ignore) {}
+                }
+
+            }
+        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 10);
     }
     public static void DeleteWallsForPlayer(Player player){
         new BukkitRunnable() {

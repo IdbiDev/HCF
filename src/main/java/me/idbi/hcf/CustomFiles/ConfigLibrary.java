@@ -23,6 +23,7 @@ public enum ConfigLibrary {
     Archer_tag("30"),
     Golden_Apple_Cooldown("10"),
     OP_Golden_Apple_Cooldown("3600"),
+    PvPTimer("1800"),
     Spawn_location("0 64 0 0 0"),
     Enchant_xp_cost("20"),
     Faction_default_balance("1000"),

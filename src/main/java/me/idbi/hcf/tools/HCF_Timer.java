@@ -16,6 +16,7 @@ public class HCF_Timer {
     public static final HashMap<Player, Long> stuckTimers = new HashMap<>();
     public static final HashMap<Player, Long> golden_apple_Timers = new HashMap<>();
     public static final HashMap<Player, Long> OP_Golden_Apple_Timers = new HashMap<>();
+    public static final HashMap<Player, Long> PVPTimers = new HashMap<>();
     // Ms >> Duration
     private static final int combatTimerDuration = Integer.parseInt(ConfigLibrary.Combat_time.getValue()) * 1000;
     // Ms >> Duration
@@ -26,6 +27,7 @@ public class HCF_Timer {
     private static final int StuckTimerDuration = Integer.parseInt(ConfigLibrary.STUCK_TIMER_DURATION.getValue()) * 1000;
     private static final int Golden_Apple_Cooldown = Integer.parseInt(ConfigLibrary.Golden_Apple_Cooldown.getValue()) * 1000;
     private static final int OP_Golden_Apple_Cooldown = Integer.parseInt(ConfigLibrary.OP_Golden_Apple_Cooldown.getValue()) * 1000;
+    private static final int PvpTimerDuration = Integer.parseInt(ConfigLibrary.OP_Golden_Apple_Cooldown.getValue()) * 1000;
 
     public static boolean addCombatTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
@@ -264,6 +266,28 @@ public class HCF_Timer {
     public static void removePVPTag(Player p){
         timers.remove(p);
     }
+    
+    public static boolean addPvPTimerCoolDownSpawn(Player player) {
+        if (!PVPTimers.containsKey(player)) {
+            PVPTimers.put(player, System.currentTimeMillis() + PvpTimerDuration);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    public static long getPvPTimerCoolDownSpawn(Player player) {
+        if (PVPTimers.containsKey(player)) {
+            if (System.currentTimeMillis() >= PVPTimers.get(player)) {
+                PVPTimers.remove(player);
+                Scoreboards.refresh(player);
+                return 0;
+            } else {
+                return PVPTimers.get(player) - System.currentTimeMillis();
+            }
+        } else {
+            return 0;
+        }
+    }
 
 }

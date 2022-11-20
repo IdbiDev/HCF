@@ -53,7 +53,7 @@ public class onPlayerMove implements Listener {
                 }
             }
             String c = HCF_Claiming.sendFactionTerritory(e.getPlayer());
-            if (!Objects.equals(playertools.getMetadata(e.getPlayer(), "current_loc"), c)) {
+            if (!(playertools.getMetadata(e.getPlayer(), "current_loc").equalsIgnoreCase(c))) {
                 e.getPlayer().sendMessage(Messages.LEAVE_ZONE.setZone(playertools.getMetadata(e.getPlayer(), "current_loc")).queue());
                 e.getPlayer().sendMessage(Messages.ENTERED_ZONE.setZone(c).queue());
                 playertools.setMetadata(e.getPlayer(), "current_loc", c);

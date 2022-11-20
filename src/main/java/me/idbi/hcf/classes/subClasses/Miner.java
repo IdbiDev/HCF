@@ -67,6 +67,5 @@ public class Miner implements HCF_Class {
         }else{
             p.removePotionEffect(PotionEffectType.INVISIBILITY);
         }
-
     }
 }

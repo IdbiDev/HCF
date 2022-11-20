@@ -119,7 +119,6 @@ public class Scoreboards {
             scoreNumber++;
         }
 
-
         for (String line : fix) {
             if (line.equals("empty")) {
                 if(scoreNumber == 0) {

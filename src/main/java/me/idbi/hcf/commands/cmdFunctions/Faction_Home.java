@@ -42,12 +42,12 @@ public class Faction_Home implements Listener {
         }};
         HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(p.getLocation().getBlockX(),p.getLocation().getBlockZ());
         if(claim != null) {
-            if (claim.faction == faction.factionid) {
+            if (claim.faction == faction.id) {
                 faction.setHomeLocation(p.getLocation());
 
                 JSONObject object = new JSONObject(map);
 
-                SQL_Connection.dbExecute(con, "UPDATE factions SET home = '?' WHERE ID='?'", object.toString(), String.valueOf(faction.factionid));
+                SQL_Connection.dbExecute(con, "UPDATE factions SET home = '?' WHERE ID='?'", object.toString(), String.valueOf(faction.id));
                 p.sendMessage(Messages.SETHOME_MESSAGE.queue());
                 faction.BroadcastFaction(Messages.SETHOME_UPDATE_FACTION.repPlayer(p).repCoords(p.getLocation().getBlockX(),p.getLocation().getBlockY(),p.getLocation().getBlockZ()).queue());
             }
@@ -60,7 +60,7 @@ public class Faction_Home implements Listener {
             p.sendMessage(Messages.NOT_IN_FACTION.queue());
             return;
         }
-        HashMap<String, Object> json = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID = '?' AND home IS NOT NULL", String.valueOf(faction.factionid));
+        HashMap<String, Object> json = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID = '?' AND home IS NOT NULL", String.valueOf(faction.id));
         if (json.size() > 0) {
             Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(json.get("home").toString()));
             Location loc = new Location(

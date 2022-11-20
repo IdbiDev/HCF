@@ -2,14 +2,19 @@ package me.idbi.hcf.commands;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.particles.Shapes;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf_abilitys.Enchantments.CustomEnchants;
 import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
 import java.sql.Connection;
 import java.util.UUID;
@@ -22,8 +27,6 @@ public class fc_position implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(sender instanceof Player p){
-            //lecgo();
-            playertools.DrawCircle(((Player) sender).getLocation(),5,2, Effect.HEART);
             if(playertools.getMetadata(p,"factionid").equals("0")){
                 p.sendMessage(Messages.NOT_IN_FACTION.queue());
                 return false;
