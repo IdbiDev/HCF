@@ -20,6 +20,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.sql.Connection;
@@ -47,6 +50,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static double MAX_DTR;
     public static double DEATH_DTR;
     public static boolean abilities_loaded = false;
+
     public static int DTR_REGEN_TIME;
 
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
@@ -146,6 +150,7 @@ public final class Main extends JavaPlugin implements Listener {
         Faction_Home.teleportPlayers = new ArrayList<>();
 
         SetupBot.setup();
+        EnchantmentFile.setup();
 
         // Config
         ArrayList<String> scoreboardList = new ArrayList<String>() {{
@@ -417,6 +422,33 @@ public final class Main extends JavaPlugin implements Listener {
                 member.sendMessage();
             }
         }
+
+        public void addPrefixPlayer(Player p) {
+            Scoreboard sb = playertools.getSB(p, this.id + "");
+            Team team = sb.getTeam(this.id + "");
+            team.addEntry(p.getName());
+            p.setPlayerListName("§a" + p.getName());
+            Bukkit.broadcastMessage(p.getName() + " " + team.hasEntry(p.getName()) + " " + team.getPrefix() + "a");
+            p.setScoreboard(sb);
+            // System.out.println("Entry Team: " + p.getScoreboard().getEntryTeam(p.getName()));
+        }
+
+        private void print(Player p) {
+            Scoreboard sb = p.getScoreboard();
+            Team team = sb.getTeam(this.id + "");
+            Bukkit.broadcastMessage(p.getName() + " Teszt: " + team.hasEntry(p.getName()) + " Prefix: " + team.getPrefix() + "a");
+
+        }
+
+        public void removePrefixPlayer(Player p) {
+            Scoreboard sb = playertools.getSB(p, this.id + "");
+            Team team = sb.getTeam(this.id + "");
+            team.removeEntry(p.getName());
+            Bukkit.broadcastMessage(p.getName() + " " + team.hasEntry(p.getName()) + " " + team.getPrefix() + "a");
+            p.setScoreboard(sb);
+            // System.out.println("Entry Team: " + p.getScoreboard().getEntryTeam(p.getName()));
+        }
+
 
         public int getKills(){
             int total = 0;

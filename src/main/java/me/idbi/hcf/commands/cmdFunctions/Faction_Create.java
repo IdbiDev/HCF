@@ -5,6 +5,7 @@ import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
@@ -56,8 +57,11 @@ public class Faction_Create {
                 // Kiíratás global chatre ->
                 //                              xy faction létre jött
                 Bukkit.broadcastMessage(Messages.FACTION_CREATON.getMessage().setFaction(name).repPlayer(p).queue());
-//                displayTeams.createTeam(faction);
-//                displayTeams.addPlayerToTeam(p);
+
+                // displayTeams.createTeam(faction);
+                // displayTeams.addPlayerToTeam(p);
+                faction.addPrefixPlayer(p);
+
                 Scoreboards.refresh(p);
                 LogLibrary.sendFactionCreate(p, faction.name);
                 faction.refreshDTR();

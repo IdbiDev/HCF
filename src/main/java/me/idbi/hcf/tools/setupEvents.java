@@ -104,5 +104,6 @@ public class setupEvents {
 
         getServer().getPluginManager().registerEvents(new TabManager(), Main.getPlugin(Main.class));
 
+        getServer().getPluginManager().registerEvents(new displayTeams(), Main.getPlugin(Main.class));
     }
 }

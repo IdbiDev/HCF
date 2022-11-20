@@ -73,7 +73,7 @@ public class displayTeams implements Listener {
         TabAPI.getInstance().getTeamManager().updateTeamData(tab);
     }
 
-    /*public static void setupAllTeams() {
+    public static void setupAllTeams() {
         for (Map.Entry<Integer, Main.Faction> fac : Main.faction_cache.entrySet()) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 Scoreboard sb = p.getScoreboard();
@@ -82,6 +82,7 @@ public class displayTeams implements Listener {
                         : sb.getTeam(fac.getValue().name));
 
                 team.setPrefix("§a");
+                team.setDisplayName("§a");
                 team.setCanSeeFriendlyInvisibles(true);
                 team.setAllowFriendlyFire(false);
 
@@ -102,7 +103,7 @@ public class displayTeams implements Listener {
 
     public static void setupAllTeams2() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            Scoreboard sb = p.getScoreboard();
+            org.bukkit.scoreboard.Scoreboard sb = p.getScoreboard();
             Team team = (sb.getTeam("non-faction") == null ? sb.registerNewTeam("non-faction") : sb.getTeam("non-faction"));
             team.setPrefix("§c");
             for (Player p2 : Bukkit.getOnlinePlayers()) {
@@ -174,6 +175,7 @@ public class displayTeams implements Listener {
 
         Scoreboard sb = p.getScoreboard();
 
+        System.out.println("Added: " + p.getName());
         Team team;
 
         for(Team tim : sb.getTeams()) {
@@ -225,7 +227,7 @@ public class displayTeams implements Listener {
     public static void removePlayerFromTeam(Player p) {
         try {
             Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
-            Scoreboard sb = Main.teams.get(faction);
+            Scoreboard sb = p.getScoreboard();
 
             Team team;
             if(sb.getTeam(faction.name) == null)
@@ -251,5 +253,5 @@ public class displayTeams implements Listener {
         team.setCanSeeFriendlyInvisibles(true);
         team.setAllowFriendlyFire(false);
         return team;
-    }*/
+    }
 }

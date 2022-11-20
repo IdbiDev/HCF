@@ -3,6 +3,7 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
@@ -24,6 +25,10 @@ public class Faction_Leave {
                 playertools.setMetadata(player, "faction", "None");
                 playertools.setMetadata(player, "factionid", "0");
                 playertools.setMetadata(player, "rank", "None");
+
+//                displayTeams.removePlayerFromTeam(player);
+//                displayTeams.addToNonFaction(player);
+                f.removePrefixPlayer(player);
 
                 f.BroadcastFaction(Messages.BC_LEAVE_MESSAGE.repPlayer(player).queue());
                 Scoreboards.refresh(player);

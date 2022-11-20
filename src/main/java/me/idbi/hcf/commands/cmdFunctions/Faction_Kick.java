@@ -3,6 +3,7 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
@@ -42,9 +43,14 @@ public class Faction_Kick {
                     f.memberCount--;
                     f.BroadcastFaction(Messages.BC_LEAVE_MESSAGE.repPlayer(targetPlayer_Online).queue());
                     f.refreshDTR();
-                    SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?',factionname='?' WHERE uuid = '?'", "none","0", "Nincs", targetPlayer_Online.getUniqueId().toString());
+                    SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?',factionname='?' WHERE uuid = '?'", "None","0", "None", targetPlayer_Online.getUniqueId().toString());
+
+//                    displayTeams.removePlayerFromTeam(targetPlayer_Online);
+//                    displayTeams.addToNonFaction(targetPlayer_Online);
+                    f.removePrefixPlayer(targetPlayer_Online);
+
                     Scoreboards.RefreshAll();
-                }else {
+                } else {
                     Main.Faction f = playertools.getPlayerFaction(player);
                     assert f != null;
                     if(Objects.equals(targetPlayer_Offline.getUniqueId().toString(), f.leader)){

@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,11 +13,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.Map;
 import java.util.Objects;
 
 public class onPlayerJoin implements Listener {
+    private Main m = Main.getPlugin(Main.class);
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -51,11 +56,13 @@ public class onPlayerJoin implements Listener {
             if(f != null) {
                 f.BroadcastFaction(
                         Messages.JOIN_FACTION_BC.repPlayer(p).queue());
+                f.addPrefixPlayer(p);
             }
         }
 
-//        displayTeams.setupPlayer(e.getPlayer());
-//        displayTeams.addPlayerToTeam(e.getPlayer());
+        // displayTeams.setupPlayer(e.getPlayer());
+        // displayTeams.addPlayerToTeam(e.getPlayer());
+
         Scoreboards.refresh(p);
 
         for (Map.Entry<LivingEntity, Long> entity : Main.saved_players.entrySet()) {

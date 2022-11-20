@@ -10,6 +10,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.Metadatable;
+import org.bukkit.scoreboard.NameTagVisibility;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -525,5 +529,22 @@ public class playertools {
 
     public static boolean hasTeam(Player p, String team) {
         return p.getScoreboard().getTeam(team) != null;
+    }
+
+    public static Scoreboard getSB(Player p, String team) {
+        if(hasTeam(p, team)) {
+            return p.getScoreboard();
+        } else {
+            Scoreboard b = p.getScoreboard();
+            b.registerNewTeam(team);
+            Team t = b.getTeam(team);
+            t.setPrefix("§aPUG");
+            p.setPlayerListName("§a" + p.getName());
+            t.setDisplayName("§aPUG");
+            t.setNameTagVisibility(NameTagVisibility.ALWAYS);
+            t.setCanSeeFriendlyInvisibles(true);
+            t.setAllowFriendlyFire(false);
+            return b;
+        }
     }
 }

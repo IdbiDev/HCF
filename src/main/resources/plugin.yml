@@ -5,6 +5,8 @@ main: me.idbi.hcf.Main
 prefix: 'HCF+'
 authors: [ Idbi, kbalu ]
 description: FÜR PLAYERS WO WANNA PLAY some HCF
+depend:
+  - TAB
 softdepend:
   - Multiverse-Core
   - HCF-
@@ -26,6 +28,8 @@ commands:
     aliases: [ k, kh, pornhub ]
     description: HCF Koth commands
     #usage: /<command> help
+  enchantment:
+    aliases: [ enc ]
 
 permissions:
   factions.reload:

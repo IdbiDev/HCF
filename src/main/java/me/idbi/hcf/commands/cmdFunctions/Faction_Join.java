@@ -3,6 +3,7 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
@@ -42,6 +43,9 @@ public class Faction_Join {
                 faction.BroadcastFaction(Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
 
                 SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',factionname='?',rank='?' WHERE uuid='?'", String.valueOf(id_faction), faction.name, faction.getDefaultRank().name, p.getUniqueId().toString());
+
+                // displayTeams.addPlayerToTeam(p);
+                faction.addPrefixPlayer(p);
 
                 Scoreboards.refresh(p);
                 faction.refreshDTR();

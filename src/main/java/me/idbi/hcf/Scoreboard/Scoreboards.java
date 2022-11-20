@@ -81,6 +81,8 @@ public class Scoreboards {
 
         sortLists();
 
+        Main.Faction fac = playertools.getPlayerFaction(p);
+
         Collections.reverse(fix);
         Collections.reverse(timers);
 
@@ -134,6 +136,8 @@ public class Scoreboards {
         }
 
         p.setScoreboard(sb);
+        if(fac == null) return;
+        //fac.addPrefixPlayer(p);
         //displayTeams.refreshPlayer(p);
 //        if(!playertools.getMetadata(p, "factionid").equals("0")) {
 //            displayTeams.addPlayerToTeam(p);
