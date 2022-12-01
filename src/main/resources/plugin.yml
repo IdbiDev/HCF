@@ -12,6 +12,7 @@ softdepend:
   - HCF-
 loadbefore:
   - HCF-
+
 commands:
   faction:
     aliases: [ f, factions ]
@@ -28,8 +29,6 @@ commands:
     aliases: [ k, kh, pornhub ]
     description: HCF Koth commands
     #usage: /<command> help
-  enchantment:
-    aliases: [ enc ]
 
 permissions:
   factions.reload:
@@ -39,9 +38,21 @@ permissions:
     children: [
       factions.reload,
       factions.admin.teleport.bypass,
-      factions.admin
+      factions.admin,
+      factions.command.addenchant,
+      factions.command.removeenchant,
+      factions.command.enchantinfo,
+      factions.command.enchantbook
     ]
   factions.admin.teleport.bypass:
     default: op
   factions.admin:
+    default: op
+  factions.command.addenchant:
+    default: op
+  factions.command.removeenchant:
+    default: op
+  factions.command.enchantinfo:
+    default: op
+  factions.command.enchantbook:
     default: op
