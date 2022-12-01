@@ -3,13 +3,13 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.util.Map;
 
 public class Faction_Join {
@@ -49,6 +49,9 @@ public class Faction_Join {
 
                 Scoreboards.refresh(p);
                 faction.refreshDTR();
+                Main.PlayerStatistic stat = Main.playerStatistics.get(p);
+                stat.factionHistory.add(new Main.FactionHistory(new Date().getTime(),0L,null,faction.name, defa.name,faction.id));
+                Main.playerStatistics.put(p,stat);
             } else {
                 //Nem vagy meghíva ebbe a facionbe
                 p.sendMessage(Messages.NOT_INVITED.queue());

@@ -54,14 +54,6 @@ public class PearlFixer implements Listener {
 
         }
     }
-    @EventHandler
-    public void onServerLoad(PluginEnableEvent event){
-
-        if(event.getPlugin().getName().equalsIgnoreCase("HCF-")) {
-            Main.abilities_loaded = true;
-            sendCmdMessage("§aHCF Abilities found,loaded. All features enabled!");
-        }
-    }
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.hasItem() &&

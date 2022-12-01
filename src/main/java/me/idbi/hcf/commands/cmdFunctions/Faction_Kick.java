@@ -3,7 +3,6 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
@@ -12,6 +11,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.util.Objects;
 
 public class Faction_Kick {
@@ -48,7 +48,16 @@ public class Faction_Kick {
 //                    displayTeams.removePlayerFromTeam(targetPlayer_Online);
 //                    displayTeams.addToNonFaction(targetPlayer_Online);
                     f.removePrefixPlayer(targetPlayer_Online);
-
+                    Main.PlayerStatistic stat = Main.playerStatistics.get(targetPlayer_Online);
+                    for(Main.FactionHistory statF : stat.factionHistory){
+                        if(statF.id == f.id){
+                            statF.left = new Date();
+                            statF.cause = "Kicked";
+                            statF.lastRole = f.player_ranks.get(player).name;
+                            statF.name = f.name;
+                        }
+                    }
+                    Main.playerStatistics.put(targetPlayer_Online,stat);
                     Scoreboards.RefreshAll();
                 } else {
                     Main.Faction f = playertools.getPlayerFaction(player);

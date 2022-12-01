@@ -8,6 +8,7 @@ import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
+import java.util.Date;
 
 public class Faction_DepositBank {
     public static final Connection con = Main.getConnection("Faction.cmd");
@@ -37,6 +38,7 @@ public class Faction_DepositBank {
                 if (deposit.transactionSuccessfully()) {
                     p.sendMessage(Messages.FACTION_BANK_DEPOSIT.queue().replace("%amount%", args[1]));
                     Scoreboards.refresh(p);
+
                 }
             } catch (NumberFormatException ex) {
                 p.sendMessage(Messages.FACTION_BANK_NUMBER_ERROR.queue());

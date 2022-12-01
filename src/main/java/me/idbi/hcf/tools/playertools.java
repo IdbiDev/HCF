@@ -11,9 +11,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.scoreboard.NameTagVisibility;
-import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -29,7 +29,7 @@ public class playertools {
     public static void LoadPlayer(Player player) {
         // Loading player From SQL
         HashMap<String, Object> playerMap = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid = '?'", player.getUniqueId().toString());
-        if (playerMap.size() > 0) {
+        if (!playerMap.isEmpty()) {
             Main.player_cache.put(player, new Main.Player_Obj());
             setMetadata(player, "factionid", playerMap.get("faction"));
             setMetadata(player, "kills", playerMap.get("kills"));
@@ -51,9 +51,31 @@ public class playertools {
                 Main.faction_cache.get(Integer.valueOf(String.valueOf(playerMap.get("faction")))).ApplyPlayerRank(player, String.valueOf(playerMap.get("rank")));
             }
             Scoreboards.refresh(player);
+            Main.playerStatistics.put(player,new Main.PlayerStatistic(new JSONObject(playerMap.get("statistics").toString())));
+
         } else {
             // Játékos létrehozása SQL-ben, majd újra betöltjük
             SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',online=0", player.getName(), player.getUniqueId().toString());
+            JSONObject jsonComp = new JSONObject();
+            JSONArray factions = new JSONArray();
+            //JSONArray ClassTimes = new JSONArray();
+            JSONObject classTimes = new JSONObject();
+            classTimes.put("Bard",0);
+            classTimes.put("Assassin",0);
+            classTimes.put("Archer",0);
+            classTimes.put("Miner",0);
+            classTimes.put("Total",0);
+            jsonComp.put("totalFactions", 0);
+            jsonComp.put("MoneySpend", 0);
+            jsonComp.put("MoneyEarned", 0);
+            jsonComp.put("TimePlayed", 0);
+            jsonComp.put("startDate", new Date().getTime());
+            jsonComp.put("lastLogin",new Date().getTime());
+            jsonComp.put("FactionHistory", factions);
+            jsonComp.put("ClassTimes", classTimes);
+            Main.PlayerStatistic m = new Main.PlayerStatistic(jsonComp);
+            m.Save(player);
+            //SQL_Connection.dbExecute(con, "INSERT INTO playerstatistics SET uuid='?',StartDate='?',LastLogin='?'", player.getUniqueId().toString(), new Date().toInstant().toString(),new Date().toInstant().toString());
             LoadPlayer(player);
         }
     }

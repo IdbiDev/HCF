@@ -4,7 +4,6 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,14 +12,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitScheduler;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
 public class onPlayerJoin implements Listener {
-    private Main m = Main.getPlugin(Main.class);
+    private final Main m = Main.getPlugin(Main.class);
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
@@ -75,5 +73,10 @@ public class onPlayerJoin implements Listener {
                 }
             }
         }
+        Main.PlayerStatistic statistic = Main.playerStatistics.get(e.getPlayer());
+        p.sendMessage("Started:"+new Date(statistic.startDate));
+        p.sendMessage("Last Login:"+new Date(statistic.lastLogin));
+        p.sendMessage("Time Played"+(statistic.TimePlayed/1000)/60);
+        p.sendMessage("Total classes"+(statistic.TotalClassTime/1000)/60);
     }
 }

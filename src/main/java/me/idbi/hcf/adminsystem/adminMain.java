@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
+import java.util.Date;
 
 public class adminMain {
     private static final Connection con = Main.getConnection("adminSystem");
@@ -93,6 +94,9 @@ public class adminMain {
 
         player.sendMessage(Messages.GIVE_MONEY.repExecutor(admin).setAmount(String.valueOf(amount)).queue());
         Scoreboards.refresh(player);
+        Main.PlayerStatistic stat = Main.playerStatistics.get(player);
+        stat.MoneyEarned += amount; 
+        Main.playerStatistics.put(player,stat);
     }
 
     public static void TakeMoney(Player admin, String target, int amount) {
@@ -109,6 +113,9 @@ public class adminMain {
 
         player.sendMessage(Messages.TAKE_MONEY.repExecutor(admin).setAmount(String.valueOf(amount)).queue());
         Scoreboards.refresh(player);
+        Main.PlayerStatistic stat = Main.playerStatistics.get(player);
+        stat.MoneySpend += amount;
+        Main.playerStatistics.put(player,stat);
     }
 
     public static void DeleteFaction(Player admin, String faction) {
@@ -130,7 +137,16 @@ public class adminMain {
             playertools.setMetadata(player, "faction", "None");
             playertools.setMetadata(player, "factionid", "0");
             playertools.setMetadata(player, "rank", "none");
-
+            Main.PlayerStatistic stat = Main.playerStatistics.get(player);
+            for(Main.FactionHistory statF : stat.factionHistory){
+                if(statF.id == selectedFaction.id){
+                    statF.left = new Date();
+                    statF.cause = "Deleted";
+                    statF.lastRole = selectedFaction.player_ranks.get(player).name;
+                    statF.name = selectedFaction.name;
+                }
+            }
+            Main.playerStatistics.put(player,stat);
         }
 
         Bukkit.broadcastMessage(Messages.DELETE_FACTION_BY_ADMIN.repExecutor(admin).setFaction(selectedFaction.name).queue());

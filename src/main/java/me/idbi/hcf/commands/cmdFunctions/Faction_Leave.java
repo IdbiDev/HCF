@@ -3,12 +3,12 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.util.Objects;
 
 public class Faction_Leave {
@@ -33,6 +33,16 @@ public class Faction_Leave {
                 f.BroadcastFaction(Messages.BC_LEAVE_MESSAGE.repPlayer(player).queue());
                 Scoreboards.refresh(player);
                 f.refreshDTR();
+                Main.PlayerStatistic stat = Main.playerStatistics.get(player);
+                for(Main.FactionHistory statF : stat.factionHistory){
+                    if(statF.id == f.id){
+                        statF.left = new Date();
+                        statF.cause = "Leaved";
+                        statF.lastRole = f.player_ranks.get(player).name;
+                        statF.name = f.name;
+                    }
+                }
+                Main.playerStatistics.put(player,stat);
             } else {
                 //Todo: Factin leader is a fucking retarded bc he wanna leave the faction. Use /f disband
                 player.sendMessage(Messages.LEADER_LEAVING_FACTION.queue());

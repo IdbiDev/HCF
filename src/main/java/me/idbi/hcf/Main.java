@@ -9,8 +9,8 @@ import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.koth.AutoKoth;
 import me.idbi.hcf.koth.KOTH;
 import me.idbi.hcf.particles.Shapes;
-import me.idbi.hcf.tools.*;
 import me.idbi.hcf.tools.DisplayName.displayTeams;
+import me.idbi.hcf.tools.*;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -22,6 +22,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -50,6 +51,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static double MAX_DTR;
     public static double DEATH_DTR;
     public static boolean abilities_loaded = false;
+    public static boolean customenchants_loaded = false;
 
     public static int DTR_REGEN_TIME;
 
@@ -62,6 +64,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static HashMap<Integer, Long> DTR_REGEN = new HashMap<>();
     public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
     public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
+    public static HashMap<Player, PlayerStatistic> playerStatistics = new HashMap<>();
     public static ArrayList<UUID> death_wait_clear = new ArrayList<>();
     //public static HashMap<Main.Faction, Scoreboard> teams = new HashMap<>();
 
@@ -150,7 +153,7 @@ public final class Main extends JavaPlugin implements Listener {
         Faction_Home.teleportPlayers = new ArrayList<>();
 
         SetupBot.setup();
-        EnchantmentFile.setup();
+        //EnchantmentFile.setup();
 
         // Config
         ArrayList<String> scoreboardList = new ArrayList<String>() {{
@@ -206,8 +209,6 @@ public final class Main extends JavaPlugin implements Listener {
         new Shapes(20);
         if(Main.debug) {
             sendCmdMessage("§1Finished loading the plugin! (" + (System.currentTimeMillis() - deltatime) + " ms)");
-            long usedmemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
-            sendCmdMessage("§1Used memory: "+ usedmemory*0.000001);
             if (multi != null)
                 sendCmdMessage("§aMultiverse-Core found. Plugin connected to Multiverse-Core\n§aMultiverse-Core version: §a§o" + multi.getDescription().getVersion());
 
@@ -220,7 +221,14 @@ public final class Main extends JavaPlugin implements Listener {
         System.out.println("\n"+startMessage+"\n"+startMessage2);
         autoKoth.startAutoKoth();
 
-        System.out.println(faction_cache.size());
+      /*  System.out.println(playerStatistics.get(Bukkit.getPlayer("adbi20014")).startDate);
+        System.out.println(playerStatistics.get(Bukkit.getPlayer("adbi20014")).factionHistory);
+        System.out.println(playerStatistics.get(Bukkit.getPlayer("adbi20014")).lastLogin);
+
+        System.out.println(playerStatistics.get(Bukkit.getPlayer("kbalu")).startDate);
+        System.out.println(playerStatistics.get(Bukkit.getPlayer("kbalu")).factionHistory);
+        System.out.println(playerStatistics.get(Bukkit.getPlayer("kbalu")).lastLogin);*/
+
     }
 
     @Override
@@ -243,6 +251,7 @@ public final class Main extends JavaPlugin implements Listener {
                         Main.player_block_changes.put(player, l);
                     }
                 }
+                playerStatistics.get(player).Save(player);
             }
             for (Map.Entry<Integer, Faction> integerFactionEntry : faction_cache.entrySet()) {
                 integerFactionEntry.getValue().saveFactionData();
@@ -495,42 +504,103 @@ public final class Main extends JavaPlugin implements Listener {
                 msg
         );
     }
-    static class FactionHistory {
-        private Date joined;
-        private Date left;
-        private String cause;
-        private String name;
-        private String lastRole;
-        public FactionHistory(Date joined,Date left,String cause,String name,String lastRole) {
-            this.joined = joined;
-            this.left = left;
+    public static class FactionHistory {
+        public final Date joined;
+        public Date left;
+        public String cause;
+        public String name;
+        public String lastRole;
+        public final int id;
+        public FactionHistory(long joined,long left,String cause,String name,String lastRole,int id) {
+            this.joined = new Date(joined);
+            this.left = new Date(left);
             this.cause = cause;
             this.name = name;
             this.lastRole = lastRole;
+            this.id = id;
         }
+        public JSONObject toJSON(){
+            JSONObject faction = new JSONObject();
+            faction.put("name",name);
+            faction.put("lastrole",lastRole);
+            faction.put("joined",joined.getTime());
+            faction.put("left",left.getTime());
+            faction.put("cause",cause);
+            faction.put("id",id);
+            return faction;
+        }
+
     }
-    static class PlayerStatistic {
+    public static class PlayerStatistic {
         //Class Times
         public long TotalBardClassTime;
         public long TotalAssassinClassTime;
         public long TotalArcherClassTime;
         public long TotalMinerClassTime;
         public long TotalClassTime;
+        public int MoneySpend;
+        public int MoneyEarned;
+        public long TimePlayed;
+        public long startDate;
+        public long lastLogin;
 
         public ArrayList<FactionHistory> factionHistory = new ArrayList<>();
-        PlayerStatistic(Player player){
-            HashMap<String, Object> map = SQL_Connection.dbPoll(con,"SELECT * FROM playerstatistics WHERE uuid='?'",player.getUniqueId().toString());
-            Map<String, Object> ClassTimes = JsonUtils.jsonToMap(new JSONObject(map.get("ClassTimes")));
-            Map<String, Object> FactionHistory = JsonUtils.jsonToMap(new JSONObject(map.get("FactionHistory")));
+        public PlayerStatistic(JSONObject mainJSON){
+            //FUCK ME
+            System.out.println(mainJSON.toString());
+            JSONObject ClassTimes = mainJSON.getJSONObject("ClassTimes");
             TotalBardClassTime = Long.parseLong(ClassTimes.get("Bard").toString());
             TotalAssassinClassTime = Long.parseLong(ClassTimes.get("Assassin").toString());
             TotalArcherClassTime = Long.parseLong(ClassTimes.get("Archer").toString());
             TotalMinerClassTime = Long.parseLong(ClassTimes.get("Miner").toString());
             TotalClassTime = Long.parseLong(ClassTimes.get("Total").toString());
 
-            for(Map.Entry<String,Object> f : FactionHistory.entrySet()){
-                //factionHistory.add(new FactionHistory(new Date()));
+            JSONArray array = mainJSON.getJSONArray("FactionHistory");
+            if(array.length() > 0){
+                for(int x = 0;x<=array.length()-1;x++) {
+                    JSONObject obj = array.getJSONObject(x);
+                    factionHistory.add(new FactionHistory(
+                            obj.getLong("joined"),
+                            obj.getLong("left"),
+                            obj.getString("cause"),
+                            obj.getString("name"),
+                            obj.getString("lastrole"),
+                            obj.getInt("id")
+                    ));
+                }
             }
+            MoneySpend = Integer.parseInt(String.valueOf(mainJSON.get("MoneySpend")));
+            MoneyEarned = Integer.parseInt(String.valueOf(mainJSON.get("MoneyEarned")));
+            startDate = Long.parseLong(String.valueOf(mainJSON.get("startDate")));
+            lastLogin = Long.parseLong(String.valueOf(mainJSON.get("lastLogin")));
+            TimePlayed = Long.parseLong(String.valueOf(mainJSON.get("TimePlayed")));
+        }
+
+        public void Save(Player p){
+            JSONObject jsonComp = new JSONObject();
+            JSONArray factions = new JSONArray();
+            //JSONArray ClassTimes = new JSONArray();
+            JSONObject classTimes = new JSONObject();
+            classTimes.put("Bard",TotalBardClassTime);
+            classTimes.put("Assassin",TotalAssassinClassTime);
+            classTimes.put("Archer",TotalArcherClassTime);
+            classTimes.put("Miner",TotalMinerClassTime);
+            classTimes.put("Total",TotalMinerClassTime+TotalArcherClassTime+TotalAssassinClassTime+TotalBardClassTime);
+
+            jsonComp.put("totalFactions", factionHistory.size());
+            jsonComp.put("MoneySpend", MoneySpend);
+            jsonComp.put("MoneyEarned", MoneyEarned);
+            jsonComp.put("TimePlayed", TimePlayed);
+            jsonComp.put("startDate", startDate);
+            jsonComp.put("lastLogin",new Date().getTime());
+            for (FactionHistory f: factionHistory) {
+                factions.put(f.toJSON());
+            }
+            jsonComp.put("FactionHistory", factions);
+            jsonComp.put("ClassTimes", classTimes);
+            System.out.println("SAVING THE CICA");
+            System.out.println(jsonComp);
+            SQL_Connection.dbExecute(con,"UPDATE members SET statistics='?' WHERE uuid='?'",jsonComp.toString(),p.getUniqueId().toString());
         }
     }
 }

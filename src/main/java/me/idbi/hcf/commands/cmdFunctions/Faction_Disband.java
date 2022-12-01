@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.util.Objects;
 
 public class Faction_Disband {
@@ -45,6 +46,16 @@ public class Faction_Disband {
             playertools.setMetadata(player, "factionid", "0");
             playertools.setMetadata(player, "rank", "none");
             Scoreboards.refresh(player);
+            Main.PlayerStatistic stat = Main.playerStatistics.get(player);
+            for(Main.FactionHistory f : stat.factionHistory){
+                if(f.id == selectedFaction.id){
+                    f.left = new Date();
+                    f.cause = "Disbanded";
+                    f.lastRole = selectedFaction.player_ranks.get(player).name;
+                    f.name = selectedFaction.name;
+                }
+            }
+            Main.playerStatistics.put(player,stat);
         }
         LogLibrary.sendFactionDisband(p, selectedFaction.name);
         Bukkit.broadcastMessage(Messages.FACTION_DISBAND

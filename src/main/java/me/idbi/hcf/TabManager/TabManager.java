@@ -1,7 +1,5 @@
 package me.idbi.hcf.TabManager;
 
-import codecrafter47.bungeetablistplus.api.bungee.BungeeTabListPlusAPI;
-import codecrafter47.bungeetablistplus.api.bungee.CustomTablist;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;

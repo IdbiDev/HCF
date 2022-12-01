@@ -20,6 +20,7 @@
     </properties>
 
     <build>
+        <finalName>HCF+</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -149,7 +150,7 @@
             <groupId>me.idbi</groupId>
             <artifactId>hcf_abilitys</artifactId>
             <version>1.0</version>
-            <systemPath>C:\Users\kille\Desktop\TsipuEgymeleg\plugins\hcf_abilitys-1.0-SNAPSHOT.jar</systemPath>
+            <systemPath>C:\Users\kille\Desktop\TsipuEgymeleg\plugins\HCF+ Abilities.jar</systemPath>
             <scope>system</scope>
         </dependency>
         <dependency>

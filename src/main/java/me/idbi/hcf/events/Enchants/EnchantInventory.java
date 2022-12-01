@@ -4,8 +4,7 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf_abilitys.Enchantments.CustomEnchants;
-import me.idbi.hcf_abilitys.Enchantments.EncListeners.Utils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -96,7 +95,7 @@ public class EnchantInventory implements Listener {
                     item.addEnchantment(obj.getEnchantment(), obj.getLevel());
                 }
                 if(Main.abilities_loaded) {
-                    item = Utils.updateLore(item);
+                   // item = Utils.updateLore(item);
                 }
                 p.setLevel(p.getLevel() - 20);
 

@@ -69,7 +69,7 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new TableEvent(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new EnchantInventory(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new TableInteract(), Main.getPlugin(Main.class));
-        //getServer().getPluginManager().registerEvents(new AnvilEvent(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new PluginLoad(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new PearlFixer(), Main.getPlugin(Main.class));
 

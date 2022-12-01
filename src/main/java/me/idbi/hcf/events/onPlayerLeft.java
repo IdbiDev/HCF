@@ -54,6 +54,8 @@ public class onPlayerLeft implements Listener {
                     .save();
         }
         Main.player_cache.remove(e.getPlayer());
+        Main.playerStatistics.get(e.getPlayer()).Save(e.getPlayer());
+        Main.playerStatistics.remove(e.getPlayer());
 
         setCombatLogger(e.getPlayer());
     }

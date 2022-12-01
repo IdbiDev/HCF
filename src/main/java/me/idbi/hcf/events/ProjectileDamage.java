@@ -1,18 +1,13 @@
 package me.idbi.hcf.events;
 
-import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.playertools;
-import org.bukkit.Effect;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import static me.idbi.hcf.classes.subClasses.Archer.archerTagEffects;
 
 public class ProjectileDamage implements Listener {
     @EventHandler

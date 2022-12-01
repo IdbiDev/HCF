@@ -2,7 +2,6 @@ package me.idbi.hcf;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import me.idbi.hcf_abilitys.Enchantments.CustomEnchants;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionEffectType;
@@ -61,7 +60,7 @@ public class HCF_Rules {
         put(Enchantment.DIG_SPEED, -1);
         put(Enchantment.PROTECTION_FALL, 3);
         put(Enchantment.SILK_TOUCH, -1);
-        put(CustomEnchants.COMBO, -1);
+       // put(CustomEnchants.COMBO, -1);
     }};
 
     public static class Enchant_Obj{

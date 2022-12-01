@@ -12,8 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.Objects;
-
 import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
 import static me.idbi.hcf.tools.playertools.getRealMetadata;
 

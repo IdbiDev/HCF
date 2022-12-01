@@ -5,7 +5,6 @@ import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
@@ -13,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Faction_Create {
@@ -66,7 +66,9 @@ public class Faction_Create {
                 LogLibrary.sendFactionCreate(p, faction.name);
                 faction.refreshDTR();
                 GUI_Sound.playSound(p,"success");
-
+                Main.PlayerStatistic stat = Main.playerStatistics.get(p);
+                stat.factionHistory.add(new Main.FactionHistory(new Date().getTime(),0L,null,faction.name, leader_rank.name,faction.id));
+                Main.playerStatistics.put(p,stat);
             } else {
                 p.sendMessage(Messages.EXISTS_FACTION_NAME.getMessage().queue());
                 GUI_Sound.playSound(p,"error");

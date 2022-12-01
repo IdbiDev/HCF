@@ -104,6 +104,22 @@ public class Misc_Timers {
                         Main.saved_players.put(key, val - 1000);
                     }
                 }
+                for(Map.Entry<Player, Main.PlayerStatistic> entry : Main.playerStatistics.entrySet()){
+                    entry.getValue().TimePlayed += 1000L;
+                    if (!playertools.HasMetaData(entry.getKey(), "class")) continue;
+                    if(playertools.getMetadata(entry.getKey(), "class").equalsIgnoreCase("Assassin")){
+                        entry.getValue().TotalAssassinClassTime += 1000L;
+                    }
+                    if(playertools.getMetadata(entry.getKey(), "class").equalsIgnoreCase("Archer")){
+                        entry.getValue().TotalArcherClassTime += 1000L;
+                    }
+                    if(playertools.getMetadata(entry.getKey(), "class").equalsIgnoreCase("Bard")){
+                        entry.getValue().TotalBardClassTime += 1000L;
+                    }
+                    if(playertools.getMetadata(entry.getKey(), "class").equalsIgnoreCase("Miner")){
+                        entry.getValue().TotalMinerClassTime += 1000L;
+                    }
+                }
 
             }
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 20);
@@ -297,6 +313,7 @@ public class Misc_Timers {
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 10);
     }
     public static void DeleteWallsForPlayer(Player player){
+
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -307,24 +324,22 @@ public class Misc_Timers {
                     for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
 
                         Location loc = it.next();
-                        cur = loc;
-                            player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                            if (Main.player_block_changes.containsKey(player)) {
-                                List<Location> l = Main.player_block_changes.get(player);
-                                it.remove();
-                                //l.remove(loc);
-                                Main.player_block_changes.put(player, l);
-                            }
+                        //cur = loc;
+                        player.sendBlockChange(loc, Material.AIR, (byte) 0);
+                        if (Main.player_block_changes.containsKey(player)) {
+                            List<Location> l = Main.player_block_changes.get(player);
+                            it.remove();
+                            //l.remove(loc);
+                            Main.player_block_changes.put(player, l);
+                        }
                     }
                 }catch (Exception e){
                     try{
                         copy.remove(cur);
                     }catch (Exception ignored){}
-
                 }
             }
         }.runTaskAsynchronously(Main.getPlugin(Main.class));
-
     }
 
     public static long getTimeOfEOTW() {
