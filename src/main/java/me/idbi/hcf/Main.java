@@ -11,6 +11,7 @@ import me.idbi.hcf.koth.KOTH;
 import me.idbi.hcf.particles.Shapes;
 import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.*;
+import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -324,6 +325,14 @@ public final class Main extends JavaPlugin implements Listener {
 
         public int memberCount;
 
+        //Statistics
+        public ArrayList<HistoryEntrys.BalanceEntry> balanceHistory = new ArrayList<>();
+        public ArrayList<HistoryEntrys.KickEntry> kickHistory = new ArrayList<>();
+        public ArrayList<HistoryEntrys.JoinLeftEntry> joinLeftHistory = new ArrayList<>();
+        public ArrayList<HistoryEntrys.FactionJoinLeftEntry> factionjoinLeftHistory = new ArrayList<>();
+        public ArrayList<HistoryEntrys.InviteEntry> inviteHistory = new ArrayList<>();
+        public ArrayList<HistoryEntrys.RankEntry> rankCreateHistory = new ArrayList<>();
+
         public Faction(Integer id, String name, String leader, Integer balance) {
             this.id = id;
             this.name = name;
@@ -603,4 +612,5 @@ public final class Main extends JavaPlugin implements Listener {
             SQL_Connection.dbExecute(con,"UPDATE members SET statistics='?' WHERE uuid='?'",jsonComp.toString(),p.getUniqueId().toString());
         }
     }
+
 }
