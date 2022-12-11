@@ -4,6 +4,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
@@ -38,6 +39,12 @@ public class Faction_DepositBank {
                 if (deposit.transactionSuccessfully()) {
                     p.sendMessage(Messages.FACTION_BANK_DEPOSIT.queue().replace("%amount%", args[1]));
                     Scoreboards.refresh(p);
+                    if(faction.balanceHistory.size()+1>50){
+                        faction.balanceHistory.remove(faction.balanceHistory.size() - 1);
+                    }
+                    faction.balanceHistory.add(0,
+                            new HistoryEntrys.BalanceEntry(Integer.parseInt(args[1]),p.getName(),new Date().getTime())
+                    );
 
                 }
             } catch (NumberFormatException ex) {

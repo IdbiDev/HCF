@@ -5,6 +5,7 @@ import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
+import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
@@ -50,8 +51,9 @@ public class Faction_Join {
                 Scoreboards.refresh(p);
                 faction.refreshDTR();
                 Main.PlayerStatistic stat = Main.playerStatistics.get(p);
-                stat.factionHistory.add(new Main.FactionHistory(new Date().getTime(),0L,null,faction.name, defa.name,faction.id));
+                stat.factionHistory.add(0, new Main.FactionHistory(new Date().getTime(),0L,"",faction.name, defa.name,faction.id));
                 Main.playerStatistics.put(p,stat);
+                faction.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(p.getName(),"invited",new Date().getTime()));
             } else {
                 //Nem vagy meghíva ebbe a facionbe
                 p.sendMessage(Messages.NOT_INVITED.queue());

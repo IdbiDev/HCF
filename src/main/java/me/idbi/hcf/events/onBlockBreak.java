@@ -45,6 +45,5 @@ public class onBlockBreak implements Listener {
             brewing.furnaces.remove(stand);
 
         }
-
     }
 }

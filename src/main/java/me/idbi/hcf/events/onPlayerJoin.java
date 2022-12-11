@@ -54,7 +54,8 @@ public class onPlayerJoin implements Listener {
             if(f != null) {
                 f.BroadcastFaction(
                         Messages.JOIN_FACTION_BC.repPlayer(p).queue());
-                f.addPrefixPlayer(p);
+                //f.addPrefixPlayer(p);
+                //Bukkit.getScoreboardManager().getMainScoreboard().getTeam(f.name).addEntry(p.getName());
             }
         }
 

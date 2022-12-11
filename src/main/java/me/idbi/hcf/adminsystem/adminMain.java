@@ -133,7 +133,7 @@ public class adminMain {
         SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(selectedFaction.id));
         SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(selectedFaction.id));
         SQL_Connection.dbExecute(con, "UPDATE members SET rank='None',faction=0,factionname='None' WHERE faction='?'", String.valueOf(selectedFaction.id));
-        for (Player player : playertools.getFactionOnlineMembers(faction)) {
+        for (Player player : playertools.getFactionOnlineMembers(selectedFaction)) {
             playertools.setMetadata(player, "faction", "None");
             playertools.setMetadata(player, "factionid", "0");
             playertools.setMetadata(player, "rank", "none");

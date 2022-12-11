@@ -6,8 +6,8 @@ public class HistoryEntrys {
 
         public final int amount;
         public final String player;
-        public final String time ;
-        public BalanceEntry(int amount,String player,String time){
+        public final long time ;
+        public BalanceEntry(int amount,String player,long time){
             this.amount = amount;
             this.player = player;
             this.time = time;
@@ -18,8 +18,8 @@ public class HistoryEntrys {
         public final String player;
         public final boolean isInvited;
         public final String executor;
-        public final String time;
-        public InviteEntry(String executor,String player,String time,boolean isInvited){
+        public final long time;
+        public InviteEntry(String executor,String player,long time,boolean isInvited){
             this.executor = executor;
             this.player = player;
             this.time = time;
@@ -31,8 +31,8 @@ public class HistoryEntrys {
         public final String player;
         public final String type;
         public final String rank;
-        public final String time;
-        public RankEntry(String rank,String player,String time,String type){
+        public final long time;
+        public RankEntry(String rank,String player,long time,String type){
             this.rank = rank;
             this.player = player;
             this.time = time;
@@ -43,8 +43,8 @@ public class HistoryEntrys {
 
         public final String player;
         public final boolean isJoined;
-        public final String time;
-        public JoinLeftEntry(String player,boolean isJoined,String time) {
+        public final long time;
+        public JoinLeftEntry(String player,boolean isJoined,long time) {
             this.player = player;
             this.time = time;
             this.isJoined = isJoined;
@@ -54,8 +54,8 @@ public class HistoryEntrys {
 
         public final String player;
         public final String type;
-        public final String time;
-        public FactionJoinLeftEntry(String player,String type,String time){
+        public final long time;
+        public FactionJoinLeftEntry(String player,String type,long time){
             this.player = player;
             this.time = time;
             this.type = type;
@@ -65,9 +65,9 @@ public class HistoryEntrys {
 
         public final String player;
         public final String executor;
-        public final String time;
+        public final long time;
         public final String reason;
-        public KickEntry(String player,String executor,String time,String reason){
+        public KickEntry(String player,String executor,long time,String reason){
             this.player = player;
             this.time = time;
             this.reason = reason;

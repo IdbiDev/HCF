@@ -5,6 +5,7 @@ import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
+import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -58,6 +59,8 @@ public class Faction_Kick {
                         }
                     }
                     Main.playerStatistics.put(targetPlayer_Online,stat);
+                    f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(targetPlayer_Online.getName(),"kicked",new Date().getTime()));
+
                     Scoreboards.RefreshAll();
                 } else {
                     Main.Faction f = playertools.getPlayerFaction(player);
@@ -70,6 +73,7 @@ public class Faction_Kick {
                     f.memberCount--;
                     f.refreshDTR();
                     Scoreboards.RefreshAll();
+                    f.factionjoinLeftHistory.add(new HistoryEntrys.FactionJoinLeftEntry(targetPlayer_Offline.getName(),"kicked",new Date().getTime()));
                 }
                 player.sendMessage(Messages.MAX_MEMBERS_REACHED.queue());
             } else {

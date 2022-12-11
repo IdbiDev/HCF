@@ -10,8 +10,8 @@ public class SQL_Generator {
     public SQL_Generator() {
         String[] tables = {
                 """
-                    CREATE TABLE IF NOT EXISTS `claims` (
-                      `ID` bigint(255) NOT NULL AUTO_INCREMENT,
+                     CREATE TABLE IF NOT EXISTS `claims` (
+                      `ID` bigint(255) NOT NULL,
                       `factionid` int(255) NOT NULL DEFAULT 0,
                       `startX` int(255) NOT NULL DEFAULT 0,
                       `startZ` int(255) NOT NULL DEFAULT 0,
@@ -22,15 +22,19 @@ public class SQL_Generator {
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,
                 """
-                    CREATE TABLE IF NOT EXISTS `deathbans` (
-                      `ID` int(255) NOT NULL AUTO_INCREMENT,
-                      `uuid` text NOT NULL,
-                      `time` bigint(255) NOT NULL DEFAULT 0,
+                     CREATE TABLE IF NOT EXISTS `factions` (
+                      `ID` int(255) NOT NULL,
+                      `name` varchar(255) NOT NULL,
+                      `money` bigint(255) NOT NULL DEFAULT 0,
+                      `home` text CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT NULL,
+                      `leader` text NOT NULL,
+                      `statistics` longtext NOT NULL,
                       PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
                 """,
                 """
-                    CREATE TABLE IF NOT EXISTS `factions` (
+                     CREATE TABLE IF NOT EXISTS `factions` (
                       `ID` int(255) NOT NULL AUTO_INCREMENT,
                       `name` varchar(255) NOT NULL,
                       `money` int(255) NOT NULL DEFAULT 0,
@@ -40,8 +44,8 @@ public class SQL_Generator {
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,
                 """
-                    CREATE TABLE IF NOT EXISTS `members` (
-                      `ID` int(255) NOT NULL AUTO_INCREMENT,
+                     CREATE TABLE IF NOT EXISTS `members` (
+                      `ID` int(255) NOT NULL,
                       `name` varchar(255) NOT NULL,
                       `faction` int(255) NOT NULL DEFAULT 0,
                       `rank` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT 'None',
@@ -51,27 +55,49 @@ public class SQL_Generator {
                       `uuid` text DEFAULT NULL,
                       `online` int(2) NOT NULL DEFAULT 0,
                       `factionname` varchar(255) NOT NULL DEFAULT 'None',
+                      `statistics` longtext NOT NULL DEFAULT '\\'{"totalFactions":0,"lastLogin":0,"TimePlayed":0,"MoneySpend":0,"ClassTimes":{"Miner":0,"Archer":0,"Assassin":0,"Total":0,"Bard":0},"MoneyEarned":0,"FactionHistory":[],"startDate":0}\\'',
+                        PRIMARY KEY (`ID`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+                """,
+                """
+                     CREATE TABLE IF NOT EXISTS `ranks` (
+                      `ID` int(11) NOT NULL,
+                      `faction` int(11) NOT NULL,
+                      `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
+                      `isDefault` tinyint(1) NOT NULL DEFAULT 0,
+                      `isLeader` tinyint(1) NOT NULL DEFAULT 0,
+                      `ALL_Permission` tinyint(1) NOT NULL DEFAULT 0,
+                      `MONEY_Permission` tinyint(1) NOT NULL DEFAULT 1,
+                      `INVITE_Permission` tinyint(1) NOT NULL DEFAULT 0,
+                      `RANK_Permission` tinyint(1) NOT NULL DEFAULT 0,
+                      `PLAYER_Permission` tinyint(1) NOT NULL DEFAULT 0,
+                      `KICK_Permission` tinyint(1) NOT NULL DEFAULT 0,
+                      `priority` int(11) NOT NULL DEFAULT 0,
+                      PRIMARY KEY (`ID`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+                """,
+                """
+                    CREATE TABLE IF NOT EXISTS `playerstatistics` (
+                      `ID` int(255) NOT NULL,
+                      `uuid` varchar(255) NOT NULL,
+                      `statistics` text NOT NULL DEFAULT '{"totalFactions":0,"lastLogin":0,"TimePlayed":0,"MoneySpend":0,"ClassTimes":{"Miner":0,"Archer":0,"Assassin":0,"Total":0,"Bard":0},"MoneyEarned":0,"FactionHistory":[],"startDate":0}',
                       PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,
                 """
-                        CREATE TABLE IF NOT EXISTS `ranks` (
-                          `ID` int(11) NOT NULL AUTO_INCREMENT,
-                          `faction` int(11) NOT NULL,
-                          `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-                          `isDefault` tinyint(1) NOT NULL DEFAULT 0,
-                          `isLeader` tinyint(1) NOT NULL DEFAULT 0,
-                          `ALL_Permission` tinyint(1) NOT NULL DEFAULT 0,
-                          `MONEY_Permission` tinyint(1) NOT NULL DEFAULT 1,
-                          `INVITE_Permission` tinyint(1) NOT NULL DEFAULT 0,
-                          `RANK_Permission` tinyint(1) NOT NULL DEFAULT 0,
-                          `PLAYER_Permission` tinyint(1) NOT NULL DEFAULT 0,
-                          `KICK_Permission` tinyint(1) NOT NULL DEFAULT 0,
-                          `priority` int(11) NOT NULL DEFAULT 0,
-                          PRIMARY KEY (`ID`)
-                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+                CREATE TABLE IF NOT EXISTS `logs` (
+                  `ID` bigint(255) NOT NULL,
+                  `player` text NOT NULL,
+                  `action` text NOT NULL,
+                  `type` text NOT NULL,
+                  `time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+                  PRIMARY KEY (`ID`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,
+
                 """
                     INSERT IGNORE INTO `factions` SET ID = 1, money = 0, name = 'spawn', leader = '';
                 """

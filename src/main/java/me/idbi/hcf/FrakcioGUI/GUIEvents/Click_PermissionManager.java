@@ -4,6 +4,7 @@ import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.RP_Items;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,13 +46,20 @@ public class Click_PermissionManager implements Listener {
 
             Main.Faction f = playertools.getPlayerFaction((Player) e.getWhoClicked());
 
-            Faction_Rank_Manager.Rank rank = f.FindRankByName(rankName);
+            assert f != null;
+            Faction_Rank_Manager.Rank rank =  f.FindRankByName(rankName);
 
             for(Map.Entry<Faction_Rank_Manager.Permissions, Boolean> hashMap : getPermissions(e.getInventory()).entrySet()) {
                 rank.setPermission(hashMap.getKey(), hashMap.getValue());
             }
             GUI_Sound.playSound((Player) e.getWhoClicked(),"success");
             Bukkit.broadcastMessage("Saved");
+            f.rankCreateHistory.add(new HistoryEntrys.RankEntry(
+                    rank.name,
+                    ((Player) e.getWhoClicked()).getDisplayName(),
+                    new Date().getTime(),
+                    "modify"
+            ));
             return;
         }
 

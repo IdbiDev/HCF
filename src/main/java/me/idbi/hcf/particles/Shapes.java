@@ -1,9 +1,14 @@
 package me.idbi.hcf.particles;
 
+import me.idbi.hcf.tools.HCF_Claiming;
+import me.idbi.hcf.tools.playertools;
 import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+
+import static me.idbi.hcf.tools.playertools.getDistanceBetweenPoints2D;
 
 
 public class Shapes {
@@ -27,6 +32,17 @@ public class Shapes {
             center.getWorld().playEffect(new Location(center.getWorld(),angleX,center.getY(),angleZ), effect,effect.getId());
         }
     }
+    public static void DrawCircle(Player player, double radius, double smoothness, Effect effect) {
+        Location center = player.getLocation();
+        double angle = 0;
+        while (angle < 360){
+            double radiant_angle = Math.toRadians(angle);
+            double angleX = center.getX() + Math.cos(radiant_angle) * radius;
+            double angleZ = center.getZ() + Math.sin(radiant_angle) * radius;
+            angle = angle + smoothness;
+            player.playEffect(new Location(center.getWorld(),angleX,center.getY(),angleZ), effect,effect.getId());
+        }
+    }
     public static void DrawSphere(Location center, double radius, double smoothness, Effect effect) {
         for(double theta : theatres) {
             for (double phi : phis) {
@@ -38,7 +54,39 @@ public class Shapes {
             }
         }
     }
-    public static void DrawCube(Location center, double radius, Effect effect) {
+    public static void Crossing(Location start, Location end, Effect effect,int res) {
+
+        HCF_Claiming.Point bottom_left = new HCF_Claiming.Point(start.getBlockX(), start.getBlockZ());
+        HCF_Claiming.Point top_right = new HCF_Claiming.Point(end.getBlockX(), end.getBlockZ());
+        HCF_Claiming.Point top_left = new HCF_Claiming.Point(top_right.x, bottom_left.z);
+        HCF_Claiming.Point bottom_right = new HCF_Claiming.Point(bottom_left.x, top_right.z);
+
+        int width = getDistanceBetweenPoints2D(bottom_left, top_left)+1;
+        int height = getDistanceBetweenPoints2D(bottom_left, bottom_right)+1;
+        final double X_RES = (double) width / res;
+        final double Z_RES = (double) height / res;
+        //HCF_Claiming.Point l1, HCF_Claiming.Point r1, HCF_Claiming.Point l2, HCF_Claiming.Point r2
+        int firstRectangle_Starting_X = bottom_left.x;
+        int firstRectangle_Starting_Z = bottom_left.z;
+
+        int firstRectangle_Ending_X = top_right.x;
+        int firstRectangle_Ending_Z = top_right.z;
+
+        int maxX = Math.max(firstRectangle_Starting_X, firstRectangle_Ending_X);
+        int minX = Math.min(firstRectangle_Starting_X, firstRectangle_Ending_X);
+
+        int maxZ = Math.max(firstRectangle_Starting_Z, firstRectangle_Ending_Z);
+        int minZ = Math.min(firstRectangle_Starting_Z, firstRectangle_Ending_Z);
+
+        for(int x = minX; x <= maxX; x+=X_RES) {
+            for(int z = minZ; z <= maxZ; z+=Z_RES) {
+                Location BigX = new Location(start.getWorld(),x,start.getWorld().getHighestBlockYAt(x,minZ),minZ);
+                Location BigZ = new Location(start.getWorld(),minX,start.getWorld().getHighestBlockYAt(minX,z),z);
+                for(Location loc : getLineBetweenPoints(BigX,BigZ)){
+                    loc.getWorld().playEffect(loc,effect,effect.getId());
+                }
+            }
+        }
 
     }
     public static void DrawLine(Location start, Location end,Effect effect) {
@@ -50,13 +98,32 @@ public class Shapes {
         double z = start.getZ();
 
         for(double x = minX; x<maxX; x++){
-            start.getWorld().playEffect(new Location(start.getWorld(), x, start.getY(), z), effect, effect.getId());
+
             if(D > 0){
                 z++;
                 D = D - 2*dx;
             }
             D = D + 2*dz;
         }
+    }
+    public static ArrayList<Location> getLineBetweenPoints(Location start, Location end) {
+       ArrayList<Location> returnLocation = new ArrayList<>();
+       double deltaX = end.getX() - start.getX();
+       double deltaZ = end.getZ() - start.getZ();
+       int dxsign = (int) (Math.abs(deltaX) / deltaX);
+       int dzsign = (int) (Math.abs(deltaZ) / deltaZ);
+       double deltaError = Math.abs(deltaZ/deltaX);
+       double error = 0;
+       double z = start.getZ();
+       for(double x = start.getX();x<=end.getX();x+=dxsign){
+           error += deltaError;
+           while (error>=0.5){
+               z += dzsign;
+               error--;
+               returnLocation.add(new Location(start.getWorld(),x,start.getWorld().getHighestBlockYAt((int) x, (int) z),z));
+           }
+       }
+       return returnLocation;
     }
 
 }

@@ -5,6 +5,8 @@ import me.idbi.hcf.Elevator.ElevatorInteract;
 import me.idbi.hcf.FrakcioGUI.GUIEvents.*;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.DeleteRankConfirm;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
+import me.idbi.hcf.HistoryGUI.Events.HistoryEvent;
+import me.idbi.hcf.HistoryGUI.Events.Stats_Inventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.SignShop.CreateShopSign;
 import me.idbi.hcf.MessagesEnums.SignShop.InteractShopSign;
@@ -105,5 +107,8 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new TabManager(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new displayTeams(), Main.getPlugin(Main.class));
+
+        getServer().getPluginManager().registerEvents(new Stats_Inventory(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new HistoryEvent(), Main.getPlugin(Main.class));
     }
 }

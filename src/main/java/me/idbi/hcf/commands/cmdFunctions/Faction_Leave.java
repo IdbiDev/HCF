@@ -4,6 +4,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.SQL_Connection;
+import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
@@ -42,6 +43,7 @@ public class Faction_Leave {
                         statF.name = f.name;
                     }
                 }
+                f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(player.getName(),"Leaved",new Date().getTime()));
                 Main.playerStatistics.put(player,stat);
             } else {
                 //Todo: Factin leader is a fucking retarded bc he wanna leave the faction. Use /f disband

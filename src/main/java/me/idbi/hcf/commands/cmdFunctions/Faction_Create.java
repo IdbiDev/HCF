@@ -10,6 +10,7 @@ import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.json.JSONObject;
 
 import java.sql.Connection;
 import java.util.Date;
@@ -31,7 +32,6 @@ public class Faction_Create {
                 //Create Faction
                 int x = SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?', leader='?'", name, p.getUniqueId().toString());
                 Main.Faction faction = new Main.Faction(x, name, p.getUniqueId().toString(), Main.faction_startingmoney);
-
                 //
                 playertools.setMetadata(p, "faction", name);
                 playertools.setMetadata(p, "factionid", x);
@@ -67,8 +67,12 @@ public class Faction_Create {
                 faction.refreshDTR();
                 GUI_Sound.playSound(p,"success");
                 Main.PlayerStatistic stat = Main.playerStatistics.get(p);
-                stat.factionHistory.add(new Main.FactionHistory(new Date().getTime(),0L,null,faction.name, leader_rank.name,faction.id));
+                stat.factionHistory.add(0, new Main.FactionHistory(new Date().getTime(),0L,"",faction.name, leader_rank.name,faction.id));
                 Main.playerStatistics.put(p,stat);
+                //HashMap<String, Object> factionMap = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID='?'", String.valueOf(faction.id));
+                faction.loadFactionHistory(faction.assembleFactionHistory());
+                faction.saveFactionData();
+
             } else {
                 p.sendMessage(Messages.EXISTS_FACTION_NAME.getMessage().queue());
                 GUI_Sound.playSound(p,"error");

@@ -18,12 +18,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -204,7 +206,7 @@ public final class Main extends JavaPlugin implements Listener {
         /*
         DISPLAYNAME THINGS!
          */
-        displayTeams.setupAllTeams();
+        //displayTeams.setupAllTeams();
 
         //SpawnShield.CalcWall();
         new Shapes(20);
@@ -231,7 +233,39 @@ public final class Main extends JavaPlugin implements Listener {
         System.out.println(playerStatistics.get(Bukkit.getPlayer("kbalu")).lastLogin);*/
 
     }
+    @EventHandler
+    public void onDisableEvent(PluginDisableEvent e) {
+        if(e.getPlugin().equals(Main.getPlugin(Main.class))) {
+            try {
+                for(Player player : Bukkit.getOnlinePlayers()){
+                    playerStatistics.get(player).Save(player);
+                    new PlayerList(player, PlayerList.SIZE_FOUR).clearCustomTabs();
+                    if(!Main.player_block_changes.containsKey(player)) continue;
+                    List<Location> copy = Main.player_block_changes.get(player);
+                    for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
+                        Location loc = it.next();
+                        player.sendBlockChange(loc, Material.AIR, (byte) 0);
+                        if (Main.player_block_changes.containsKey(player)) {
+                            List<Location> l = Main.player_block_changes.get(player);
+                            it.remove();
+                            //l.remove(loc);
+                            Main.player_block_changes.put(player, l);
+                        }
+                    }
 
+                }
+                for (Map.Entry<Integer, Faction> integerFactionEntry : faction_cache.entrySet()) {
+                    integerFactionEntry.getValue().saveFactionData();
+                    for (Faction_Rank_Manager.Rank rank : integerFactionEntry.getValue().ranks) {
+                        rank.saveRank();
+                    }
+                }
+                con.close();
+                con = null;
+
+            } catch (Exception asked) {}
+        }
+    }
     @Override
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDisable() {
@@ -239,6 +273,7 @@ public final class Main extends JavaPlugin implements Listener {
         //SaveAll();
         try {
             for(Player player : Bukkit.getOnlinePlayers()){
+                playerStatistics.get(player).Save(player);
                 new PlayerList(player, PlayerList.SIZE_FOUR).clearCustomTabs();
                 if(!Main.player_block_changes.containsKey(player)) continue;
                 List<Location> copy = Main.player_block_changes.get(player);
@@ -252,7 +287,7 @@ public final class Main extends JavaPlugin implements Listener {
                         Main.player_block_changes.put(player, l);
                     }
                 }
-                playerStatistics.get(player).Save(player);
+
             }
             for (Map.Entry<Integer, Faction> integerFactionEntry : faction_cache.entrySet()) {
                 integerFactionEntry.getValue().saveFactionData();
@@ -263,9 +298,7 @@ public final class Main extends JavaPlugin implements Listener {
             con.close();
             con = null;
 
-        } catch (Exception e) {
-            System.out.println("A KURVA");
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
 
     }
@@ -306,12 +339,12 @@ public final class Main extends JavaPlugin implements Listener {
     // Készülőben Illetve talán mégse kéne XD
     public static class Faction {
 
-        public Integer id;
+        public int id;
 
         public String name;
 
         public String leader;
-        public Integer balance;
+        public int balance;
         public ArrayList<HCF_Claiming.Faction_Claim> claims = new ArrayList<>();
         public double DTR = 0;
         public double DTR_MAX = 0;
@@ -333,7 +366,7 @@ public final class Main extends JavaPlugin implements Listener {
         public ArrayList<HistoryEntrys.InviteEntry> inviteHistory = new ArrayList<>();
         public ArrayList<HistoryEntrys.RankEntry> rankCreateHistory = new ArrayList<>();
 
-        public Faction(Integer id, String name, String leader, Integer balance) {
+        public Faction(int id, String name, String leader, int balance) {
             this.id = id;
             this.name = name;
             this.leader = leader;
@@ -341,8 +374,171 @@ public final class Main extends JavaPlugin implements Listener {
             this.balance = balance;
 
         }
+        public boolean isPlayerInFaction(Player p){
+            return player_ranks.containsKey(p);
+        }
+        public void loadFactionHistory(JSONObject mainJSON){
+            try{
+                JSONArray balance_array = mainJSON.getJSONArray("balanceHistory");
+                JSONArray kick_array = mainJSON.getJSONArray("kickHistory");
+                JSONArray join_array = mainJSON.getJSONArray("joinLeftHistory");
+                JSONArray factionjoin_array = mainJSON.getJSONArray("factionjoinLeftHistory");
+                JSONArray invite_array = mainJSON.getJSONArray("inviteHistory");
+                JSONArray rank_array = mainJSON.getJSONArray("rankCreateHistory");
+                if(balance_array.length() > 0){
+                    for(int x = 0;x<=balance_array.length()-1;x++) {
+                        System.out.println("Balance on lOad: " + balance_array.getJSONObject(x));
+                        if(x >= 50){
+                            balanceHistory.remove(balanceHistory.size() - 1);
+                        }
+
+                        JSONObject obj = balance_array.getJSONObject(x);
+                        balanceHistory.add(new HistoryEntrys.BalanceEntry(
+                                obj.getInt("amount"),
+                                obj.getString("player"),
+                                obj.getLong("time")
+                        ));
+                    }
+                }
+                if(kick_array.length() > 0){
+                    for(int x = 0;x<=kick_array.length()-1;x++) {
+                        if(x >= 50){
+                            kick_array.remove(kickHistory.size() - 1);
+                        }
+                        JSONObject obj = kick_array.getJSONObject(x);
+                        kickHistory.add(new HistoryEntrys.KickEntry(
+                                obj.getString("player"),
+                                obj.getString("executor"),
+                                obj.getLong("time"),
+                                obj.getString("reason")
+                        ));
+                    }
+                }
+                if(factionjoin_array.length() > 0){
+                    for(int x = 0;x<=factionjoin_array.length()-1;x++) {
+                        if(x >= 50){
+                            factionjoinLeftHistory.remove(factionjoinLeftHistory.size() - 1);
+                        }
+                        JSONObject obj = factionjoin_array.getJSONObject(x);
+                        factionjoinLeftHistory.add( new HistoryEntrys.FactionJoinLeftEntry(
+                                obj.getString("player"),
+                                obj.getString("type"),
+                                obj.getLong("time")
+                        ));
+                    }
+                }
+                if(join_array.length() > 0){
+                    for(int x = 0;x<=join_array.length()-1;x++) {
+                        if(x >= 50){
+                            joinLeftHistory.remove(joinLeftHistory.size() - 1);
+                        }
+                        JSONObject obj = join_array.getJSONObject(x);
+                        joinLeftHistory.add(new HistoryEntrys.JoinLeftEntry(
+                                obj.getString("player"),
+                                obj.getBoolean("isjoined"),
+                                obj.getLong("time")
+                        ));
+                    }
+                }
+                if(invite_array.length() > 0){
+                    for(int x = 0;x<=invite_array.length()-1;x++) {
+                        if(x >= 50){
+                            inviteHistory.remove(inviteHistory.size() - 1);
+                        }
+                        JSONObject obj = invite_array.getJSONObject(x);
+                        inviteHistory.add(new HistoryEntrys.InviteEntry(
+                                obj.getString("executor"),
+                                obj.getString("player"),
+                                obj.getLong("time"),
+                                obj.getBoolean("isinvited")
+                        ));
+                    }
+                }
+                if(rank_array.length() > 0){
+                    for(int x = 0;x<=rank_array.length()-1;x++) {
+                        if(x >= 50){
+                            rankCreateHistory.remove(rankCreateHistory.size());
+                        }
+                        JSONObject obj = rank_array.getJSONObject(x);
+                        rankCreateHistory.add(new HistoryEntrys.RankEntry(
+                                obj.getString("rank"),
+                                obj.getString("player"),
+                                obj.getLong("time"),
+                                obj.getString("type")
+                        ));
+                    }
+                }
+            }catch (JSONException e){
+                e.printStackTrace();
+                loadFactionHistory(assembleFactionHistory());
+            }
+
+        }
+
+        public JSONObject assembleFactionHistory(){
+            JSONObject main = new JSONObject();
+            JSONArray balanceHistory = new JSONArray();
+            JSONArray kickHistory = new JSONArray();
+            JSONArray joinleftHistory = new JSONArray();
+            JSONArray factionJoinLeftHistory = new JSONArray();
+            JSONArray inviteHistory = new JSONArray();
+            JSONArray rankModifyHistory = new JSONArray();
+            for (HistoryEntrys.BalanceEntry balanceEntry : this.balanceHistory) {
+                JSONObject balance = new JSONObject();
+                balance.put("amount",balanceEntry.amount);
+                balance.put("player",balanceEntry.player);
+                balance.put("time",balanceEntry.time);
+                balanceHistory.put(balance);
+                System.out.println("Balance: " + balanceEntry.amount);
+            }
+            main.put("balanceHistory",balanceHistory);
+            for (HistoryEntrys.InviteEntry InviteEntry : this.inviteHistory) {
+                JSONObject invite = new JSONObject();
+                invite.put("executor",InviteEntry.executor);
+                invite.put("player",InviteEntry.player);
+                invite.put("time",InviteEntry.time);
+                invite.put("isinvited",InviteEntry.isInvited);
+                inviteHistory.put(invite);
+            }
+            main.put("inviteHistory",inviteHistory);
+            for (HistoryEntrys.KickEntry KickEntry : this.kickHistory) {
+                JSONObject kick = new JSONObject();
+                kick.put("executor",KickEntry.executor);
+                kick.put("player",KickEntry.player);
+                kick.put("time",KickEntry.time);
+                kick.put("reason",KickEntry.reason);
+                kickHistory.put(kick);
+            }
+            main.put("kickHistory",kickHistory);
+            for (HistoryEntrys.JoinLeftEntry JoinEntry : this.joinLeftHistory) {
+                JSONObject join = new JSONObject();
+                join.put("player",JoinEntry.player);
+                join.put("isjoined",JoinEntry.isJoined);
+                join.put("time",JoinEntry.time);
+                joinleftHistory.put(join);
+            }
+            main.put("joinLeftHistory",joinleftHistory);
+            for (HistoryEntrys.FactionJoinLeftEntry FactionJoinEntry : this.factionjoinLeftHistory) {
+                JSONObject fjoin = new JSONObject();
+                fjoin.put("player",FactionJoinEntry.player);
+                fjoin.put("type",FactionJoinEntry.type);
+                fjoin.put("time",FactionJoinEntry.time);
+                factionJoinLeftHistory.put(fjoin);
+            }
+            main.put("factionjoinLeftHistory",factionJoinLeftHistory);
+            for (HistoryEntrys.RankEntry rankEntry : this.rankCreateHistory) {
+                JSONObject rank = new JSONObject();
+                rank.put("player",rankEntry.player);
+                rank.put("type",rankEntry.type);
+                rank.put("time",rankEntry.time);
+                rank.put("rank",rankEntry.rank);
+                rankModifyHistory.put(rank);
+            }
+            main.put("rankCreateHistory",rankModifyHistory);
+            return main;
+        }
         public void saveFactionData(){
-            SQL_Connection.dbExecute(con,"UPDATE factions SET name='?',money='?',leader='?' WHERE ID='?'", name, String.valueOf(balance),leader,String.valueOf(id));
+            SQL_Connection.dbExecute(con,"UPDATE factions SET name='?',money='?',leader='?',`statistics`='?' WHERE ID='?'", name, String.valueOf(balance),leader,assembleFactionHistory().toString(),String.valueOf(id));
         }
         public void invitePlayer(Player p) {
             if(memberCount + 1 > max_members_pro_faction || invites.getInvitedPlayers().size()+1 > HCF_Rules.maxInvitesPerFaction ) {
@@ -429,19 +625,22 @@ public final class Main extends JavaPlugin implements Listener {
         }
 
         public void BroadcastFaction(String message) {
-            Player[] members = playertools.getFactionOnlineMembers(name);
+            ArrayList<Player> members = playertools.getFactionOnlineMembers(this);
             for (Player member : members) {
                 member.sendMessage(message);
             }
         }
         public void PlayerBroadcast(String message) {
-            Player[] members = playertools.getFactionOnlineMembers(name);
+            ArrayList<Player> members = playertools.getFactionOnlineMembers(this);
             for (Player member : members) {
                 member.sendMessage();
             }
         }
 
         public void addPrefixPlayer(Player p) {
+            if(1==1){
+                return;
+            }
             Scoreboard sb = playertools.getSB(p, this.id + "");
             Team team = sb.getTeam(this.id + "");
             team.addEntry(p.getName());
@@ -459,6 +658,9 @@ public final class Main extends JavaPlugin implements Listener {
         }
 
         public void removePrefixPlayer(Player p) {
+            if(1==1){
+                return;
+            }
             Scoreboard sb = playertools.getSB(p, this.id + "");
             Team team = sb.getTeam(this.id + "");
             team.removeEntry(p.getName());
@@ -552,6 +754,8 @@ public final class Main extends JavaPlugin implements Listener {
         public long TimePlayed;
         public long startDate;
         public long lastLogin;
+        public int kills;
+        public int deaths;
 
         public ArrayList<FactionHistory> factionHistory = new ArrayList<>();
         public PlayerStatistic(JSONObject mainJSON){
@@ -563,7 +767,6 @@ public final class Main extends JavaPlugin implements Listener {
             TotalArcherClassTime = Long.parseLong(ClassTimes.get("Archer").toString());
             TotalMinerClassTime = Long.parseLong(ClassTimes.get("Miner").toString());
             TotalClassTime = Long.parseLong(ClassTimes.get("Total").toString());
-
             JSONArray array = mainJSON.getJSONArray("FactionHistory");
             if(array.length() > 0){
                 for(int x = 0;x<=array.length()-1;x++) {
@@ -607,8 +810,6 @@ public final class Main extends JavaPlugin implements Listener {
             }
             jsonComp.put("FactionHistory", factions);
             jsonComp.put("ClassTimes", classTimes);
-            System.out.println("SAVING THE CICA");
-            System.out.println(jsonComp);
             SQL_Connection.dbExecute(con,"UPDATE members SET statistics='?' WHERE uuid='?'",jsonComp.toString(),p.getUniqueId().toString());
         }
     }

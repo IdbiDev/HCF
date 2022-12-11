@@ -5,6 +5,7 @@ import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.InviteManagerInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+
+import java.util.Date;
 
 public class Click_InvitedPlayers implements Listener {
 
@@ -42,6 +45,12 @@ public class Click_InvitedPlayers implements Listener {
             if(p == null) return;
 
             faction.unInvitePlayer(p);
+            faction.inviteHistory.add(new HistoryEntrys.InviteEntry(
+                    ((Player) e.getWhoClicked()).getPlayer().getName(),
+                    p.getName(),
+                    new Date().getTime(),
+                    false
+            ));
             ((Player) e.getWhoClicked()).sendMessage(Messages.UNINVITE_EXECUTOR.repPlayer(p).queue());
             p.sendMessage(Messages.UNINVITE_TARGET.repPlayer((Player) e.getWhoClicked()).queue());
             e.getWhoClicked().openInventory(InviteManagerInventory.invitedPlayers((Player) e.getWhoClicked()));

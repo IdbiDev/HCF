@@ -9,6 +9,7 @@ import me.idbi.hcf.FrakcioGUI.Menus.InviteManagerInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
@@ -16,6 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+
+import java.util.Date;
 
 public class Click_InviteManager implements Listener {
 
@@ -64,7 +67,12 @@ public class Click_InviteManager implements Listener {
                                 if (!faction.isPlayerInvited(target)) {
                                     faction.invitePlayer(target);
                                     // Broadcast both player the invite successful
-
+                                    faction.inviteHistory.add(new HistoryEntrys.InviteEntry(
+                                            p.getName(),
+                                            target.getName(),
+                                            new Date().getTime(),
+                                            true
+                                    ));
                                     p.sendMessage(Messages.INVITED_PLAYER.repPlayer(target).queue());
                                     //target.sendMessage(Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue());
                                     Clickable_Join.sendMessage(target,

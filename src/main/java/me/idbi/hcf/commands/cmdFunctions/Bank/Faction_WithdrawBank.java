@@ -4,8 +4,11 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
+
+import java.util.Date;
 
 
 public class Faction_WithdrawBank {
@@ -43,6 +46,9 @@ public class Faction_WithdrawBank {
                 if (withdraw.transactionSuccessfully()) {
                     p.sendMessage(Messages.FACTION_BANK_WITHDRAW.queue().replace("%amount%", args[1]));
                     Scoreboards.refresh(p);
+                    faction.balanceHistory.add(0,
+                            new HistoryEntrys.BalanceEntry(-Integer.parseInt(args[1]),p.getName(),new Date().getTime())
+                    );
                 }
             } catch (NumberFormatException ex) {
                 p.sendMessage(Messages.FACTION_BANK_NUMBER_ERROR.queue());

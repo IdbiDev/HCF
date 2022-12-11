@@ -8,6 +8,7 @@ import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.classes.ClassSelector;
 import me.idbi.hcf.classes.subClasses.Bard;
 import me.idbi.hcf.koth.KOTH;
+import me.idbi.hcf.particles.Shapes;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -38,6 +39,7 @@ public class Misc_Timers {
                     if (playertools.getMetadata(player, "class").equalsIgnoreCase("bard")){
                         Bard.useSimpleBardEffect(player);
                     }
+                    //Shapes.Crossing(new Location(player.getWorld(),10,64,16),new Location(player.getWorld(),-21,64,-5),Effect.HEART,10);
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 60);
@@ -196,6 +198,7 @@ public class Misc_Timers {
                         stopKoth();
                     }
                 }
+
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }
@@ -302,6 +305,7 @@ public class Misc_Timers {
             public void run() {
 
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    //Shapes.Crossing(new Location(player.getWorld(),10,64,16),new Location(player.getWorld(),-21,64,-5),Effect.HEART,10);
                     try {
                          if(HCF_Timer.checkArcherTimer(player)){
                              player.getWorld().playEffect(player.getLocation().add(0,1,0), Effect.COLOURED_DUST,Effect.COLOURED_DUST.getId());
@@ -310,7 +314,7 @@ public class Misc_Timers {
                 }
 
             }
-        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 10);
+        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 100);
     }
     public static void DeleteWallsForPlayer(Player player){
 

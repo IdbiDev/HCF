@@ -42,10 +42,15 @@ public class onDeath implements Listener {
             }
             playertools.setMetadata(damager,"kills",Integer.parseInt(playertools.getMetadata(damager,"kills"))+1);
             playertools.setMetadata(victim,"deaths",Integer.parseInt(playertools.getMetadata(victim,"deaths")+1));
+            Main.PlayerStatistic cica = Main.playerStatistics.get(damager);
+            cica.kills++;
+            Main.playerStatistics.put(damager,cica);
+            cica = Main.playerStatistics.get(victim);
+            cica.deaths++;
+            Main.playerStatistics.put(victim,cica);
 
-
-            System.out.println(SQL_Connection.dbExecute(con,"UPDATE members SET kills=kills+1 WHERE uuid='?'",damager.getUniqueId().toString()));
-            System.out.println(SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString()));
+            SQL_Connection.dbExecute(con,"UPDATE members SET kills=kills+1 WHERE uuid='?'",damager.getUniqueId().toString());
+           SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString());
         } else {
             SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString());
             e.setDeathMessage(Messages.KILL_MESSAGE_BROADCAST_WITHOUT_VICTIM.repDeathWithoutKiller(victim).queue());

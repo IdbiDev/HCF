@@ -4,9 +4,12 @@ import me.idbi.hcf.ClickableMessages.Clickable_Join;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.Date;
 
 public class Faction_Invite {
     public static void InvitePlayerToFaction(Player p, String name) {
@@ -34,9 +37,14 @@ public class Faction_Invite {
 
                         //target.sendMessage(Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue());
                         //Invite kiírása a faction számára
-                        Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
-                        f.BroadcastFaction(Messages.FACTION_INVITE_BROADCAST.repExecutor(p).repPlayer(target).queue());
-
+                        //Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+                        faction.BroadcastFaction(Messages.FACTION_INVITE_BROADCAST.repExecutor(p).repPlayer(target).queue());
+                        faction.inviteHistory.add(0, new HistoryEntrys.InviteEntry(
+                                p.getName(),
+                                target.getName(),
+                                new Date().getTime(),
+                                true
+                        ));
                     } else {
                         // This player is already invited
                         p.sendMessage(Messages.ALREADY_INVITED.queue());

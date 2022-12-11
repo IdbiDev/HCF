@@ -106,9 +106,8 @@ public class Bard implements HCF_Class {
                 for (Player p : getFactionMembersInDistance(bardplayer, 10)) {
                     PotionEffectType potion = item.effect;
                     p.addPotionEffect(new PotionEffect(potion, 180, 0, false, false));
+                    Shapes.DrawCircle(bardplayer,10,2, Effect.HAPPY_VILLAGER);
                 }
-                if(!bardplayer.isSneaking())
-                    Shapes.DrawCircle(bardplayer.getLocation(),10,2, Effect.HAPPY_VILLAGER);
                 //bardplayer.getWorld().playEffect(new Location(bardplayer.getWorld(),bardplayer.getLocation().getBlockX(),bardplayer.getLocation().getBlockY(),bardplayer.getLocation().getBlockZ()), Effect.HAPPY_VILLAGER,Effect.HAPPY_VILLAGER.getId());
             }
         }
@@ -164,7 +163,8 @@ public class Bard implements HCF_Class {
                         if(counts+1 > 15)
                             cancel();
                         counts++;
-                        Shapes.DrawCircle(loc,counts,2, Effect.HAPPY_VILLAGER);
+                        for(Player teammate : getFactionMembersInDistance(bardplayer,15))
+                            Shapes.DrawCircle(teammate,counts,2, Effect.HAPPY_VILLAGER);
                     }
                 }.runTaskTimer(m,0L,0L);
                 bardplayer.sendMessage(Messages.BARD_USED_POWERUP

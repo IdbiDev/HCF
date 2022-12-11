@@ -5,6 +5,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.koth.KOTH;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -14,6 +15,7 @@ import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -51,7 +53,10 @@ public class playertools {
                 Main.faction_cache.get(Integer.valueOf(String.valueOf(playerMap.get("faction")))).ApplyPlayerRank(player, String.valueOf(playerMap.get("rank")));
             }
             Scoreboards.refresh(player);
-            Main.playerStatistics.put(player,new Main.PlayerStatistic(new JSONObject(playerMap.get("statistics").toString())));
+            Main.PlayerStatistic statistic = new Main.PlayerStatistic(new JSONObject(playerMap.get("statistics").toString()));
+            statistic.kills = (int) playerMap.get("kills");
+            statistic.deaths = (int) playerMap.get("deaths");
+            Main.playerStatistics.put(player,statistic);
 
         } else {
             // Játékos létrehozása SQL-ben, majd újra betöltjük
@@ -105,7 +110,7 @@ public class playertools {
         return null;
     }
     public static List<Player> getFactionMembersInDistance(Player p, double distance) {
-        String faction = getMetadata(p, "faction");
+        Main.Faction faction = getPlayerFaction(p);
         List<Player> players = new ArrayList<>();
         for (Player player : getFactionOnlineMembers(faction)) {
             if (p.getLocation().distance(player.getLocation()) <= distance) {
@@ -117,21 +122,21 @@ public class playertools {
 
     public static boolean isFactionOnline(String name) {
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if (getMetadata(p, "faction").equals(name)) {
+            if (getMetadata(p, "faction").equalsIgnoreCase(name)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static Player[] getFactionOnlineMembers(String name) {
-        List<Player> players = new ArrayList<Player>();
+    public static  ArrayList<Player> getFactionOnlineMembers(Main.Faction faction) {
+        ArrayList<Player> players = new ArrayList<Player>();
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if (getMetadata(p, "faction").equals(name)) {
+            if (faction.isPlayerInFaction(p)){
                 players.add(p);
             }
         }
-        return players.toArray(new Player[0]);
+        return players;
     }
 
     public static HashMap<String, String> getFactionMembers(int id) {
@@ -152,7 +157,7 @@ public class playertools {
         }
     }
     public static void RenameFaction(Main.Faction faction,String name){
-        for(Player p : getFactionOnlineMembers(faction.name)){
+        for(Player p : getFactionOnlineMembers(faction)){
             setMetadata(p,"faction",name);
         }
         String oldname = faction.name;
@@ -171,6 +176,8 @@ public class playertools {
 
     public static void setPlayerBalance(Player p, int amount) {
         setMetadata(p, "money", amount);
+
+
     }
 
     public static void setMetadata(Player p, String key, Object data) {
@@ -266,6 +273,7 @@ public class playertools {
 
     public static void setFactionCache() {
         try {
+            Scoreboard main_score = Bukkit.getScoreboardManager().getMainScoreboard();
             Main.factionToname.clear();
             Main.faction_cache.clear();
             PreparedStatement ps = con.prepareStatement("SELECT * FROM factions");
@@ -273,11 +281,24 @@ public class playertools {
             while (rs.next()) {
                 Main.factionToname.put(rs.getInt("ID"), rs.getString("name"));
                 Main.Faction faction = new Main.Faction(rs.getInt("ID"), rs.getString("name"), rs.getString("leader"), rs.getInt("money"));
+                if(isValidJSON(rs.getString("statistics"))){
+                    faction.loadFactionHistory(new JSONObject(rs.getString("statistics")));
+                }else{
+                    faction.loadFactionHistory(faction.assembleFactionHistory());
+                }
                 Main.faction_cache.put(rs.getInt("ID"), faction);
                 Main.nameToFaction.put(rs.getString("name"), faction);
                 faction.memberCount = playertools.countMembers(faction);
                 faction.DTR = Double.parseDouble(CalculateDTR(faction));
                 faction.DTR_MAX = Double.parseDouble(CalculateDTR(faction));
+//                if(main_score.getTeam(faction.name) == null)
+//                    main_score.registerNewTeam(faction.name).setPrefix(ChatColor.GREEN.toString());
+//                else{
+//                    main_score.getTeam(faction.name).unregister();
+//                    main_score.registerNewTeam(faction.name).setPrefix(ChatColor.GREEN.toString());
+//                }
+                //System.out.println(main_score.getTeams());
+                //Main.sendCmdMessage(faction.name + " UWUUUUUUUUUUUUUUUUUUU");
                 if (Main.debug)
                     Main.sendCmdMessage(faction.name + " Prepared");
                 if (rs.getString("home") == null)
@@ -293,8 +314,9 @@ public class playertools {
                 faction.setHomeLocation(loc);
                 /*Main.DTR_REGEN.put(faction.factionid, System.currentTimeMillis() + DTR_REGEN_TIME* 1000L);
                 faction.DTR -= Main.DEATH_DTR;*/
+
             }
-        } catch (SQLException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
     }
@@ -391,6 +413,7 @@ public class playertools {
     */
     public static String CalculateDTR(Main.Faction faction){
 
+
         double addedDTR = 1.5;
         for(int i = 1; i <= faction.memberCount; i++) {
             if(faction.memberCount % 5 == 0) {
@@ -470,6 +493,9 @@ public class playertools {
 
     public static int getDistanceBetweenPoints2D(HCF_Claiming.Point p1, HCF_Claiming.Point p2) {
         return (Math.abs(p1.x-p2.x) + Math.abs(p1.z-p2.z));
+    }
+    public static int getDistanceBetweenPoints2D(Location p1,Location p2) {
+        return (Math.abs(p1.getBlockX()-p2.getBlockX()) + Math.abs(p1.getBlockZ()-p2.getBlockZ()));
     }
     public static void placeBlockChange(Player p,Location loc){
         if(Main.player_block_changes.containsKey(p)) {
@@ -568,5 +594,13 @@ public class playertools {
             t.setAllowFriendlyFire(false);
             return b;
         }
+    }
+    public static boolean isValidJSON(String json) {
+        try {
+            new JSONObject(json);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }
