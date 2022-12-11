@@ -1,6 +1,8 @@
 package me.idbi.hcf;
 
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import me.idbi.hcf.CustomFiles.*;
 import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.MessagesEnums.Messages;
@@ -76,6 +78,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static ArrayList<UUID> kothRewardsGUI;
 
     public static List<String> blacklistedRankNames;
+    public static ProtocolManager protocolManager;
     public static AutoKoth autoKoth = new AutoKoth();
 
     // Egyszerű SQL Connection getter
@@ -156,6 +159,8 @@ public final class Main extends JavaPlugin implements Listener {
         Faction_Home.teleportPlayers = new ArrayList<>();
 
         SetupBot.setup();
+
+        protocolManager = ProtocolLibrary.getProtocolManager();
         //EnchantmentFile.setup();
 
         // Config

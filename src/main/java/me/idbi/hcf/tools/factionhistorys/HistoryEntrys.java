@@ -29,6 +29,9 @@ public class HistoryEntrys {
     public static class RankEntry {
 
         public final String player;
+        /**
+         * Types: modified, created, deleted
+         */
         public final String type;
         public final String rank;
         public final long time;
@@ -53,6 +56,9 @@ public class HistoryEntrys {
     public static class FactionJoinLeftEntry {
 
         public final String player;
+        /**
+         * Types: invited, kicked, Leaved
+         */
         public final String type;
         public final long time;
         public FactionJoinLeftEntry(String player,String type,long time){

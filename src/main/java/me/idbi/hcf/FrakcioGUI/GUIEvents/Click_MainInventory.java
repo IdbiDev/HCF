@@ -7,6 +7,7 @@ import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.InviteManagerInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
+import me.idbi.hcf.HistoryGUI.History.FactionHistoryInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
@@ -61,6 +62,18 @@ public class Click_MainInventory implements Listener {
             }
              GUI_Sound.playSound(p,"click");
              p.openInventory(InviteManagerInventory.inv());
+        }
+
+        else if(e.getCurrentItem().isSimilar(GUI_Items.histories())) {
+            // ToDo: Logs check permission
+            //if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_INVITE)) {
+             /*   p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
+                GUI_Sound.playSound(p,"error");
+                return;
+            }*/
+             GUI_Sound.playSound(p,"click");
+             p.openInventory(FactionHistoryInventory.inv(playertools.getPlayerFaction(p),
+                     1, 1, 1, 1, 1, 1));
         }
 
         else if(e.getCurrentItem().isSimilar(GUI_Items.renameFaction())) {

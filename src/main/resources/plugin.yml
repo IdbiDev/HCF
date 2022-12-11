@@ -42,7 +42,8 @@ permissions:
       factions.command.addenchant,
       factions.command.removeenchant,
       factions.command.enchantinfo,
-      factions.command.enchantbook
+      factions.command.enchantbook,
+      factions.command.stats
     ]
   factions.admin.teleport.bypass:
     default: op
@@ -55,4 +56,6 @@ permissions:
   factions.command.enchantinfo:
     default: op
   factions.command.enchantbook:
+    default: op
+  factions.command.stats:
     default: op

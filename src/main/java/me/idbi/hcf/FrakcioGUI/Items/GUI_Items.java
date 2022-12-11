@@ -97,4 +97,17 @@ public class GUI_Items {
         is.setItemMeta(im);
         return is;
     }
+
+    public static ItemStack histories() {
+        ItemStack is = new ItemStack(Material.PAPER);
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName("§eFaction Histories");
+
+        im.setLore(Arrays.asList(
+                "§5",
+                "§7Click here to see the histories!"
+        ));
+        is.setItemMeta(im);
+        return is;
+    }
 }

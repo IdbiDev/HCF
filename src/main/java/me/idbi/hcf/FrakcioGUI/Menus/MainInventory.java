@@ -24,6 +24,7 @@ public class MainInventory {
         Main.Faction faction = playertools.getPlayerFaction(p);
         assert faction != null;
         inv.setItem(31, GUI_Items.factinoStats(faction));
+        inv.setItem(27, GUI_Items.histories());
         return inv;
     }
 }

@@ -32,7 +32,7 @@ public class faction implements CommandExecutor, TabCompleter {
         //if (cmd.getName().equalsIgnoreCase("faction")) {
         if (sender instanceof Player p) {
             if (args.length > 0) {
-                switch (args[0]) {
+                switch (args[0].toLowerCase()) {
                     case "create":
                         //CreateFaction
                         try {
@@ -76,6 +76,8 @@ public class faction implements CommandExecutor, TabCompleter {
                     case "leave":
                         Faction_Leave.leave_faction(p);
                         break;
+                    case "stats":
+                        Faction_Stats.PlayerStats(p, args);
                     case "withdraw":
                         //WithdrawFaction
                         if (args.length != 2) {
