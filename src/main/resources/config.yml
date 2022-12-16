@@ -14,12 +14,12 @@ DATABASE_PASSWORD: ''
 # Main scoreboard
 Scoreboard_title: '&6HCF+ &7- &eMap &6#1'
 Scoreboard:
-  - "&7\u250c\u2500"
-  - "&7\u2502 &eFaction: &6%faction%"
-  - "&7\u2502 &eLocation: &6%location%"
-  - "&7\u2502 &eMoney: &6$%money%"
-  - "&7\u2502 &eClass: &6%class%"
-  - "&7\u2514\u2500"
+  - "&7┌─"
+  - "&7│ &eFaction: &6%faction%"
+  - "&7│ &eLocation: &6%location%"
+  - "&7│ &eMoney: &6$%money%"
+  - "&7│ &eClass: &6%class%"
+  - "&7└─"
   - "empty"
   - "&7▍ &e%customtimers%"
   - "&7▍ &eEOTW: &6%eotw%"

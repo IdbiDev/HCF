@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.AdminTools;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -51,7 +52,11 @@ public class onPlayerJoin implements Listener {
             addPvPTimerCoolDownSpawn(e.getPlayer());
         }
         e.setJoinMessage("");
-        
+
+        for (Player admins : AdminTools.InvisibleManager.invisedAdmins) {
+            AdminTools.InvisibleManager.hidePlayer(admins);
+        }
+
         if (!Objects.equals(playertools.getMetadata(p, "factionid"), "0")) {
             Main.Faction f = playertools.getPlayerFaction(e.getPlayer());
             if(f != null) {

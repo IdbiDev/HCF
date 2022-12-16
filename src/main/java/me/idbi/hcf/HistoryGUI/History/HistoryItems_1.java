@@ -25,8 +25,10 @@ public class HistoryItems_1 {
 
         ArrayList<String> lore = new ArrayList<>();
 
+        int counter = 1;
         for (HistoryEntrys.JoinLeftEntry joinLeftEntry : f.joinLeftHistory) {
-            lore.add(designJoinLeft(joinLeftEntry));
+            lore.add("§7" + counter + ". " + designJoinLeft(joinLeftEntry));
+            counter++;
         }
 
         im.setLore(GUITools.setupPageLore(page, lore, (int) Math.ceil(f.joinLeftHistory.size() / 5.0)));
@@ -73,11 +75,13 @@ public class HistoryItems_1 {
 
         ArrayList<String> lore = new ArrayList<>();
 
+        int counter = 1;
         for (HistoryEntrys.KickEntry kick : f.kickHistory) {
-            lore.add(designKickHistory(kick));
+            lore.add("§7" + counter + ". " + designKickHistory(kick));
+            counter++;
         }
 
-        im.setLore(GUITools.setupPageLore(page, lore, (int) Math.ceil(f.kickHistory.size() / 5.0)));
+        im.setLore(GUITools.setupPageLore(page, lore, (int) Math.ceil(f.kickHistory.size() / 10.0)));
 
         is.setItemMeta(im);
         return is;

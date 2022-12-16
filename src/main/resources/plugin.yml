@@ -29,6 +29,9 @@ commands:
     aliases: [ k, kh, pornhub ]
     description: HCF Koth commands
     #usage: /<command> help
+  setuplogs:
+  customtimer:
+    aliases: [ ct, customt, ctimer ]
 
 permissions:
   factions.reload:
@@ -43,7 +46,8 @@ permissions:
       factions.command.removeenchant,
       factions.command.enchantinfo,
       factions.command.enchantbook,
-      factions.command.stats
+      factions.command.stats,
+      factions.admin.customtimer
     ]
   factions.admin.teleport.bypass:
     default: op
@@ -58,4 +62,6 @@ permissions:
   factions.command.enchantbook:
     default: op
   factions.command.stats:
+    default: op
+  factions.admin.customtimer:
     default: op

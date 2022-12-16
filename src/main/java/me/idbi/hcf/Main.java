@@ -6,6 +6,7 @@ import com.comphenix.protocol.ProtocolManager;
 import me.idbi.hcf.CustomFiles.*;
 import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.TabManager.PlayerList;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.koth.AutoKoth;
@@ -60,6 +61,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static double DEATH_DTR;
     public static boolean abilities_loaded = false;
     public static boolean customenchants_loaded = false;
+    public static HashMap<String, CustomTimers> customSBTimers;
 
     public static int DTR_REGEN_TIME;
 
@@ -166,6 +168,8 @@ public final class Main extends JavaPlugin implements Listener {
 
         protocolManager = ProtocolLibrary.getProtocolManager();
         //EnchantmentFile.setup();
+        AdminTools.InvisibleManager.invisedAdmins = new ArrayList<>();
+        customSBTimers = new HashMap<>();
 
         // Config
         ArrayList<String> scoreboardList = new ArrayList<String>() {{
@@ -184,26 +188,25 @@ public final class Main extends JavaPlugin implements Listener {
             add("&7▍ &ePearl: &6%ep_cd%");
             add("&7▍ &eBard energy: &6%bard_energy%");
         }};
-//        getConfig().addDefault("Scoreboard", scoreboardList);
-//        getConfig().addDefault("Freeze.Ban", true);
-//        getConfig().addDefault("Freeze.Reason", "You leaved when you are froze!");
-//        getConfig().addDefault("Freeze.BanTimeSeconds", 300);
-//        getConfig().addDefault("PvP-Quit.Ban", true);
-//        getConfig().addDefault("PvP-Quit.Reason", "You leaved when you are in pvp!");
-//        getConfig().addDefault("PvP-Quit.BanTimeSeconds", 900);
+
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         saveConfig();
+
         KothRewardsFile.setup();
+
         setupEvents.SetupEvents();
         setupCommands.setupCommands();
+
         playertools.setFactionCache();
         playertools.cacheFactionClaims();
         playertools.LoadRanks();
         playertools.prepareKoths();
+
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             playertools.LoadPlayer(player);
         }
+
         Misc_Timers.CheckArmors();
         Misc_Timers.DTR_Timer();
         Misc_Timers.Bard_Energy();
@@ -212,6 +215,7 @@ public final class Main extends JavaPlugin implements Listener {
         Misc_Timers.KOTH_Countdown();
         Misc_Timers.CleanupFakeWalls();
         Misc_Timers.ArcherTagEffect();
+
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
 
@@ -247,7 +251,7 @@ public final class Main extends JavaPlugin implements Listener {
     }
     @EventHandler
     public void onDisableEvent(PluginDisableEvent e) {
-        if(e.getPlugin().equals(Main.getPlugin(Main.class))) {
+        if(e.getPlugin().equals(this)) {
             try {
                 for(Player player : Bukkit.getOnlinePlayers()){
                     playerStatistics.get(player).Save(player);
@@ -399,7 +403,7 @@ public final class Main extends JavaPlugin implements Listener {
                 JSONArray rank_array = mainJSON.getJSONArray("rankCreateHistory");
                 if(balance_array.length() > 0){
                     for(int x = 0;x<=balance_array.length()-1;x++) {
-                        System.out.println("Balance on lOad: " + balance_array.getJSONObject(x));
+                        System.out.println("Balance on load: " + balance_array.getJSONObject(x));
                         if(x >= 50){
                             balanceHistory.remove(balanceHistory.size() - 1);
                         }
@@ -495,6 +499,7 @@ public final class Main extends JavaPlugin implements Listener {
             JSONArray factionJoinLeftHistory = new JSONArray();
             JSONArray inviteHistory = new JSONArray();
             JSONArray rankModifyHistory = new JSONArray();
+
             for (HistoryEntrys.BalanceEntry balanceEntry : this.balanceHistory) {
                 JSONObject balance = new JSONObject();
                 balance.put("amount",balanceEntry.amount);
@@ -693,8 +698,7 @@ public final class Main extends JavaPlugin implements Listener {
                     total += rs.getInt("kills");
 
                 }
-            }catch (SQLException ignored)
-            {
+            }catch (SQLException ignored) {
 
             }
             return total;

@@ -32,7 +32,6 @@ public class GUITools {
         boolean isBold = false;
 
         for(char c : message.toCharArray()) {
-            System.out.println("Beleszámolva");
             if(c == '§') {
                 previousCode = true;
                 continue;
@@ -80,7 +79,7 @@ public class GUITools {
 
         return "§7- §fPage " + currentPage + " §7§l➸ "+ str;
     }
-//●Zia UwU UwU gyere voice köcsög <3 ;) :P
+
     public static int getCenterPX(String highestLengthString) {
         int finalInt = 0;
         for (char c : highestLengthString.toCharArray()) {
@@ -119,10 +118,14 @@ public class GUITools {
         }
 
         public static int[] getSubs(int currentPage) {
-            return new int[]{
-                    valueOf("NUM_" + currentPage).min,
-                    valueOf("NUM_" + currentPage).max
-            };
+            try {
+                return new int[]{
+                        valueOf("NUM_" + currentPage).min,
+                        valueOf("NUM_" + currentPage).max
+                };
+            } catch (IllegalArgumentException e) {
+                return new int[]{NUM_5.min, NUM_5.max};
+            }
         }
     }
 }

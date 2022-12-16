@@ -73,7 +73,7 @@ public class Faction_Kick {
                     f.memberCount--;
                     f.refreshDTR();
                     Scoreboards.RefreshAll();
-                    f.factionjoinLeftHistory.add(new HistoryEntrys.FactionJoinLeftEntry(targetPlayer_Offline.getName(),"kicked",new Date().getTime()));
+                    f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(targetPlayer_Offline.getName(),"kicked",new Date().getTime()));
                 }
                 player.sendMessage(Messages.MAX_MEMBERS_REACHED.queue());
             } else {

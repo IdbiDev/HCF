@@ -167,6 +167,7 @@ public class Bard implements HCF_Class {
                             Shapes.DrawCircle(teammate,counts,2, Effect.HAPPY_VILLAGER);
                     }
                 }.runTaskTimer(m,0L,0L);
+
                 bardplayer.sendMessage(Messages.BARD_USED_POWERUP
                         .setAmount(String.valueOf(item.cost))
                         .repBardEffects(

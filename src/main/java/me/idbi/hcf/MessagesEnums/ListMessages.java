@@ -4,6 +4,7 @@ package me.idbi.hcf.MessagesEnums;
 
 import me.idbi.hcf.CustomFiles.ConfigManager;
 import me.idbi.hcf.CustomFiles.MessagesFile;
+import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,39 +15,60 @@ public enum ListMessages {
 
     FACTION_SHOW(Arrays.asList(
             "&8&m        &c %faction_name% &f[%faction_status%&f] &8&m        ",
-            "&7&l✣ &eLeader: &a%leader_name%",
-            "&6Members:",
+            "&7&l» &eLeader: &a%leader_name%",
+            " ",
+            "&6Members &7[%members_online%/%members_count%]",
             "%members_list_categories_and_members%",
             " ",
-            "&7┌ &eBalance: &a$%faction_balance%",
+            "&7┌─",
+            "&7│ &eBalance: &a$%faction_balance%",
+            "&7│ &eDTR: &a%faction_dtr%&7/&a%faction_max_dtr% &eRaidable: &a%faction_raidable%",
+            "&7│ &eDTR Regenerating: %faction_dtr_regen",
+            "&7│ &eHome Location: &a%faction_pos%",
             "&7├ &eKills: &a%faction_kills%",
             "&7├ &eDeaths: &a%faction_deaths%",
-            "&7├ &eHome Location: &a%faction_pos%",
-            "&7└ &eDTR: &a%faction_dtr%"
+            "&7└─"
     )),
 
-    CLAIM_INFO(Arrays.asList(
+    /*CLAIM_INFO(Arrays.asList(
             "%prefix% &6Claiming information:",
             "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
             "&7&l» &ePress &6&o[LEFT] &eclick on the ground, to place the other position!", // pos2
             "&eTo accept the claim, press &6&oSHIFT + RIGHT &eclick!", // right click
             "&eTo discard the claim, press &6&oSHIFT + LEFT &eclick!" // left click
+    )),*/
+
+    CLAIM_INFO(Arrays.asList(
+            "&eLeft and right click on the ground",
+            "&f➥ to place the positions.",
+            " ",
+            "&eShift + Right click",
+            "&f➥ Accept the claim.",
+            " ",
+             "&eShift + Left click",
+            "&f➥ Discard the claim."
     )),
 
     SPAWN_CLAIM(Arrays.asList(
-            "%prefix% &6Spawn claiming information:",
-            "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
-            "&7&l» &ePress &6&o[LEFT] &eclick on the ground, to place the other position!", // pos2
-            "&eTo accept the claim, press &6&oSHIFT + RIGHT &eclick!", // right click
-            "&eTo discard the claim, press &6&oSHIFT + LEFT &eclick!" // left click
+            "&eLeft and right click on the ground",
+            "&f➥ to place the positions.",
+            " ",
+            "&eShift + Right click",
+            "&f➥ Accept the claim.",
+            " ",
+            "&eShift + Left click",
+            "&f➥ Discard the claim."
     )),
 
     KOTH_CLAIM(Arrays.asList(
-            "%prefix% &6Koth claiming information:",
-            "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
-            "&7&l» &ePress &6&o[LEFT] &eclick on the ground, to place the other position!", // pos2
-            "&eTo accept the claim, press &6&oSHIFT + RIGHT &eclick!", // right click
-            "&eTo discard the claim, press &6&oSHIFT + LEFT &eclick!" // left click
+            "&eLeft and right click on the ground",
+            "&f➥ to place the positions.",
+            " ",
+            "&eShift + Right click",
+            "&f➥ Accept the claim.",
+            " ",
+            "&eShift + Left click",
+            "&f➥ Discard the claim."
     )),
     CLAIM_INFO_ADMIN(Arrays.asList(
             "%prefix% &6Spawn claiming information:",
@@ -141,21 +163,23 @@ public enum ListMessages {
                             .replace("%category%",
                                     category.getKey().substring(0, 1).toUpperCase() + category.getKey().substring(1)));
 
+                    List<String> playersList = new ArrayList<>();
                     for (Map.Entry<String, String> player : players.entrySet()) {
                         if (category.getValue().contains(player.getKey())) { // player a rankban!!!
 //                            if(Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(Bukkit.getPlayer(player.getKey()), "factionid")))
 //                                    .player_ranks.get(Bukkit.getPlayer(player.getKey())).isLeader)
                             if (Bukkit.getPlayer(player.getKey()) != null) { // player online!!
-                                listike.add(Messages.MEMBER_LIST_DESIGN_ONLINE.queue()
+                                playersList.add(Messages.MEMBER_LIST_DESIGN_ONLINE.queue()
                                         .replace("%member%", player.getKey())
                                         .replace("%member_kill%", player.getValue()));
                             } else {
-                                listike.add(Messages.MEMBER_LIST_DESIGN_OFFLINE.queue()
+                                playersList.add(Messages.MEMBER_LIST_DESIGN_OFFLINE.queue()
                                         .replace("%member%", player.getKey())
                                         .replace("%member_kill%", player.getValue()));
                             }
                         }
                     }
+                    listike.add(playersList.toString().substring(1, playersList.toString().length() - 1));
                 }
             }
             if (!line.contains("%members_list_categories_and_members%")) {
@@ -167,7 +191,8 @@ public enum ListMessages {
     }
 
     public ListMessages setupShow(
-            String factionName, String factionStatus, String leaderName, String factionBalance, String factionKills, String factionDeaths, String factionPos, String factionDtr) {
+            String factionName, String factionStatus, String leaderName, String factionBalance, String factionKills, String factionDeaths,
+            String factionPos, String factionDtr, String factionDtrRegen, String dtrMax, String onlinesMembers, String totalMembers, String isRaidable) {
         List<String> lines = new ArrayList<>();
         for (String line : list) {
             lines.add(line
@@ -177,8 +202,14 @@ public enum ListMessages {
                     .replace("%faction_balance%", factionBalance)
                     .replace("%faction_kills%", factionKills)
                     .replace("%faction_deaths%", factionDeaths)
-                    .replace("%faction_pos%", factionPos)
-                    .replace("%faction_dtr%", factionDtr));
+                    .replace("%faction_pos%", (factionPos.equals("0, 0") ? "None" : factionPos))
+                    .replace("%faction_max_dtr%", dtrMax)
+                    .replace("%faction_dtr_regen", factionDtrRegen)
+                    .replace("%faction_dtr%", factionDtr)
+                    .replace("%members_online%", onlinesMembers)
+                    .replace("%members_count%", totalMembers)
+                    .replace("%faction_raidable%", isRaidable)
+            );
         }
         message = lines;
         return this;

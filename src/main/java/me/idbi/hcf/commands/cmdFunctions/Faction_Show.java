@@ -48,7 +48,13 @@ public class Faction_Show {
                         String.valueOf(faction.getKills()),
                         String.valueOf(faction.getDeaths()),
                         homeLoc.getBlockX() + ", " + homeLoc.getBlockZ(),
-                        String.valueOf(faction.DTR)
+                        String.valueOf(faction.DTR),
+                        ((faction.DTR == faction.DTR_MAX) ? "-" : playertools.convertLongToTime(faction.DTR_TIMEOUT)),
+                        String.valueOf(faction.DTR_MAX),
+                        String.valueOf(playertools.getOnlineSize(faction)),
+                        String.valueOf(faction.memberCount),
+                        (faction.DTR <= 0 ? "true" : "false")
+
                 )
                 .setMembers(playertools.getRankPlayers(faction.name),
                         playertools.getPlayersKills()).queueShow()) {

@@ -37,8 +37,10 @@ public class HistoryItems_2 {
 
         ArrayList<String> lore = new ArrayList<>();
 
+        int counter = 1;
         for (HistoryEntrys.InviteEntry inviteEntry : f.inviteHistory) {
-            lore.add(designInvite(inviteEntry));
+            lore.add("§7" + counter + ". " + designInvite(inviteEntry));
+            counter++;
         }
 
         im.setLore(GUITools.setupPageLore(page, lore, (int) Math.ceil(f.inviteHistory.size() / 5.0)));
@@ -60,8 +62,10 @@ public class HistoryItems_2 {
 
         ArrayList<String> lore = new ArrayList<>();
 
+        int counter = 1;
         for (HistoryEntrys.RankEntry rank : f.rankCreateHistory) {
-            lore.add(designRank(rank));
+            lore.add("§7" + counter + ". " + designRank(rank));
+            counter++;
         }
 
         im.setLore(GUITools.setupPageLore(page, lore, (int) Math.ceil(f.rankCreateHistory.size() / 5.0)));
@@ -84,8 +88,10 @@ public class HistoryItems_2 {
 
         ArrayList<String> lore = new ArrayList<>();
 
+        int counter = 1;
         for (HistoryEntrys.FactionJoinLeftEntry fJL : f.factionjoinLeftHistory) {
-            lore.add(designFJoinLeft(fJL));
+            lore.add("§7" + counter + ". " + designFJoinLeft(fJL));
+            counter++;
         }
 
         im.setLore(GUITools.setupPageLore(page, lore, (int) Math.ceil(f.factionjoinLeftHistory.size() / 5.0)));
@@ -102,8 +108,7 @@ public class HistoryItems_2 {
         cal.add(Calendar.HOUR, -1);
         Date oneHourBack = cal.getTime();
 
-        System.out.println("Type: " + entry.type);
-        return "§7[§6" + format.format(oneHourBack) + "§7] §e" + entry.player + "§7 " + entry.type + "§7.";
+        return "§7[§a" + format.format(oneHourBack) + "§7] §2" + entry.player + "§7 has been " + entry.type + "§7.";
     }
 
     public static String designInvite(HistoryEntrys.InviteEntry entry) {
@@ -126,7 +131,7 @@ public class HistoryItems_2 {
         cal.add(Calendar.HOUR, -1);
         Date oneHourBack = cal.getTime();
 
-        System.out.println("Rank type: " + entry.type);
-        return "§7[§6" + format.format(oneHourBack) + "§7] §e" + entry.rank + "§7 managed by §e" + entry.player;
+        String type = entry.type.equals("modify") ? "modified" : entry.type;
+        return "§7[§a" + format.format(oneHourBack) + "§7] §a" + entry.rank + "§7 " + type + " by §2" + entry.player;
     }
 }

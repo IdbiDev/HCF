@@ -2,6 +2,7 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.AdminTools;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
@@ -46,6 +47,12 @@ public class onPlayerLeft implements Listener {
 
             //Main.cacheRanks.remove(e.getPlayer());
         }
+
+        if(playertools.isInStaffDuty(e.getPlayer())) {
+            AdminTools.InvisibleManager.showPlayer(e.getPlayer());
+            //AdminTools.InvisibleManager.invisedAdmins.remove(e.getPlayer());
+        }
+
         if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "freeze"))) {
             Bukkit.getBanList(BanList.Type.NAME).addBan(e.getPlayer().getName(),
                             m.getConfig().getString("Freeze.Reason"),

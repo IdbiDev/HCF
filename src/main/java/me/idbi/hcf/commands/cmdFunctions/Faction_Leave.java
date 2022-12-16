@@ -43,7 +43,7 @@ public class Faction_Leave {
                         statF.name = f.name;
                     }
                 }
-                f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(player.getName(),"Leaved",new Date().getTime()));
+                f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(player.getName(),"leaved",new Date().getTime()));
                 Main.playerStatistics.put(player,stat);
             } else {
                 //Todo: Factin leader is a fucking retarded bc he wanna leave the faction. Use /f disband

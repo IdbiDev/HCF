@@ -17,65 +17,17 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Scoreboards {
     private static final Main m = Main.getPlugin(Main.class);
 
-    public static void scoreboard() {
-        List<String> fix = sortLists().get(0);
-        List<String> timers = sortLists().get(1);
-
-        sortLists();
-
-        Collections.reverse(fix);
-        Collections.reverse(timers);
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player p : Bukkit.getWorld(ConfigLibrary.World_name.getValue()).getPlayers()) {
-                    Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-
-
-                    Objective obj = sb.registerNewObjective("dummy", "igen");
-                    obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-                    obj.setDisplayName(ConfigLibrary.Scoreboard_title.getValue());
-
-                    int scoreNumber = 0;
-
-                    for (String line : timers) {
-
-                        if (line.equals("empty"))
-                            line = "";
-
-                        Score score = obj.getScore(replaceVariables(line, p));
-                        score.setScore(scoreNumber);
-
-                        scoreNumber++;
-                    }
-
-
-                    for (String line : fix) {
-                        if (line.equals("empty"))
-                            line = " ";
-
-                        Score score = obj.getScore(replaceVariables(line, p));
-                        score.setScore(scoreNumber);
-
-                        scoreNumber++;
-                    }
-
-                    p.setScoreboard(sb);
-                }
-            }
-        }.runTaskTimer(m, 0L, 60L);
-    }
-
     public static void refresh(Player p) {
+        if(playertools.isInStaffDuty(p)) {
+            AdminScoreboard.refresh(p);
+            return;
+        }
+
         List<String> fix = sortLists().get(0);
         List<String> timers = sortLists().get(1);
 
@@ -106,6 +58,10 @@ public class Scoreboards {
                 continue;
             } else if(line.contains("%eotw%") && Misc_Timers.getTimeOfEOTW() <= 0L) {
                 continue;
+            } else if(line.contains("%sotw%") && Misc_Timers.getTimeOfSOTW() <= 0L) {
+                continue;
+            } else if(line.contains("%pvp_timer%") && HCF_Timer.getPvPTimerCoolDownSpawn(p) <= 0L) {
+                continue;
             } else if(line.contains("%gapple_cd%") && HCF_Timer.get_Golden_Apple_Time(p) <= 0L) {
                 continue;
             } else if(line.contains("%opgapple_cd%") && HCF_Timer.get_OP_Golden_Apple_Time(p) <= 0L) {
@@ -115,18 +71,33 @@ public class Scoreboards {
             if (line.equals("empty"))
                 line = " ";
 
+            if(line.contains("%customtimers%")) {
+                for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
+                    if(customTimers.getValue().isActive()) {
+                        Score score = obj.getScore(replaceVariables(customTimers.getValue().getFormatted(), p));
+                        score.setScore(scoreNumber);
+                    }
+                }
+                continue;
+            }
+
             Score score = obj.getScore(replaceVariables(line, p));
             score.setScore(scoreNumber);
 
             scoreNumber++;
         }
 
+        int emptyCalc = 0;
         for (String line : fix) {
             if (line.equals("empty")) {
                 if(scoreNumber == 0) {
                     continue;
                 }
-                line = "  ";
+                line = line.replace("empty", "");
+                for (int i = 0; i <= emptyCalc; i++) {
+                    line += " ";
+                }
+                emptyCalc++;
             }
 
             Score score = obj.getScore(replaceVariables(line, p));
@@ -182,7 +153,7 @@ public class Scoreboards {
 
     private static final DecimalFormat dfSharp = new DecimalFormat("0.0");
 
-    private static String replaceVariables(String inputString, Player p) {
+    public static String replaceVariables(String inputString, Player p) {
         return inputString
                 .replace("%money%", playertools.getMetadata(p, "money"))
                 .replace("%faction%", playertools.getMetadata(p, "faction"))
@@ -211,7 +182,7 @@ public class Scoreboards {
 
     public static String ConvertTime(int seconds) {
         if(seconds <= 0)
-            return "0s";
+            return "0";
 
 //        int day = (int) TimeUnit.MINUTES.toDays(minutes);
 //        long hours = TimeUnit.MINUTES.toHours(minutes) - (day * 24);
@@ -236,26 +207,27 @@ public class Scoreboards {
 
         String result = "";
 
-//        if (day != 0){
-//            result += day;
-//            result += "d ";
-//        }
-
-        if (hours != 0){
+        if (hours != 0) {
             result += hours;
-            result += "h ";
+            result += ":";
         }
 
-        if (minute != 0){
-            result += minute;
-            result += "m ";
-        }
+        if (minute != 0) {
+            if(minute < 10)
+                result += "0" + minute;
+            else
+                result += minute;
 
-        if (second != 0 && minute == 0 && hours == 0) {
+            result += ":";
+        } else
+            result += "00:";
+
+        if(seconds < 10)
+            result += "0" + second;
+        else
             result += second;
-            result += "s";
-        }
 
+        //return result;
         return result;
     }
 }

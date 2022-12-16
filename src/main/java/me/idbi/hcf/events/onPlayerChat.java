@@ -3,6 +3,8 @@ package me.idbi.hcf.events;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.playertools;
+import me.neznamy.tab.api.placeholder.Placeholder;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -10,7 +12,18 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class onPlayerChat implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
+        if(Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "staffchat"))) {
+            e.setCancelled(true);
 
+            if(e.getMessage().split(" ").length == 2)
+                if (e.getMessage().split(" ")[1].equalsIgnoreCase("chat"))
+                    return;
+
+            playertools.sendStaffChat(ChatColor.translateAlternateColorCodes('&',
+                    Messages.STAFF_CHAT.repPlayer(e.getPlayer()).setMessage(e.getMessage()).queue()
+            ));
+            return;
+        }
 
         if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "factionchat"))) {
             if(playertools.getMetadata(e.getPlayer(), "factionid").equals("0")) {

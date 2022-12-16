@@ -366,7 +366,7 @@ public class Misc_Timers {
     }
 
     public static long getTimeOfEOTW() {
-        long current = System.currentTimeMillis() / 1000;
+        long current = System.currentTimeMillis();
         //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
         return Main.EOTWStarted - current;
     }

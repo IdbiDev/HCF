@@ -135,9 +135,9 @@ public enum Messages {
     // Designs
     STATUS_DESIGN_ONLINE("&aOnline"),
     STATUS_DESIGN_OFFLINE("&cOffline"),
-    CATEGORY_DESIGN("&e%category%:"),
-    MEMBER_LIST_DESIGN_ONLINE("&7▬ &a%member% &f[&7%member_kill%&f]"),
-    MEMBER_LIST_DESIGN_OFFLINE("&7▬ &7%member% &f[&7%member_kill%&f]"),
+    CATEGORY_DESIGN("&7&l» &6%category%:"),
+    MEMBER_LIST_DESIGN_ONLINE("&a%member% &f[&7%member_kill%&f]"),
+    MEMBER_LIST_DESIGN_OFFLINE("&7%member% &f[&7%member_kill%&f]"),
 
     // Sign Shop message
     SIGN_SHOP_BOUGHT("%prefix% &aYou bought &2&o%amount%x %item% &afor &2&o$%price%&a."),
@@ -231,6 +231,23 @@ public enum Messages {
 
     // Hover things
     HOVER_JOIN("&7Click here to join!"),
+
+    // Staff messages
+    STAFF_CHAT("&8[&eStaffChat&8] &b%player%&7: &e%message%"),
+    STAFF_CHAT_ON("%prefix% &aStaff chat enabled!"),
+    STAFF_CHAT_OFF("%prefix% &cStaff chat disabled!"),
+
+    VANISH_ENABLED("%prefix% &aVanish enabled!"),
+    VANISH_DISABLE("%prefix% &cVanish disabled!"),
+    NOT_IN_DUTY("%prefix% &cYou are not in staff duty!"),
+
+    // Custom timers
+    CUSTOMT_CREATED("%prefix% §aCustom timer successfully created!"),
+    CUSTOMT_DELETED("%prefix% §aCustom timer successfully deleted!"),
+    CUSTOMT_EDITED("%prefix% §aCustom timer successfully edited!"),
+    CUSTOMT_NO_ACTIVE_TIMER("%prefix% §cNo available active timers!"),
+    CUSTOMT_NOT_FOUND("%prefix% §cThis timer not found!"),
+    ALREADY_CREATED("%prefix% §aThis name already in use!"),
 
     CANT_TELEPORT_TO_SAFEZONE("%prefix% &cYou can't teleport to a protected zone while you are in PvP tag");
 

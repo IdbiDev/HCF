@@ -1,9 +1,13 @@
 package me.idbi.hcf.adminsystem;
 
+import com.avaje.ebeaninternal.server.core.Message;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.Scoreboard.AdminScoreboard;
+import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.AdminTools;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
@@ -12,9 +16,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Score;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class adminMain {
     private static final Connection con = Main.getConnection("adminSystem");
@@ -24,11 +32,20 @@ public class adminMain {
             player.setGameMode(GameMode.CREATIVE);
             playertools.setMetadata(player, "adminDuty", true);
 
+            AdminTools.InvisibleManager.hidePlayer(player);
+
+            AdminScoreboard.refresh(player);
+
+
             player.sendMessage(Messages.ADMIN_DUTY_ON.queue());
         } else {
             player.setGameMode(GameMode.SURVIVAL);
 
             playertools.setMetadata(player, "adminDuty", false);
+            AdminTools.InvisibleManager.showPlayer(player);
+
+            Scoreboards.refresh(player);
+
             player.sendMessage(Messages.ADMIN_DUTY_OFF.queue());
         }
     }

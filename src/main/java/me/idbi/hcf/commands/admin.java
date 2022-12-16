@@ -31,7 +31,7 @@ public class admin implements CommandExecutor, TabCompleter {
                                 adminMain.Deposit(p, args[1], Integer.parseInt(args[2]));
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
@@ -40,7 +40,7 @@ public class admin implements CommandExecutor, TabCompleter {
                                 adminMain.Withdraw(p, args[1], Integer.parseInt(args[2]));
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
@@ -49,7 +49,7 @@ public class admin implements CommandExecutor, TabCompleter {
                                 adminMain.FreezePlayer(p, args[1]);
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
@@ -60,7 +60,7 @@ public class admin implements CommandExecutor, TabCompleter {
                                 adminMain.setPlayerFaction(p, args[1], args[2]);
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
@@ -69,7 +69,7 @@ public class admin implements CommandExecutor, TabCompleter {
                                 adminMain.kickPlayerFromFaction(p, args[1], args[2]);
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
@@ -77,7 +77,7 @@ public class admin implements CommandExecutor, TabCompleter {
                             try {
                                 Faction_EOTW.EOTW(p);
                                 //Kiíratás hogy balfaszul használta a commandot
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                                 e.printStackTrace();
                             }
@@ -96,7 +96,7 @@ public class admin implements CommandExecutor, TabCompleter {
                                 adminMain.DeleteFaction(p, args[1]);
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
@@ -105,7 +105,7 @@ public class admin implements CommandExecutor, TabCompleter {
                                 adminMain.setFactionLeader(p, args[1], args[2]);
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
@@ -114,7 +114,7 @@ public class admin implements CommandExecutor, TabCompleter {
                                 adminMain.GiveMoney(p, args[1], Integer.parseInt(args[2]));
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
@@ -123,7 +123,7 @@ public class admin implements CommandExecutor, TabCompleter {
                                 adminMain.TakeMoney(p, args[1], Integer.parseInt(args[2]));
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
@@ -132,7 +132,7 @@ public class admin implements CommandExecutor, TabCompleter {
                                 adminMain.SetFactionname(p, args[1], String.valueOf(args[2]));
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
@@ -142,13 +142,46 @@ public class admin implements CommandExecutor, TabCompleter {
                                 //ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                             }
                             break;
                         case "help":
                             for (String lines : ListMessages.ADMIN_COMMAND_LIST.queue()) {
                                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
+                            }
+                            break;
+                        case "chat":
+                            try {
+                                adminMain.toggleStaffChat(p, args);
+                                //ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
+                            } catch (IndexOutOfBoundsException ignored) {
+                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                            } catch (Exception e) {
+                                p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                                e.printStackTrace();
+                            }
+                            break;
+                        case "createtimer":
+                            try {
+                                adminMain.toggleStaffChat(p, args);
+                                //ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
+                            } catch (IndexOutOfBoundsException ignored) {
+                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                            } catch (Exception e) {
+                                p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                                e.printStackTrace();
+                            }
+                            break;
+                        case "vanish", "v":
+                            try {
+                                adminMain.toggleVanish(p, args);
+                                //ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
+                            } catch (IndexOutOfBoundsException ignored) {
+                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                            } catch (Exception e) {
+                                p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                                e.printStackTrace();
                             }
                             break;
                     }

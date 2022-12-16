@@ -46,7 +46,7 @@ public class playertools {
             String c = HCF_Claiming.sendFactionTerritory(player);
             setMetadata(player, "current_loc", c);
             setMetadata(player, "spawnclaiming", false);
-            setMetadata(player, "bardenergy", 100D);
+            setMetadata(player, "bardenergy", 0D);
             // rankManager.addRankToPlayer(player);
             SQL_Connection.dbExecute(con, "UPDATE members SET online='?' WHERE uuid='?'", "1", player.getUniqueId().toString());
             if (!playerMap.get("faction").equals(0)) {
@@ -256,6 +256,17 @@ public class playertools {
         }
     }
 
+    public static int getOnlineSize(Main.Faction faction) {
+        int counter = 0;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Main.Faction fac = getPlayerFaction(player);
+            if(fac != null && fac.id == faction.id) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
     public static boolean hasPermission(Player player, Faction_Rank_Manager.Permissions perm) {
         Main.Faction f = getPlayerFaction(player);
         if (f != null){
@@ -292,6 +303,7 @@ public class playertools {
                 }else{
                     faction.loadFactionHistory(faction.assembleFactionHistory());
                 }
+
                 Main.faction_cache.put(rs.getInt("ID"), faction);
                 Main.nameToFaction.put(rs.getString("name"), faction);
                 faction.memberCount = playertools.countMembers(faction);
@@ -608,5 +620,17 @@ public class playertools {
             return false;
         }
         return true;
+    }
+
+    public static boolean isInStaffDuty(Player p) {
+        return Boolean.parseBoolean(getMetadata(p, "adminDuty"));
+    }
+
+    public static void sendStaffChat(String message) {
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if(onlinePlayer.hasPermission("factions.admin")) {
+                onlinePlayer.sendMessage(message);
+            }
+        }
     }
 }

@@ -32,13 +32,6 @@ public class HistoryEvent implements Listener {
 
         String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
 
-        ItemStack balance = e.getClickedInventory().getItem(11);
-        ItemStack kick = e.getClickedInventory().getItem(13);
-        ItemStack joinLeft = e.getClickedInventory().getItem(15);
-        ItemStack fJoin = e.getClickedInventory().getItem(29);
-        ItemStack invite = e.getClickedInventory().getItem(31);
-        ItemStack rank = e.getClickedInventory().getItem(33);
-
         if(displayName.contains("§6☰ §eBalance History")) {
             if(e.getClick() == ClickType.RIGHT) {
                 openBalance(p, e.getClickedInventory(), 1);
@@ -47,11 +40,43 @@ public class HistoryEvent implements Listener {
             }
         }
 //
-        else if(e.getCurrentItem().isSimilar(HistoryItems_1.kickHistory(f, GUITools.getPage(kick)))) {
+        else if(displayName.contains("§2☰ §aKick History")) {
             if(e.getClick() == ClickType.RIGHT) {
                 openKick(p, e.getClickedInventory(), 1);
             } else if(e.getClick() == ClickType.LEFT) {
                 openKick(p, e.getClickedInventory(), -1);
+            }
+        }
+//
+        else if(displayName.contains("§6☰ §eJoin / Left History")) {
+            if(e.getClick() == ClickType.RIGHT) {
+                openJoinLeft(p, e.getClickedInventory(), 1);
+            } else if(e.getClick() == ClickType.LEFT) {
+                openJoinLeft(p, e.getClickedInventory(), -1);
+            }
+        }
+//
+        else if(displayName.contains("§6☰ §eInvite History")) {
+            if(e.getClick() == ClickType.RIGHT) {
+                openInvite(p, e.getClickedInventory(), 1);
+            } else if(e.getClick() == ClickType.LEFT) {
+                openInvite(p, e.getClickedInventory(), -1);
+            }
+        }
+//
+        else if(displayName.contains("§2☰ §aRank History")) {
+            if(e.getClick() == ClickType.RIGHT) {
+                openRank(p, e.getClickedInventory(), 1);
+            } else if(e.getClick() == ClickType.LEFT) {
+                openRank(p, e.getClickedInventory(), -1);
+            }
+        }
+//
+        else if(displayName.contains("§2☰ §aFaction Join / Left History")) {
+            if(e.getClick() == ClickType.RIGHT) {
+                openFJoinLeft(p, e.getClickedInventory(), 1);
+            } else if(e.getClick() == ClickType.LEFT) {
+                openFJoinLeft(p, e.getClickedInventory(), -1);
             }
         }
     }
@@ -97,7 +122,7 @@ public class HistoryEvent implements Listener {
 
         p.openInventory(FactionHistoryInventory.inv(f,
                 slot(balance),
-                slot(kick) - page,
+                slot(kick) + page,
                 slot(joinLeft),
                 slot(fJoin),
                 slot(invite),

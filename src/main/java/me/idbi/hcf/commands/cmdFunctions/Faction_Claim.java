@@ -25,17 +25,17 @@ public class Faction_Claim {
                 ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
                 ItemMeta meta = wand.getItemMeta();
 
-                meta.setDisplayName("&uClaim tool");
+                meta.setDisplayName("§6Claiming Wand");
 
                 List<String> str = new ArrayList<>();
 
-                str.add("Use &uleft&r and &uright&r click");
-                str.add("to select the area.");
+                str.addAll(ListMessages.CLAIM_INFO.queue());
+
                 meta.setLore(str);
                 wand.setItemMeta(meta);
                 p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
 
-                ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
+                //ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
                 playertools.setMetadata(p, "spawnclaiming", false);
                 return true;
             } else {
