@@ -52,6 +52,9 @@ public final class Main extends JavaPlugin implements Listener {
     public static int max_members_pro_faction;
     public static int stuck_duration;
     public static long EOTWStarted;
+    public static long SOTWSTARTED;
+    public static boolean EOTW_ENABLED;
+    public static boolean SOTW_ENABLED;
     public static int WARZONE_SIZE;
     public static double MAX_DTR;
     public static double DEATH_DTR;
@@ -150,7 +153,8 @@ public final class Main extends JavaPlugin implements Listener {
                 ConfigLibrary.DATABASE_USER.getValue(),
                 ConfigLibrary.DATABASE_PASSWORD.getValue());
         Plugin multi = getServer().getPluginManager().getPlugin("Multiverse-Core");
-
+        EOTW_ENABLED = false;
+        SOTW_ENABLED = false;
         if (con == null)
             return;
         new SQL_Generator();
@@ -174,6 +178,9 @@ public final class Main extends JavaPlugin implements Listener {
             add("empty");
             add("&7▍ &eStuck: &6%stuck_timer%");
             add("&7▍ &eSpawn Tag: &6%spawntag%");
+            add("&7▍ &ePVP Tag: &6%pvp_timer%");
+            add("&7▍ &eSOTW Tag: &6%sotw%");
+            add("&7▍ &eEOTW Tag: &6%eotw%");
             add("&7▍ &ePearl: &6%ep_cd%");
             add("&7▍ &eBard energy: &6%bard_energy%");
         }};
@@ -462,7 +469,7 @@ public final class Main extends JavaPlugin implements Listener {
                 if(rank_array.length() > 0){
                     for(int x = 0;x<=rank_array.length()-1;x++) {
                         if(x >= 50){
-                            rankCreateHistory.remove(rankCreateHistory.size());
+                            rankCreateHistory.remove(rankCreateHistory.size() - 1);
                         }
                         JSONObject obj = rank_array.getJSONObject(x);
                         rankCreateHistory.add(new HistoryEntrys.RankEntry(
@@ -643,9 +650,9 @@ public final class Main extends JavaPlugin implements Listener {
         }
 
         public void addPrefixPlayer(Player p) {
-            if(1==1){
+            if(true)
                 return;
-            }
+
             Scoreboard sb = playertools.getSB(p, this.id + "");
             Team team = sb.getTeam(this.id + "");
             team.addEntry(p.getName());

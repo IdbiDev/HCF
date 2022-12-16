@@ -26,25 +26,27 @@ public class onDamage implements Listener {
                 HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(victim.getLocation().getBlockX(),victim.getLocation().getBlockZ());
                 HCF_Claiming.Faction_Claim damagerClaim = HCF_Claiming.sendClaimByXZ(damager.getLocation().getBlockX(), damager.getLocation().getBlockZ());
 
-                if (claim != null) {
-                    if(claim.attribute.equals("protected")){
+                if (claim != null && damagerClaim != null) {
+                    if(claim.attribute.equals("protected") || damagerClaim.attribute.equals("protected")){
                         e.setCancelled(true);
                         damager.sendMessage(Messages.CANT_DAMAGE_PROTECTED_AREA.queue());
                         return;
                     }
                 }
-                if (damagerClaim != null) {
+                /*if (damagerClaim != null) {
                     if(damagerClaim.attribute.equals("protected")){
                         e.setCancelled(true);
                         damager.sendMessage(Messages.CANT_DAMAGE_PROTECTED_AREA.queue());
                         return;
                     }
-                }
+                }*/
                 if(HCF_Timer.getPvPTimerCoolDownSpawn(victim) != 0){
                     damager.sendMessage(Messages.CANT_DAMAGE_WHILE_PVPTIMER_VICTIM.queue());
+                    e.setCancelled(true);
                 }
                 if(HCF_Timer.getPvPTimerCoolDownSpawn(damager) != 0){
                     damager.sendMessage(Messages.CANT_DAMAGE_WHILE_PVPTIMER.queue());
+                    e.setCancelled(true);
                 }
             } catch (NullPointerException ex) {
                 ex.printStackTrace();

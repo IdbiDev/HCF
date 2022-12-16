@@ -102,6 +102,7 @@ public enum Messages {
     JOIN_FACTION_BC("&8[&a+&8] &7&l» &6&o%player%"),
     LEAVE_FACTION_BC("&8[&c-&8] &7&l» &6&o%player%"),
     FACTION_PLAYER_POSITION("%prefix% &7-> &6&o%player%'s &eposition: &6&o%location_x%&e, &6&o%location_y%&e, &6&o%location_z%"),
+    FACTION_DONT_HAVE_CLAIM("%prefix% &4Your faction does not have a claim yet!"),
 
     // Faction home
     SETHOME_MESSAGE("%prefix% &aSuccessfully set home of your faction to your location!"),

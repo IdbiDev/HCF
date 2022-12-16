@@ -237,7 +237,13 @@ public class playertools {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 try {
-                    HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt(3), rs.getInt(5), rs.getInt(4), rs.getInt(6), rs.getInt(2),rs.getString("type"));
+                    HCF_Claiming.ClaimAttributes at = HCF_Claiming.ClaimAttributes.NORMAL;
+                    if(rs.getString("type").equalsIgnoreCase("protected")){
+                        at = HCF_Claiming.ClaimAttributes.PROTECTED;
+                    } else if (rs.getString("type").equalsIgnoreCase("koth")) {
+                        at = HCF_Claiming.ClaimAttributes.KOTH;
+                    }
+                    HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt(3), rs.getInt(5), rs.getInt(4), rs.getInt(6), rs.getInt(2),at);
                     Main.Faction f =  Main.faction_cache.get(rs.getInt("factionid"));
                     if(f != null)
                         f.addClaim(claim);
@@ -515,7 +521,7 @@ public class playertools {
 
         for (Main.Faction faction : hashMap.values()) {
             for (HCF_Claiming.Faction_Claim claim : faction.claims) {
-                if (claim.attribute.equalsIgnoreCase("koth")) {
+                if (claim.attribute.equals(HCF_Claiming.ClaimAttributes.KOTH)) {
                     KOTH.koth_area temp = new KOTH.koth_area(
                             faction,
                             new HCF_Claiming.Point(claim.startX, claim.startZ),

@@ -102,7 +102,7 @@ public class HistoryItems_1 {
         cal.add(Calendar.HOUR, -1);
         Date oneHourBack = cal.getTime();
 
-        return "§7✣ [§6" + format.format(oneHourBack) + "§7]\n§7✣ §e" + entry.player + "§7 kicked by §e" + entry.executor + "§7. Reason: §e" + entry.reason;
+        return "§7[§a" + format.format(oneHourBack) + "§7] §2" + entry.player + "§7 kicked by §a" + entry.executor + "§7. " + "Reason: §a\"" + entry.reason + "\"";
     }
 
     public static String designJoinLeft(HistoryEntrys.JoinLeftEntry entry) {

@@ -163,7 +163,10 @@ public class Scoreboards {
                     || line.contains("%bard_energy%")
                     || line.contains("%stuck_timer%")
                     || line.contains("%gapple_cd%")
+                    || line.contains("%pvp_timer%")
                     || line.contains("%opgapple_cd%")
+                    || line.contains("%sotw%")
+                    || line.contains("%customtimers%")
                     || line.contains("%eotw%")) {
                 timers.add(ChatColor.translateAlternateColorCodes('&', line));
                 continue;
@@ -192,11 +195,13 @@ public class Scoreboards {
 //                                new Date((long) (Double.parseDouble(playertools.getMetadata(p, "bardenergy")) * 1000L)))))
                 //.replace("%bard_energy%", new SimpleDateFormat("s").format(new Date()))
                 .replace("%spawntag%", getDouble(HCF_Timer.getCombatTime(p)))
+                .replace("%pvp_timer%", getDouble(HCF_Timer.getPvPTimerCoolDownSpawn(p)))
                 .replace("%stuck_timer%", getDouble(HCF_Timer.getStuckTime(p)))
                 .replace("%ep_cd%", getDouble(HCF_Timer.getEpTime(p)))
                 .replace("%gapple_cd%", getDouble(HCF_Timer.get_Golden_Apple_Time(p)))
                 .replace("%opgapple_cd%", ConvertTime((int) (HCF_Timer.get_OP_Golden_Apple_Time(p) / 1000)))
-                .replace("%eotw%", ConvertTime((int) Misc_Timers.getTimeOfEOTW()))
+                .replace("%eotw%", ConvertTime((int) Misc_Timers.getTimeOfEOTW() /1000))
+                .replace("%sotw%", ConvertTime((int) Misc_Timers.getTimeOfSOTW()/1000))
                 .replace("%location%", HCF_Claiming.sendFactionTerritory(p));
     }
 

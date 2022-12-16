@@ -242,7 +242,7 @@ public class adminMain {
             playertools.setMetadata(admin, "spawnclaiming", true);
             HCF_Claiming.SpawnPrepare(admin);
         } else if (state.equalsIgnoreCase("claim")) {
-            if (HCF_Claiming.ForceFinishClaim(1,admin,"protected")) {
+            if (HCF_Claiming.ForceFinishClaim(1,admin, HCF_Claiming.ClaimAttributes.PROTECTED)) {
                 //Todo: Kurvva sikerült
                 playertools.setMetadata(admin, "spawnclaiming", false);
                 admin.sendMessage(Messages.SPAWN_CLAIM_SUCCESS.queue());
@@ -260,4 +260,78 @@ public class adminMain {
         }
     }
 
+    public static void toggleStaffChat(Player admin, String[] args) {
+        if(!playertools.isInStaffDuty(admin)) {
+            admin.sendMessage(Messages.NOT_IN_DUTY.queue());
+            return;
+        }
+        String staffChatState = playertools.getMetadata(admin, "staffchat");
+        if(args.length == 1) {
+            if (args[0].equalsIgnoreCase("chat")) {
+                if(staffChatState.equals("")) {
+                    playertools.setMetadata(admin, "staffchat", true);
+                    admin.sendMessage(Messages.STAFF_CHAT_ON.queue());
+                } else if(staffChatState.equalsIgnoreCase("false")) {
+                    playertools.setMetadata(admin, "staffchat", true);
+                    admin.sendMessage(Messages.STAFF_CHAT_ON.queue());
+                } else {
+                    playertools.setMetadata(admin, "staffchat", false);
+                    admin.sendMessage(Messages.STAFF_CHAT_OFF.queue());
+                }
+            }
+            AdminScoreboard.refresh(admin);
+        }
+        else if(args.length == 2) {
+            if (args[0].equalsIgnoreCase("chat")) {
+                if(args[1].equalsIgnoreCase("on")) {
+                    playertools.setMetadata(admin, "staffchat", true);
+                    admin.sendMessage(Messages.STAFF_CHAT_ON.queue());
+                } else if(args[1].equalsIgnoreCase("off")) {
+                    playertools.setMetadata(admin, "staffchat", false);
+                    admin.sendMessage(Messages.STAFF_CHAT_OFF.queue());
+                } else {
+                    List<String> argsList = Arrays.stream(args).toList();
+                    playertools.sendStaffChat(
+                            ChatColor.translateAlternateColorCodes('&',
+                                    Messages.STAFF_CHAT.repPlayer(admin).setMessage(getMessage(argsList).replaceFirst(args[0] + " ", "")).queue())
+                    );
+                }
+            }
+            AdminScoreboard.refresh(admin);
+        } else {
+            List<String> argsList = Arrays.stream(args).toList();
+            playertools.sendStaffChat(
+                    ChatColor.translateAlternateColorCodes('&',
+                            Messages.STAFF_CHAT.repPlayer(admin).setMessage(getMessage(argsList)).queue())
+            );
+        }
+    }
+
+    public static String getMessage(List<String> args) {
+        String output = "";
+
+        for (String s : args) {
+            output += s;
+            output += " ";
+        }
+
+        return output;
+    }
+
+    public static void toggleVanish(Player p, String[] args) {
+        if(!playertools.isInStaffDuty(p)) {
+            p.sendMessage(Messages.NOT_IN_DUTY.queue());
+            return;
+        }
+        boolean inVanish = AdminTools.InvisibleManager.invisedAdmins.contains(p);
+        if(inVanish) {
+            AdminTools.InvisibleManager.showPlayer(p);
+            AdminScoreboard.refresh(p);
+            p.sendMessage(Messages.VANISH_DISABLE.queue());
+        } else {
+            AdminTools.InvisibleManager.hidePlayer(p);
+            AdminScoreboard.refresh(p);
+            p.sendMessage(Messages.VANISH_ENABLED.queue());
+        }
+    }
 }

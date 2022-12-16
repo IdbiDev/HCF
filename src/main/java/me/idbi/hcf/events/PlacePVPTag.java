@@ -6,6 +6,7 @@ import me.idbi.hcf.classes.subClasses.Archer;
 import me.idbi.hcf.tools.HCF_Timer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
@@ -13,9 +14,9 @@ import static me.idbi.hcf.tools.playertools.isTeammate;
 
 public class PlacePVPTag implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void PlaceTag(EntityDamageByEntityEvent e){
-        //if(e.isCancelled()) return;
+        if(e.isCancelled()) return;
         if (e.getDamager() instanceof Player damager && e.getEntity() instanceof Player victim) {
             /*int damager_faction = Integer.parseInt(playertools.getMetadata(damager, "factionid"));
             int victim_faction = Integer.parseInt(playertools.getMetadata(victim, "factionid"));*/
@@ -36,7 +37,6 @@ public class PlacePVPTag implements Listener {
             //Damage if ArcherTag
             if (HCF_Timer.checkArcherTimer(victim)) {
                 double dmg = e.getDamage();
-                System.out.println("Archertag damage");
                 e.setDamage(dmg + (dmg * Archer.ArcherTagDamageAmplifier / 100));
             }
 

@@ -39,7 +39,7 @@ public class PearlFixer implements Listener {
             Location location = event.getTo();
             for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
                 for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().claims) {
-                    if(claim.attribute.equalsIgnoreCase("protected")){
+                    if(claim.attribute.equals(HCF_Claiming.ClaimAttributes.PROTECTED)){
                         HCF_Claiming.Point claimStart = new HCF_Claiming.Point(claim.startX, claim.startZ);
                         HCF_Claiming.Point claimEnd = new HCF_Claiming.Point(claim.endX, claim.endZ);
                         HCF_Claiming.Point getTo = new HCF_Claiming.Point(location.getBlockX(), location.getBlockZ());

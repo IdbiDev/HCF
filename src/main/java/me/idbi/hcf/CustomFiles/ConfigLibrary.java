@@ -39,6 +39,7 @@ public enum ConfigLibrary {
     DATABASE_PASSWORD(""),
     MAX_FACTION_MEMBERS("7"),
     EOTW_time("60"),
+    SOTW_TIME("60"),
     WARZONE_SIZE("500"),
     MAX_DTR("5.5"),
     DEATH_DTR("1.0"),

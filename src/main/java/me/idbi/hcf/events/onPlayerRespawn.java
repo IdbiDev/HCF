@@ -10,6 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import static me.idbi.hcf.tools.HCF_Timer.addPvPTimerCoolDownSpawn;
+
 public class onPlayerRespawn implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
@@ -30,5 +32,6 @@ public class onPlayerRespawn implements Listener {
         e.getPlayer().setFoodLevel(20);
         e.getPlayer().setFallDistance(0);
         Bukkit.broadcastMessage("Shut up nigger");
+        addPvPTimerCoolDownSpawn(e.getPlayer());
     }
 }

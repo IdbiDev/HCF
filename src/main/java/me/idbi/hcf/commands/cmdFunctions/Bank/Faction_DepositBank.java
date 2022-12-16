@@ -65,9 +65,7 @@ public class Faction_DepositBank {
                 return this;
             }
 
-            int SumSumAmount = faction.balance + amount;
-
-            faction.balance = SumSumAmount;
+            faction.balance = faction.balance + amount;
 
             playertools.setMetadata(p, "money", Integer.parseInt(playertools.getMetadata(p, "money")) - amount);
 

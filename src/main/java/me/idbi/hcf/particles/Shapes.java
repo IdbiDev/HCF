@@ -115,12 +115,12 @@ public class Shapes {
        double deltaError = Math.abs(deltaZ/deltaX);
        double error = 0;
        double z = start.getZ();
-       for(double x = start.getX();x<=end.getX();x+=dxsign){
+       for(int x = start.getBlockX();x<=end.getBlockX();x+=dxsign){
            error += deltaError;
            while (error>=0.5){
                z += dzsign;
                error--;
-               returnLocation.add(new Location(start.getWorld(),x,start.getWorld().getHighestBlockYAt((int) x, (int) z),z));
+               returnLocation.add(new Location(start.getWorld(),x,start.getBlockY(),z));
            }
        }
        return returnLocation;

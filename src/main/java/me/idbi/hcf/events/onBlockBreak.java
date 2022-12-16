@@ -22,7 +22,7 @@ public class onBlockBreak implements Listener {
         Block block = e.getBlock();
         int bx = Math.round(block.getX());
         int bz = Math.round(block.getZ());
-        if (HCF_Claiming.checkEnemyClaimAction(bx, bz, Integer.parseInt(playertools.getMetadata(p, "factionid"))) && !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
+        if (HCF_Claiming.checkEnemyClaimAction(bx, bz, playertools.getPlayerFaction(p)) && !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
             //p.sendMessage(Main.servername+"§4Ezt nem teheted meg itt!");
             p.sendMessage(Messages.YOU_CANT_DO.setFaction(HCF_Claiming.sendFactionTerretoryByXZ(bx, bz)).queue());
             e.setCancelled(true);

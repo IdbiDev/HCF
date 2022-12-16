@@ -2,6 +2,7 @@ package me.idbi.hcf.commands;
 
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.WorldModes.SOTW;
 import me.idbi.hcf.adminsystem.adminMain;
 import me.idbi.hcf.commands.cmdFunctions.Faction_EOTW;
 import me.idbi.hcf.tools.playertools;
@@ -75,10 +76,17 @@ public class admin implements CommandExecutor, TabCompleter {
                         case "eotw":
                             try {
                                 Faction_EOTW.EOTW(p);
-                            } catch (IndexOutOfBoundsException asd) {
-                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                                 //Kiíratás hogy balfaszul használta a commandot
                             }catch (Exception e){
+                                p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                                e.printStackTrace();
+                            }
+                            break;
+                        case "sotw":
+                            try {
+                                SOTW.EnableSOTW();
+                                //Kiíratás hogy balfaszul használta a commandot
+                            } catch (Exception e) {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                                 e.printStackTrace();
                             }

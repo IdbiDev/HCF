@@ -51,7 +51,7 @@ public class koth implements CommandExecutor, TabCompleter {
                                             Main.sendCmdMessage("MeowCapture");
                                         }
                                     }else{
-                                        HCF_Claiming.ForceFinishClaim(getKothFromName(args[1]),p,"koth");
+                                        HCF_Claiming.ForceFinishClaim(getKothFromName(args[1]),p,ClaimAttributes.KOTH);
                                         playertools.setMetadata(p, "kothclaim", false);
                                         playertools.setMetadata(p, "kothid", 0);
                                         endpositions.remove(getKothFromName(args[1]));
@@ -77,7 +77,7 @@ public class koth implements CommandExecutor, TabCompleter {
                                             Main.sendCmdMessage("MOEW setnatrualzone");
                                         }
                                     }else{
-                                        HCF_Claiming.ForceFinishClaim(getKothFromName(args[1]),p,"normal");
+                                        HCF_Claiming.ForceFinishClaim(getKothFromName(args[1]),p,ClaimAttributes.NORMAL);
                                         playertools.setMetadata(p, "kothclaim", false);
                                         playertools.setMetadata(p, "kothid", 0);
                                         endpositions.remove(getKothFromName(args[1]));

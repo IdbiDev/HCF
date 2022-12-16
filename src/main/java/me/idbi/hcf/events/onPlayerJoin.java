@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
+import static me.idbi.hcf.tools.HCF_Timer.addPvPTimerCoolDownSpawn;
+
 public class onPlayerJoin implements Listener {
     private final Main m = Main.getPlugin(Main.class);
 
@@ -46,6 +48,7 @@ public class onPlayerJoin implements Listener {
             );
             e.getPlayer().teleport(spawn);
             //pvpTimer
+            addPvPTimerCoolDownSpawn(e.getPlayer());
         }
         e.setJoinMessage("");
         

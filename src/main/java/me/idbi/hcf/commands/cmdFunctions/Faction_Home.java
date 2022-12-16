@@ -51,6 +51,8 @@ public class Faction_Home implements Listener {
                 p.sendMessage(Messages.SETHOME_MESSAGE.queue());
                 faction.BroadcastFaction(Messages.SETHOME_UPDATE_FACTION.repPlayer(p).repCoords(p.getLocation().getBlockX(),p.getLocation().getBlockY(),p.getLocation().getBlockZ()).queue());
             }
+        }else{
+            p.sendMessage(Messages.FACTION_DONT_HAVE_CLAIM.queue());
         }
     }
 

@@ -59,14 +59,14 @@ public class HCF_Timer {
             if (System.currentTimeMillis() >= timers.get(player)) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 timers.remove(player);
-                DeleteWallsForPlayer(player);
+                //DeleteWallsForPlayer(player);
                 return false;
             } else {
                 // Ellenkező esetben: Van rajta
                 return true;
             }
         } else {
-            DeleteWallsForPlayer(player);
+            //DeleteWallsForPlayer(player);
             return false;
         }
     }

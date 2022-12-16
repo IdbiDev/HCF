@@ -72,6 +72,8 @@ public class Faction_Create {
                 //HashMap<String, Object> factionMap = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID='?'", String.valueOf(faction.id));
                 faction.loadFactionHistory(faction.assembleFactionHistory());
                 faction.saveFactionData();
+                faction.DTR = faction.DTR_MAX;
+                faction.memberCount++;
 
             } else {
                 p.sendMessage(Messages.EXISTS_FACTION_NAME.getMessage().queue());

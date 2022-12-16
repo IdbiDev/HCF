@@ -18,9 +18,11 @@ public class Basic_Claim implements Listener {
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && !Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
+
                 HCF_Claiming.setEndPosition(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
                 e.setCancelled(true);
                 p.sendMessage(Messages.CLAIM_POS_END.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
+
                 if (HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
 
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_PRICE
@@ -46,6 +48,7 @@ public class Basic_Claim implements Listener {
                             .queue()
                             .replace("%blocks%", String.valueOf(HCF_Claiming.calcBlocks(e.getPlayer())))
                     );
+
                     //e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: "+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
                 }
             }
@@ -63,7 +66,7 @@ public class Basic_Claim implements Listener {
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking() && !Boolean.parseBoolean(playertools.getMetadata(p, "spawnclaiming"))) {
             if (e.getItem().getType() != Material.DIAMOND_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
-                if (HCF_Claiming.FinishClaiming(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")),e.getPlayer(),"normal")) {
+                if (HCF_Claiming.FinishClaiming(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")),e.getPlayer(), HCF_Claiming.ClaimAttributes.NORMAL)) {
                     e.getPlayer().sendMessage(Messages.FACTION_CLAIM_ACCEPT.queue());
                     e.getPlayer().getInventory().remove(e.getItem());
                 } else {
