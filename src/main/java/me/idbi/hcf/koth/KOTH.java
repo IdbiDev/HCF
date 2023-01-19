@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.koth.GUI.KOTHItemManager;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
@@ -57,8 +58,8 @@ public class KOTH implements Listener {
     }
     public static class koth_area {
         HCF_Claiming.Faction_Claim claim;
-        public Main.Faction faction;
-        public koth_area(Main.Faction f,HCF_Claiming.Point start, HCF_Claiming.Point end){
+        public Faction faction;
+        public koth_area(Faction f, HCF_Claiming.Point start, HCF_Claiming.Point end){
             faction = f;
             claim = new HCF_Claiming.Faction_Claim(start.x,end.x,start.z,end.z,faction.id, HCF_Claiming.ClaimAttributes.KOTH);
         }
@@ -112,7 +113,7 @@ public class KOTH implements Listener {
     }
 
     public static int getKothFromName(String name){
-        Main.Faction k = Main.nameToFaction.get(name);
+        Faction k = Main.nameToFaction.get(name);
         if(k !=null){
             return k.id;
         }

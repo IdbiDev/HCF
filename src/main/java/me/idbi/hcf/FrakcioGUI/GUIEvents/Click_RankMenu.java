@@ -10,6 +10,7 @@ import me.idbi.hcf.FrakcioGUI.Menus.RankManagerInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankPriorityInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import net.wesjd.anvilgui.AnvilGUI;
@@ -70,7 +71,7 @@ public class Click_RankMenu implements Listener {
                                 return AnvilGUI.Response.text(Messages.GUI_BAD_WORD.queue());
                             }
                         }
-                        Main.Faction faction = playertools.getPlayerFaction(p);
+                        Faction faction = playertools.getPlayerFaction(p);
                         assert faction != null;
                         Faction_Rank_Manager.CreateRank(faction, text);
                         p.sendMessage(Messages.GUI_RANK_CREATED.queue().replace("%rank%", text));

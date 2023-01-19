@@ -5,7 +5,11 @@ import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.FactionHistory;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.SQL_Connection;
+import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,7 +28,7 @@ public class Faction_Disband {
             return;
         }
 
-        Main.Faction selectedFaction = Main.nameToFaction.get(playertools.getMetadata(p, "faction"));
+        Faction selectedFaction = Main.nameToFaction.get(playertools.getMetadata(p, "faction"));
         if (!Objects.equals(selectedFaction.leader, p.getUniqueId().toString())) {
             //Todo: Nope factionLeader
             p.sendMessage(Messages.NOT_LEADER.queue());
@@ -46,8 +50,9 @@ public class Faction_Disband {
             playertools.setMetadata(player, "factionid", "0");
             playertools.setMetadata(player, "rank", "none");
             Scoreboards.refresh(player);
-            Main.PlayerStatistic stat = Main.playerStatistics.get(player);
-            for(Main.FactionHistory f : stat.factionHistory){
+            NameChanger.refresh(player);
+            PlayerStatistic stat = Main.playerStatistics.get(player);
+            for(FactionHistory f : stat.factionHistory){
                 if(f.id == selectedFaction.id){
                     f.left = new Date();
                     f.cause = "Disbanded";
@@ -64,6 +69,8 @@ public class Faction_Disband {
                 .queue());
         Scoreboards.refresh(p);
         GUI_Sound.playSound(p,"success");
+        NameChanger.refresh(p);
+        NameChanger.refreshAll();
         //Bukkit.broadcastMessage(Messages.DELETE_FACTION_BY_ADMIN.repExecutor(p).setFaction(selectedFaction.factioname).queue());
     }
 }

@@ -3,9 +3,13 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.Objects.FactionHistory;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
+import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
@@ -26,7 +30,7 @@ public class Faction_Join {
                     break;
                 }
             }
-            Main.Faction faction = Main.faction_cache.get(id_faction);
+            Faction faction = Main.faction_cache.get(id_faction);
             if(faction == null) return;
             if (faction.isPlayerInvited(p)) {
 
@@ -40,20 +44,25 @@ public class Faction_Join {
                 faction.ApplyPlayerRank(p, defa.name);
                 //Faction -> xy belépett
                 faction.memberCount++;
-                //Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+                //Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
                 faction.BroadcastFaction(Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
 
                 SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',factionname='?',rank='?' WHERE uuid='?'", String.valueOf(id_faction), faction.name, faction.getDefaultRank().name, p.getUniqueId().toString());
 
                 // displayTeams.addPlayerToTeam(p);
-                faction.addPrefixPlayer(p);
+                //faction.addPrefixPlayer(p);
 
                 Scoreboards.refresh(p);
                 faction.refreshDTR();
-                Main.PlayerStatistic stat = Main.playerStatistics.get(p);
-                stat.factionHistory.add(0, new Main.FactionHistory(new Date().getTime(),0L,"",faction.name, defa.name,faction.id));
+                PlayerStatistic stat = Main.playerStatistics.get(p);
+                stat.factionHistory.add(0, new FactionHistory(new Date().getTime(),0L,"",faction.name, defa.name,faction.id));
                 Main.playerStatistics.put(p,stat);
                 faction.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(p.getName(),"invited",new Date().getTime()));
+                //NameChanger.refresh(p);
+
+                NameChanger.refresh(p);
+
+
             } else {
                 //Nem vagy meghíva ebbe a facionbe
                 p.sendMessage(Messages.NOT_INVITED.queue());

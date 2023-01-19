@@ -27,11 +27,11 @@ public class brewing {
         for (Chunk c : w.getLoadedChunks()) {
             BlockState[] blocks = c.getTileEntities();
             for(BlockState b : blocks){
-                if (b.getType() == Material.BREWING_STAND) {
+                if (b.getType() == Material.BREWING_STAND && !brewingStands.contains((BrewingStand) b)) {
                     BrewingStand stand = (BrewingStand) b;
                     brewingStands.add(stand);
                 }
-                if (b.getType() == Material.FURNACE || b.getType() == Material.BURNING_FURNACE) {
+                if ((b.getType() == Material.FURNACE || b.getType() == Material.BURNING_FURNACE) && !furnaces.contains((Furnace) b)) {
                     Furnace stand = (Furnace) b;
                     furnaces.add(stand);
                 }

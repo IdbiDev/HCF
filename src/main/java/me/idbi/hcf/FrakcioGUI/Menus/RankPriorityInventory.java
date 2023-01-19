@@ -3,7 +3,7 @@ package me.idbi.hcf.FrakcioGUI.Menus;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RP_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RPrio_Items;
-import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
@@ -33,7 +33,7 @@ public class RankPriorityInventory {
         inv.setItem(45, RP_Items.cancel());
         inv.setItem(53, RP_Items.save());
 
-        Main.Faction f = playertools.getPlayerFaction(p);
+        Faction f = playertools.getPlayerFaction(p);
 
         for(Map.Entry<Integer, Faction_Rank_Manager.Rank> map : playertools.sortByPriority(f).entrySet()) {
             inv.addItem(RPrio_Items.ranks(map.getValue().name));

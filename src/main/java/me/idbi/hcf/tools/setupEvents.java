@@ -10,7 +10,7 @@ import me.idbi.hcf.HistoryGUI.Events.Stats_Inventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.SignShop.CreateShopSign;
 import me.idbi.hcf.MessagesEnums.SignShop.InteractShopSign;
-import me.idbi.hcf.TabManager.TabManager;
+import me.idbi.hcf.classes.subClasses.Rogue;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.events.Enchants.EnchantInventory;
 import me.idbi.hcf.events.Enchants.TableEvent;
@@ -22,7 +22,6 @@ import me.idbi.hcf.events.claim.Spawn_Claim;
 import me.idbi.hcf.koth.GUI.KOTHCloseEvent;
 import me.idbi.hcf.koth.GUI.KOTHInvClickEvent;
 import me.idbi.hcf.koth.KOTH;
-import me.idbi.hcf.tools.DisplayName.displayTeams;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -103,12 +102,8 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new Click_InviteManager(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new Click_InvitedPlayers(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new Click_RankPriority(), Main.getPlugin(Main.class));
-
-        getServer().getPluginManager().registerEvents(new TabManager(), Main.getPlugin(Main.class));
-
-        getServer().getPluginManager().registerEvents(new displayTeams(), Main.getPlugin(Main.class));
-
         getServer().getPluginManager().registerEvents(new Stats_Inventory(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new HistoryEvent(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Rogue(), Main.getPlugin(Main.class));
     }
 }

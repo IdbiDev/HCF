@@ -98,6 +98,10 @@
             <id>krypton</id>
             <url>https://repo.kryptonmc.org/releases</url>
         </repository>
+        <repository>
+            <id>alvinb-repo</id>
+            <url>http://repo.bringholm.com/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -151,12 +155,6 @@
             <scope>system</scope>
         </dependency>
         <dependency>
-            <groupId>codecrafter47.bungeetablistplus</groupId>
-            <artifactId>bungeetablistplus-api-bungee</artifactId>
-            <version>3.5.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>me.idbi</groupId>
             <artifactId>hcf_abilitys</artifactId>
             <version>1.0</version>
@@ -167,12 +165,6 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>4.8.0</version>
-        </dependency>
-        <dependency>
-            <groupId>me.neznamy</groupId>
-            <artifactId>tab-api</artifactId>
-            <version>3.1.4</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

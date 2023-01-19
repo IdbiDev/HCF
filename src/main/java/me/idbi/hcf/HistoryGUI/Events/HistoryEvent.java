@@ -2,8 +2,7 @@ package me.idbi.hcf.HistoryGUI.Events;
 
 import me.idbi.hcf.HistoryGUI.GUITools;
 import me.idbi.hcf.HistoryGUI.History.FactionHistoryInventory;
-import me.idbi.hcf.HistoryGUI.History.HistoryItems_1;
-import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,7 +26,7 @@ public class HistoryEvent implements Listener {
         if(e.getClickedInventory() != e.getView().getTopInventory()) return;
 
         if(!(e.getWhoClicked() instanceof Player p)) return;
-        Main.Faction f = playertools.getPlayerFaction(p);
+        Faction f = playertools.getPlayerFaction(p);
         if(f == null) return;
 
         String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
@@ -87,7 +86,7 @@ public class HistoryEvent implements Listener {
     }
 
     public static void openBalance(Player p, Inventory inv, int page) {
-        Main.Faction f = playertools.getPlayerFaction(p);
+        Faction f = playertools.getPlayerFaction(p);
 
         ItemStack balance = inv.getItem(11);
         ItemStack kick = inv.getItem(13);
@@ -109,7 +108,7 @@ public class HistoryEvent implements Listener {
     }
 
     public static void openKick(Player p, Inventory inv, int page) {
-        Main.Faction f = playertools.getPlayerFaction(p);
+        Faction f = playertools.getPlayerFaction(p);
 
         ItemStack balance = inv.getItem(11);
         ItemStack kick = inv.getItem(13);
@@ -131,7 +130,7 @@ public class HistoryEvent implements Listener {
     }
 
     public static void openJoinLeft(Player p, Inventory inv, int page) {
-        Main.Faction f = playertools.getPlayerFaction(p);
+        Faction f = playertools.getPlayerFaction(p);
 
         ItemStack balance = inv.getItem(11);
         ItemStack kick = inv.getItem(13);
@@ -153,7 +152,7 @@ public class HistoryEvent implements Listener {
     }
 
     public static void openFJoinLeft(Player p, Inventory inv, int page) {
-        Main.Faction f = playertools.getPlayerFaction(p);
+        Faction f = playertools.getPlayerFaction(p);
 
         ItemStack balance = inv.getItem(11);
         ItemStack kick = inv.getItem(13);
@@ -175,7 +174,7 @@ public class HistoryEvent implements Listener {
     }
 
     public static void openInvite(Player p, Inventory inv, int page) {
-        Main.Faction f = playertools.getPlayerFaction(p);
+        Faction f = playertools.getPlayerFaction(p);
 
         ItemStack balance = inv.getItem(11);
         ItemStack kick = inv.getItem(13);
@@ -197,7 +196,7 @@ public class HistoryEvent implements Listener {
     }
 
     public static void openRank(Player p, Inventory inv, int page) {
-        Main.Faction f = playertools.getPlayerFaction(p);
+        Faction f = playertools.getPlayerFaction(p);
 
         ItemStack balance = inv.getItem(11);
         ItemStack kick = inv.getItem(13);

@@ -4,7 +4,6 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

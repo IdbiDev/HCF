@@ -3,9 +3,13 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.Objects.FactionHistory;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
+import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -31,7 +35,7 @@ public class Faction_Kick {
                         return;
                     }
 
-                    Main.Faction f = playertools.getPlayerFaction(targetPlayer_Online);
+                    Faction f = playertools.getPlayerFaction(targetPlayer_Online);
                     assert f != null;
                     if(Objects.equals(targetPlayer_Online.getUniqueId().toString(), f.leader)){
                         player.sendMessage(Messages.CANT_KICK_LEADER.queue());
@@ -48,9 +52,9 @@ public class Faction_Kick {
 
 //                    displayTeams.removePlayerFromTeam(targetPlayer_Online);
 //                    displayTeams.addToNonFaction(targetPlayer_Online);
-                    f.removePrefixPlayer(targetPlayer_Online);
-                    Main.PlayerStatistic stat = Main.playerStatistics.get(targetPlayer_Online);
-                    for(Main.FactionHistory statF : stat.factionHistory){
+                    //f.removePrefixPlayer(targetPlayer_Online);
+                    PlayerStatistic stat = Main.playerStatistics.get(targetPlayer_Online);
+                    for(FactionHistory statF : stat.factionHistory){
                         if(statF.id == f.id){
                             statF.left = new Date();
                             statF.cause = "Kicked";
@@ -62,8 +66,11 @@ public class Faction_Kick {
                     f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(targetPlayer_Online.getName(),"kicked",new Date().getTime()));
 
                     Scoreboards.RefreshAll();
+                    NameChanger.refresh(player);
+                    //NameChanger.refreshAll();
+
                 } else {
-                    Main.Faction f = playertools.getPlayerFaction(player);
+                    Faction f = playertools.getPlayerFaction(player);
                     assert f != null;
                     if(Objects.equals(targetPlayer_Offline.getUniqueId().toString(), f.leader)){
                         player.sendMessage(Messages.CANT_KICK_LEADER.queue());
@@ -75,7 +82,8 @@ public class Faction_Kick {
                     Scoreboards.RefreshAll();
                     f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(targetPlayer_Offline.getName(),"kicked",new Date().getTime()));
                 }
-                player.sendMessage(Messages.MAX_MEMBERS_REACHED.queue());
+
+                player.sendMessage(Messages.KICK_MESSAGE.repExecutor(player).repPlayer(targetPlayer_Offline).queue());
             } else {
                 player.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
             }

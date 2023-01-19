@@ -3,6 +3,7 @@ package me.idbi.hcf.MessagesEnums.SignShop;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -83,7 +84,7 @@ public class InteractShopSign implements Listener {
                                 }
 
                                 playertools.setPlayerBalance(p, playerBalance - fertigPreise);
-                                Main.PlayerStatistic stat = Main.playerStatistics.get(p);
+                                PlayerStatistic stat = Main.playerStatistics.get(p);
                                 stat.MoneySpend+=fertigPreise;
                                 Main.playerStatistics.put(p,stat);
                                 p.sendMessage(Messages.SIGN_SHOP_BOUGHT.setItem(new ItemStack(material, remainingSpace, Short))
@@ -106,7 +107,7 @@ public class InteractShopSign implements Listener {
                                         .setAmount(String.valueOf(amount))
                                         .queue());
                                 playertools.setPlayerBalance(p, playerBalance - signPrice);
-                                Main.PlayerStatistic stat = Main.playerStatistics.get(p);
+                                PlayerStatistic stat = Main.playerStatistics.get(p);
                                 stat.MoneySpend+=signPrice;
                                 Main.playerStatistics.put(p,stat);
                             }
@@ -151,7 +152,7 @@ public class InteractShopSign implements Listener {
                                 );
                                 Scoreboards.refresh(p);
                                 playertools.setMetadata(p, "money", Integer.parseInt(playertools.getMetadata(p, "money")) + price);
-                                Main.PlayerStatistic stat = Main.playerStatistics.get(p);
+                                PlayerStatistic stat = Main.playerStatistics.get(p);
                                 stat.MoneyEarned+=price;
                                 Main.playerStatistics.put(p,stat);
                             } else {

@@ -10,6 +10,7 @@ import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
 import me.idbi.hcf.HistoryGUI.History.FactionHistoryInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import net.wesjd.anvilgui.AnvilGUI;
@@ -93,7 +94,7 @@ public class Click_MainInventory implements Listener {
                 })
                 .onComplete((player, text) -> {                                    //called when the inventory output slot is clicked
                     if(text.matches("^[0-9a-zA-Z]+$")) {
-                        Main.Faction faction = playertools.getPlayerFaction(p);
+                        Faction faction = playertools.getPlayerFaction(p);
                         assert faction != null;
                         playertools.RenameFaction(faction, text);
                         //p.sendMessage("Renamed!");

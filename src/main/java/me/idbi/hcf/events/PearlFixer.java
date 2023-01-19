@@ -3,6 +3,7 @@ package me.idbi.hcf.events;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.HCF_Claiming;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,11 +15,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.server.PluginEnableEvent;
 
 import java.util.Map;
 
-import static me.idbi.hcf.Main.sendCmdMessage;
 import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
 
 public class PearlFixer implements Listener {
@@ -37,7 +36,7 @@ public class PearlFixer implements Listener {
         }*/
         if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL) && !event.isCancelled() && checkCombatTimer(event.getPlayer())) {
             Location location = event.getTo();
-            for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
+            for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {
                 for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().claims) {
                     if(claim.attribute.equals(HCF_Claiming.ClaimAttributes.PROTECTED)){
                         HCF_Claiming.Point claimStart = new HCF_Claiming.Point(claim.startX, claim.startZ);

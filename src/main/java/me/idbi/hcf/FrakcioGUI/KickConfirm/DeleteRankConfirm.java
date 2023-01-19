@@ -2,7 +2,7 @@ package me.idbi.hcf.FrakcioGUI.KickConfirm;
 
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
-import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
@@ -29,7 +29,7 @@ public class DeleteRankConfirm implements Listener {
         if(e.getCurrentItem().isSimilar(confirm())) {
             String name = e.getView().getTitle().split(" ")[1];
 
-            Main.Faction faction = playertools.getPlayerFaction((Player) e.getWhoClicked());
+            Faction faction = playertools.getPlayerFaction((Player) e.getWhoClicked());
 
             Faction_Rank_Manager.DeleteRank(faction, name);
             e.getWhoClicked().closeInventory();

@@ -2,6 +2,7 @@ package me.idbi.hcf.FrakcioGUI.Menus;
 
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
@@ -48,7 +49,7 @@ public class PlayerRankManagerInventory {
             }
         });
 
-        Main.Faction faction = playertools.getPlayerFaction(p);
+        Faction faction = playertools.getPlayerFaction(p);
         assert faction != null;
         for (String name : namesGecim) {
             String Name = ChatColor.stripColor(name);
@@ -59,7 +60,7 @@ public class PlayerRankManagerInventory {
             inv.addItem(rank(Name, false));
         }*/
 
-        Main.Faction faction = playertools.getPlayerFaction(p);
+        Faction faction = playertools.getPlayerFaction(p);
         for(Map.Entry<Integer, Faction_Rank_Manager.Rank> rank : playertools.sortByPriority(playertools.getPlayerFaction(p)).entrySet()) {
             if(faction.player_ranks.get(p).name.equalsIgnoreCase(rank.getValue().name)) {
                 inv.addItem(rank(rank.getValue().name, true));
@@ -102,7 +103,7 @@ public class PlayerRankManagerInventory {
             }
         });
 
-        Main.Faction faction = playertools.getPlayerFaction(p);
+        Faction faction = playertools.getPlayerFaction(p);
         HashMap<String,Object> map = SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid='?'",p.getUniqueId().toString());
         for (String name : namesGecim) {
             String Name = ChatColor.stripColor(name);
@@ -114,7 +115,7 @@ public class PlayerRankManagerInventory {
             inv.addItem(rank(Name, false));
         }*/
 
-        Main.Faction faction = playertools.getPlayerFaction(p);
+        Faction faction = playertools.getPlayerFaction(p);
 
         HashMap<String,Object> map = SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid='?'",p.getUniqueId().toString());
 
@@ -137,7 +138,7 @@ public class PlayerRankManagerInventory {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
 
-        Main.Faction faction = playertools.getPlayerFaction(target);
+        Faction faction = playertools.getPlayerFaction(target);
 
         assert faction != null;
         Faction_Rank_Manager.Rank rank = faction.player_ranks.get(target);
@@ -157,7 +158,7 @@ public class PlayerRankManagerInventory {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
 
-        Main.Faction faction = playertools.getPlayerFaction(target);
+        Faction faction = playertools.getPlayerFaction(target);
 
         HashMap<String,Object> map = SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid='?'",target.getUniqueId().toString());
         assert faction != null;

@@ -1,18 +1,15 @@
 package me.idbi.hcf.HistoryGUI.Player;
 
 import me.idbi.hcf.Main;
-import net.bytebuddy.build.Plugin;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.logging.SimpleFormatter;
 
 public class PlayerHistoryItems {
 
@@ -30,7 +27,7 @@ public class PlayerHistoryItems {
         ItemStack is = new ItemStack(Material.PAPER);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§6☰ §eStatistics");
-        Main.PlayerStatistic stats = Main.playerStatistics.get(p);
+        PlayerStatistic stats = Main.playerStatistics.get(p);
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         im.setLore(Arrays.asList(
@@ -62,7 +59,7 @@ public class PlayerHistoryItems {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§2☰ §aClass Statistics");
 
-        Main.PlayerStatistic stats = Main.playerStatistics.get(p);
+        PlayerStatistic stats = Main.playerStatistics.get(p);
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
 
         long total = 0L;

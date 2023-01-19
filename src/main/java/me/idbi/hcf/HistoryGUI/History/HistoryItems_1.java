@@ -1,18 +1,21 @@
 package me.idbi.hcf.HistoryGUI.History;
 
 import me.idbi.hcf.HistoryGUI.GUITools;
-import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 public class HistoryItems_1 {
 
-    public static ItemStack joinLeftHistory(Main.Faction f, int page) {
+    public static ItemStack joinLeftHistory(Faction f, int page) {
         ItemStack is = new ItemStack(Material.PAPER);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§6☰ §eJoin / Left History");
@@ -37,7 +40,7 @@ public class HistoryItems_1 {
         return is;
     }
 
-    public static ItemStack balanceHistory(Main.Faction f, int page) {
+    public static ItemStack balanceHistory(Faction f, int page) {
         ItemStack is = new ItemStack(Material.PAPER);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§6☰ §eBalance History");
@@ -62,7 +65,7 @@ public class HistoryItems_1 {
         return is;
     }
 
-    public static ItemStack kickHistory(Main.Faction f, int page) {
+    public static ItemStack kickHistory(Faction f, int page) {
         ItemStack is = new ItemStack(Material.PAPER);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§2☰ §aKick History");

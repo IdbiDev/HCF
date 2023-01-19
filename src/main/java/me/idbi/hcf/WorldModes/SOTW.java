@@ -2,12 +2,10 @@ package me.idbi.hcf.WorldModes;
 
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.tools.HCF_Claiming;
+import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-
-import static me.idbi.hcf.tools.playertools.getDistanceBetweenPoints2D;
 
 public class SOTW {
     public static void EnableSOTW() {
@@ -30,8 +28,8 @@ public class SOTW {
         Main.SOTWSTARTED = System.currentTimeMillis() + (timeInSeconds * 1000L);
         for(Player p : Bukkit.getOnlinePlayers()){
             p.sendTitle(
-                    "§1SOTW Started",
-                    "HCF+ UwU"
+                    Messages.SOTW_START_TITLE.queue(),
+                    Messages.SOTW_START_SUBTITLE.queue()
             );
             p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL,1f,1f);
         }

@@ -2,8 +2,8 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
-import me.neznamy.tab.api.placeholder.Placeholder;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,7 +31,7 @@ public class onPlayerChat implements Listener {
                 return;
             }
             e.setCancelled(true);
-            Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
+            Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
             if(faction == null){
                 e.getPlayer().sendMessage(Messages.NOT_IN_FACTION.queue());
                 return;

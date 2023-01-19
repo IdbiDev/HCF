@@ -5,6 +5,7 @@ import me.idbi.hcf.CustomFiles.ConfigManager;
 import me.idbi.hcf.CustomFiles.MessagesFile;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +15,7 @@ public enum Messages {
     PREFIX("&8[&2HCF&a+&8] &7>"),
     PREFIX_CMD("&r[&2HCF&a+&r] &r"),
     RELOAD("%prefix% &aSuccessfully reloaded configuration files!"),
-
+    CANT_START_EOTW("%prefix% &cEOTW Start failed! (No spawn location defined! Please use &n/a spawnclaim&f&c)"),
     CHAT_PREFIX_FACTION("&8[&6%faction_name%&8] &e%player% &f> &7%message%"),
     CHAT_PREFIX_WITHOUT_FACTION("&e%player% &f> &7%message%"),
     // Errors
@@ -90,8 +91,8 @@ public enum Messages {
     ENTERED_ZONE("§eYou entered §6§o%zone_name%"),
 
     // Faction messages
-    /*KICK_MESSAGE("&a%executor% &ekicked &a%player%&e from the faction!"),
-    WITHDRAW_MESSAGE("%prefix% &eYou withdrew &6&o$%amount% &efrom faction bank!"),
+    KICK_MESSAGE("&%prefix% a%executor% &ekicked &a%player%&e from the faction!"),
+    /*WITHDRAW_MESSAGE("%prefix% &eYou withdrew &6&o$%amount% &efrom faction bank!"),
     DEPOSIT_MESSAGE("%prefix% &eYou deposited &6&o$%amount% &eto faction bank!"),
     EXECUTOR_INVITE_MESSAGE("&eYou invited &6&o%player% &eto your faction!"),
     INVITED_INVITE_MESSAGE("&eYou invited to &6&o%faction_name% &efaction by &6&o%executor%&e!"),*/
@@ -157,7 +158,7 @@ public enum Messages {
     FACTION_ADMIN_DEPOSIT_BC("%prefix% &c&l%executor% &cwithdrew &c&l%amount% &cfrom the faction's bank!"),
     ADMIN_SET_PLAYERFACTION("%prefix%&1 You successfully put &6&o%player% in the %faction_name% faction"),
     SET_FACTION_NAME("%prefix% &eFaction's name changed by &6&o%executor% &eto &6&o%faction_name%&e!"),
-
+    ADMIN_SET_DTR("%prefix% &eYou have successfully set the DTR of &6&o%faction_name%&e faction to &6&o%new_dtr%"),
     ADMIN_SET_FACTION_NAME("%prefix% &1You have successfully changed the name of the faction to &e%faction_name%"),
     GIVE_MONEY("%prefix% &eYou got &6&o%amount% &efrom &6&o%executor%&e!"),
     TAKE_MONEY("%prefix% &6&o%executor%&e took &6&o%amount% &efrom you!"),
@@ -212,7 +213,7 @@ public enum Messages {
     KOTH_CREATED("%prefix% &aYou have successfully created a KOTH named &6&o%faction_name%&a!"),
     KOTH_CAPTURING_STARTED("%prefix% &aSomeone started to occupy the &6&o%faction_name%&a KOTH!"),
     KOTH_CAPTURING_ENDED("%prefix% &aThe occupation of KOTH &6&o%faction_name%&a was interrupted!"),
-    KOTH_CAPTURE_TIMER("%prefix% &aSomeone is capturing kitty KOTH! meow :3 (%format_time%)"),
+    KOTH_CAPTURE_TIMER("%prefix% &aSomeone is capturing &6&o%faction_name%&a (%format_time%)"),
 
     WARZONE_NO_PERMISSION("%prefix% &eYou can't do this in the Warzone!"),
 
@@ -248,6 +249,15 @@ public enum Messages {
     CUSTOMT_NO_ACTIVE_TIMER("%prefix% §cNo available active timers!"),
     CUSTOMT_NOT_FOUND("%prefix% §cThis timer not found!"),
     ALREADY_CREATED("%prefix% §aThis name already in use!"),
+
+
+
+    SOTW_START_TITLE("SOTW STARTED"),
+    SOTW_START_SUBTITLE("Kawaii"),
+    EOTW_START_TITLE("EOTW STARTED"),
+    EOTW_START_SUBTITLE("UwU"),
+
+
 
     CANT_TELEPORT_TO_SAFEZONE("%prefix% &cYou can't teleport to a protected zone while you are in PvP tag");
 
@@ -335,6 +345,11 @@ public enum Messages {
     }
 
     public Messages repPlayer(Player p) {
+        message = msg.replace("%player%", p.getName());
+        this.msg = message;
+        return this;
+    }
+    public Messages repPlayer(OfflinePlayer p) {
         message = msg.replace("%player%", p.getName());
         this.msg = message;
         return this;

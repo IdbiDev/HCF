@@ -9,6 +9,7 @@ import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankPermissionInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import net.wesjd.anvilgui.AnvilGUI;
@@ -38,7 +39,7 @@ public class Click_RankManager implements Listener {
 
         String rankName = ChatColor.stripColor(e.getView().getTitle().split(" ")[0]);
 
-        Main.Faction f = playertools.getPlayerFaction((Player) e.getWhoClicked());
+        Faction f = playertools.getPlayerFaction((Player) e.getWhoClicked());
 
 
         if (e.getCurrentItem().isSimilar(RM_Items.rename())) {
@@ -81,7 +82,7 @@ public class Click_RankManager implements Listener {
                                 return AnvilGUI.Response.text(Messages.GUI_BAD_WORD.queue());
                             }
                         }
-                        Main.Faction faction = playertools.getPlayerFaction(p);
+                        Faction faction = playertools.getPlayerFaction(p);
                         assert faction != null;
                         Faction_Rank_Manager.RenameRank(faction,rankName,text);
                         GUI_Sound.playSound(player,"success");

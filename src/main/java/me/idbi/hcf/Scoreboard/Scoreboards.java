@@ -2,14 +2,12 @@ package me.idbi.hcf.Scoreboard;
 
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.tools.HCF_Claiming;
-import me.idbi.hcf.tools.HCF_Timer;
-import me.idbi.hcf.tools.Misc_Timers;
-import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.tools.*;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -33,7 +31,7 @@ public class Scoreboards {
 
         sortLists();
 
-        Main.Faction fac = playertools.getPlayerFaction(p);
+        Faction fac = playertools.getPlayerFaction(p);
 
         Collections.reverse(fix);
         Collections.reverse(timers);
@@ -121,6 +119,7 @@ public class Scoreboards {
     public static void RefreshAll() {
         for (Player p : Bukkit.getOnlinePlayers()) {
             Scoreboards.refresh(p);
+            NameChanger.refresh(p);
         }
     }
 

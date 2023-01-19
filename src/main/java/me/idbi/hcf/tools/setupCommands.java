@@ -4,8 +4,6 @@ package me.idbi.hcf.tools;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.commands.*;
 
-import java.util.Objects;
-
 public class setupCommands {
     public static void setupCommands() {
         Main m = Main.getPlugin(Main.class);

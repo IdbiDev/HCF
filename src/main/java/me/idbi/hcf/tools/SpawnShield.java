@@ -1,13 +1,13 @@
 package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.Faction;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
 import static me.idbi.hcf.tools.playertools.getDistanceBetweenPoints2D;
 
 public class SpawnShield {
@@ -17,8 +17,8 @@ public class SpawnShield {
 
     public static void CalcWall(Player p) {
         HCF_Claiming.Point player_point = new HCF_Claiming.Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
-        Main.Faction player_faction = playertools.getPlayerFaction(p);
-        for (Map.Entry<Integer, Main.Faction> thisFaction : Main.faction_cache.entrySet()) {
+        Faction player_faction = playertools.getPlayerFaction(p);
+        for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {
             for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().claims) {
                 boolean kellfal = false;
                 //true              //    true - > NINCS

@@ -2,6 +2,7 @@ package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.Objects.Faction;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -19,7 +20,7 @@ public class Faction_Rank_Manager {
         MANAGE_KICK    // Can rename the faction
     }
     private static final Connection con = Main.getConnection("rankManagerNew");
-    public static Rank CreateRank(Main.Faction faction, String name) {
+    public static Rank CreateRank(Faction faction, String name) {
         for (Faction_Rank_Manager.Rank rank : faction.ranks)
             if (rank.name.equalsIgnoreCase(name))
                 return null;
@@ -37,7 +38,7 @@ public class Faction_Rank_Manager {
         return rank;
     }
     public static Rank CreateRank(Player player, String name) {
-        Main.Faction faction = playertools.getPlayerFaction(player);
+        Faction faction = playertools.getPlayerFaction(player);
         assert faction != null;
         for (Faction_Rank_Manager.Rank rank : faction.ranks)
             if (rank.name.equalsIgnoreCase(name))
@@ -53,7 +54,7 @@ public class Faction_Rank_Manager {
         Scoreboards.RefreshAll();
         return rank;
     }
-    public static boolean RenameRank(Main.Faction faction,String oldName,String newName) {
+    public static boolean RenameRank(Faction faction,String oldName,String newName) {
         Rank rank = faction.FindRankByName(oldName);
         if(oldName.equalsIgnoreCase(newName))
             return false;
@@ -66,7 +67,7 @@ public class Faction_Rank_Manager {
         Scoreboards.RefreshAll();
         return true;
     }
-    public static void DeleteRank(Main.Faction faction, String name) {
+    public static void DeleteRank(Faction faction, String name) {
         Rank rank = faction.FindRankByName(name);
         for(Map.Entry<Player, Rank> entry : faction.player_ranks.entrySet()) {
             if (entry.getValue().name.equals(rank.name)) {

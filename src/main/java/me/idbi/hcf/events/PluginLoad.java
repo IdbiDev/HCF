@@ -20,6 +20,10 @@ public class PluginLoad implements Listener {
             Main.customenchants_loaded = true;
             sendCmdMessage("§aHCF+ CustomEnchantments found,loaded.");
         }
+        if(event.getPlugin().getName().equalsIgnoreCase("HCFDiscord")) {
+            Main.discord_log_loaded = true;
+            sendCmdMessage("§aHCF+ DiscordLogs found,loaded.");
+        }
 
     }
 }

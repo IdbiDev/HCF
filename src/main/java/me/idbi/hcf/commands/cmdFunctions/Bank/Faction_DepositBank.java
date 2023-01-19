@@ -3,6 +3,7 @@ package me.idbi.hcf.commands.cmdFunctions.Bank;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
@@ -24,7 +25,7 @@ public class Faction_DepositBank {
 
         if (args[1].matches("^[0-9]+$")) {
             try {
-                Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+                Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
                 if (Integer.parseInt(args[1]) <= 0) {
                     p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
                     return;
@@ -56,7 +57,7 @@ public class Faction_DepositBank {
         }
     }
 
-    public Faction_DepositBank depositFaction(Main.Faction faction, Player p, int amount) {
+    public Faction_DepositBank depositFaction(Faction faction, Player p, int amount) {
         try {
             int SQLAmount = Integer.parseInt(playertools.getMetadata(p, "money"));
             if (amount > SQLAmount) {

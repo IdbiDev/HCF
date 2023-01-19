@@ -10,6 +10,7 @@ import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.commands.cmdFunctions.Bank.Faction_DepositBank;
 import me.idbi.hcf.commands.cmdFunctions.Bank.Faction_WithdrawBank;
 import me.idbi.hcf.commands.cmdFunctions.*;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -55,10 +56,11 @@ public class faction implements CommandExecutor, TabCompleter {
                                 args[1] = Main.factionToname.get(Integer.parseInt(playertools.getMetadata(Bukkit.getPlayer(args[1]), "factionid")));
                                 if (args[1] != null) {
                                     Faction_Show.show(p, args[1]);
+                                    playertools.getPlayerFaction(p).DTR--;
                                     return false;
                                 }
                             }
-                            for (Map.Entry<Integer, Main.Faction> faction : Main.faction_cache.entrySet()) {
+                            for (Map.Entry<Integer, Faction> faction : Main.faction_cache.entrySet()) {
                                 if (faction.getValue().name.equalsIgnoreCase(args[1])) {
                                     Faction_Show.show(p, args[1]);
                                     return false;

@@ -1,7 +1,7 @@
 package me.idbi.hcf.HistoryGUI.History;
 
 import me.idbi.hcf.HistoryGUI.GUITools;
-import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +24,7 @@ public class HistoryItems_2 {
         public ArrayList<HistoryEntrys.RankEntry> rankCreateHistory = new ArrayList<>();
      */
 
-    public static ItemStack inviteHistory(Main.Faction f, int page) {
+    public static ItemStack inviteHistory(Faction f, int page) {
         ItemStack is = new ItemStack(Material.PAPER);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§6☰ §eInvite History");
@@ -49,7 +49,7 @@ public class HistoryItems_2 {
         return is;
     }
 
-    public static ItemStack rankCreateHistory(Main.Faction f, int page) {
+    public static ItemStack rankCreateHistory(Faction f, int page) {
         ItemStack is = new ItemStack(Material.PAPER);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§2☰ §aRank History");
@@ -75,7 +75,7 @@ public class HistoryItems_2 {
     }
 
 
-    public static ItemStack fJoinLeft(Main.Faction f, int page) {
+    public static ItemStack fJoinLeft(Faction f, int page) {
         ItemStack is = new ItemStack(Material.PAPER);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§2☰ §aFaction Join / Left History");

@@ -29,6 +29,7 @@ public class KickConfirm implements Listener {
 
             Faction_Kick.kick_faction((Player)e.getWhoClicked(),name);
             GUI_Sound.playSound((Player) e.getWhoClicked(), "success");
+            e.getWhoClicked().closeInventory();
             return;
         }
 

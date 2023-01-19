@@ -1,25 +1,22 @@
 package me.idbi.hcf.adminsystem;
 
-import com.avaje.ebeaninternal.server.core.Message;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.AdminScoreboard;
-import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.AdminTools;
-import me.idbi.hcf.tools.HCF_Claiming;
-import me.idbi.hcf.tools.SQL_Connection;
-import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.tools.*;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.FactionHistory;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
+import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Score;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +45,7 @@ public class adminMain {
 
             player.sendMessage(Messages.ADMIN_DUTY_OFF.queue());
         }
+        NameChanger.refresh(player);
     }
 
     public static void Deposit(Player admin, String faction, int amount) {
@@ -59,9 +57,10 @@ public class adminMain {
             admin.sendMessage(Messages.NOT_A_NUMBER.queue());
             return;
         }
-        Main.Faction selectedFaction = Main.nameToFaction.get(faction);
+
+        Faction selectedFaction = Main.nameToFaction.get(faction);
         selectedFaction.balance += amount;
-        Main.Faction f = Main.nameToFaction.get(faction);
+        Faction f = Main.nameToFaction.get(faction);
         f.BroadcastFaction(Messages.FACTION_ADMIN_DEPOSIT_BC.repExecutor(admin).queue());
     }
 
@@ -74,9 +73,9 @@ public class adminMain {
             admin.sendMessage(Messages.NOT_A_NUMBER.queue());
             return;
         }
-        Main.Faction selectedFaction = Main.nameToFaction.get(faction);
+        Faction selectedFaction = Main.nameToFaction.get(faction);
         selectedFaction.balance -= amount;
-        Main.Faction f = Main.nameToFaction.get(faction);
+        Faction f = Main.nameToFaction.get(faction);
         f.BroadcastFaction(Messages.FACTION_ADMIN_WITHDRAW_BC.repExecutor(admin).queue());
     }
 
@@ -89,10 +88,10 @@ public class adminMain {
             admin.sendMessage(Messages.NOT_A_NUMBER.queue());
             return;
         }
-        Main.Faction selectedFaction = Main.nameToFaction.get(faction);
+        Faction selectedFaction = Main.nameToFaction.get(faction);
         selectedFaction.name = newName;
         //Todo: Broadcast the change
-        Main.Faction f = Main.nameToFaction.get(faction);
+        Faction f = Main.nameToFaction.get(faction);
         f.BroadcastFaction(Messages.SET_FACTION_NAME.repExecutor(admin).setFaction(newName).queue());
         Scoreboards.RefreshAll();
     }
@@ -111,7 +110,7 @@ public class adminMain {
 
         player.sendMessage(Messages.GIVE_MONEY.repExecutor(admin).setAmount(String.valueOf(amount)).queue());
         Scoreboards.refresh(player);
-        Main.PlayerStatistic stat = Main.playerStatistics.get(player);
+        PlayerStatistic stat = Main.playerStatistics.get(player);
         stat.MoneyEarned += amount; 
         Main.playerStatistics.put(player,stat);
     }
@@ -130,7 +129,7 @@ public class adminMain {
 
         player.sendMessage(Messages.TAKE_MONEY.repExecutor(admin).setAmount(String.valueOf(amount)).queue());
         Scoreboards.refresh(player);
-        Main.PlayerStatistic stat = Main.playerStatistics.get(player);
+        PlayerStatistic stat = Main.playerStatistics.get(player);
         stat.MoneySpend += amount;
         Main.playerStatistics.put(player,stat);
     }
@@ -141,7 +140,7 @@ public class adminMain {
             return;
         }
 
-        Main.Faction selectedFaction = Main.nameToFaction.get(faction);
+        Faction selectedFaction = Main.nameToFaction.get(faction);
 
         Main.faction_cache.remove(selectedFaction.id);
         Main.nameToFaction.remove(selectedFaction.name);
@@ -154,8 +153,8 @@ public class adminMain {
             playertools.setMetadata(player, "faction", "None");
             playertools.setMetadata(player, "factionid", "0");
             playertools.setMetadata(player, "rank", "none");
-            Main.PlayerStatistic stat = Main.playerStatistics.get(player);
-            for(Main.FactionHistory statF : stat.factionHistory){
+            PlayerStatistic stat = Main.playerStatistics.get(player);
+            for(FactionHistory statF : stat.factionHistory){
                 if(statF.id == selectedFaction.id){
                     statF.left = new Date();
                     statF.cause = "Deleted";
@@ -164,6 +163,7 @@ public class adminMain {
                 }
             }
             Main.playerStatistics.put(player,stat);
+            NameChanger.refresh(player);
         }
 
         Bukkit.broadcastMessage(Messages.DELETE_FACTION_BY_ADMIN.repExecutor(admin).setFaction(selectedFaction.name).queue());
@@ -178,11 +178,11 @@ public class adminMain {
             admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
             return;
         }
-        Main.Faction selectedFaction = Main.nameToFaction.get(faction);
+        Faction selectedFaction = Main.nameToFaction.get(faction);
         selectedFaction.leader = Bukkit.getPlayer(Leader).getUniqueId().toString();
         SQL_Connection.dbExecute(con, "UPDATE factions SET leader='?' WHERE name='?'", selectedFaction.leader, faction);
         //Todo: Broadcast the change
-        Main.Faction f = Main.nameToFaction.get(faction);
+        Faction f = Main.nameToFaction.get(faction);
         f.BroadcastFaction(Messages.SET_FACTION_LEADER_BY_ADMIN.repPlayer(Bukkit.getPlayer(Leader)).repExecutor(admin).queue());
         admin.sendMessage(Messages.ADMIN_SET_FACTION_NAME.setFaction(faction).queue());
     }
@@ -197,7 +197,7 @@ public class adminMain {
             return;
         }
         Player p = Bukkit.getPlayer(target);
-        Main.Faction selectedFaction = Main.nameToFaction.get(faction);
+        Faction selectedFaction = Main.nameToFaction.get(faction);
         playertools.setMetadata(p, "factionid", selectedFaction.id);
         playertools.setMetadata(p, "faction", selectedFaction.name);
         SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',factionname='?' WHERE uuid='?'", String.valueOf(selectedFaction.id), selectedFaction.name, p.getUniqueId().toString());
@@ -206,10 +206,11 @@ public class adminMain {
         p.sendMessage(Messages.JOIN_MESSAGE.queue());
 
         //Faction -> xy belépett
-        Main.Faction f = Main.nameToFaction.get(faction);
+        Faction f = Main.nameToFaction.get(faction);
         f.BroadcastFaction(Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
         Scoreboards.refresh(p);
         admin.sendMessage(Messages.ADMIN_SET_PLAYERFACTION.setFaction(faction).repPlayer(p).queue());
+        NameChanger.refresh(p);
     }
 
     public static void kickPlayerFromFaction(Player admin, String target, String faction) {
@@ -226,6 +227,7 @@ public class adminMain {
         playertools.setMetadata(p, "faction", "None");
         SQL_Connection.dbExecute(con, "UPDATE members SET faction=0,factionname='None' WHERE uuid='?'", p.getUniqueId().toString());
         Scoreboards.refresh(p);
+        NameChanger.refresh(p);
 
 
     }

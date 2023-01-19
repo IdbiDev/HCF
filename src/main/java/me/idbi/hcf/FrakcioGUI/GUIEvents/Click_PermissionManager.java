@@ -2,7 +2,7 @@ package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.RP_Items;
-import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
@@ -44,7 +44,7 @@ public class Click_PermissionManager implements Listener {
 
             String rankName = ChatColor.stripColor(e.getView().getTitle().split(" ")[0]);
 
-            Main.Faction f = playertools.getPlayerFaction((Player) e.getWhoClicked());
+            Faction f = playertools.getPlayerFaction((Player) e.getWhoClicked());
 
             assert f != null;
             Faction_Rank_Manager.Rank rank =  f.FindRankByName(rankName);

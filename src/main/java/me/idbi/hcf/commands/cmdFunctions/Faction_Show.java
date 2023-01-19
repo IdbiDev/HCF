@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,13 +23,13 @@ public class Faction_Show {
         }
         HashMap<Player, Integer> returnPlayers = new HashMap<>();
 
-        Map<String, Main.Faction> asd = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        Map<String, Faction> asd = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         asd.putAll(Main.nameToFaction);
 
         // System.out.println("Faction Name: " + factionName);
-        Main.Faction faction = asd.get(factionName);
+        Faction faction = asd.get(factionName);
 
-        String factionStatus = (playertools.isFactionOnline(faction.name)
+        String factionStatus = (playertools.isFactionOnline(faction)
                 ? Messages.STATUS_DESIGN_ONLINE.queue()
                 : Messages.STATUS_DESIGN_OFFLINE.queue());
         String leaderName = "";

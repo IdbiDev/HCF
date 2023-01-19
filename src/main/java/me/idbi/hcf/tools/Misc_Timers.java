@@ -8,9 +8,9 @@ import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.classes.ClassSelector;
 import me.idbi.hcf.classes.subClasses.Bard;
 import me.idbi.hcf.koth.KOTH;
-import me.idbi.hcf.particles.Shapes;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -18,14 +18,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import static me.idbi.hcf.koth.KOTH.GLOBAL_TIME;
 import static me.idbi.hcf.koth.KOTH.stopKoth;
-import static me.idbi.hcf.tools.playertools.getDistanceBetweenPoints2D;
 
 public class Misc_Timers {
 
@@ -35,7 +33,6 @@ public class Misc_Timers {
             public void run() {
 
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-
                     ClassSelector.addClassToPlayer(player);
                     if (!playertools.HasMetaData(player, "class")) continue;
                     if (playertools.getMetadata(player, "class").equalsIgnoreCase("bard")){
@@ -87,7 +84,7 @@ public class Misc_Timers {
                 for (Map.Entry<Integer, Long> entry : Main.DTR_REGEN.entrySet()) {
                     int key = entry.getKey();
                     long val = entry.getValue();
-                    Main.Faction f = Main.faction_cache.get(key);
+                    Faction f = Main.faction_cache.get(key);
                     // 4000+10000 <= 4000
                     if (val <= System.currentTimeMillis()) {
                         Main.DTR_REGEN.remove(key);
@@ -108,7 +105,7 @@ public class Misc_Timers {
                         Main.saved_players.put(key, val - 1000);
                     }
                 }
-                for(Map.Entry<Player, Main.PlayerStatistic> entry : Main.playerStatistics.entrySet()){
+                for(Map.Entry<Player, PlayerStatistic> entry : Main.playerStatistics.entrySet()){
                     entry.getValue().TimePlayed += 1000L;
                     if (!playertools.HasMetaData(entry.getKey(), "class")) continue;
                     if(playertools.getMetadata(entry.getKey(), "class").equalsIgnoreCase("Assassin")){
@@ -136,6 +133,7 @@ public class Misc_Timers {
             @Override
             public void run() {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+
                     boolean shouldRefresh = false;
                     //Stuck Time
                     if (HCF_Timer.getStuckTime(player) != 0) {
@@ -187,7 +185,7 @@ public class Misc_Timers {
                     if (!playertools.getMetadata(player, "class").equalsIgnoreCase("bard")) continue;
                     if (!(Double.parseDouble(playertools.getMetadata(player, "bardenergy")) >= 100D)) {
                         Scoreboards.refresh(player);
-                        playertools.setMetadata(player, "bardenergy", Double.parseDouble(playertools.getMetadata(player, "bardenergy")) + 50D);
+                        playertools.setMetadata(player, "bardenergy", Double.parseDouble(playertools.getMetadata(player, "bardenergy")) + 1D);
                     }
                 }
             }
@@ -272,6 +270,7 @@ public class Misc_Timers {
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 1);
     }
     public static void ArcherTagEffect() {
+        /*
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -305,7 +304,7 @@ public class Misc_Timers {
                                 }
                                 if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, x, height-1)) {
                                     return true;
-                                }*/
+                                }
 
                                 //Main.sendCmdMessage("");
                             }
@@ -325,13 +324,13 @@ public class Misc_Timers {
                                 }
                                 if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, width-1, y)) {
                                     return true;
-                                }*/
+                                }
                             }
                         }
                     }
                 }
             }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20L);
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20L);*/
     }
 
     public static void DeleteWallsForPlayer(Player player){

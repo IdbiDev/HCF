@@ -5,6 +5,9 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.AdminTools;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
+import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -58,7 +61,7 @@ public class onPlayerJoin implements Listener {
         }
 
         if (!Objects.equals(playertools.getMetadata(p, "factionid"), "0")) {
-            Main.Faction f = playertools.getPlayerFaction(e.getPlayer());
+            Faction f = playertools.getPlayerFaction(e.getPlayer());
             if(f != null) {
                 f.BroadcastFaction(
                         Messages.JOIN_FACTION_BC.repPlayer(p).queue());
@@ -82,7 +85,7 @@ public class onPlayerJoin implements Listener {
                 }
             }
         }
-        Main.PlayerStatistic statistic = Main.playerStatistics.get(e.getPlayer());
+        PlayerStatistic statistic = Main.playerStatistics.get(e.getPlayer());
         p.sendMessage("Started:"+new Date(statistic.startDate));
         p.sendMessage("Last Login:"+new Date(statistic.lastLogin));
         p.sendMessage("Time Played"+(statistic.TimePlayed/1000)/60);

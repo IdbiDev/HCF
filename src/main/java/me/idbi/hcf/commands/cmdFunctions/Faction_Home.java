@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.*;
+import me.idbi.hcf.tools.Objects.Faction;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -24,7 +25,7 @@ public class Faction_Home implements Listener {
     private static final Connection con = Main.getConnection("faction");
 
     public static void setHome(Player p) {
-        Main.Faction faction = playertools.getPlayerFaction(p);
+        Faction faction = playertools.getPlayerFaction(p);
         if(faction == null){
             p.sendMessage(Messages.NOT_IN_FACTION.queue());
             return;
@@ -57,7 +58,7 @@ public class Faction_Home implements Listener {
     }
 
     public static void teleportToHome(Player p) {
-        Main.Faction faction = playertools.getPlayerFaction(p);
+        Faction faction = playertools.getPlayerFaction(p);
         if(faction == null){
             p.sendMessage(Messages.NOT_IN_FACTION.queue());
             return;

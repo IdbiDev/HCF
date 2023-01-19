@@ -4,6 +4,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.classes.HCF_Class;
 import me.idbi.hcf.particles.Shapes;
+import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -106,7 +107,7 @@ public class Bard implements HCF_Class {
                 for (Player p : getFactionMembersInDistance(bardplayer, 10)) {
                     PotionEffectType potion = item.effect;
                     p.addPotionEffect(new PotionEffect(potion, 180, 0, false, false));
-                    Shapes.DrawCircle(bardplayer,10,2, Effect.HAPPY_VILLAGER);
+                    Shapes.DrawCircle(p,bardplayer.getLocation(),10,2, Effect.HAPPY_VILLAGER);
                 }
                 //bardplayer.getWorld().playEffect(new Location(bardplayer.getWorld(),bardplayer.getLocation().getBlockX(),bardplayer.getLocation().getBlockY(),bardplayer.getLocation().getBlockZ()), Effect.HAPPY_VILLAGER,Effect.HAPPY_VILLAGER.getId());
             }
@@ -137,6 +138,9 @@ public class Bard implements HCF_Class {
                     bardplayer.sendMessage(Messages.BARD_DONT_HAVE_ENOUGH_ENERGY.setAmount(String.valueOf(item.cost)).queue());
                     return;
                 }
+                if (HCF_Timer.getBardTimer(bardplayer) !=0 ) {
+                    return;
+                }
                 main.setAmount(main.getAmount() - 1);
                 bardplayer.getInventory().setItemInHand(main);
                 playertools.setMetadata(bardplayer, "bardenergy", currentEnergy - item.cost);
@@ -151,6 +155,7 @@ public class Bard implements HCF_Class {
                         }
                     });
                 }
+                HCF_Timer.addBardTimer(bardplayer);
                 new BukkitRunnable(){
                     private int counts = 0;
                     private final Location loc = bardplayer.getLocation();
@@ -164,7 +169,7 @@ public class Bard implements HCF_Class {
                             cancel();
                         counts++;
                         for(Player teammate : getFactionMembersInDistance(bardplayer,15))
-                            Shapes.DrawCircle(teammate,counts,2, Effect.HAPPY_VILLAGER);
+                            Shapes.DrawCircle(teammate,loc,counts,2, Effect.HAPPY_VILLAGER);
                     }
                 }.runTaskTimer(m,0L,0L);
 

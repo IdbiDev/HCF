@@ -162,6 +162,19 @@ public class HCF_Rules {
     public static final int maxMembersPerFaction = 14; // >> GUI limit
     public static final int maxRanksPerFaction = 28; // >> GUI limit
 
+    public static final String VERSION = "0.1";
+    public static final String AUTHORS = "Idbi & Koba";
+    public static final String DISCORD = "https://discord.gg/aaswGgjJgU";
+    public static final String WEBSITE = "UwU";
+
+    public static final String startMessageInfo = "\n" +
+            "-------------------------------------------\n"+
+            "HCF Plus | Version"+ VERSION+"\n"+
+            ">>Authors: "+AUTHORS+"\n"+
+            ">>Discord: "+DISCORD+"\n"+
+            ">>Website: "+WEBSITE+"\n"+
+            "-------------------------------------------";
+
 
 
 }

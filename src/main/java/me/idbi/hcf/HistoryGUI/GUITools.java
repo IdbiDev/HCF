@@ -1,13 +1,9 @@
 package me.idbi.hcf.HistoryGUI;
 
 import me.idbi.hcf.tools.CenterTools;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.StringUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GUITools {

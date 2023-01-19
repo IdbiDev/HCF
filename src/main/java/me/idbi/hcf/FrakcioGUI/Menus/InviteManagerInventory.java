@@ -2,7 +2,7 @@ package me.idbi.hcf.FrakcioGUI.Menus;
 
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
-import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -36,7 +36,7 @@ public class InviteManagerInventory {
                 inv.setItem(i, GUI_Items.blackGlass());
         }
 
-        Main.Faction faction = playertools.getPlayerFaction(p);
+        Faction faction = playertools.getPlayerFaction(p);
 
         assert faction != null;
         for (Player invitedPlayer : faction.invites.getInvitedPlayers()) {

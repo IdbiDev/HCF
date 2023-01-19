@@ -2,10 +2,9 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
-import me.idbi.hcf.tools.Banhandler;
-import me.idbi.hcf.tools.HCF_Timer;
-import me.idbi.hcf.tools.SQL_Connection;
-import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.tools.*;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -34,7 +33,7 @@ public class onDeath implements Listener {
 
         Player damager = e.getEntity().getKiller();
         Player victim = e.getEntity().getPlayer();
-        Main.Faction faction = playertools.getPlayerFaction(victim);
+        Faction faction = playertools.getPlayerFaction(victim);
         if (damager != null) {
             e.setDeathMessage(Messages.KILL_MESSAGE_BROADCAST.repDeathWithKills(victim,damager).queue());
             if(faction !=null){
@@ -42,7 +41,7 @@ public class onDeath implements Listener {
             }
             playertools.setMetadata(damager,"kills",Integer.parseInt(playertools.getMetadata(damager,"kills"))+1);
             playertools.setMetadata(victim,"deaths",Integer.parseInt(playertools.getMetadata(victim,"deaths")+1));
-            Main.PlayerStatistic cica = Main.playerStatistics.get(damager);
+            PlayerStatistic cica = Main.playerStatistics.get(damager);
             cica.kills++;
             Main.playerStatistics.put(damager,cica);
             cica = Main.playerStatistics.get(victim);

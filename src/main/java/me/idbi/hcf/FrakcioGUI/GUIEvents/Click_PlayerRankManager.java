@@ -3,8 +3,8 @@ package me.idbi.hcf.FrakcioGUI.GUIEvents;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
-import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
@@ -44,9 +44,9 @@ public class Click_PlayerRankManager implements Listener {
 
                 OfflinePlayer offline = Bukkit.getOfflinePlayer(playerName);
 
-//                Main.Faction faction = playertools.getPlayerFaction((Player) e.getWhoClicked());
+//                Faction faction = playertools.getPlayerFaction((Player) e.getWhoClicked());
 
-                Main.Faction f = playertools.getPlayerFaction((Player) e.getWhoClicked());
+                Faction f = playertools.getPlayerFaction((Player) e.getWhoClicked());
                 assert f != null;
                 Faction_Rank_Manager.Rank rank = f.FindRankByName(rankName);
                 if(rank != null)

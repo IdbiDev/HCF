@@ -9,6 +9,7 @@ import me.idbi.hcf.FrakcioGUI.Menus.InviteManagerInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import net.wesjd.anvilgui.AnvilGUI;
@@ -59,7 +60,7 @@ public class Click_InviteManager implements Listener {
                 })
                 .onComplete((player, text) -> {                                    //called when the inventory output slot is clicked
                     if(text.matches("^[0-9a-zA-Z]+$")) {
-                        Main.Faction faction = playertools.getPlayerFaction(p);
+                        Faction faction = playertools.getPlayerFaction(p);
                         assert faction != null;
                         Player target = Bukkit.getPlayer(text);
                         if(target != null) {

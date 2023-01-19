@@ -3,8 +3,12 @@ package me.idbi.hcf.commands.cmdFunctions;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.FactionHistory;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
+import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
@@ -22,20 +26,20 @@ public class Faction_Leave {
                 SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?',factionname='?' WHERE uuid = '?'", "None","0", "None", player.getUniqueId().toString());
                 // Koba moment :3
                 player.sendMessage(Messages.LEAVE_MESSAGE.queue());
-                Main.Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(player, "factionid")));
+                Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(player, "factionid")));
                 playertools.setMetadata(player, "faction", "None");
                 playertools.setMetadata(player, "factionid", "0");
                 playertools.setMetadata(player, "rank", "None");
 
 //                displayTeams.removePlayerFromTeam(player);
 //                displayTeams.addToNonFaction(player);
-                f.removePrefixPlayer(player);
+                //f.removePrefixPlayer(player);
 
                 f.BroadcastFaction(Messages.BC_LEAVE_MESSAGE.repPlayer(player).queue());
                 Scoreboards.refresh(player);
                 f.refreshDTR();
-                Main.PlayerStatistic stat = Main.playerStatistics.get(player);
-                for(Main.FactionHistory statF : stat.factionHistory){
+                PlayerStatistic stat = Main.playerStatistics.get(player);
+                for(FactionHistory statF : stat.factionHistory){
                     if(statF.id == f.id){
                         statF.left = new Date();
                         statF.cause = "Leaved";
@@ -45,6 +49,7 @@ public class Faction_Leave {
                 }
                 f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(player.getName(),"leaved",new Date().getTime()));
                 Main.playerStatistics.put(player,stat);
+                NameChanger.refresh(player);
             } else {
                 //Todo: Factin leader is a fucking retarded bc he wanna leave the faction. Use /f disband
                 player.sendMessage(Messages.LEADER_LEAVING_FACTION.queue());

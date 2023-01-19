@@ -3,6 +3,7 @@ package me.idbi.hcf.commands.cmdFunctions.Bank;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
@@ -22,7 +23,7 @@ public class Faction_WithdrawBank {
         }
         if (args[1].matches("^[0-9]+$")) {
             try {
-                Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+                Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
                 if (Integer.parseInt(args[1]) <= 0) {
                     p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
                     return;
@@ -58,7 +59,7 @@ public class Faction_WithdrawBank {
         }
     }
 
-    public Faction_WithdrawBank withdrawFaction(Main.Faction faction, Player p, int amount) {
+    public Faction_WithdrawBank withdrawFaction(Faction faction, Player p, int amount) {
         try {
             int SumSumAmount = faction.balance - amount;
 

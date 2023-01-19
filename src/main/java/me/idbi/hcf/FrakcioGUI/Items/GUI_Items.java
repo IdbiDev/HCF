@@ -1,6 +1,6 @@
 package me.idbi.hcf.FrakcioGUI.Items;
 
-import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -60,7 +60,7 @@ public class GUI_Items {
         return is;
     }
 
-    public static ItemStack factinoStats(Main.Faction faction) {
+    public static ItemStack factinoStats(Faction faction) {
         ItemStack is = new ItemStack(Material.COMPASS);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§2§o" + faction.name);

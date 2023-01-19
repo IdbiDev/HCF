@@ -9,6 +9,7 @@ import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankPriorityInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.ChatColor;
@@ -109,7 +110,7 @@ public class Click_RankPriority implements Listener {
     }
 
     public static void saveInventory(Player p, Inventory inv) {
-        Main.Faction f = playertools.getPlayerFaction(p);
+        Faction f = playertools.getPlayerFaction(p);
         for(ItemStack is : inv.getContents()) {
             if(is == null) return;
             if(!is.hasItemMeta()) return;
@@ -125,15 +126,15 @@ public class Click_RankPriority implements Listener {
 
         }
         assert f != null;
-        for (Faction_Rank_Manager.Rank r:
-             f.ranks) {
-            System.out.println(r.name + "   "+ r.priority);
-        }
+//        for (Faction_Rank_Manager.Rank r:
+//             f.ranks) {
+//            //System.out.println(r.name + "   "+ r.priority);
+//        }
     }
 
     public static boolean selectable(Player p, ItemStack is) {
         String name = ChatColor.stripColor(is.getItemMeta().getDisplayName());
-        Main.Faction f = playertools.getPlayerFaction(p);
+        Faction f = playertools.getPlayerFaction(p);
 
         assert f != null;
         return !(f.FindRankByName(name).isDefault || f.FindRankByName(name).isLeader);

@@ -1,7 +1,6 @@
 package me.idbi.hcf.Scoreboard;
 
 import me.idbi.hcf.Main;
-import org.bukkit.scoreboard.Score;
 
 import java.util.Map;
 

@@ -3,6 +3,7 @@ package me.idbi.hcf;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import me.idbi.hcf.Bossbar.Bossbar;
 import me.idbi.hcf.CustomFiles.*;
 import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.MessagesEnums.Messages;
@@ -12,10 +13,16 @@ import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.koth.AutoKoth;
 import me.idbi.hcf.koth.KOTH;
 import me.idbi.hcf.particles.Shapes;
-import me.idbi.hcf.tools.DisplayName.displayTeams;
 import me.idbi.hcf.tools.*;
-import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
-import org.bukkit.*;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.FactionHistory;
+import me.idbi.hcf.tools.Objects.PlayerObject;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
+import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,17 +32,11 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 import static me.idbi.hcf.HCF_Rules.*;
@@ -61,6 +62,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static double DEATH_DTR;
     public static boolean abilities_loaded = false;
     public static boolean customenchants_loaded = false;
+    public static boolean discord_log_loaded = false;
     public static HashMap<String, CustomTimers> customSBTimers;
 
     public static int DTR_REGEN_TIME;
@@ -70,13 +72,13 @@ public final class Main extends JavaPlugin implements Listener {
     public static HashMap<String, KOTH.koth_area> koth_cache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
     public static HashMap<Integer, String> factionToname = new HashMap<>();
-    public static HashMap<Player, Main.Player_Obj> player_cache = new HashMap<>();
+    public static HashMap<Player, PlayerObject> player_cache = new HashMap<>();
     public static HashMap<Integer, Long> DTR_REGEN = new HashMap<>();
     public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
     public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
     public static HashMap<Player, PlayerStatistic> playerStatistics = new HashMap<>();
     public static ArrayList<UUID> death_wait_clear = new ArrayList<>();
-    //public static HashMap<Main.Faction, Scoreboard> teams = new HashMap<>();
+    //public static HashMap<Faction, Scoreboard> teams = new HashMap<>();
 
     public static HashMap<Player, List<Location>> player_block_changes = new HashMap<>();
     private static Connection con;
@@ -95,21 +97,20 @@ public final class Main extends JavaPlugin implements Listener {
 
     public static void SaveFactions() {
         for (Map.Entry<Integer, Faction> faction : faction_cache.entrySet()) {
-            Main.Faction f = faction.getValue();
+            Faction f = faction.getValue();
             SQL_Connection.dbExecute(con, "UPDATE factions SET money='?',name='?' WHERE ID = '?'", String.valueOf(f.balance), f.name, String.valueOf(f.id));
         }
     }
 
     public static void SavePlayers() {
-        for (Map.Entry<Player, Player_Obj> value : player_cache.entrySet()) {
+        for (Map.Entry<Player, PlayerObject> value : player_cache.entrySet()) {
 
-            Player_Obj p_Obj = value.getValue();
+            PlayerObject p_Obj = value.getValue();
             Player p = value.getKey();
             if (p == null)
                 continue;
             SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?',money='?',factionname='?',name='?' WHERE UUID='?'", p_Obj.getData("factionid"), p_Obj.getData("rank"), p_Obj.getData("money"), p_Obj.getData("faction"),ChatColor.stripColor(p.getName()), p.getUniqueId().toString());
-            // Safe
-            //SQL_Connection.dbUpdate(con,"factions",keys,values, "uuid='"+p.getUniqueId().toString()+"'");
+
         }
     }
 
@@ -128,11 +129,18 @@ public final class Main extends JavaPlugin implements Listener {
         blacklistedRankNames = getConfig().getStringList("Blacklisted-rankNames");
         MessagesFile.setup();
         DiscordFile.setup();
-        if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", false);
+        if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", true);
         ConfigManager.getManager().setup();
 //        DiscordFile.getDiscord().options().copyDefaults(true);
 //        DiscordFile.saveDiscord();
 //        saveDefaultConfig();
+
+        // Messages
+        /*this.manager = new SimpleConfigManager(this);
+
+        this.config = manager.getNewConfig("config.yml", new String[]{" ", "Plugin created by Idbi, koba1" , " "});
+        this.messages = manager.getNewConfig("messages/messages_en.yml");*/
+
         // Setup variables
         deathban = Boolean.parseBoolean(ConfigLibrary.Deathban.getValue());
         claim_price_multiplier = Double.parseDouble(ConfigLibrary.Claim_price_multiplier.getValue());
@@ -157,15 +165,15 @@ public final class Main extends JavaPlugin implements Listener {
         Plugin multi = getServer().getPluginManager().getPlugin("Multiverse-Core");
         EOTW_ENABLED = false;
         SOTW_ENABLED = false;
+
+        // SQL
         if (con == null)
             return;
         new SQL_Generator();
+
         // Variables
         player_block_changes = new HashMap<>();
         Faction_Home.teleportPlayers = new ArrayList<>();
-
-        SetupBot.setup();
-
         protocolManager = ProtocolLibrary.getProtocolManager();
         //EnchantmentFile.setup();
         AdminTools.InvisibleManager.invisedAdmins = new ArrayList<>();
@@ -189,24 +197,30 @@ public final class Main extends JavaPlugin implements Listener {
             add("&7▍ &eBard energy: &6%bard_energy%");
         }};
 
-        getConfig().options().copyDefaults(true);
+        /*getConfig().options().copyDefaults(true);
         saveDefaultConfig();
-        saveConfig();
+        saveConfig();*/
 
+        // koth
         KothRewardsFile.setup();
 
+        // setup classes
+        SetupBot.setup();
         setupEvents.SetupEvents();
         setupCommands.setupCommands();
 
+        // playertools
         playertools.setFactionCache();
         playertools.cacheFactionClaims();
         playertools.LoadRanks();
         playertools.prepareKoths();
-
+        new NameChanger(this);
+        // Load online players
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             playertools.LoadPlayer(player);
         }
 
+        // Timers
         Misc_Timers.CheckArmors();
         Misc_Timers.DTR_Timer();
         Misc_Timers.Bard_Energy();
@@ -238,15 +252,8 @@ public final class Main extends JavaPlugin implements Listener {
             Bukkit.getServer().shutdown();
         }
         System.out.println("\n"+startMessage+"\n"+startMessage2);
+        System.out.println(startMessageInfo);
         autoKoth.startAutoKoth();
-
-      /*  System.out.println(playerStatistics.get(Bukkit.getPlayer("adbi20014")).startDate);
-        System.out.println(playerStatistics.get(Bukkit.getPlayer("adbi20014")).factionHistory);
-        System.out.println(playerStatistics.get(Bukkit.getPlayer("adbi20014")).lastLogin);
-
-        System.out.println(playerStatistics.get(Bukkit.getPlayer("kbalu")).startDate);
-        System.out.println(playerStatistics.get(Bukkit.getPlayer("kbalu")).factionHistory);
-        System.out.println(playerStatistics.get(Bukkit.getPlayer("kbalu")).lastLogin);*/
 
     }
     @EventHandler
@@ -319,515 +326,12 @@ public final class Main extends JavaPlugin implements Listener {
 
     }
 
-
-    // Define classe
-
-    public void setDebugMode(String debugMode) {
-        debug = debugMode.equalsIgnoreCase("true");
-    }
-
-    public static class Player_Obj {
-        private final HashMap<String, Object> metadata = new HashMap<>();
-
-        public void setData(String key, Object value) {
-            metadata.put(key, value);
-        }
-
-        public String getData(String key) {
-            if (hasData(key))
-                return metadata.get(key).toString();
-            //Bukkit.getLogger().severe(" Error while reading key:" + key);
-            return "";
-        }
-        public Object getRealData(String key) {
-            if (hasData(key))
-                return metadata.get(key);
-            //Bukkit.getLogger().severe(" Error while reading key:" + key);
-            return null;
-        }
-
-        public boolean hasData(String key) {
-            return metadata.containsKey(key);
-        }
-    }
-
-
-    // Készülőben Illetve talán mégse kéne XD
-    public static class Faction {
-
-        public int id;
-
-        public String name;
-
-        public String leader;
-        public int balance;
-        public ArrayList<HCF_Claiming.Faction_Claim> claims = new ArrayList<>();
-        public double DTR = 0;
-        public double DTR_MAX = 0;
-        public long DTR_TIMEOUT = 0L;
-        public inviteManager.factionInvite invites;
-
-        public Location homeLocation;
-
-        public ArrayList<Faction_Rank_Manager.Rank> ranks = new ArrayList<>();
-        public HashMap<Player, Faction_Rank_Manager.Rank> player_ranks = new HashMap<>();
-
-        public int memberCount;
-
-        //Statistics
-        public ArrayList<HistoryEntrys.BalanceEntry> balanceHistory = new ArrayList<>();
-        public ArrayList<HistoryEntrys.KickEntry> kickHistory = new ArrayList<>();
-        public ArrayList<HistoryEntrys.JoinLeftEntry> joinLeftHistory = new ArrayList<>();
-        public ArrayList<HistoryEntrys.FactionJoinLeftEntry> factionjoinLeftHistory = new ArrayList<>();
-        public ArrayList<HistoryEntrys.InviteEntry> inviteHistory = new ArrayList<>();
-        public ArrayList<HistoryEntrys.RankEntry> rankCreateHistory = new ArrayList<>();
-
-        public Faction(int id, String name, String leader, int balance) {
-            this.id = id;
-            this.name = name;
-            this.leader = leader;
-            this.invites = new inviteManager.factionInvite();
-            this.balance = balance;
-
-        }
-        public boolean isPlayerInFaction(Player p){
-            return player_ranks.containsKey(p);
-        }
-        public void loadFactionHistory(JSONObject mainJSON){
-            try{
-                JSONArray balance_array = mainJSON.getJSONArray("balanceHistory");
-                JSONArray kick_array = mainJSON.getJSONArray("kickHistory");
-                JSONArray join_array = mainJSON.getJSONArray("joinLeftHistory");
-                JSONArray factionjoin_array = mainJSON.getJSONArray("factionjoinLeftHistory");
-                JSONArray invite_array = mainJSON.getJSONArray("inviteHistory");
-                JSONArray rank_array = mainJSON.getJSONArray("rankCreateHistory");
-                if(balance_array.length() > 0){
-                    for(int x = 0;x<=balance_array.length()-1;x++) {
-                        System.out.println("Balance on load: " + balance_array.getJSONObject(x));
-                        if(x >= 50){
-                            balanceHistory.remove(balanceHistory.size() - 1);
-                        }
-
-                        JSONObject obj = balance_array.getJSONObject(x);
-                        balanceHistory.add(new HistoryEntrys.BalanceEntry(
-                                obj.getInt("amount"),
-                                obj.getString("player"),
-                                obj.getLong("time")
-                        ));
-                    }
-                }
-                if(kick_array.length() > 0){
-                    for(int x = 0;x<=kick_array.length()-1;x++) {
-                        if(x >= 50){
-                            kick_array.remove(kickHistory.size() - 1);
-                        }
-                        JSONObject obj = kick_array.getJSONObject(x);
-                        kickHistory.add(new HistoryEntrys.KickEntry(
-                                obj.getString("player"),
-                                obj.getString("executor"),
-                                obj.getLong("time"),
-                                obj.getString("reason")
-                        ));
-                    }
-                }
-                if(factionjoin_array.length() > 0){
-                    for(int x = 0;x<=factionjoin_array.length()-1;x++) {
-                        if(x >= 50){
-                            factionjoinLeftHistory.remove(factionjoinLeftHistory.size() - 1);
-                        }
-                        JSONObject obj = factionjoin_array.getJSONObject(x);
-                        factionjoinLeftHistory.add( new HistoryEntrys.FactionJoinLeftEntry(
-                                obj.getString("player"),
-                                obj.getString("type"),
-                                obj.getLong("time")
-                        ));
-                    }
-                }
-                if(join_array.length() > 0){
-                    for(int x = 0;x<=join_array.length()-1;x++) {
-                        if(x >= 50){
-                            joinLeftHistory.remove(joinLeftHistory.size() - 1);
-                        }
-                        JSONObject obj = join_array.getJSONObject(x);
-                        joinLeftHistory.add(new HistoryEntrys.JoinLeftEntry(
-                                obj.getString("player"),
-                                obj.getBoolean("isjoined"),
-                                obj.getLong("time")
-                        ));
-                    }
-                }
-                if(invite_array.length() > 0){
-                    for(int x = 0;x<=invite_array.length()-1;x++) {
-                        if(x >= 50){
-                            inviteHistory.remove(inviteHistory.size() - 1);
-                        }
-                        JSONObject obj = invite_array.getJSONObject(x);
-                        inviteHistory.add(new HistoryEntrys.InviteEntry(
-                                obj.getString("executor"),
-                                obj.getString("player"),
-                                obj.getLong("time"),
-                                obj.getBoolean("isinvited")
-                        ));
-                    }
-                }
-                if(rank_array.length() > 0){
-                    for(int x = 0;x<=rank_array.length()-1;x++) {
-                        if(x >= 50){
-                            rankCreateHistory.remove(rankCreateHistory.size() - 1);
-                        }
-                        JSONObject obj = rank_array.getJSONObject(x);
-                        rankCreateHistory.add(new HistoryEntrys.RankEntry(
-                                obj.getString("rank"),
-                                obj.getString("player"),
-                                obj.getLong("time"),
-                                obj.getString("type")
-                        ));
-                    }
-                }
-            }catch (JSONException e){
-                e.printStackTrace();
-                loadFactionHistory(assembleFactionHistory());
-            }
-
-        }
-
-        public JSONObject assembleFactionHistory(){
-            JSONObject main = new JSONObject();
-            JSONArray balanceHistory = new JSONArray();
-            JSONArray kickHistory = new JSONArray();
-            JSONArray joinleftHistory = new JSONArray();
-            JSONArray factionJoinLeftHistory = new JSONArray();
-            JSONArray inviteHistory = new JSONArray();
-            JSONArray rankModifyHistory = new JSONArray();
-
-            for (HistoryEntrys.BalanceEntry balanceEntry : this.balanceHistory) {
-                JSONObject balance = new JSONObject();
-                balance.put("amount",balanceEntry.amount);
-                balance.put("player",balanceEntry.player);
-                balance.put("time",balanceEntry.time);
-                balanceHistory.put(balance);
-                System.out.println("Balance: " + balanceEntry.amount);
-            }
-            main.put("balanceHistory",balanceHistory);
-            for (HistoryEntrys.InviteEntry InviteEntry : this.inviteHistory) {
-                JSONObject invite = new JSONObject();
-                invite.put("executor",InviteEntry.executor);
-                invite.put("player",InviteEntry.player);
-                invite.put("time",InviteEntry.time);
-                invite.put("isinvited",InviteEntry.isInvited);
-                inviteHistory.put(invite);
-            }
-            main.put("inviteHistory",inviteHistory);
-            for (HistoryEntrys.KickEntry KickEntry : this.kickHistory) {
-                JSONObject kick = new JSONObject();
-                kick.put("executor",KickEntry.executor);
-                kick.put("player",KickEntry.player);
-                kick.put("time",KickEntry.time);
-                kick.put("reason",KickEntry.reason);
-                kickHistory.put(kick);
-            }
-            main.put("kickHistory",kickHistory);
-            for (HistoryEntrys.JoinLeftEntry JoinEntry : this.joinLeftHistory) {
-                JSONObject join = new JSONObject();
-                join.put("player",JoinEntry.player);
-                join.put("isjoined",JoinEntry.isJoined);
-                join.put("time",JoinEntry.time);
-                joinleftHistory.put(join);
-            }
-            main.put("joinLeftHistory",joinleftHistory);
-            for (HistoryEntrys.FactionJoinLeftEntry FactionJoinEntry : this.factionjoinLeftHistory) {
-                JSONObject fjoin = new JSONObject();
-                fjoin.put("player",FactionJoinEntry.player);
-                fjoin.put("type",FactionJoinEntry.type);
-                fjoin.put("time",FactionJoinEntry.time);
-                factionJoinLeftHistory.put(fjoin);
-            }
-            main.put("factionjoinLeftHistory",factionJoinLeftHistory);
-            for (HistoryEntrys.RankEntry rankEntry : this.rankCreateHistory) {
-                JSONObject rank = new JSONObject();
-                rank.put("player",rankEntry.player);
-                rank.put("type",rankEntry.type);
-                rank.put("time",rankEntry.time);
-                rank.put("rank",rankEntry.rank);
-                rankModifyHistory.put(rank);
-            }
-            main.put("rankCreateHistory",rankModifyHistory);
-            return main;
-        }
-        public void saveFactionData(){
-            SQL_Connection.dbExecute(con,"UPDATE factions SET name='?',money='?',leader='?',`statistics`='?' WHERE ID='?'", name, String.valueOf(balance),leader,assembleFactionHistory().toString(),String.valueOf(id));
-        }
-        public void invitePlayer(Player p) {
-            if(memberCount + 1 > max_members_pro_faction || invites.getInvitedPlayers().size()+1 > HCF_Rules.maxInvitesPerFaction ) {
-                p.sendMessage(Messages.MAX_MEMBERS_REACHED.queue());
-                return;
-            }
-            invites.invitePlayerToFaction(p);
-        }
-
-        public void unInvitePlayer(Player p) {
-            invites.removePlayerFromInvite(p);
-        }
-
-        public boolean isPlayerInvited(Player p) {
-            return invites.isPlayerInvited(p);
-        }
-
-        public void addClaim(HCF_Claiming.Faction_Claim claimid) {
-            try {
-                claims.add(claimid);
-            } catch (NullPointerException ex) {
-                claims = new ArrayList<>();
-                claims.add(claimid);
-                ex.printStackTrace();
-            }
-        }
-
-        public HCF_Claiming.Faction_Claim getFactionClaim(Integer id) {
-            return claims.get(id);
-        }
-
-        public void ApplyPlayerRank(Player p, String name) {
-            for (Faction_Rank_Manager.Rank rank : ranks) {
-                if (Objects.equals(rank.name, name)) {
-                    player_ranks.put(p, rank);
-                    playertools.setMetadata(p, "rank", rank.name);
-                    SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE uuid='?'", rank.name, p.getUniqueId().toString());
-                    break;
-                }
-            }
-        }
-        public void ApplyPlayerRank(OfflinePlayer p, String name) {
-            for (Faction_Rank_Manager.Rank rank : ranks) {
-                if (Objects.equals(rank.name, name)) {
-                    SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE uuid='?'", rank.name, p.getUniqueId().toString());
-                    break;
-                }
-            }
-        }
-
-        public Faction_Rank_Manager.Rank FindRankByName(String name) {
-            // Bukkit.broadcastMessage(name);
-            //Bukkit.broadcastMessage("Meow " + name.toCharArray().length);
-            for (Faction_Rank_Manager.Rank rank : ranks) {
-                if (rank.name.equalsIgnoreCase(name)) {
-                    return rank;
-                }
-            }
-            return null;
-        }
-
-        public Faction_Rank_Manager.Rank getDefaultRank() {
-            for (Faction_Rank_Manager.Rank rank : ranks) {
-                if (rank.isDefault)
-                    return rank;
-            }
-            Faction_Rank_Manager.Rank default_rank = Faction_Rank_Manager.CreateRank(this, "Default");
-            assert default_rank != null;
-            default_rank.isDefault = true;
-            default_rank.saveRank();
-            return default_rank;
-        }
-
-        public Faction_Rank_Manager.Rank getLeaderRank() {
-            for (Faction_Rank_Manager.Rank rank : ranks) {
-                if (rank.isLeader)
-                    return rank;
-            }
-            return null;
-        }
-
-        public void setHomeLocation(Location loc) {
-            homeLocation = loc;
-        }
-
-        public void BroadcastFaction(String message) {
-            ArrayList<Player> members = playertools.getFactionOnlineMembers(this);
-            for (Player member : members) {
-                member.sendMessage(message);
-            }
-        }
-        public void PlayerBroadcast(String message) {
-            ArrayList<Player> members = playertools.getFactionOnlineMembers(this);
-            for (Player member : members) {
-                member.sendMessage();
-            }
-        }
-
-        public void addPrefixPlayer(Player p) {
-            if(true)
-                return;
-
-            Scoreboard sb = playertools.getSB(p, this.id + "");
-            Team team = sb.getTeam(this.id + "");
-            team.addEntry(p.getName());
-            p.setPlayerListName("§a" + p.getName());
-            Bukkit.broadcastMessage(p.getName() + " " + team.hasEntry(p.getName()) + " " + team.getPrefix() + "a");
-            p.setScoreboard(sb);
-            // System.out.println("Entry Team: " + p.getScoreboard().getEntryTeam(p.getName()));
-        }
-
-        private void print(Player p) {
-            Scoreboard sb = p.getScoreboard();
-            Team team = sb.getTeam(this.id + "");
-            Bukkit.broadcastMessage(p.getName() + " Teszt: " + team.hasEntry(p.getName()) + " Prefix: " + team.getPrefix() + "a");
-
-        }
-
-        public void removePrefixPlayer(Player p) {
-            if(1==1){
-                return;
-            }
-            Scoreboard sb = playertools.getSB(p, this.id + "");
-            Team team = sb.getTeam(this.id + "");
-            team.removeEntry(p.getName());
-            Bukkit.broadcastMessage(p.getName() + " " + team.hasEntry(p.getName()) + " " + team.getPrefix() + "a");
-            p.setScoreboard(sb);
-            // System.out.println("Entry Team: " + p.getScoreboard().getEntryTeam(p.getName()));
-        }
-
-
-        public int getKills(){
-            int total = 0;
-            try {
-                PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction = ?");
-                ps.setInt(1, id);
-                ResultSet rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    total += rs.getInt("kills");
-
-                }
-            }catch (SQLException ignored) {
-
-            }
-            return total;
-        }
-        public int getDeaths(){
-            int total = 0;
-            try {
-                PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction = ?");
-                ps.setInt(1, id);
-                ResultSet rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    total += rs.getInt("deaths");
-
-                }
-            }catch (SQLException ignored)
-            {
-
-            }
-            return total;
-        }
-        public void refreshDTR(){
-            this.DTR_MAX = Double.parseDouble(playertools.CalculateDTR(this));
-        }
-
-    }
     public static void sendCmdMessage(String msg) {
         Bukkit.getServer().getConsoleSender().sendMessage(
                 Messages.PREFIX_CMD.queue()+
                 msg
         );
     }
-    public static class FactionHistory {
-        public final Date joined;
-        public Date left;
-        public String cause;
-        public String name;
-        public String lastRole;
-        public final int id;
-        public FactionHistory(long joined,long left,String cause,String name,String lastRole,int id) {
-            this.joined = new Date(joined);
-            this.left = new Date(left);
-            this.cause = cause;
-            this.name = name;
-            this.lastRole = lastRole;
-            this.id = id;
-        }
-        public JSONObject toJSON(){
-            JSONObject faction = new JSONObject();
-            faction.put("name",name);
-            faction.put("lastrole",lastRole);
-            faction.put("joined",joined.getTime());
-            faction.put("left",left.getTime());
-            faction.put("cause",cause);
-            faction.put("id",id);
-            return faction;
-        }
 
-    }
-    public static class PlayerStatistic {
-        //Class Times
-        public long TotalBardClassTime;
-        public long TotalAssassinClassTime;
-        public long TotalArcherClassTime;
-        public long TotalMinerClassTime;
-        public long TotalClassTime;
-        public int MoneySpend;
-        public int MoneyEarned;
-        public long TimePlayed;
-        public long startDate;
-        public long lastLogin;
-        public int kills;
-        public int deaths;
-
-        public ArrayList<FactionHistory> factionHistory = new ArrayList<>();
-        public PlayerStatistic(JSONObject mainJSON){
-            //FUCK ME
-            System.out.println(mainJSON.toString());
-            JSONObject ClassTimes = mainJSON.getJSONObject("ClassTimes");
-            TotalBardClassTime = Long.parseLong(ClassTimes.get("Bard").toString());
-            TotalAssassinClassTime = Long.parseLong(ClassTimes.get("Assassin").toString());
-            TotalArcherClassTime = Long.parseLong(ClassTimes.get("Archer").toString());
-            TotalMinerClassTime = Long.parseLong(ClassTimes.get("Miner").toString());
-            TotalClassTime = Long.parseLong(ClassTimes.get("Total").toString());
-            JSONArray array = mainJSON.getJSONArray("FactionHistory");
-            if(array.length() > 0){
-                for(int x = 0;x<=array.length()-1;x++) {
-                    JSONObject obj = array.getJSONObject(x);
-                    factionHistory.add(new FactionHistory(
-                            obj.getLong("joined"),
-                            obj.getLong("left"),
-                            obj.getString("cause"),
-                            obj.getString("name"),
-                            obj.getString("lastrole"),
-                            obj.getInt("id")
-                    ));
-                }
-            }
-            MoneySpend = Integer.parseInt(String.valueOf(mainJSON.get("MoneySpend")));
-            MoneyEarned = Integer.parseInt(String.valueOf(mainJSON.get("MoneyEarned")));
-            startDate = Long.parseLong(String.valueOf(mainJSON.get("startDate")));
-            lastLogin = Long.parseLong(String.valueOf(mainJSON.get("lastLogin")));
-            TimePlayed = Long.parseLong(String.valueOf(mainJSON.get("TimePlayed")));
-        }
-
-        public void Save(Player p){
-            JSONObject jsonComp = new JSONObject();
-            JSONArray factions = new JSONArray();
-            //JSONArray ClassTimes = new JSONArray();
-            JSONObject classTimes = new JSONObject();
-            classTimes.put("Bard",TotalBardClassTime);
-            classTimes.put("Assassin",TotalAssassinClassTime);
-            classTimes.put("Archer",TotalArcherClassTime);
-            classTimes.put("Miner",TotalMinerClassTime);
-            classTimes.put("Total",TotalMinerClassTime+TotalArcherClassTime+TotalAssassinClassTime+TotalBardClassTime);
-
-            jsonComp.put("totalFactions", factionHistory.size());
-            jsonComp.put("MoneySpend", MoneySpend);
-            jsonComp.put("MoneyEarned", MoneyEarned);
-            jsonComp.put("TimePlayed", TimePlayed);
-            jsonComp.put("startDate", startDate);
-            jsonComp.put("lastLogin",new Date().getTime());
-            for (FactionHistory f: factionHistory) {
-                factions.put(f.toJSON());
-            }
-            jsonComp.put("FactionHistory", factions);
-            jsonComp.put("ClassTimes", classTimes);
-            SQL_Connection.dbExecute(con,"UPDATE members SET statistics='?' WHERE uuid='?'",jsonComp.toString(),p.getUniqueId().toString());
-        }
-    }
 
 }

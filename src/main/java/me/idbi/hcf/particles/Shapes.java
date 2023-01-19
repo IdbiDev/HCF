@@ -1,7 +1,6 @@
 package me.idbi.hcf.particles;
 
 import me.idbi.hcf.tools.HCF_Claiming;
-import me.idbi.hcf.tools.playertools;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -32,6 +31,16 @@ public class Shapes {
             center.getWorld().playEffect(new Location(center.getWorld(),angleX,center.getY(),angleZ), effect,effect.getId());
         }
     }
+    public static void DrawCircle(Player player,Location center, double radius, double smoothness, Effect effect) {
+        double angle = 0;
+        while (angle < 360){
+            double radiant_angle = Math.toRadians(angle);
+            double angleX = center.getX() + Math.cos(radiant_angle) * radius;
+            double angleZ = center.getZ() + Math.sin(radiant_angle) * radius;
+            angle = angle + smoothness;
+            player.playEffect(new Location(center.getWorld(),angleX,center.getWorld().getHighestBlockYAt(center),angleZ), effect,effect.getId());
+        }
+    }
     public static void DrawCircle(Player player, double radius, double smoothness, Effect effect) {
         Location center = player.getLocation();
         double angle = 0;
@@ -40,7 +49,7 @@ public class Shapes {
             double angleX = center.getX() + Math.cos(radiant_angle) * radius;
             double angleZ = center.getZ() + Math.sin(radiant_angle) * radius;
             angle = angle + smoothness;
-            player.playEffect(new Location(center.getWorld(),angleX,center.getY(),angleZ), effect,effect.getId());
+            player.playEffect(new Location(center.getWorld(),angleX,center.getWorld().getHighestBlockYAt(center),angleZ), effect,effect.getId());
         }
     }
     public static void DrawSphere(Location center, double radius, double smoothness, Effect effect) {

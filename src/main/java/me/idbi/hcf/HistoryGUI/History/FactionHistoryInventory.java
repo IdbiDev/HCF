@@ -1,11 +1,9 @@
 package me.idbi.hcf.HistoryGUI.History;
 
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
-import me.idbi.hcf.Main;
-import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
+import me.idbi.hcf.tools.Objects.Faction;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
-import org.json.JSONObject;
 
 public class FactionHistoryInventory {
 
@@ -18,7 +16,7 @@ public class FactionHistoryInventory {
         public ArrayList<HistoryEntrys.RankEntry> rankCreateHistory = new ArrayList<>();
      */
 
-    public static Inventory inv(Main.Faction f, int balancePage, int kickPage, int joinLeftPage, int fJoinLeftPage, int invitePage, int rankCreatePage) {
+    public static Inventory inv(Faction f, int balancePage, int kickPage, int joinLeftPage, int fJoinLeftPage, int invitePage, int rankCreatePage) {
         Inventory inv = Bukkit.createInventory(null, 5*9, "§8" + f.name + "'s histories");
 
         for (int i = 0; i < inv.getSize(); i++) {
@@ -66,7 +64,7 @@ public class FactionHistoryInventory {
         return inv;
     }
 
-    public static void subHistories(Main.Faction f) {
+    public static void subHistories(Faction f) {
         for(int x = 0;x <= f.rankCreateHistory.size() -1 ;x++) {
             if(x >= 50){
                 f.rankCreateHistory.remove(f.rankCreateHistory.size() - 1);

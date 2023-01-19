@@ -2,6 +2,7 @@ package me.idbi.hcf.commands.cmdFunctions;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
@@ -30,7 +31,7 @@ public class Faction_Chat {
                 return;
             }
 
-            Main.Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+            Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
 
             faction.BroadcastFaction(Messages.FACTION_CHAT
                     .setMessage(
