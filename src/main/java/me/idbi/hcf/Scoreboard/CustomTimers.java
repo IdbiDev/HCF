@@ -32,14 +32,16 @@ public class CustomTimers {
         return true;
     }
 
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
         Main.customSBTimers.put(this.name, this);
+        refreshScoreboards();
     }
 
     public void setText(String text) {
         this.text = text;
         Main.customSBTimers.put(this.name, this);
+        refreshScoreboards();
     }
 
     public String getFormatted() {
@@ -49,6 +51,12 @@ public class CustomTimers {
 
     public void delete() {
         Main.customSBTimers.remove(this.name);
+        refreshScoreboards();
+    }
+
+    public void refreshScoreboards() {
+        Scoreboards.RefreshAll();
+        AdminScoreboard.RefreshAll();
     }
 
     public static void refreshAll() {

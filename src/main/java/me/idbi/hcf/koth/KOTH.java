@@ -1,5 +1,6 @@
 package me.idbi.hcf.koth;
 
+import me.idbi.hcf.Bossbar.BossbarTools;
 import me.idbi.hcf.CustomFiles.ConfigLibrary;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
@@ -109,6 +110,10 @@ public class KOTH implements Listener {
         KOTHItemManager.addRewardsToPlayer(GLOBAL_PLAYER);
         GLOBAL_PLAYER  = null;
         GLOBAL_TIME = Integer.parseInt(ConfigLibrary.KOTH_TIME.getValue()) * 60;
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            BossbarTools.remove(player);
+        }
         ///Main.autoKoth.StopAutoKoth();
     }
 

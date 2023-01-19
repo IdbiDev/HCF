@@ -5,6 +5,8 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import me.idbi.hcf.Bossbar.Bossbar;
 import me.idbi.hcf.CustomFiles.*;
+import me.idbi.hcf.CustomFiles.Configs.SimpleConfig;
+import me.idbi.hcf.CustomFiles.Configs.SimpleConfigManager;
 import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.CustomTimers;
@@ -44,6 +46,12 @@ import static me.idbi.hcf.HCF_Rules.*;
 
 
 public final class Main extends JavaPlugin implements Listener {
+    public SimpleConfigManager manager;
+
+    public SimpleConfig config;
+    public SimpleConfig messages;
+
+
     // Beállítások configba
     public static int world_border_radius;
     public static boolean deathban;
@@ -127,6 +135,7 @@ public final class Main extends JavaPlugin implements Listener {
         EOTWStarted = System.currentTimeMillis() / 1000;
         blacklistedRankNames = new ArrayList<>();
         blacklistedRankNames = getConfig().getStringList("Blacklisted-rankNames");
+        Bossbar.bars = new HashMap<>();
         MessagesFile.setup();
         DiscordFile.setup();
         if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", true);
@@ -232,6 +241,28 @@ public final class Main extends JavaPlugin implements Listener {
 
         brewing.Async_Cache_BrewingStands();
         brewing.SpeedBoost();
+
+       /* new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                while(true) {
+                    for(String s : BarUtil.getPlayers()) {
+                        Player o = Bukkit.getPlayer(s);
+                        if(o != null) BarUtil.teleportBar(o);
+                    }
+
+                    try {
+                        Thread.sleep(1000); // 1000 = 1 sec
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        }).start();*/
+
+        // (new BossbarUpdater(this)).runTaskTimer((Plugin)this, 0L, 20L);
 
         /*
         DISPLAYNAME THINGS!

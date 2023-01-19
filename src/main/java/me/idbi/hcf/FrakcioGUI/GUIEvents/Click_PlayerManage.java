@@ -38,6 +38,7 @@ public class Click_PlayerManage implements Listener {
             if(!playertools.hasPermission((Player) e.getWhoClicked(), Faction_Rank_Manager.Permissions.MANAGE_KICK)){
                 e.getWhoClicked().sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
                 GUI_Sound.playSound((Player) e.getWhoClicked(), "error");
+                e.getWhoClicked().closeInventory();
                 return;
             }
             String[] name = e.getView().getTitle().split(" ");

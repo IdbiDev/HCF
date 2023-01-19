@@ -74,6 +74,7 @@ public class onPlayerJoin implements Listener {
         // displayTeams.addPlayerToTeam(e.getPlayer());
 
         Scoreboards.refresh(p);
+        NameChanger.refreshAll();
 
         for (Map.Entry<LivingEntity, Long> entity : Main.saved_players.entrySet()) {
             if (Bukkit.getPlayer(entity.getKey().getCustomName()) != null) {

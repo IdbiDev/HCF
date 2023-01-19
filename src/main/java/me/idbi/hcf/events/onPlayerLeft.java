@@ -47,6 +47,8 @@ public class onPlayerLeft implements Listener {
             //Main.cacheRanks.remove(e.getPlayer());
         }
 
+        BossbarTools.remove(e.getPlayer());
+
         if(playertools.isInStaffDuty(e.getPlayer())) {
             AdminTools.InvisibleManager.showPlayer(e.getPlayer());
             //AdminTools.InvisibleManager.invisedAdmins.remove(e.getPlayer());

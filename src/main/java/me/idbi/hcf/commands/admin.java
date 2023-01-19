@@ -161,7 +161,7 @@ public class admin implements CommandExecutor, TabCompleter {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                                 e.printStackTrace();
                             }
-                            break;
+                            break;/*
                         case "createtimer":
                             try {
                                 adminMain.toggleStaffChat(p, args);
@@ -172,11 +172,21 @@ public class admin implements CommandExecutor, TabCompleter {
                                 p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
                                 e.printStackTrace();
                             }
-                            break;
+                            break;*/
                         case "vanish", "v":
                             try {
                                 adminMain.toggleVanish(p, args);
                                 //ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
+                            } catch (IndexOutOfBoundsException ignored) {
+                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                            } catch (Exception e) {
+                                p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                                e.printStackTrace();
+                            }
+                            break;
+                        case "setdtr":
+                            try {
+                                adminMain.setDTR(p, args);
                             } catch (IndexOutOfBoundsException ignored) {
                                 p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
                             } catch (Exception e) {

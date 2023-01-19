@@ -1,6 +1,8 @@
 package me.idbi.hcf.tools;
 
 
+import me.idbi.hcf.Bossbar.BarUtil;
+import me.idbi.hcf.Bossbar.BossbarTools;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
@@ -196,18 +198,23 @@ public class Misc_Timers {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if(KOTH.GLOBAL_AREA != null && KOTH.GLOBAL_PLAYER != null){
+                if (KOTH.GLOBAL_AREA != null && KOTH.GLOBAL_PLAYER != null) {
                     //TODO: Scoreboard format MIN:SS
-                    KOTH.GLOBAL_TIME--;
-                    if(KOTH.GLOBAL_TIME % 30 == 0)
+                    GLOBAL_TIME--;
+                    if (GLOBAL_TIME % 30 == 0)
                         Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.name).repTime_formatted(GLOBAL_TIME).queue());
-                      //  Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
-                    if(KOTH.GLOBAL_TIME <= 0){
-
+                    //  Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
+                    if (GLOBAL_TIME <= 0) {
                         stopKoth();
+                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                            BossbarTools.remove(onlinePlayer);
+                        }
                     }
                 }
 
+                for (Player online : Bukkit.getOnlinePlayers()) {
+                    BarUtil.setBar(online, "Igen nem §cTe köcsög §cigen " + GLOBAL_TIME, 50);
+                }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }

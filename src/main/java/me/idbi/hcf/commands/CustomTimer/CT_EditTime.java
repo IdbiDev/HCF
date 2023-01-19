@@ -6,4 +6,38 @@ import me.idbi.hcf.Scoreboard.CustomTimers;
 import org.bukkit.entity.Player;
 
 public class CT_EditTime {
+
+
+
+    public static void editCustomTimerTime(Player p, String[] args) {
+        long seconds = System.currentTimeMillis();
+        if (args.length == 3) {
+            if(!CustomTimers.isCreated(args[1])) {
+                p.sendMessage(Messages.CUSTOMT_NOT_FOUND.queue());
+                return;
+            }
+
+            if (args[2].endsWith("h")) {
+                if (args[2].replace("h", "").matches("^[0-9]+$")) {
+                    seconds += Integer.parseInt(args[2].replace("h", "")) * 3600 * 1000L;
+                } else {
+                    p.sendMessage("§cUsage: /customtimer settime <name> <time>h|m");
+                    return;
+                }
+            }
+            //
+            else if (args[2].endsWith("m")) {
+                if (args[2].replace("m", "").matches("^[0-9]+$")) {
+                    seconds += Integer.parseInt(args[2].replace("m", "")) * 60 * 1000L;
+                } else {
+                    p.sendMessage("§cUsage: /customtimer settime <name> <time>h|m");
+                    return;
+                }
+            }
+
+            CustomTimers timer = Main.customSBTimers.get(args[1]);
+            timer.setTime(seconds);
+            p.sendMessage(Messages.CUSTOMT_EDITED.queue());
+        }
+    }
 }

@@ -45,6 +45,7 @@ public class Scoreboards {
 
         int scoreNumber = 0;
 
+        int emptyCalcTimer = 0;
         for (String line : timers) {
             if (line.contains("%spawntag%") && HCF_Timer.getCombatTime(p) <= 0.0) {
                 continue;
@@ -66,14 +67,24 @@ public class Scoreboards {
                 continue;
             }
 
-            if (line.equals("empty"))
-                line = " ";
+            if (line.equals("empty")) {
+                if(scoreNumber == 0) {
+                    continue;
+                }
+                line = line.replace("empty", "");
+                for (int i = 0; i <= emptyCalcTimer; i++) {
+                    line += " ";
+                }
+                emptyCalcTimer++;
+            }
 
             if(line.contains("%customtimers%")) {
                 for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
                     if(customTimers.getValue().isActive()) {
-                        Score score = obj.getScore(replaceVariables(customTimers.getValue().getFormatted(), p));
+                        Score score = obj.getScore(line.replace("%customtimers%",
+                                replaceVariables(customTimers.getValue().getFormatted(), p)));
                         score.setScore(scoreNumber);
+                        scoreNumber++;
                     }
                 }
                 continue;
@@ -221,7 +232,7 @@ public class Scoreboards {
         } else
             result += "00:";
 
-        if(seconds < 10)
+        if(second < 10)
             result += "0" + second;
         else
             result += second;

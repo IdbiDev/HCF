@@ -353,4 +353,28 @@ public class adminMain {
             p.sendMessage(Messages.VANISH_ENABLED.queue());
         }
     }
+
+    public static void setDTR(Player p, String[] args) {
+        // /a setdtr CicaMC 2.0
+        if(args.length == 3) {
+            if(args[0].equalsIgnoreCase("setdtr")) {
+                Faction f = playertools.getFactionByName(args[1]);
+                if(f == null) {
+                    p.sendMessage(Messages.NOT_FOUND_FACTION.queue());
+                    return;
+                }
+                try {
+                    double dtr = Double.parseDouble(args[2]);
+                    if(f.DTR_MAX >= dtr) {
+                        f.DTR = Math.min(f.DTR_MAX, dtr);
+                        // ToDo: Successfully set dtr
+                        p.sendMessage(Messages.ADMIN_SET_DTR.setFaction(f.name).queue()
+                                .replace("%new_dtr%", f.DTR + ""));
+                    }
+                } catch (NumberFormatException e) {
+                    p.sendMessage(Messages.NOT_A_NUMBER.queue());
+                }
+            }
+        }
+    }
 }

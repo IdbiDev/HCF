@@ -72,6 +72,18 @@ public class AdminScoreboard {
                 emptyCalc++;
             }
 
+            if(line.contains("%customtimers%")) {
+                for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
+                    if(customTimers.getValue().isActive()) {
+                        Score score = obj.getScore(line.replace("%customtimers%",
+                                Scoreboards.replaceVariables(customTimers.getValue().getFormatted(), p)));
+                        score.setScore(scoreNumber);
+                        scoreNumber++;
+                    }
+                }
+                continue;
+            }
+
             Score score = obj.getScore(replaceVariablesAdmin(line, p));
             score.setScore(scoreNumber);
 
@@ -118,7 +130,10 @@ public class AdminScoreboard {
                     || line.contains("%bard_energy%")
                     || line.contains("%stuck_timer%")
                     || line.contains("%gapple_cd%")
+                    || line.contains("%pvp_timer%")
                     || line.contains("%opgapple_cd%")
+                    || line.contains("%sotw%")
+                    || line.contains("%customtimers%")
                     || line.contains("%eotw%")) {
                 timers.add(ChatColor.translateAlternateColorCodes('&', line));
                 continue;
