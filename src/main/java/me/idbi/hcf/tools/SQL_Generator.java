@@ -99,7 +99,10 @@ public class SQL_Generator {
                 """,
 
                 """
-                    INSERT IGNORE INTO `factions` SET ID = 1, money = 0, name = 'spawn', leader = '';
+                    INSERT IGNORE INTO `factions` SET ID = 1, money = 0, name = 'Spawn', leader = '';
+                """,
+                """
+                    INSERT IGNORE INTO `factions` SET ID = 2, money = 0, name = 'Warzone', leader = '';
                 """
         };
         for (String data : tables) {

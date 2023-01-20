@@ -347,9 +347,20 @@ public class playertools {
             }
             //Check if warzone enabled, and the spawn location is setted
             if(Integer.parseInt(ConfigLibrary.WARZONE_SIZE.getValue()) != 0 && !Main.faction_cache.get(1).claims.isEmpty()) {
-
-
-
+                String str = ConfigLibrary.Spawn_location.getValue();
+                Location spawn = new Location(
+                        Bukkit.getWorld(ConfigLibrary.World_name.getValue()),
+                        Integer.parseInt(str.split(" ")[0]),
+                        Integer.parseInt(str.split(" ")[1]),
+                        Integer.parseInt(str.split(" ")[2]),
+                        Integer.parseInt(str.split(" ")[3]),
+                        Integer.parseInt(str.split(" ")[4])
+                );
+                Faction f = Main.faction_cache.get(2);
+                int warzoneSize = Integer.parseInt(ConfigLibrary.WARZONE_SIZE.getValue());
+                HCF_Claiming.Faction_Claim claim;
+                claim = new HCF_Claiming.Faction_Claim(spawn.getBlockX() - warzoneSize, spawn.getBlockX() + warzoneSize, spawn.getBlockZ() - warzoneSize, spawn.getBlockZ() + warzoneSize, 2, HCF_Claiming.ClaimAttributes.SPECIAL);
+                f.addClaim(claim);
             }
         } catch (SQLException | JSONException e) {
             e.printStackTrace();
