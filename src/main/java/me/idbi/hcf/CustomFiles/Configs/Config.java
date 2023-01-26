@@ -131,7 +131,7 @@ public enum Config {
     }
 
     public String asStr() {
-        return ChatColor.translateAlternateColorCodes('&', (String)  this.value);
+        return ChatColor.translateAlternateColorCodes('&', (String) this.value);
     }
 
     public boolean asBoolean() {
@@ -152,7 +152,7 @@ public enum Config {
 
         if (config == null) return;
 
-        if (config.getString(this.toString()) == null) {
+        if (config.get((this.section == null ? "" : this.section + ".") + this.toString()) == null) {
             if(this.section == null) {
                 if (this.comments == null)
                     config.set(this.toString(), this.value);
@@ -168,7 +168,7 @@ public enum Config {
             return;
         }
 
-        this.value = config.get(this.toString());
+        this.value = config.get((this.section == null ? "" : this.section + ".") + this.toString());
     }
 
     public void save() {
@@ -179,7 +179,7 @@ public enum Config {
         else
             config.set(section + "." + this.toString(), this.value);
 
-        ConfigManager.getSimpleConfig().saveConfig();
+        config.saveConfig();
     }
 
     private static ConfigComments cc() {

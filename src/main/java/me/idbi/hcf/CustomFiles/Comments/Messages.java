@@ -599,7 +599,7 @@ public enum Messages {
 
         if (msgs == null) return;
 
-        if (msgs.getString(this.toString()) == null) {
+        if (msgs.getString((this.section == null ? "" : this.section + ".") + this.toString()) == null) {
             Object obj = this.message;
             if(this.listMessages != null)
                 obj = this.listMessages;
@@ -621,7 +621,7 @@ public enum Messages {
             return;
         }
 
-        this.message = msgs.getString(this.toString());
+        this.message = msgs.getString((this.section == null ? "" : this.section + ".") + this.toString());
 
         this.thisPrefix = msgs.getString("prefix");
     }
@@ -631,7 +631,7 @@ public enum Messages {
 
         if (msgs == null) return;
 
-        if (msgs.getString(this.toString()) == null) {
+        if (msgs.getString((this.section == null ? "" : this.section + ".") + this.toString()) == null) {
             Object obj = this.message;
             if(this.listMessages != null)
                 obj = this.listMessages;
