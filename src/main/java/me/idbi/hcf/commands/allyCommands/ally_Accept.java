@@ -7,7 +7,6 @@ import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Objects.FactionHistory;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
-import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
 import me.idbi.hcf.tools.playertools;
@@ -17,7 +16,7 @@ import java.util.Date;
 import java.util.Map;
 
 public class ally_Accept {
-    public static void JoinToFaction(Player p, String factionname) {
+    public static void AcceptAlly(Player p, String factionname) {
 
         if (playertools.getMetadata(p, "factionid").equals("0")) {
             Integer id_faction = 0;
