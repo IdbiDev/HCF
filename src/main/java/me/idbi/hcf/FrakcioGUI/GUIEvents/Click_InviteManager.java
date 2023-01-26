@@ -2,13 +2,13 @@ package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.AnvilGUI.AnvilItems;
 import me.idbi.hcf.ClickableMessages.Clickable_Join;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.InviteManagerInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
@@ -74,39 +74,42 @@ public class Click_InviteManager implements Listener {
                                             new Date().getTime(),
                                             true
                                     ));
-                                    p.sendMessage(Messages.INVITED_PLAYER.repPlayer(target).queue());
+                                    p.sendMessage(Messages.invited_player.language(p).setPlayer(target).queue());
                                     //target.sendMessage(Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue());
                                     Clickable_Join.sendMessage(target,
                                             "/f join " + faction.name,
-                                            Messages.INVITED_BY.repExecutor(p).setFaction(faction.name).queue(),
-                                            Messages.HOVER_JOIN.queue());
+                                            Messages.invited_by.language(target).setExecutor(p).setFaction(faction.name).queue(),
+                                            Messages.hover_join.language(target).queue());
 
-                                    faction.BroadcastFaction(Messages.FACTION_INVITE_BROADCAST.repExecutor(p).repPlayer(target).queue());
+                                    for (Player member : faction.getMembers()) {
+                                        member.sendMessage(Messages.faction_invite_broadcast.language(member).setExecutor(p).setPlayer(target).queue());
+                                    }
+
                                     GUI_Sound.playSound(p,"success");
                                     GUI_Sound.playSound(target,"success");
                                 } else {
                                     // This player is already invited
-                                    p.sendMessage(Messages.ALREADY_INVITED.queue());
+                                    p.sendMessage(Messages.already_invited.language(p).queue());
                                     GUI_Sound.playSound(p,"error");
                                 }
                             } else {
-                                p.sendMessage(Messages.PLAYER_IN_FACTION.queue());
+                                p.sendMessage(Messages.player_in_faction.language(p).queue());
                                 GUI_Sound.playSound(p,"error");
                             }
                             //faction.invitePlayer(target);
                             return AnvilGUI.Response.close();
                         } else {
-                            p.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
+                            p.sendMessage(Messages.not_found_player.language(p).queue());
                             GUI_Sound.playSound(p,"error");
                             return AnvilGUI.Response.close();
                         }
                     } else {
                         GUI_Sound.playSound(p,"error");
-                        return AnvilGUI.Response.text(Messages.GUI_INVALID_TYPE_TEXT.queue());
+                        return AnvilGUI.Response.text(Messages.gui_invalid_type_text.language(p).queue());
                     }
                 })
                 //.preventClose()//prevents the inventory from being closed
-                .text(Messages.GUI_INVITE_PLAYER.queue())                              //sets the text the GUI should start with
+                .text(Messages.gui_invite_player.language(p).queue())                              //sets the text the GUI should start with
                 .itemLeft(AnvilItems.left())                      //use a custom item for the first slot
                 //.itemRight(AnvilItems.done())                     //use a custom item for the second slot
                 .plugin(m)                                          //set the plugin instance

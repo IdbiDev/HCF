@@ -1,7 +1,7 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Objects.FactionHistory;
@@ -25,7 +25,7 @@ public class Faction_Leave {
 
                 SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?',factionname='?' WHERE uuid = '?'", "None","0", "None", player.getUniqueId().toString());
                 // Koba moment :3
-                player.sendMessage(Messages.LEAVE_MESSAGE.queue());
+                player.sendMessage(Messages.leave_message.language(player).queue());
                 Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(player, "factionid")));
                 playertools.setMetadata(player, "faction", "None");
                 playertools.setMetadata(player, "factionid", "0");
@@ -35,7 +35,10 @@ public class Faction_Leave {
 //                displayTeams.addToNonFaction(player);
                 //f.removePrefixPlayer(player);
 
-                f.BroadcastFaction(Messages.BC_LEAVE_MESSAGE.repPlayer(player).queue());
+                for (Player member : f.getMembers()) {
+                    member.sendMessage(Messages.bc_leave_message.language(member).setPlayer(player).queue());
+                }
+
                 Scoreboards.refresh(player);
                 f.refreshDTR();
                 PlayerStatistic stat = Main.playerStatistics.get(player.getUniqueId());
@@ -52,12 +55,11 @@ public class Faction_Leave {
                 NameChanger.refresh(player);
             } else {
                 //Todo: Factin leader is a fucking retarded bc he wanna leave the faction. Use /f disband
-                player.sendMessage(Messages.LEADER_LEAVING_FACTION.queue());
+                player.sendMessage(Messages.leader_leaving_faction.language(player).queue());
             }
         } else {
             // Nem vagy tagja egy factionnak se
-            player.sendMessage(Messages.NOT_IN_FACTION.queue());
+            player.sendMessage(Messages.not_in_faction.language(player).queue());
         }
-
     }
 }

@@ -1,7 +1,7 @@
 package me.idbi.hcf.classes.subClasses;
 
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.classes.HCF_Class;
 import me.idbi.hcf.particles.Shapes;
 import me.idbi.hcf.tools.HCF_Timer;
@@ -135,7 +135,7 @@ public class Bard implements HCF_Class {
             if (item != null) {
                 double currentEnergy = Double.parseDouble(playertools.getMetadata(bardplayer, "bardenergy"));
                 if ((currentEnergy - item.cost) < 0) {
-                    bardplayer.sendMessage(Messages.BARD_DONT_HAVE_ENOUGH_ENERGY.setAmount(String.valueOf(item.cost)).queue());
+                    bardplayer.sendMessage(Messages.bard_dont_have_enough_energy.language(bardplayer).setAmount(String.valueOf(item.cost)).queue());
                     return;
                 }
                 if (HCF_Timer.getBardTimer(bardplayer) !=0 ) {
@@ -173,9 +173,9 @@ public class Bard implements HCF_Class {
                     }
                 }.runTaskTimer(m,0L,0L);
 
-                bardplayer.sendMessage(Messages.BARD_USED_POWERUP
+                bardplayer.sendMessage(Messages.bard_used_powerup
                         .setAmount(String.valueOf(item.cost))
-                        .repBardEffects(
+                        .setBardEffects(
                                 bardplayer,
                                 getPotionName(item.effect.getName()),
                                 String.valueOf(getFactionMembersInDistance(bardplayer, 15).size())

@@ -1,6 +1,7 @@
 package me.idbi.hcf.Scoreboard;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.AdminTools;
 import me.idbi.hcf.tools.HCF_Timer;
@@ -39,7 +40,7 @@ public class AdminScoreboard {
 
         Objective obj = sb.registerNewObjective("dummy", "igen");
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        obj.setDisplayName(ChatColor.translateAlternateColorCodes('&', m.getConfig().getString("Admin_Scoreboard_Title")));
+        obj.setDisplayName(Config.admin_scoreboard_title.asStr());
 
         int scoreNumber = 0;
 
@@ -121,7 +122,7 @@ public class AdminScoreboard {
     }
 
     public static ArrayList<List<String>> sortLists() {
-        List<String> str = m.getConfig().getStringList("Admin_Scoreboard");
+        List<String> str = Config.admin_scoreboard.asStrList();
         List<String> fix = new ArrayList<>();
         List<String> timers = new ArrayList<>();
         for (String line : str) {

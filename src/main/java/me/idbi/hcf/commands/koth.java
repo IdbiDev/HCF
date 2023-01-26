@@ -1,8 +1,7 @@
 package me.idbi.hcf.commands;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.ListMessages;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.koth.GUI.KOTHInventory;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.playertools;
@@ -34,11 +33,11 @@ public class koth implements CommandExecutor, TabCompleter {
                         case "create":
                             try{
                                 createKoth(args[1]);
-                                p.sendMessage(Messages.KOTH_CREATED.setFaction(args[1]).queue());
+                                p.sendMessage(Messages.koth_created.language(p).setFaction(args[1]).queue());
                             } catch (IndexOutOfBoundsException ignored) {
-                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                                p.sendMessage(Messages.missing_argument.language(p).queue());
                             }catch (Exception e){
-                                p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                                p.sendMessage(Messages.error_while_executing.language(p).queue());
                             }
                             break;
                         case "setcapturezone":
@@ -59,12 +58,12 @@ public class koth implements CommandExecutor, TabCompleter {
                                         p.getInventory().remove(Material.IRON_HOE);
                                     }
                                 }else{
-                                    p.sendMessage(Messages.KOTH_INVALID_NAME.queue());
+                                    p.sendMessage(Messages.koth_invalid_name.language(p).queue());
                                 }
 
                                 //p.sendMessage(Messages.KOTH_CREATED.setFaction(args[1]).queue());
                             } catch (IndexOutOfBoundsException ignored) {
-                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                                p.sendMessage(Messages.missing_argument.language(p).queue());
                             }
                             break;
                         case "setnatrualzone":
@@ -85,18 +84,17 @@ public class koth implements CommandExecutor, TabCompleter {
                                         p.getInventory().remove(Material.IRON_HOE);
                                     }
                                 }else{
-                                    p.sendMessage(Messages.KOTH_INVALID_NAME.queue());
+                                    p.sendMessage(Messages.koth_invalid_name.language(p).queue());
                                 }
 
                                 //p.sendMessage(Messages.KOTH_SUCESS_CREATE.setFaction(args[1]).queue());
                             } catch (IndexOutOfBoundsException ignored) {
-                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                                p.sendMessage(Messages.missing_argument.language(p).queue());
                             }
                             break;
                         case "help":
                             //System.out.println(ListMessages.KOTH_COMMAND_LIST.queue());
-                            for (String lines : ListMessages.KOTH_COMMAND_LIST.queue()) {
-                                System.out.println(lines);
+                            for (String lines : Messages.koth_commands.language(p).queueList()) {
                                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
                             }
 
@@ -107,16 +105,16 @@ public class koth implements CommandExecutor, TabCompleter {
                                     startKoth(args[1]);
                                     //Todo: koth started @everyone
                                 }else{
-                                    p.sendMessage(Messages.KOTH_INVALID_NAME.queue());
+                                    p.sendMessage(Messages.koth_invalid_name.language(p).queue());
                                 }
                             } catch (IndexOutOfBoundsException ignored) {
-                                p.sendMessage(Messages.UNKNOWN_COMMAND.queue());
+                                p.sendMessage(Messages.missing_argument.language(p).queue());
                             }
                             break;
                     }
                 }
             }else{
-                for (String lines : ListMessages.KOTH_COMMAND_LIST.queue()) {
+                for (String lines : Messages.koth_commands.language(p).queueList()) {
                     p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
                 }
             }

@@ -1,10 +1,12 @@
 package me.idbi.hcf.events;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -19,43 +21,50 @@ public class onPlayerChat implements Listener {
                 if (e.getMessage().split(" ")[1].equalsIgnoreCase("chat"))
                     return;
 
-            playertools.sendStaffChat(ChatColor.translateAlternateColorCodes('&',
-                    Messages.STAFF_CHAT.repPlayer(e.getPlayer()).setMessage(e.getMessage()).queue()
-            ));
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if (onlinePlayer.hasPermission("factions.admin")) {
+                    onlinePlayer.sendMessage(Messages.staff_chat.language(e.getPlayer()).setPlayer(e.getPlayer()).setMessage(e.getMessage()).queue());
+                }
+            }
             return;
         }
 
         if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "factionchat"))) {
             if(playertools.getMetadata(e.getPlayer(), "factionid").equals("0")) {
-                e.getPlayer().sendMessage(Messages.NOT_IN_FACTION.queue());
+                e.getPlayer().sendMessage(Messages.not_in_faction.queue());
                 return;
             }
             e.setCancelled(true);
             Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
             if(faction == null){
-                e.getPlayer().sendMessage(Messages.NOT_IN_FACTION.queue());
+                e.getPlayer().sendMessage(Messages.not_in_faction.queue());
                 return;
             }
-            String msg = Messages.FACTION_CHAT.setMessage(e.getMessage()).repPlayer(e.getPlayer()).setFaction(faction.name).queue();
-            faction.BroadcastFaction(msg.replace("%rank%", playertools.getMetadata(e.getPlayer(), "rank")));
-        }else{
+            String msg = Messages.faction_chat
+                    .setMessage(e.getMessage())
+                    .setPlayer(e.getPlayer())
+                    .setFaction(faction)
+                    .replace("%rank%", playertools.getMetadata(e.getPlayer(), "rank")).queue();
+
+            faction.BroadcastFaction(msg);
+        } else {
             if(!playertools.getMetadata(e.getPlayer(), "factionid").equals("0")) {
-                String faction = playertools.getMetadata(e.getPlayer(), "faction");
+                Faction faction = playertools.getPlayerFaction(e.getPlayer());
                 String msg = e.getMessage();
                 //e.setCancelled(true);
-                e.setFormat(Messages.CHAT_PREFIX_FACTION
+                e.setFormat(Messages.chat_prefix_faction
                         .setFaction(faction)
                         .setMessage(msg)
-                        .repPlayer(e.getPlayer())
+                        .setPlayer(e.getPlayer())
                         .setDisplayName(e.getPlayer())
                         .queue()
                 );
             }else{
                 String msg = e.getMessage();
                 //e.setCancelled(true);
-                e.setFormat(Messages.CHAT_PREFIX_WITHOUT_FACTION
+                e.setFormat(Messages.chat_prefix_without_faction
                         .setMessage(msg)
-                        .repPlayer(e.getPlayer())
+                        .setPlayer(e.getPlayer())
                         .setDisplayName(e.getPlayer())
                         .queue()
                 );

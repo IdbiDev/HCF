@@ -1,7 +1,7 @@
 package me.idbi.hcf.MessagesEnums.SignShop;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.playertools;
@@ -74,20 +74,20 @@ public class InteractShopSign implements Listener {
                             Scoreboards.refresh(p);
                             if (remainingSpace < amount && remainingSpace > 0) {
                                 if (isFull(p, new ItemStack(material, remainingSpace, Short))) {
-                                    p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
+                                    p.sendMessage(Messages.not_enough_slot.language(p).queue());
                                     return;
                                 }
 
                                 if (playerBalance < fertigPreise) {
-                                    p.sendMessage(Messages.NOT_ENOUGH_MONEY.queue());
+                                    p.sendMessage(Messages.not_enough_money.language(p).queue());
                                     return;
                                 }
 
                                 playertools.setPlayerBalance(p, playerBalance - fertigPreise);
                                 PlayerStatistic stat = Main.playerStatistics.get(p.getUniqueId());
                                 stat.MoneySpend+=fertigPreise;
-                                Main.playerStatistics.put(p,stat);
-                                p.sendMessage(Messages.SIGN_SHOP_BOUGHT.setItem(new ItemStack(material, remainingSpace, Short))
+                                Main.playerStatistics.put(p.getUniqueId(),stat);
+                                p.sendMessage(Messages.sign_shop_bought.language(p).setItem(new ItemStack(material, remainingSpace, Short))
                                         .setPrice(fertigPreise)
                                         .setAmount(String.valueOf(remainingSpace))
                                         .queue());
@@ -96,12 +96,12 @@ public class InteractShopSign implements Listener {
                             }
 
                             if (isFull(p, new ItemStack(material, amount, Short))) {
-                                p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
+                                p.sendMessage(Messages.not_enough_slot.language(p).queue());
                                 return;
                             }
 
                             if (playerBalance >= signPrice) {
-                                p.sendMessage(Messages.SIGN_SHOP_BOUGHT
+                                p.sendMessage(Messages.sign_shop_bought.language(p)
                                         .setItem(new ItemStack(material, amount, Short))
                                         .setPrice(signPrice)
                                         .setAmount(String.valueOf(amount))
@@ -144,7 +144,7 @@ public class InteractShopSign implements Listener {
 
                             if (p.getInventory().contains(material)) {
                                 p.getInventory().removeItem(new ItemStack(material, amount, Short));
-                                p.sendMessage(Messages.SIGN_SHOP_SOLD
+                                p.sendMessage(Messages.sign_shop_sold.language(p)
                                         .setPrice(price)
                                         .setAmount(line1)
                                         .setItem(new ItemStack(material, amount, Short))
@@ -156,7 +156,7 @@ public class InteractShopSign implements Listener {
                                 stat.MoneyEarned+=price;
                                 Main.playerStatistics.put(p.getUniqueId(),stat);
                             } else {
-                                p.sendMessage(Messages.DONT_HAVE_ITEM.queue());
+                                p.sendMessage(Messages.dont_have_item.language(p).queue());
                             }
                             Scoreboards.refresh(p);
                         } catch (NullPointerException | IllegalArgumentException ex) {

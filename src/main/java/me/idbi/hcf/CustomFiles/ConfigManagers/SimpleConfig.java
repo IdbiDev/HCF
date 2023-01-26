@@ -1,4 +1,4 @@
-package me.idbi.hcf.CustomFiles.Configs;
+package me.idbi.hcf.CustomFiles.ConfigManagers;
 
 import java.io.File;
 import java.io.InputStream;
@@ -10,9 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-
 public class SimpleConfig {
-
     private int comments;
     private SimpleConfigManager manager;
 
@@ -41,6 +39,10 @@ public class SimpleConfig {
 
     public String getString(String path, String def) {
         return this.config.getString(path, def);
+    }
+
+    public List<String> getStringList(String path) {
+        return this.config.getStringList(path);
     }
 
     public int getInt(String path) {
@@ -97,7 +99,7 @@ public class SimpleConfig {
 
     public void set(String path, Object value, String comment) {
         if(!this.config.contains(path)) {
-            this.config.set(manager.getPluginName() + "_COMMENT_" + comments, " " + comment);
+            this.config.set(path + manager.getPluginName() + "_COMMENT_" + comments, " " + comment);
             comments++;
         }
 
@@ -108,9 +110,8 @@ public class SimpleConfig {
     public void set(String path, Object value, String[] comment) {
 
         for(String comm : comment) {
-
             if(!this.config.contains(path)) {
-                this.config.set(manager.getPluginName() + "_COMMENT_" + comments, " " + comm);
+                this.config.set(path + manager.getPluginName() + "_COMMENT_" + comments, " " + comm);
                 comments++;
             }
 

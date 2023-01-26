@@ -8,7 +8,7 @@ import me.idbi.hcf.FrakcioGUI.KickConfirm.DeleteRankConfirm;
 import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankPermissionInventory;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
@@ -79,7 +79,7 @@ public class Click_RankManager implements Listener {
                         for(String blacklisted_word : Main.blacklistedRankNames){
                             if(text.toLowerCase().contains(blacklisted_word.toLowerCase())){
                                 GUI_Sound.playSound(player,"error");
-                                return AnvilGUI.Response.text(Messages.GUI_BAD_WORD.queue());
+                                return AnvilGUI.Response.text(Messages.gui_bad_word.language(p).queue());
                             }
                         }
                         Faction faction = playertools.getPlayerFaction(p);
@@ -89,11 +89,11 @@ public class Click_RankManager implements Listener {
                         return AnvilGUI.Response.close();
                     } else {
                         GUI_Sound.playSound(player,"error");
-                        return AnvilGUI.Response.text(Messages.GUI_INVALID_TYPE_TEXT.queue());
+                        return AnvilGUI.Response.text(Messages.gui_invalid_type_text.language(p).queue());
                     }
                 })
                 //.preventClose()//prevents the inventory from being closed
-                .text(Messages.GUI_RENAME_TEXT.queue())                              //sets the text the GUI should start with
+                .text(Messages.gui_rename_text.language(p).queue())                              //sets the text the GUI should start with
                 .itemLeft(AnvilItems.left())                      //use a custom item for the first slot
                 //.itemRight(AnvilItems.done())                     //use a custom item for the second slot
                 .plugin(m)                                          //set the plugin instance

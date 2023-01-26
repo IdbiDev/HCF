@@ -1,8 +1,6 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
-
-import me.idbi.hcf.MessagesEnums.ListMessages;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
@@ -18,7 +16,7 @@ public class Faction_Claim {
     public static boolean PrepareClaiming(Player p) {
         if (!playertools.getMetadata(p, "factionid").equals("0")) {
             if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_ALL)) {
-                p.sendMessage(Messages.NO_PERMISSION.queue());
+                p.sendMessage(Messages.no_permission.language(p).queue());
                 return false;
             }
             if (p.getInventory().firstEmpty() != -1) {
@@ -29,7 +27,7 @@ public class Faction_Claim {
 
                 List<String> str = new ArrayList<>();
 
-                str.addAll(ListMessages.CLAIM_INFO.queue());
+                str.addAll(Messages.claim_info.queueList());
 
                 meta.setLore(str);
                 wand.setItemMeta(meta);
@@ -39,10 +37,10 @@ public class Faction_Claim {
                 playertools.setMetadata(p, "spawnclaiming", false);
                 return true;
             } else {
-                p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
+                p.sendMessage(Messages.not_enough_slot.language(p).queue());
             }
         } else {
-            p.sendMessage(Messages.NOT_IN_FACTION.queue());
+            p.sendMessage(Messages.not_in_faction.language(p).queue());
 
         }
 

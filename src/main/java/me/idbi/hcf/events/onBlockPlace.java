@@ -51,7 +51,7 @@ public class onBlockPlace implements Listener {
                 new HCF_Claiming.Point(playertools.getSpawn().getBlockX(),
                         playertools.getSpawn().getBlockZ())) == WARZONE_SIZE && !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
             //p.sendMessage(Main.servername+"§4Ezt nem teheted meg itt!");
-            p.sendMessage(Messages.WARZONE_NO_PERMISSION.queue());
+            p.sendMessage(Messages.warzone_no_permission.language(p).queue());
             e.setCancelled(true);
             return;
         }

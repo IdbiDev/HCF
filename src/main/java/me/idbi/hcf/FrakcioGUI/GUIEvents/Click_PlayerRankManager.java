@@ -3,7 +3,7 @@ package me.idbi.hcf.FrakcioGUI.GUIEvents;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
@@ -59,10 +59,10 @@ public class Click_PlayerRankManager implements Listener {
                     f.ApplyPlayerRank(offline, rankName);
 
                 e.getWhoClicked().closeInventory();
-                e.getWhoClicked().sendMessage(Messages.GUI_RANK_CHANGE.setRank(rankName).queue().replace("%player%", offline.getName()));
+                e.getWhoClicked().sendMessage(Messages.gui_rank_change.language(((Player) e.getWhoClicked())).setRank(rankName).queue().replace("%player%", offline.getName()));
                 GUI_Sound.playSound((Player) e.getWhoClicked(), "success");
             } else {
-                e.getWhoClicked().sendMessage(Messages.GUI_RANK_ALREADY_HAVE.queue());
+                e.getWhoClicked().sendMessage(Messages.gui_rank_already_have.language(((Player) e.getWhoClicked())).queue());
                 GUI_Sound.playSound((Player) e.getWhoClicked(), "error");
             }
         }

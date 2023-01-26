@@ -1,7 +1,7 @@
 package me.idbi.hcf.tools;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -14,7 +14,7 @@ public class Banhandler {
 
     public static void banPlayerInHCF(Player player) {
         SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", player.getUniqueId().toString(), String.valueOf(System.currentTimeMillis() + (Main.death_time * 60000L)));
-        player.kickPlayer(Messages.DEATHBAN_KICK.queue());
+        player.kickPlayer(Messages.deathban_kick.queue());
 
     }
     public static void banPlayerInHCF(OfflinePlayer player) {

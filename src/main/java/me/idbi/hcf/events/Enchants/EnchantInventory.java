@@ -4,7 +4,6 @@ import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -135,10 +134,10 @@ public class EnchantInventory implements Listener {
     public static ItemStack confirm() {
         ItemStack is = new ItemStack(Material.INK_SACK, 1, (short) 10);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(Messages.ENCHANT_CONFIRM_BUTTON.queue());
+        im.setDisplayName(Messages.enchant_confirm_button.queue());
         im.setLore(Arrays.asList(
                 "§5",
-                Messages.CONFIRM_BUTTON_LORE.queue().replace("%xp_level%", ConfigLibrary.Enchant_xp_cost.getValue())
+                Messages.confirm_button_lore.queue().replace("%xp_level%", Config.enchant_cost.asStr())
         ));
         is.setItemMeta(im);
         return is;
@@ -147,7 +146,7 @@ public class EnchantInventory implements Listener {
     public static ItemStack cancel() {
         ItemStack is = new ItemStack(Material.INK_SACK, 1, (short) 1);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(Messages.ENCHANT_CANCEL_BUTTON.queue());
+        im.setDisplayName(Messages.enchant_cancel_button.queue());
         is.setItemMeta(im);
         return is;
     }

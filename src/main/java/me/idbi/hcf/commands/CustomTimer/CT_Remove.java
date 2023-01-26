@@ -1,7 +1,7 @@
 package me.idbi.hcf.commands.CustomTimer;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.CustomTimers;
 import org.bukkit.entity.Player;
 
@@ -12,9 +12,9 @@ public class CT_Remove {
             if(args[0].equalsIgnoreCase("delete")) {
                 if(CustomTimers.isCreated(args[1])) {
                     Main.customSBTimers.get(args[1]).delete();
-                    p.sendMessage(Messages.CUSTOMT_DELETED.queue());
+                    p.sendMessage(Messages.customt_deleted.language(p).queue());
                 } else {
-                    p.sendMessage(Messages.CUSTOMT_NOT_FOUND.queue());
+                    p.sendMessage(Messages.customt_not_found.language(p).queue());
                 }
             }
         }

@@ -9,14 +9,12 @@ import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Discord.SetupBot;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.koth.AutoKoth;
 import me.idbi.hcf.koth.KOTH;
 import me.idbi.hcf.tools.*;
 import me.idbi.hcf.tools.Objects.Faction;
-import me.idbi.hcf.tools.Objects.FactionHistory;
 import me.idbi.hcf.tools.Objects.PlayerObject;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
@@ -33,8 +31,6 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.sql.Connection;
 import java.util.*;
@@ -72,7 +68,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static boolean discord_log_loaded = false;
     public static HashMap<String, CustomTimers> customSBTimers;
     public static int DTR_REGEN_TIME;
-
+    private static ConfigManager configManager;
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
 
     public static HashMap<String, KOTH.koth_area> koth_cache = new HashMap<>();
@@ -85,11 +81,14 @@ public final class Main extends JavaPlugin implements Listener {
 
     public static HashMap<UUID, PlayerStatistic> playerStatistics = new HashMap<>();
     public static ArrayList<UUID> death_wait_clear = new ArrayList<>();
+    public static ArrayList<String> availableLanguages = new ArrayList<>();
     //public static HashMap<Faction, Scoreboard> teams = new HashMap<>();
 
     public static HashMap<UUID, List<Location>> player_block_changes = new HashMap<>();
     private static Connection con;
     public static ArrayList<UUID> kothRewardsGUI;
+
+    public static HashMap<UUID, String> currentLanguages;
 
     public static List<String> blacklistedRankNames;
     public static ProtocolManager protocolManager;
@@ -132,7 +131,6 @@ public final class Main extends JavaPlugin implements Listener {
         kothRewardsGUI = new ArrayList<>();
         EOTWStarted = System.currentTimeMillis() / 1000;
         blacklistedRankNames = new ArrayList<>();
-        blacklistedRankNames = getConfig().getStringList("Blacklisted-rankNames");
         Bossbar.bars = new HashMap<>();
         currentLanguages = new HashMap<>();
         //MessagesFile.setup();
@@ -142,6 +140,13 @@ public final class Main extends JavaPlugin implements Listener {
 //        DiscordFile.getDiscord().options().copyDefaults(true);
 //        DiscordFile.saveDiscord();
 //        saveDefaultConfig();
+
+
+        configManager = new ConfigManager(this);
+        configManager.setup();
+
+
+        blacklistedRankNames = Config.blacklisted_names.asStrList();
 
         // Messages
         /*this.manager = new SimpleConfigManager(this);
@@ -165,11 +170,11 @@ public final class Main extends JavaPlugin implements Listener {
         MAX_DTR = Config.max_dtr.asDouble();
         DEATH_DTR = Config.death_dtr.asDouble();
         con = SQL_Connection.dbConnect(
-                ConfigLibrary.DATABASE_HOST.getValue(),
-                ConfigLibrary.DATABASE_PORT.getValue(),
-                ConfigLibrary.DATABASE_DATABSE.getValue(),
-                ConfigLibrary.DATABASE_USER.getValue(),
-                ConfigLibrary.DATABASE_PASSWORD.getValue());
+                Config.host.asStr(),
+                Config.port.asStr(),
+                Config.database.asStr(),
+                Config.username.asStr(),
+                Config.password.asStr());
         Plugin multi = getServer().getPluginManager().getPlugin("Multiverse-Core");
         EOTW_ENABLED = false;
         SOTW_ENABLED = false;
@@ -286,6 +291,7 @@ public final class Main extends JavaPlugin implements Listener {
         autoKoth.startAutoKoth();
 
     }
+
     @EventHandler
     public void onDisableEvent(PluginDisableEvent e) {
         if(e.getPlugin().equals(this)) {
@@ -356,7 +362,7 @@ public final class Main extends JavaPlugin implements Listener {
 
     public static void sendCmdMessage(String msg) {
         Bukkit.getServer().getConsoleSender().sendMessage(
-                Messages.PREFIX_CMD.queue()+
+                Messages.prefix_cmd.queue()+
                 msg
         );
     }

@@ -3,9 +3,9 @@ package me.idbi.hcf.tools;
 
 import me.idbi.hcf.Bossbar.BarUtil;
 import me.idbi.hcf.Bossbar.BossbarTools;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.classes.ClassSelector;
 import me.idbi.hcf.classes.subClasses.Bard;
@@ -146,7 +146,7 @@ public class Misc_Timers {
                         Location loc = HCF_Claiming.ReturnSafeSpot(player.getLocation());
                         if(loc != null){
                             player.teleport(loc);
-                            player.sendMessage(Messages.STUCK_FINISHED.queue());
+                            player.sendMessage(me.idbi.hcf.CustomFiles.Comments.Messages.stuck_finished.queue());
                         }
                     }
                     //Combat Time
@@ -204,7 +204,8 @@ public class Misc_Timers {
                     //TODO: Scoreboard format MIN:SS
                     GLOBAL_TIME--;
                     if (GLOBAL_TIME % 30 == 0)
-                        Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.name).repTime_formatted(GLOBAL_TIME).queue());
+                        Bukkit.broadcastMessage(Messages.koth_capture_timer
+                                .setFaction(KOTH.GLOBAL_AREA.faction).setFormattedTime(GLOBAL_TIME).queue());
                     //  Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
                     if (GLOBAL_TIME <= 0) {
                         stopKoth();

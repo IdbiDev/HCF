@@ -3,8 +3,10 @@ package me.idbi.hcf.FrakcioGUI.GUIEvents;
 import me.idbi.hcf.AnvilGUI.AnvilItems;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
+import me.idbi.hcf.FrakcioGUI.Items.Ally_Items;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
+import me.idbi.hcf.FrakcioGUI.Menus.Alley_MainInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.InviteManagerInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
@@ -85,6 +87,16 @@ public class Click_MainInventory implements Listener {
             }
             GUI_Sound.playSound(p,"click");
             renameFaction(p);
+        }
+
+        else if(e.getCurrentItem().isSimilar(Ally_Items.ally())) {
+            if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_ALL)) {
+                p.sendMessage(Messages.no_permission.language(p).queue());
+                GUI_Sound.playSound(p,"error");
+                return;
+            }
+            GUI_Sound.playSound(p,"click");
+            p.openInventory(Alley_MainInventory.inv());
         }
     }
 

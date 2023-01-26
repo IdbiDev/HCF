@@ -1,7 +1,7 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
 import me.idbi.hcf.HistoryGUI.Player.PlayerStatInventory;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -18,10 +18,10 @@ public class Faction_Stats {
                 if(p.hasPermission("factions.command.stats")) {
                     p.openInventory(PlayerStatInventory.inv(target.getPlayer()));
                 } else {
-                    p.sendMessage(Messages.NO_PERMISSION.queue());
+                    p.sendMessage(Messages.no_permission.language(p).queue());
                 }
             } else {
-                p.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
+                p.sendMessage(Messages.not_found_faction.language(p).queue());
             }
         }
 

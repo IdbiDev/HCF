@@ -18,7 +18,7 @@ public class brewing {
     public static final ArrayList<Furnace> furnaces = new ArrayList<>();
 
     public static void setAllBrewingStands() {
-        World w = Bukkit.getWorld(ConfigLibrary.World_name.getValue());
+        World w = Bukkit.getWorld(Config.world_name.asStr());
         if(w == null){
             Main.sendCmdMessage("§cWorld not found! Make sure to select the world name in the config.yml file!\nShutting down..");
             Bukkit.shutdown();

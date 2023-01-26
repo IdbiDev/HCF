@@ -1,7 +1,7 @@
 package me.idbi.hcf.commands.CustomTimer;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.CustomTimers;
 import org.bukkit.entity.Player;
 
@@ -13,7 +13,7 @@ public class CT_EditTime {
         long seconds = System.currentTimeMillis();
         if (args.length == 3) {
             if(!CustomTimers.isCreated(args[1])) {
-                p.sendMessage(Messages.CUSTOMT_NOT_FOUND.queue());
+                p.sendMessage(Messages.customt_not_found.language(p).queue());
                 return;
             }
 
@@ -37,7 +37,7 @@ public class CT_EditTime {
 
             CustomTimers timer = Main.customSBTimers.get(args[1]);
             timer.setTime(seconds);
-            p.sendMessage(Messages.CUSTOMT_EDITED.queue());
+            p.sendMessage(Messages.customt_edited.language(p).queue());
         }
     }
 }

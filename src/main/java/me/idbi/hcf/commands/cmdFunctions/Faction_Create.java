@@ -2,7 +2,7 @@ package me.idbi.hcf.commands.cmdFunctions;
 
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
@@ -58,14 +58,16 @@ public class Faction_Create {
 
                 // Kiíratás global chatre ->
                 //                              xy faction létre jött
-                Bukkit.broadcastMessage(Messages.FACTION_CREATON.getMessage().setFaction(name).repPlayer(p).queue());
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    onlinePlayer.sendMessage(Messages.faction_creation.language(onlinePlayer).setFaction(name).setPlayer(p).queue());
+                }
 
                 // displayTeams.createTeam(faction);
                 // displayTeams.addPlayerToTeam(p);
                 //faction.addPrefixPlayer(p);
 
                 Scoreboards.refresh(p);
-                LogLibrary.sendFactionCreate(p, faction.name);
+                // LogLibrary.sendFactionCreate(p, faction.name);
                 faction.refreshDTR();
                 GUI_Sound.playSound(p,"success");
                 PlayerStatistic stat = Main.playerStatistics.get(p.getUniqueId());
@@ -78,11 +80,11 @@ public class Faction_Create {
                 faction.memberCount++;
                 NameChanger.refresh(p);
             } else {
-                p.sendMessage(Messages.EXISTS_FACTION_NAME.getMessage().queue());
+                p.sendMessage(Messages.exists_faction_name.language(p).queue());
                 GUI_Sound.playSound(p,"error");
             }
         } else {
-            p.sendMessage(Messages.YOU_ALREADY_IN_FACTION.getMessage().queue());
+            p.sendMessage(Messages.you_already_in_faction.language(p).queue());
             GUI_Sound.playSound(p,"error");
         }
 

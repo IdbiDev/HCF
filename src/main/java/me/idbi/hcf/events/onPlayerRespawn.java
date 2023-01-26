@@ -18,9 +18,9 @@ public class onPlayerRespawn implements Listener {
         if (Main.debug)
             System.out.println("Respawning player.. Loading it ");
         playertools.LoadPlayer(e.getPlayer());
-        String str = ConfigLibrary.Spawn_location.getValue();
+        String str = Config.spawn_location.asStr();
         Location spawn = new Location(
-                Bukkit.getWorld(ConfigLibrary.World_name.getValue()),
+                Bukkit.getWorld(Config.world_name.asStr()),
                 Integer.parseInt(str.split(" ")[0]),
                 Integer.parseInt(str.split(" ")[1]),
                 Integer.parseInt(str.split(" ")[2]),
@@ -31,7 +31,7 @@ public class onPlayerRespawn implements Listener {
         e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
         e.getPlayer().setFoodLevel(20);
         e.getPlayer().setFallDistance(0);
-        Bukkit.broadcastMessage("Shut up nigger");
+        // Bukkit.broadcastMessage("Shut up nigger");
         addPvPTimerCoolDownSpawn(e.getPlayer());
     }
 }

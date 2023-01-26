@@ -1,7 +1,7 @@
 package me.idbi.hcf.events.claim;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
@@ -20,7 +20,7 @@ public class Koth_Claim implements Listener {
             if (e.getItem().getType() != Material.IRON_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
                 Main.sendCmdMessage("This is RIGHT click");
-                p.sendMessage(Messages.CLAIM_POS_END.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
+                p.sendMessage(Messages.claim_pos_end.language(p).setLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
                 HCF_Claiming.setEndPosition(Integer.parseInt(playertools.getMetadata(p, "kothid")), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
                 e.setCancelled(true);
             }else {
@@ -31,7 +31,7 @@ public class Koth_Claim implements Listener {
             if (e.getItem().getType() != Material.IRON_HOE) return;
             if (e.getItem().getItemMeta().hasLore()) {
                 Main.sendCmdMessage("This is LEFT click");
-                p.sendMessage(Messages.CLAIM_POS_START.repLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
+                p.sendMessage(Messages.claim_pos_start.language(p).setLoc(e.getClickedBlock().getX(),e.getClickedBlock().getZ()).queue());
                 e.setCancelled(true);
                 HCF_Claiming.setStartPosition(Integer.parseInt(playertools.getMetadata(p, "kothid")), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             }else {

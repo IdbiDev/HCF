@@ -3,7 +3,6 @@ package me.idbi.hcf.events;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.AdminTools;
 import me.idbi.hcf.tools.Objects.Faction;
@@ -41,10 +40,10 @@ public class onPlayerJoin implements Listener {
 
 
             Main.death_wait_clear.remove(e.getPlayer().getUniqueId());
-            String str = ConfigLibrary.Spawn_location.getValue();
+            String str = Config.spawn_location.asStr();
 
             Location spawn = new Location(
-                    Bukkit.getWorld(ConfigLibrary.World_name.getValue()),
+                    Bukkit.getWorld(Config.world_name.asStr()),
                     Integer.parseInt(str.split(" ")[0]),
                     Integer.parseInt(str.split(" ")[1]),
                     Integer.parseInt(str.split(" ")[2]),
@@ -64,8 +63,9 @@ public class onPlayerJoin implements Listener {
         if (!Objects.equals(playertools.getMetadata(p, "factionid"), "0")) {
             Faction f = playertools.getPlayerFaction(e.getPlayer());
             if(f != null) {
-                f.BroadcastFaction(
-                        Messages.JOIN_FACTION_BC.repPlayer(p).queue());
+                for (Player member : f.getMembers()) {
+                    member.sendMessage(Messages.join_faction_bc.language(member).setPlayer(e.getPlayer()).queue());
+                }
                 //f.addPrefixPlayer(p);
                 //Bukkit.getScoreboardManager().getMainScoreboard().getTeam(f.name).addEntry(p.getName());
             }

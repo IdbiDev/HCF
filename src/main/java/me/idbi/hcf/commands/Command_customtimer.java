@@ -1,7 +1,7 @@
 package me.idbi.hcf.commands;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.commands.CustomTimer.CT_Create;
@@ -40,7 +40,7 @@ public class Command_customtimer implements CommandExecutor {
                     }
                     else if(args[0].equalsIgnoreCase("list")) {
                         if(Main.customSBTimers.isEmpty()) {
-                            p.sendMessage(Messages.CUSTOMT_NO_ACTIVE_TIMER.queue());
+                            p.sendMessage(Messages.customt_no_active_timer.language(p).queue());
                             return false;
                         }
                         p.sendMessage(" ");

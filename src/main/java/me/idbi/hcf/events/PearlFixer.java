@@ -1,8 +1,8 @@
 package me.idbi.hcf.events;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.HCF_Claiming;
 import org.bukkit.Location;
@@ -44,7 +44,7 @@ public class PearlFixer implements Listener {
                         HCF_Claiming.Point getTo = new HCF_Claiming.Point(location.getBlockX(), location.getBlockZ());
                         if(HCF_Claiming.FindPoint_old(claimStart.x,claimStart.z,claimEnd.x,claimEnd.z,getTo.x,getTo.z)){
                             event.setCancelled(true);
-                            event.getPlayer().sendMessage(Messages.CANT_TELEPORT_TO_SAFEZONE.queue());
+                            event.getPlayer().sendMessage(Messages.cant_teleport_to_safezone.language(event.getPlayer()).queue());
                             break;
                         }
                     }

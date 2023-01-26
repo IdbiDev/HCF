@@ -27,11 +27,11 @@ public class Faction_Home implements Listener {
     public static void setHome(Player p) {
         Faction faction = playertools.getPlayerFaction(p);
         if(faction == null){
-            p.sendMessage(Messages.NOT_IN_FACTION.queue());
+            p.sendMessage(Messages.not_in_faction.language(p).queue());
             return;
         }
         if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_RANKS)) {
-            p.sendMessage(Messages.NO_PERMISSION.queue());
+            p.sendMessage(Messages.no_permission.language(p).queue());
             return;
         }
         HashMap<String,Integer> map = new HashMap<String,Integer>() {{
@@ -49,53 +49,63 @@ public class Faction_Home implements Listener {
                 JSONObject object = new JSONObject(map);
 
                 SQL_Connection.dbExecute(con, "UPDATE factions SET home = '?' WHERE ID='?'", object.toString(), String.valueOf(faction.id));
-                p.sendMessage(Messages.SETHOME_MESSAGE.queue());
-                faction.BroadcastFaction(Messages.SETHOME_UPDATE_FACTION.repPlayer(p).repCoords(p.getLocation().getBlockX(),p.getLocation().getBlockY(),p.getLocation().getBlockZ()).queue());
+                p.sendMessage(Messages.sethome_message.language(p).queue());
+
+                for (Player member : faction.getMembers()) {
+                    member.sendMessage(Messages.sethome_update_faction
+                            .language(member)
+                            .setPlayer(p)
+                            .setCoords(
+                                    p.getLocation().getBlockX(),
+                                    p.getLocation().getBlockY(),
+                                    p.getLocation().getBlockZ())
+                            .queue());
+                }
             }
         }else{
-            p.sendMessage(Messages.FACTION_DONT_HAVE_CLAIM.queue());
+            p.sendMessage(Messages.faction_dont_have_claim.language(p).queue());
         }
     }
 
     public static void teleportToHome(Player p) {
         Faction faction = playertools.getPlayerFaction(p);
         if(faction == null){
-            p.sendMessage(Messages.NOT_IN_FACTION.queue());
+            p.sendMessage(Messages.not_in_faction.language(p).queue());
             return;
         }
         HashMap<String, Object> json = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID = '?' AND home IS NOT NULL", String.valueOf(faction.id));
         if (json.size() > 0) {
             Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(json.get("home").toString()));
             Location loc = new Location(
-                    Bukkit.getWorld(ConfigLibrary.World_name.getValue()),
+                    Bukkit.getWorld(Config.world_name.asStr()),
                     Integer.parseInt(map.get("X").toString()),
                     Integer.parseInt(map.get("Y").toString()),
                     Integer.parseInt(map.get("Z").toString()),
                     Integer.parseInt(map.get("YAW").toString()),
                     Integer.parseInt(map.get("PITCH").toString()));
 
-            p.sendMessage(Messages.TELEPORT_TO_HOME.queue().replace("%time%", ConfigLibrary.teleport_delay_in_seconds.getValue()));
+            p.sendMessage(Messages.teleport_cancel.language(p).queue().replace("%time%", Config.home_teleport.asStr()));
             teleportPlayers.add(p);
             delayer(p, loc);
         } else {
-            p.sendMessage(Messages.DOESNT_HOME.queue());
+            p.sendMessage(Messages.doesnt_home.language(p).queue());
         }
     }
 
     private static void delayer(Player p, Location loc) {
         new BukkitRunnable() {
-            int delay = Integer.parseInt(ConfigLibrary.teleport_delay_in_seconds.getValue()) * 20;
+            int delay = Config.home_teleport.asInt() * 20;
 
             @Override
             public void run() {
                 if (!teleportPlayers.contains(p)) {
-                    p.sendMessage(Messages.TELEPORT_CANCEL.queue());
+                    p.sendMessage(Messages.teleport_cancel.language(p).queue());
                     cancel();
                     return;
                 }
 
                 if (delay <= 0) {
-                    p.sendMessage(Messages.SUCCESSFULLY_TELEPORT.queue());
+                    p.sendMessage(Messages.successfully_teleport.language(p).queue());
                     p.teleport(loc.add(0.5, 0, 0.5));
                     cancel();
                     return;

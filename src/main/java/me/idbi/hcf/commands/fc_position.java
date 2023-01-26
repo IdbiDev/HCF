@@ -1,7 +1,7 @@
 package me.idbi.hcf.commands;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
@@ -23,19 +23,21 @@ public class fc_position implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(sender instanceof Player p){
             if(playertools.getMetadata(p,"factionid").equals("0")){
-                p.sendMessage(Messages.NOT_IN_FACTION.queue());
+                p.sendMessage(Messages.not_in_faction.language(p).queue());
                 return false;
             }
             Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p,"factionid")));
            //faction.BroadcastFaction("&2"+p.getName()+" >> &o" +  convertLocation(p,p.getLocation()));
 
-            faction.BroadcastFaction(convertLocation(p, p.getLocation()));
+            for (Player member : faction.getMembers()) {
+                member.sendMessage(convertLocation(p, p.getLocation()));
+            }
         }
         return false;
     }
 
     public static String convertLocation(Player p, Location loc) {
-        return Messages.FACTION_PLAYER_POSITION.repPlayer(p).repCoords(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).queue();
+        return Messages.faction_player_position.language(p).setPlayer(p).setCoords(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).queue();
     }
 
     public static void lecgo(){

@@ -4,8 +4,6 @@ import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.ListMessages;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.commands.cmdFunctions.Bank.Faction_DepositBank;
 import me.idbi.hcf.commands.cmdFunctions.Bank.Faction_WithdrawBank;
 import me.idbi.hcf.commands.cmdFunctions.*;
@@ -41,7 +39,7 @@ public class faction implements CommandExecutor, TabCompleter {
                             p.sendMessage(Messages.missing_argument.language(p).queue());
                             //Kiíratás hogy balfaszul használta a commandot
                         }catch (Exception e){
-                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            p.sendMessage(Messages.error_while_executing.language(p).queue());
                             e.printStackTrace();
                         }
                         break;
@@ -65,7 +63,7 @@ public class faction implements CommandExecutor, TabCompleter {
                                     return false;
                                 }
                             }
-                            p.sendMessage(Messages.NO_FACTION_EXISTS.queue());
+                            p.sendMessage(Messages.no_faction_exists.queue());
                             return false;
                         }
                         p.sendMessage(Messages.unknown_command.language(p).queue());
@@ -110,12 +108,12 @@ public class faction implements CommandExecutor, TabCompleter {
                             p.sendMessage(Messages.unknown_command.language(p).queue());
                             //Kiíratás hogy balfaszul használta a commandot
                         }catch (Exception e){
-                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            p.sendMessage(Messages.error_while_executing.language(p).queue());
                             e.printStackTrace();
                         }
                         break;
                     case "help":
-                        for (String lines : ListMessages.COMMAND_LIST.queue()) {
+                        for (String lines : Messages.commands.language(p).queueList()) {
                             p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
                         }
                         break;
@@ -147,7 +145,7 @@ public class faction implements CommandExecutor, TabCompleter {
                             }*/
                             p.sendMessage(Messages.reload.language(p).queue());
                         } else {
-                            sender.sendMessage(Messages.NO_PERMISSION.getMessage().queue());
+                            sender.sendMessage(Messages.no_permission.language(p).queue());
                         }
                         break;
                     /*case "addrank":
@@ -202,7 +200,7 @@ public class faction implements CommandExecutor, TabCompleter {
                             p.sendMessage(Messages.unknown_command.language(p).queue());
                             //Kiíratás hogy balfaszul használta a commandot
                         }catch (Exception e){
-                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            p.sendMessage(Messages.error_while_executing.language(p).queue());
                             e.printStackTrace();
                         }
                         break;
@@ -213,20 +211,20 @@ public class faction implements CommandExecutor, TabCompleter {
                             p.sendMessage(Messages.unknown_command.language(p).queue());
                             //Kiíratás hogy balfaszul használta a commandot
                         }catch (Exception e){
-                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            p.sendMessage(Messages.error_while_executing.language(p).queue());
                             e.printStackTrace();
                         }
                         break;
                     case "manage":
                         try{
                             if(playertools.getPlayerFaction(p) == null) {
-                                p.sendMessage(Messages.NOT_IN_FACTION.queue());
+                                p.sendMessage(Messages.not_in_faction.language(p).queue());
                                 return false;
                             }
                             p.openInventory(MainInventory.mainInv(p));
                             GUI_Sound.playSound(p,"success");
                         }catch (Exception e){
-                            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+                            p.sendMessage(Messages.error_while_executing.language(p).queue());
                             e.printStackTrace();
                         }
                         break;
@@ -235,7 +233,7 @@ public class faction implements CommandExecutor, TabCompleter {
                         break;
                 }
             } else {
-                for (String lines : ListMessages.COMMAND_LIST.queue()) {
+                for (String lines : Messages.commands.language(p).queueList()) {
                     p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
                 }
             }

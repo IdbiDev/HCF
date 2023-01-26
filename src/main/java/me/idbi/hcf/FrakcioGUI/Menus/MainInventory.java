@@ -1,9 +1,11 @@
 package me.idbi.hcf.FrakcioGUI.Menus;
 
+import me.idbi.hcf.FrakcioGUI.Items.Ally_Items;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -16,6 +18,7 @@ public class MainInventory {
             inv.setItem(i, GUI_Items.blackGlass());
         }
 
+        inv.setItem(0, Ally_Items.ally());
         inv.setItem(11, GUI_Items.rankManager());
         inv.setItem(13, IM_Items.inviteManager());
         inv.setItem(15, GUI_Items.playerManager());

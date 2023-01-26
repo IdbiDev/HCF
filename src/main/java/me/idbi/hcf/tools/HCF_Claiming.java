@@ -1,7 +1,7 @@
 package me.idbi.hcf.tools;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Objects.Faction;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -74,15 +74,15 @@ public class HCF_Claiming {
 
                         if (doOverlap3(faction_start, faction_end, start_this, end_this)) {
                             //if (doOverlap(new Point(val.startX, val.endX), new Point(val.startZ, val.endZ), new Point(start[0], end[0]), new Point(start[1], end[1]))) {
-                            p.sendMessage(Messages.FACTION_CLAIM_OVERLAP.queue());
+                            p.sendMessage(Messages.faction_claim_overlap.language(p).queue());
                             return false;
                         }
                         if (calcBlocks(p) < 4) {
-                            p.sendMessage(Messages.FACTION_CLAIM_TOO_SMALL.queue());
+                            p.sendMessage(Messages.faction_claim_too_small.language(p).queue());
                             return false;
                         }
                         if(playertools.CheckClaimPlusOne(faction_start, faction_end,1, start_this, end_this)) {
-                            p.sendMessage(Messages.FACTION_CLAIM_OVERLAP_PLUS_ONE.queue());
+                            p.sendMessage(Messages.faction_claim_overlap.language(p).queue());
                             return false;
                         }
 
@@ -92,7 +92,7 @@ public class HCF_Claiming {
                     playertools.setMetadata(p, "money", playertools.getPlayerBalance(p) - calcMoneyOfArea(p));
                 } else {
                     if(attribute.equals(ClaimAttributes.NORMAL)){
-                        p.sendMessage(Messages.NOT_ENOUGH_MONEY.queue());
+                        p.sendMessage(Messages.not_enough_money.language(p).queue());
                         return false;
                     }
                 }
@@ -117,7 +117,7 @@ public class HCF_Claiming {
             }
             return false;
         } catch (Exception e) {
-            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+            p.sendMessage(Messages.error_while_executing.language(p).queue());
         }
         return false;
     }
@@ -149,7 +149,7 @@ public class HCF_Claiming {
             }
             return false;
         } catch (Exception e) {
-            p.sendMessage(Messages.ERROR_WHILE_EXECUTING.queue());
+            p.sendMessage(Messages.error_while_executing.language(p).queue());
         }
         return false;
     }
@@ -404,7 +404,7 @@ public class HCF_Claiming {
             p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
             return true;
         } else {
-            p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
+            p.sendMessage(Messages.not_enough_slot.language(p).queue());
         }
 
         return false;
@@ -425,7 +425,7 @@ public class HCF_Claiming {
             p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
             return true;
         } else {
-            p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
+            p.sendMessage(Messages.not_enough_slot.language(p).queue());
         }
 
         return false;
@@ -450,7 +450,7 @@ public class HCF_Claiming {
             p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
             return true;
         } else {
-            p.sendMessage(Messages.NOT_ENOUGH_SLOT.queue());
+            p.sendMessage(Messages.not_enough_slot.language(p).queue());
         }
 
         return false;

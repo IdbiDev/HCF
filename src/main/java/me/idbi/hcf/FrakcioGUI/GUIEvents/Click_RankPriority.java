@@ -1,5 +1,6 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RP_Items;
@@ -8,7 +9,6 @@ import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankPriorityInventory;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
@@ -41,14 +41,14 @@ public class Click_RankPriority implements Listener {
         if(!(e.getWhoClicked() instanceof Player p)) return;
 
         if (e.getCurrentItem().isSimilar(RP_Items.cancel())) {
-            e.getWhoClicked().openInventory(MainInventory.mainInv(p));
-            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
+            p.openInventory(MainInventory.mainInv(p));
+            GUI_Sound.playSound(p, "back");
             return;
         }
 
         if(e.getCurrentItem().isSimilar(RPrio_Items.rankManagerToggleButton())) {
-            e.getWhoClicked().openInventory(RankMenuInventory.inv(p));
-            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
+            p.openInventory(RankMenuInventory.inv(p));
+            GUI_Sound.playSound(p, "back");
             return;
         }
 
@@ -63,9 +63,9 @@ public class Click_RankPriority implements Listener {
 
         if(e.getCurrentItem().isSimilar(RP_Items.save())) {
             saveInventory(p, e.getInventory());
-            p.sendMessage(Messages.GUI_PRIORITY_SAVED.queue());
+            p.sendMessage(Messages.gui_priority_saved.language(p).queue());
             GUI_Sound.playSound(p, "success");
-            e.getWhoClicked().closeInventory();
+            p.closeInventory();
             return;
         }
 

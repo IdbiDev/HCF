@@ -1,7 +1,6 @@
 package me.idbi.hcf.events;
 
-
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.playertools;
@@ -18,7 +17,7 @@ public class onDamage implements Listener {
         if (e.getDamager() instanceof Player damager && e.getEntity() instanceof Player victim) {
             // Check Friendly Fire
             if (Boolean.parseBoolean(playertools.getMetadata(damager, "adminDuty"))) {
-                damager.sendMessage(Messages.CANT_DAMAGE_ADMIN.queue());
+                damager.sendMessage(Messages.cant_damage_admin.language(damager).queue());
                 e.setCancelled(true);
             }
             //String c = ChatColor.stripColor(HCF_Claiming.sendFactionTerritory(victim));
@@ -29,7 +28,7 @@ public class onDamage implements Listener {
                 if (claim != null && damagerClaim != null) {
                     if(claim.attribute.equals("protected") || damagerClaim.attribute.equals("protected")){
                         e.setCancelled(true);
-                        damager.sendMessage(Messages.CANT_DAMAGE_PROTECTED_AREA.queue());
+                        damager.sendMessage(Messages.cant_damage_protected_area.language(damager).queue());
                         return;
                     }
                 }
@@ -41,11 +40,11 @@ public class onDamage implements Listener {
                     }
                 }*/
                 if(HCF_Timer.getPvPTimerCoolDownSpawn(victim) != 0){
-                    damager.sendMessage(Messages.CANT_DAMAGE_WHILE_PVPTIMER_VICTIM.queue());
+                    damager.sendMessage(Messages.cant_damage_while_pvptimer_victim.language(damager).queue());
                     e.setCancelled(true);
                 }
                 if(HCF_Timer.getPvPTimerCoolDownSpawn(damager) != 0){
-                    damager.sendMessage(Messages.CANT_DAMAGE_WHILE_PVPTIMER.queue());
+                    damager.sendMessage(Messages.cant_damage_while_pvptimer.language(damager).queue());
                     e.setCancelled(true);
                 }
             } catch (NullPointerException ex) {

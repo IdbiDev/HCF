@@ -335,12 +335,24 @@ public class Faction {
         homeLocation = loc;
     }
 
+    public void BroadcastFaction(Messages message) {
+        ArrayList<Player> members = playertools.getFactionOnlineMembers(this);
+        for (Player member : members) {
+            member.sendMessage(message.queue());
+        }
+    }
+
     public void BroadcastFaction(String message) {
         ArrayList<Player> members = playertools.getFactionOnlineMembers(this);
         for (Player member : members) {
             member.sendMessage(message);
         }
     }
+
+    public ArrayList<Player> getMembers() {
+        return playertools.getFactionOnlineMembers(this);
+    }
+
     public void PlayerBroadcast(String message) {
         ArrayList<Player> members = playertools.getFactionOnlineMembers(this);
         for (Player member : members) {

@@ -25,7 +25,6 @@ public class CustomTimers {
 
     public boolean isActive() {
         if(getTime() <= 0) {
-            System.out.println("Törlés: " + time);
             Main.customSBTimers.remove(this.name);
             return false;
         }

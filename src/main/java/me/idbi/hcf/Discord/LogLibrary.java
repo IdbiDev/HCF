@@ -7,7 +7,7 @@ public class LogLibrary {
 
     private static final WebhookClientBuilder channel = SetupBot.builder;
 
-    public static void sendKill(Player killer, Player victim) {
+    /*public static void sendKill(Player killer, Player victim) {
         if(channel == null) return;
         if (DiscordFile.getDiscord().getBoolean("kill"))
             channel.buildJDA().send(Embeds.kill(killer, victim).build());
@@ -89,5 +89,5 @@ public class LogLibrary {
         if(channel == null) return;
         if (DiscordFile.getDiscord().getBoolean("commands"))
             channel.buildJDA().send(Embeds.commands(p, command).build());
-    }
+    }*/
 }

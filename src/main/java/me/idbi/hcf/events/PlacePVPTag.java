@@ -23,16 +23,16 @@ public class PlacePVPTag implements Listener {
 
 
             if (isTeammate(damager,victim)) {
-                damager.sendMessage(Messages.TEAMMATE_DAMAGE.queue());
+                damager.sendMessage(Messages.teammate_damage.language(damager).queue());
                 e.setCancelled(true);
                 return;
             }
             //Add combatTimer
             if (HCF_Timer.addCombatTimer(victim)) {
-                victim.sendMessage(Messages.COMBAT_MESSAGE.queue().replace("%sec%", ConfigLibrary.Combat_time.getValue()));
+                victim.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.combattag.asStr()));
             }
             if (HCF_Timer.addCombatTimer(damager)) {
-                damager.sendMessage(Messages.COMBAT_MESSAGE.queue().replace("%sec%", ConfigLibrary.Combat_time.getValue()));
+                damager.sendMessage(Messages.combat_message.language(damager).queue().replace("%sec%", Config.combattag.asStr()));
             }
             //Damage if ArcherTag
             if (HCF_Timer.checkArcherTimer(victim)) {

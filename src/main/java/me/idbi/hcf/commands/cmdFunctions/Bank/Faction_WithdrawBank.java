@@ -1,7 +1,7 @@
 package me.idbi.hcf.commands.cmdFunctions.Bank;
 
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
@@ -18,23 +18,23 @@ public class Faction_WithdrawBank {
     public static void asd(String[] args, Player p) {
         if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_MONEY)) {
             // ToDo: permission handle
-            p.sendMessage(Messages.NO_PERMISSION.queue());
+            p.sendMessage(Messages.no_permission.language(p).queue());
             return;
         }
         if (args[1].matches("^[0-9]+$")) {
             try {
                 Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
                 if (Integer.parseInt(args[1]) <= 0) {
-                    p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
+                    p.sendMessage(Messages.faction_bank_not_enough.language(p).queue());
                     return;
                 }
                 if (faction.balance <= 0) {
-                    p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
+                    p.sendMessage(Messages.faction_bank_not_enough.language(p).queue());
                     return;
                 }
 
                 if (faction.balance < Integer.parseInt(args[1])) {
-                    p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
+                    p.sendMessage(Messages.faction_bank_not_enough.language(p).queue());
                     return;
                 }
                 Faction_WithdrawBank withdraw =
@@ -45,17 +45,17 @@ public class Faction_WithdrawBank {
                         );
 
                 if (withdraw.transactionSuccessfully()) {
-                    p.sendMessage(Messages.FACTION_BANK_WITHDRAW.queue().replace("%amount%", args[1]));
+                    p.sendMessage(Messages.faction_bank_withdraw.language(p).queue().replace("%amount%", args[1]));
                     Scoreboards.refresh(p);
                     faction.balanceHistory.add(0,
                             new HistoryEntrys.BalanceEntry(-Integer.parseInt(args[1]),p.getName(),new Date().getTime())
                     );
                 }
             } catch (NumberFormatException ex) {
-                p.sendMessage(Messages.FACTION_BANK_NUMBER_ERROR.queue());
+                p.sendMessage(Messages.faction_bank_number_error.language(p).queue());
             }
         } else {
-            p.sendMessage(Messages.FACTION_BANK_NUMBER_ERROR.queue());
+            p.sendMessage(Messages.faction_bank_number_error.language(p).queue());
         }
     }
 

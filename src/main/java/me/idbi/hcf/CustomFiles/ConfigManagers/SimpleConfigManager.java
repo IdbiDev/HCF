@@ -1,6 +1,7 @@
-package me.idbi.hcf.CustomFiles.Configs;
+package me.idbi.hcf.CustomFiles.ConfigManagers;
 
-import java.io.BufferedReader;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -12,11 +13,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class SimpleConfigManager {
-
     private JavaPlugin plugin;
 
     /*
@@ -41,7 +42,6 @@ public class SimpleConfigManager {
             if(header != null && header.length != 0) {
                 this.setHeader(file, header);
             }
-
         }
 
         SimpleConfig config = new SimpleConfig(this.getConfigContent(filePath), file, this.getCommentsNum(file), plugin);
@@ -104,7 +104,7 @@ public class SimpleConfigManager {
             file.getParentFile().mkdirs();
             file.createNewFile();
 
-            if(!resource.isEmpty() && resource != null) {
+            if(resource != null && !resource.isEmpty()) {
                 this.copyResource(plugin.getResource(resource), file);
             }
 
@@ -172,7 +172,9 @@ public class SimpleConfigManager {
             config.append("# +----------------------------------------------------+ #");
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.write(this.prepareConfigString(config.toString()));
+            writer.write(this.prepareConfigString(config.toString()
+                    .replace(",\n  ", this.plugin.getName() + "_COMMA")
+                    .replace("\n    ", this.plugin.getName() + "_SPACE")));
             writer.flush();
             writer.close();
 
@@ -264,7 +266,7 @@ public class SimpleConfigManager {
 
     }
 
-    /*
+    /**
      * Get config content from file
      * @param filePath - Path to file
      * @return - readied file
@@ -284,6 +286,8 @@ public class SimpleConfigManager {
 
         for(String line : lines) {
 
+            line = line.replace(this.plugin.getName() + "_COMMA", ", ");
+            line = line.replace(this.plugin.getName() + "_SPACE", " ");
             if(line.startsWith(this.getPluginName() + "_COMMENT")) {
                 String comment = "#" + line.trim().substring(line.indexOf(":") + 1);
 
@@ -306,16 +310,12 @@ public class SimpleConfigManager {
 
                         lastLine = 0;
                         headerLine = 0;
-
                     }
-
                 } else {
-
                     /*
                      * Last line = 0 - Comment
                      * Last line = 1 - Normal path
                      */
-
                     String normalComment;
 
                     if(comment.startsWith("# ' ")) {
@@ -327,32 +327,28 @@ public class SimpleConfigManager {
                     if(lastLine == 0) {
                         config.append(normalComment + "\n");
                     } else if(lastLine == 1) {
-                        config.append("\n" + normalComment + "\n");
+                        config.append(normalComment + "\n");
                     }
-
                     lastLine = 0;
-
                 }
-
             } else {
                 config.append(line + "\n");
                 lastLine = 1;
             }
-
         }
-
         return config.toString();
-
     }
 
 
-    /*
+    /**
      * Saves configuration to file
      * @param configString - Config string
      * @param file - Config file
      */
     public void saveConfig(String configString, File file) {
-        String configuration = this.prepareConfigString(configString);
+        String configuration = this.prepareConfigString(configString
+                .replace(",\n  ", this.plugin.getName() + "_COMMA")
+                .replace("\n    ", this.plugin.getName() + "_SPACE"));
 
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));

@@ -1,7 +1,7 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
@@ -31,14 +31,14 @@ public class Faction_Kick {
                 if(targetPlayer_Offline.isOnline()) {
                     targetPlayer_Online = targetPlayer_Offline.getPlayer();
                     if(targetPlayer_Online == player){
-                        player.sendMessage(Messages.CANT_KICK_YOURSELF.queue());
+                        player.sendMessage(Messages.cant_kick_yourself.language(player).queue());
                         return;
                     }
 
                     Faction f = playertools.getPlayerFaction(targetPlayer_Online);
                     assert f != null;
                     if(Objects.equals(targetPlayer_Online.getUniqueId().toString(), f.leader)){
-                        player.sendMessage(Messages.CANT_KICK_LEADER.queue());
+                        player.sendMessage(Messages.cant_kick_leader.language(player).queue());
                         return;
                     }
                     playertools.setMetadata(targetPlayer_Online, "faction", "None");
@@ -46,7 +46,11 @@ public class Faction_Kick {
                     playertools.setMetadata(targetPlayer_Online, "rank", "None");
                     f.player_ranks.remove(targetPlayer_Online);
                     f.memberCount--;
-                    f.BroadcastFaction(Messages.BC_LEAVE_MESSAGE.repPlayer(targetPlayer_Online).queue());
+
+                    for (Player member : f.getMembers()) {
+                        member.sendMessage(Messages.bc_leave_message.language(member).setPlayer(targetPlayer_Online).queue());
+                    }
+
                     f.refreshDTR();
                     SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?',factionname='?' WHERE uuid = '?'", "None","0", "None", targetPlayer_Online.getUniqueId().toString());
 
@@ -73,7 +77,7 @@ public class Faction_Kick {
                     Faction f = playertools.getPlayerFaction(player);
                     assert f != null;
                     if(Objects.equals(targetPlayer_Offline.getUniqueId().toString(), f.leader)){
-                        player.sendMessage(Messages.CANT_KICK_LEADER.queue());
+                        player.sendMessage(Messages.cant_kick_leader.language(player).queue());
                         return;
                     }
                     SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?',factionname='?' WHERE uuid = '?'", "None","0", "None", targetPlayer_Offline.getUniqueId().toString());
@@ -83,13 +87,13 @@ public class Faction_Kick {
                     f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(targetPlayer_Offline.getName(),"kicked",new Date().getTime()));
                 }
 
-                player.sendMessage(Messages.KICK_MESSAGE.repExecutor(player).repPlayer(targetPlayer_Offline).queue());
+                player.sendMessage(Messages.kick_message.setExecutor(player).replace("%player%", targetPlayer_Offline.getName()).queue());
             } else {
-                player.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
+                player.sendMessage(Messages.no_permission_in_faction.language(player).queue());
             }
         } else {
             // Nem vagy tagja egy factionnak se
-            player.sendMessage(Messages.NOT_IN_FACTION.queue());
+            player.sendMessage(Messages.not_in_faction.language(player).queue());
         }
 
     }

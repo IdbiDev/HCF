@@ -1,7 +1,7 @@
 package me.idbi.hcf.commands.cmdFunctions.Bank;
 
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
@@ -19,7 +19,7 @@ public class Faction_DepositBank {
     public static void asd(String[] args, Player p) {
         if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_MONEY)) {
             // ToDo: permission handle
-            p.sendMessage(Messages.NO_PERMISSION.queue());
+            p.sendMessage(Messages.no_permission.language(p).queue());
             return;
         }
 
@@ -27,7 +27,7 @@ public class Faction_DepositBank {
             try {
                 Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
                 if (Integer.parseInt(args[1]) <= 0) {
-                    p.sendMessage(Messages.FACTION_BANK_NOT_ENOUGH.queue());
+                    p.sendMessage(Messages.faction_bank_not_enough.language(p).queue());
                     return;
                 }
                 Faction_DepositBank deposit =
@@ -38,7 +38,7 @@ public class Faction_DepositBank {
                         );
 
                 if (deposit.transactionSuccessfully()) {
-                    p.sendMessage(Messages.FACTION_BANK_DEPOSIT.queue().replace("%amount%", args[1]));
+                    p.sendMessage(Messages.faction_bank_deposit.language(p).queue().replace("%amount%", args[1]));
                     Scoreboards.refresh(p);
                     if(faction.balanceHistory.size()+1>50){
                         faction.balanceHistory.remove(faction.balanceHistory.size() - 1);
@@ -49,11 +49,11 @@ public class Faction_DepositBank {
 
                 }
             } catch (NumberFormatException ex) {
-                p.sendMessage(Messages.FACTION_BANK_NUMBER_ERROR.queue());
+                p.sendMessage(Messages.faction_bank_withdraw.language(p).queue());
                 ex.printStackTrace();
             }
         } else {
-            p.sendMessage(Messages.FACTION_BANK_NUMBER_ERROR.queue());
+            p.sendMessage(Messages.faction_bank_number_error.language(p).queue());
         }
     }
 
@@ -62,7 +62,7 @@ public class Faction_DepositBank {
             int SQLAmount = Integer.parseInt(playertools.getMetadata(p, "money"));
             if (amount > SQLAmount) {
                 transaction = false;
-                p.sendMessage(Messages.NOT_ENOUGH_MONEY.queue());
+                p.sendMessage(Messages.not_enough_slot.language(p).queue());
                 return this;
             }
 

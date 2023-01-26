@@ -1,6 +1,6 @@
 package me.idbi.hcf.commands.CustomTimer;
 
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Scoreboard.CustomTimers;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,7 +12,7 @@ public class CT_Create {
         long seconds = System.currentTimeMillis();
         if (args.length == 4) {
             if(CustomTimers.isCreated(args[1])) {
-                p.sendMessage(Messages.ALREADY_CREATED.queue());
+                p.sendMessage(Messages.already_created.language(p).queue());
                 return;
             }
             if (args[2].endsWith("h")) {
@@ -36,7 +36,7 @@ public class CT_Create {
 
             new CustomTimers(args[1], (seconds), mainText);
 
-            p.sendMessage(Messages.CUSTOMT_CREATED.queue());
+            p.sendMessage(Messages.customt_created.language(p).queue());
         }
     }
 }

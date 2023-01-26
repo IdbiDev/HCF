@@ -9,7 +9,7 @@ import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankManagerInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankPriorityInventory;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
@@ -68,22 +68,22 @@ public class Click_RankMenu implements Listener {
                         for(String blacklisted_word : Main.blacklistedRankNames){
                             if(text.toLowerCase().contains(blacklisted_word.toLowerCase())){
                                 GUI_Sound.playSound(player,"error");
-                                return AnvilGUI.Response.text(Messages.GUI_BAD_WORD.queue());
+                                return AnvilGUI.Response.text(Messages.gui_bad_word.language(p).queue());
                             }
                         }
                         Faction faction = playertools.getPlayerFaction(p);
                         assert faction != null;
                         Faction_Rank_Manager.CreateRank(faction, text);
-                        p.sendMessage(Messages.GUI_RANK_CREATED.queue().replace("%rank%", text));
+                        p.sendMessage(Messages.gui_rank_created.language(p).queue().replace("%rank%", text));
                         GUI_Sound.playSound(player,"success");
                         return AnvilGUI.Response.close();
                     } else {
                         GUI_Sound.playSound(player,"error");
-                        return AnvilGUI.Response.text(Messages.GUI_INVALID_TYPE_TEXT.queue());
+                        return AnvilGUI.Response.text(Messages.gui_invalid_type_text.language(p).queue());
                     }
                 })
                 //.preventClose()//prevents the inventory from being closed
-                .text(Messages.GUI_CREATE_RANK_TEXT.queue())                              //sets the text the GUI should start with
+                .text(Messages.gui_create_rank_text.language(p).queue())                              //sets the text the GUI should start with
                 .itemLeft(AnvilItems.left())                      //use a custom item for the first slot
                 //.itemRight(AnvilItems.done())                     //use a custom item for the second slot
                 .plugin(m)                                          //set the plugin instance

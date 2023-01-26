@@ -1,6 +1,6 @@
 package me.idbi.hcf.MessagesEnums.SignShop;
 
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -46,7 +46,7 @@ CreateShopSign implements Listener {
         if (line0 != null) {
             if (line0.equalsIgnoreCase("[buy]")) {
                 if (!Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "adminDuty"))) {
-                    e.getPlayer().sendMessage(Messages.NO_PERMISSION.queue());
+                    e.getPlayer().sendMessage(Messages.no_permission.language(e.getPlayer()).queue());
                     return;
                 }
                 if (!successfullySign(e.getLine(1))) {
@@ -69,7 +69,7 @@ CreateShopSign implements Listener {
             }
             if (line0.equalsIgnoreCase("[sell]")) {
                 if (!Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "adminDuty"))) {
-                    e.getPlayer().sendMessage(Messages.NO_PERMISSION.queue());
+                    e.getPlayer().sendMessage(Messages.no_permission.language(e.getPlayer()).queue());
                     return;
                 }
                 e.setLine(0, "§c[Sell]");

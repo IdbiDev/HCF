@@ -25,17 +25,20 @@ public class onBlockBreak implements Listener {
         Block block = e.getBlock();
         int bx = Math.round(block.getX());
         int bz = Math.round(block.getZ());
-        if (HCF_Claiming.checkEnemyClaimAction(bx, bz, playertools.getPlayerFaction(p)) && !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
-            //p.sendMessage(Main.servername+"§4Ezt nem teheted meg itt!");
-            p.sendMessage(Messages.YOU_CANT_DO.setFaction(HCF_Claiming.sendFactionTerretoryByXZ(bx, bz)).queue());
-            e.setCancelled(true);
-            return;
+        Faction f = playertools.getPlayerFaction(p);
+        HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(bx,bz);
+        Faction baszogatottFaction;
+        if(claim != null){
+            baszogatottFaction = Main.faction_cache.get(claim.faction);
+        }else{
+            baszogatottFaction = Main.faction_cache.get(1);
         }
+
         if (playertools.getDistanceBetweenPoints2D(new HCF_Claiming.Point(block.getX(),block.getZ()),
                 new HCF_Claiming.Point(playertools.getSpawn().getBlockX(),
                         playertools.getSpawn().getBlockZ())) == WARZONE_SIZE && !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
             //p.sendMessage(Main.servername+"§4Ezt nem teheted meg itt!");
-            p.sendMessage(Messages.WARZONE_NO_PERMISSION.queue());
+            p.sendMessage(Messages.warzone_no_permission.language(p).queue());
             e.setCancelled(true);
             return;
         }

@@ -8,10 +8,10 @@ public class SetupBot {
 
     public static void setup() {
         try {
-            if (!DiscordFile.getDiscord().getBoolean("bot"))
+            /*if (!DiscordFile.getDiscord().getBoolean("bot"))
                 return;
 
-            builder = new WebhookClientBuilder(DiscordFile.getDiscord().getString("webhook_url"));
+            builder = new WebhookClientBuilder(DiscordFile.getDiscord().getString("webhook_url"));*/
             //builder.buildJDA().send(Embeds.kill(Bukkit.getPlayer("kbalu"), Bukkit.getPlayer("adbi20014")).build());
 //
 //            JDA jda = JDABuilder.createDefault(DiscordFile.getDiscord().getString("token"))

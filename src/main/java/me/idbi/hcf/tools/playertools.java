@@ -660,10 +660,10 @@ public class playertools {
         return Boolean.parseBoolean(getMetadata(p, "adminDuty"));
     }
 
-    public static void sendStaffChat(String message) {
+    public static void sendStaffChat(Messages message) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if(onlinePlayer.hasPermission("factions.admin")) {
-                onlinePlayer.sendMessage(message);
+                onlinePlayer.sendMessage(message.language(onlinePlayer).queue());
             }
         }
     }

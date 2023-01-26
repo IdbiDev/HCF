@@ -1,8 +1,7 @@
 package me.idbi.hcf.adminsystem;
 
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.ListMessages;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Scoreboard.AdminScoreboard;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.*;
@@ -34,7 +33,7 @@ public class adminMain {
             AdminScoreboard.refresh(player);
 
 
-            player.sendMessage(Messages.ADMIN_DUTY_ON.queue());
+            player.sendMessage(Messages.admin_duty_on.language(player).queue());
         } else {
             player.setGameMode(GameMode.SURVIVAL);
 
@@ -43,91 +42,103 @@ public class adminMain {
 
             Scoreboards.refresh(player);
 
-            player.sendMessage(Messages.ADMIN_DUTY_OFF.queue());
+            player.sendMessage(Messages.admin_duty_off.language(player).queue());
         }
         NameChanger.refresh(player);
     }
 
     public static void Deposit(Player admin, String faction, int amount) {
         if (!Main.nameToFaction.containsKey(faction)) {
-            admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
+            admin.sendMessage(Messages.not_found_faction.language(admin).queue());
             return;
         }
         if (amount <= 0) {
-            admin.sendMessage(Messages.NOT_A_NUMBER.queue());
+            admin.sendMessage(Messages.not_a_number.language(admin).queue());
             return;
         }
 
         Faction selectedFaction = Main.nameToFaction.get(faction);
         selectedFaction.balance += amount;
         Faction f = Main.nameToFaction.get(faction);
-        f.BroadcastFaction(Messages.FACTION_ADMIN_DEPOSIT_BC.repExecutor(admin).queue());
+
+        for (Player member : f.getMembers()) {
+            member.sendMessage(Messages.faction_admin_deposit_bc.language(member).setExecutor(admin).queue());
+        }
     }
 
     public static void Withdraw(Player admin, String faction, int amount) {
         if (!Main.nameToFaction.containsKey(faction)) {
-            admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
+            admin.sendMessage(Messages.not_found_faction.language(admin).queue());
             return;
         }
         if (amount <= 0) {
-            admin.sendMessage(Messages.NOT_A_NUMBER.queue());
+            admin.sendMessage(Messages.not_a_number.language(admin).queue());
             return;
         }
         Faction selectedFaction = Main.nameToFaction.get(faction);
         selectedFaction.balance -= amount;
         Faction f = Main.nameToFaction.get(faction);
-        f.BroadcastFaction(Messages.FACTION_ADMIN_WITHDRAW_BC.repExecutor(admin).queue());
+
+        for (Player member : f.getMembers()) {
+            member.sendMessage(Messages.faction_admin_withdraw_bc.language(member).setExecutor(admin).queue());
+        }
     }
 
     public static void SetFactionname(Player admin, String faction, String newName) {
         if (!Main.nameToFaction.containsKey(faction)) {
-            admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
+            admin.sendMessage(Messages.not_found_faction.language(admin).queue());
             return;
         }
         if (newName.length() > 5) {
-            admin.sendMessage(Messages.NOT_A_NUMBER.queue());
+            admin.sendMessage(Messages.not_a_number.language(admin).queue());
             return;
         }
         Faction selectedFaction = Main.nameToFaction.get(faction);
         selectedFaction.name = newName;
         //Todo: Broadcast the change
         Faction f = Main.nameToFaction.get(faction);
-        f.BroadcastFaction(Messages.SET_FACTION_NAME.repExecutor(admin).setFaction(newName).queue());
+
+        for (Player member : f.getMembers()) {
+            member.sendMessage(Messages.set_faction_name.language(member).setExecutor(admin).setFaction(newName).queue());
+        }
+
+        admin.sendMessage(Messages.admin_set_faction_name.setFaction(f.name).queue());
+
         Scoreboards.RefreshAll();
     }
 
     public static void GiveMoney(Player admin, String target, int amount) {
         if (Bukkit.getPlayer(target) == null) {
-            admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
+            admin.sendMessage(Messages.not_found_player.language(admin).queue());
             return;
         }
         if (amount <= 0) {
-            admin.sendMessage(Messages.NOT_A_NUMBER.queue());
+            admin.sendMessage(Messages.not_a_number.language(admin).queue());
             return;
         }
         Player player = Bukkit.getPlayer(target);
         playertools.setMetadata(player, "money", Integer.parseInt(playertools.getMetadata(player, "money")) + amount);
 
-        player.sendMessage(Messages.GIVE_MONEY.repExecutor(admin).setAmount(String.valueOf(amount)).queue());
+        player.sendMessage(Messages.give_money.language(admin).setExecutor(admin).setAmount(String.valueOf(amount)).queue());
         Scoreboards.refresh(player);
-        PlayerStatistic stat = Main.playerStatistics.get(player);
-        stat.MoneyEarned += amount; 
-        Main.playerStatistics.put(player,stat);
+        PlayerStatistic stat = Main.playerStatistics.get(player.getUniqueId());
+        stat.MoneyEarned += amount;
+        Main.playerStatistics.put(player.getUniqueId(),stat);
     }
 
     public static void TakeMoney(Player admin, String target, int amount) {
         if (Bukkit.getPlayer(target) == null) {
-            admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
+            admin.sendMessage(Messages.not_found_player.language(admin).queue());
             return;
         }
         if (amount <= 0) {
-            admin.sendMessage(Messages.NOT_A_NUMBER.queue());
+            admin.sendMessage(Messages.not_a_number.language(admin).queue());
             return;
         }
         Player player = Bukkit.getPlayer(target);
         playertools.setMetadata(player, "money", Integer.parseInt(playertools.getMetadata(player, "money")) - amount);
 
-        player.sendMessage(Messages.TAKE_MONEY.repExecutor(admin).setAmount(String.valueOf(amount)).queue());
+        player.sendMessage(Messages.take_money.language(admin).setExecutor(admin).setAmount(String.valueOf(amount)).queue());
         Scoreboards.refresh(player);
         PlayerStatistic stat = Main.playerStatistics.get(player.getUniqueId());
         stat.MoneySpend += amount;
@@ -136,7 +147,7 @@ public class adminMain {
 
     public static void DeleteFaction(Player admin, String faction) {
         if (!Main.nameToFaction.containsKey(faction)) {
-            admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
+            admin.sendMessage(Messages.not_found_faction.language(admin).queue());
             return;
         }
 
@@ -166,16 +177,18 @@ public class adminMain {
             NameChanger.refresh(player);
         }
 
-        Bukkit.broadcastMessage(Messages.DELETE_FACTION_BY_ADMIN.repExecutor(admin).setFaction(selectedFaction.name).queue());
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(Messages.delete_faction_by_admin.setExecutor(player).setFaction(selectedFaction.name).queue());
+        }
     }
 
     public static void setFactionLeader(Player admin, String faction, String Leader) {
         if (!Main.nameToFaction.containsKey(faction)) {
-            admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
+            admin.sendMessage(Messages.not_found_faction.language(admin).queue());
             return;
         }
         if (Bukkit.getPlayer(Leader) == null) {
-            admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
+            admin.sendMessage(Messages.not_found_player.language(admin).queue());
             return;
         }
         Faction selectedFaction = Main.nameToFaction.get(faction);
@@ -183,17 +196,21 @@ public class adminMain {
         SQL_Connection.dbExecute(con, "UPDATE factions SET leader='?' WHERE name='?'", selectedFaction.leader, faction);
         //Todo: Broadcast the change
         Faction f = Main.nameToFaction.get(faction);
-        f.BroadcastFaction(Messages.SET_FACTION_LEADER_BY_ADMIN.repPlayer(Bukkit.getPlayer(Leader)).repExecutor(admin).queue());
-        admin.sendMessage(Messages.ADMIN_SET_FACTION_NAME.setFaction(faction).queue());
+
+        for (Player member : f.getMembers()) {
+            member.sendMessage(Messages.set_faction_leader_by_admin.language(member).setPlayer(Bukkit.getPlayer(Leader)).setExecutor(admin).queue());
+        }
+
+        admin.sendMessage(Messages.admin_set_faction_name.language(admin).setFaction(faction).queue());
     }
 
     public static void setPlayerFaction(Player admin, String target, String faction) {
         if (!Main.nameToFaction.containsKey(faction)) {
-            admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
+            admin.sendMessage(Messages.not_found_faction.language(admin).queue());
             return;
         }
         if (Bukkit.getPlayer(target) == null) {
-            admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
+            admin.sendMessage(Messages.not_found_player.language(admin).queue());
             return;
         }
         Player p = Bukkit.getPlayer(target);
@@ -203,23 +220,28 @@ public class adminMain {
         SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',factionname='?' WHERE uuid='?'", String.valueOf(selectedFaction.id), selectedFaction.name, p.getUniqueId().toString());
 
         //Sikeres belépés
-        p.sendMessage(Messages.JOIN_MESSAGE.queue());
+        p.sendMessage(Messages.join_message.language(p).queue());
 
         //Faction -> xy belépett
         Faction f = Main.nameToFaction.get(faction);
-        f.BroadcastFaction(Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
+
+        for (Player member : f.getMembers()) {
+            member.sendMessage(Messages.bc_join_message.language(member).setPlayer(p).queue());
+
+        }
+
         Scoreboards.refresh(p);
-        admin.sendMessage(Messages.ADMIN_SET_PLAYERFACTION.setFaction(faction).repPlayer(p).queue());
+        admin.sendMessage(Messages.admin_set_playerfaction.setFaction(faction).setPlayer(p).queue());
         NameChanger.refresh(p);
     }
 
     public static void kickPlayerFromFaction(Player admin, String target, String faction) {
         if (!Main.nameToFaction.containsKey(faction)) {
-            admin.sendMessage(Messages.NOT_FOUND_FACTION.queue());
+            admin.sendMessage(Messages.not_found_faction.language(admin).queue());
             return;
         }
         if (Bukkit.getPlayer(target) == null) {
-            admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
+            admin.sendMessage(Messages.not_found_player.language(admin).queue());
             return;
         }
         Player p = Bukkit.getPlayer(target);
@@ -234,26 +256,26 @@ public class adminMain {
 
     public static void FreezePlayer(Player admin, String target) {
         if (Bukkit.getPlayer(target) == null) {
-            admin.sendMessage(Messages.NOT_FOUND_PLAYER.queue());
+            admin.sendMessage(Messages.not_found_player.language(admin).queue());
             return;
         }
         Player p = Bukkit.getPlayer(target);
         boolean state = Boolean.parseBoolean(playertools.getMetadata(p, "freeze"));
         // Freeze
         if (!state) {
-            admin.sendMessage(Messages.FREEZE_EXECUTOR_ON.repPlayer(p).queue());
-            p.sendMessage(Messages.FREEZE_PLAYER_ON.repExecutor(admin).queue());
+            admin.sendMessage(Messages.freeze_executor_on.language(admin).setPlayer(p).queue());
+            p.sendMessage(Messages.freeze_player_off.language(p).setExecutor(admin).queue());
         } else {
             //UnFreeze
-            admin.sendMessage(Messages.FREEZE_EXECUTOR_OFF.repPlayer(p).queue());
-            p.sendMessage(Messages.FREEZE_PLAYER_OFF.repExecutor(admin).queue());
+            admin.sendMessage(Messages.freeze_executor_off.language(admin).setPlayer(p).queue());
+            p.sendMessage(Messages.freeze_player_off.language(p).setExecutor(admin).queue());
         }
         playertools.setMetadata(p, "freeze", !state);
     }
 
     public static void SpawnPlace(Player admin, String state) {
         if (state.equalsIgnoreCase("start")) {
-            for (String lines : ListMessages.CLAIM_INFO_ADMIN.getMessageList()) {
+            for (String lines : Messages.claim_info_admin.queueList()) {
 
                 admin.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
             }
@@ -264,24 +286,24 @@ public class adminMain {
             if (HCF_Claiming.ForceFinishClaim(1,admin, HCF_Claiming.ClaimAttributes.PROTECTED)) {
                 //Todo: Kurvva sikerült
                 playertools.setMetadata(admin, "spawnclaiming", false);
-                admin.sendMessage(Messages.SPAWN_CLAIM_SUCCESS.queue());
+                admin.sendMessage(Messages.spawn_claim_success.language(admin).queue());
                 admin.getInventory().remove(Material.GOLD_HOE);
             } else {
                 //Todo: nem sikerült, balfasz vagy és nem raktad le
                 playertools.setMetadata(admin, "spawnclaiming", false);
-                admin.sendMessage(Messages.FACTION_CLAIM_INVALID_ZONE.queue());
+                admin.sendMessage(Messages.faction_claim_invalid_zone.language(admin).queue());
                 admin.getInventory().remove(Material.GOLD_HOE);
             }
         } else if (state.equalsIgnoreCase("stop")) {
             playertools.setMetadata(admin, "spawnclaiming", false);
-            admin.sendMessage(Messages.FACTION_CLAIM_DECLINE.queue());
+            admin.sendMessage(Messages.faction_claim_decline.language(admin).queue());
             admin.getInventory().remove(Material.GOLD_HOE);
         }
     }
 
     public static void toggleStaffChat(Player admin, String[] args) {
         if(!playertools.isInStaffDuty(admin)) {
-            admin.sendMessage(Messages.NOT_IN_DUTY.queue());
+            admin.sendMessage(Messages.not_in_duty.language(admin).queue());
             return;
         }
         String staffChatState = playertools.getMetadata(admin, "staffchat");
@@ -289,13 +311,13 @@ public class adminMain {
             if (args[0].equalsIgnoreCase("chat")) {
                 if(staffChatState.equals("")) {
                     playertools.setMetadata(admin, "staffchat", true);
-                    admin.sendMessage(Messages.STAFF_CHAT_ON.queue());
+                    admin.sendMessage(Messages.staff_chat.language(admin).queue());
                 } else if(staffChatState.equalsIgnoreCase("false")) {
                     playertools.setMetadata(admin, "staffchat", true);
-                    admin.sendMessage(Messages.STAFF_CHAT_ON.queue());
+                    admin.sendMessage(Messages.staff_chat_on.language(admin).queue());
                 } else {
                     playertools.setMetadata(admin, "staffchat", false);
-                    admin.sendMessage(Messages.STAFF_CHAT_OFF.queue());
+                    admin.sendMessage(Messages.staff_chat_off.language(admin).queue());
                 }
             }
             AdminScoreboard.refresh(admin);
@@ -304,25 +326,32 @@ public class adminMain {
             if (args[0].equalsIgnoreCase("chat")) {
                 if(args[1].equalsIgnoreCase("on")) {
                     playertools.setMetadata(admin, "staffchat", true);
-                    admin.sendMessage(Messages.STAFF_CHAT_ON.queue());
+                    admin.sendMessage(Messages.staff_chat_on.language(admin).queue());
                 } else if(args[1].equalsIgnoreCase("off")) {
                     playertools.setMetadata(admin, "staffchat", false);
-                    admin.sendMessage(Messages.STAFF_CHAT_OFF.queue());
+                    admin.sendMessage(Messages.staff_chat_off.language(admin).queue());
                 } else {
                     List<String> argsList = Arrays.stream(args).toList();
-                    playertools.sendStaffChat(
-                            ChatColor.translateAlternateColorCodes('&',
-                                    Messages.STAFF_CHAT.repPlayer(admin).setMessage(getMessage(argsList).replaceFirst(args[0] + " ", "")).queue())
-                    );
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        if(onlinePlayer.hasPermission("factions.admin")) {
+                            onlinePlayer.sendMessage(
+                                    Messages.staff_chat.language(onlinePlayer)
+                                            .setPlayer(admin)
+                                            .setMessage(getMessage(argsList)
+                                                    .replaceFirst(args[0] + " ", ""))
+                                            .queue());
+                        }
+                    }
                 }
             }
             AdminScoreboard.refresh(admin);
         } else {
             List<String> argsList = Arrays.stream(args).toList();
-            playertools.sendStaffChat(
-                    ChatColor.translateAlternateColorCodes('&',
-                            Messages.STAFF_CHAT.repPlayer(admin).setMessage(getMessage(argsList)).queue())
-            );
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if(onlinePlayer.hasPermission("factions.admin")) {
+                    onlinePlayer.sendMessage(Messages.staff_chat.language(onlinePlayer).setPlayer(admin).setMessage(getMessage(argsList)).queue());
+                }
+            }
         }
     }
 
@@ -339,18 +368,18 @@ public class adminMain {
 
     public static void toggleVanish(Player p, String[] args) {
         if(!playertools.isInStaffDuty(p)) {
-            p.sendMessage(Messages.NOT_IN_DUTY.queue());
+            p.sendMessage(Messages.not_in_duty.language(p).queue());
             return;
         }
         boolean inVanish = AdminTools.InvisibleManager.invisedAdmins.contains(p);
         if(inVanish) {
             AdminTools.InvisibleManager.showPlayer(p);
             AdminScoreboard.refresh(p);
-            p.sendMessage(Messages.VANISH_DISABLE.queue());
+            p.sendMessage(Messages.vanish_disable.language(p).queue());
         } else {
             AdminTools.InvisibleManager.hidePlayer(p);
             AdminScoreboard.refresh(p);
-            p.sendMessage(Messages.VANISH_ENABLED.queue());
+            p.sendMessage(Messages.vanish_enabled.language(p).queue());
         }
     }
 
@@ -360,7 +389,7 @@ public class adminMain {
             if(args[0].equalsIgnoreCase("setdtr")) {
                 Faction f = playertools.getFactionByName(args[1]);
                 if(f == null) {
-                    p.sendMessage(Messages.NOT_FOUND_FACTION.queue());
+                    p.sendMessage(Messages.not_found_player.language(p).queue());
                     return;
                 }
                 try {
@@ -368,11 +397,11 @@ public class adminMain {
                     if(f.DTR_MAX >= dtr) {
                         f.DTR = Math.min(f.DTR_MAX, dtr);
                         // ToDo: Successfully set dtr
-                        p.sendMessage(Messages.ADMIN_SET_DTR.setFaction(f.name).queue()
+                        p.sendMessage(Messages.admin_set_dtr.language(p).setFaction(f.name).queue()
                                 .replace("%new_dtr%", f.DTR + ""));
                     }
                 } catch (NumberFormatException e) {
-                    p.sendMessage(Messages.NOT_A_NUMBER.queue());
+                    p.sendMessage(Messages.not_a_number.language(p).queue());
                 }
             }
         }

@@ -10,7 +10,7 @@ import java.util.*;
 
 public enum ListMessages {
 
-    FACTION_SHOW(Arrays.asList(
+    /*FACTION_SHOW(Arrays.asList(
             "&8&m        &c %faction_name% &f[%faction_status%&f] &8&m        ",
             "&7&l» &eLeader: &a%leader_name%",
             " ",
@@ -27,13 +27,13 @@ public enum ListMessages {
             "&7└─"
     )),
 
-    /*CLAIM_INFO(Arrays.asList(
+    *//*CLAIM_INFO(Arrays.asList(
             "%prefix% &6Claiming information:",
             "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
             "&7&l» &ePress &6&o[LEFT] &eclick on the ground, to place the other position!", // pos2
             "&eTo accept the claim, press &6&oSHIFT + RIGHT &eclick!", // right click
             "&eTo discard the claim, press &6&oSHIFT + LEFT &eclick!" // left click
-    )),*/
+    )),*//*
 
     CLAIM_INFO(Arrays.asList(
             "&eLeft and right click on the ground",
@@ -156,7 +156,7 @@ public enum ListMessages {
 
                     if (category.getKey().equalsIgnoreCase("Leader")) continue;
 
-                    listike.add(Messages.CATEGORY_DESIGN.queue()
+                    listike.add(Messages.category_design.queue()
                             .replace("%category%",
                                     category.getKey().substring(0, 1).toUpperCase() + category.getKey().substring(1)));
 

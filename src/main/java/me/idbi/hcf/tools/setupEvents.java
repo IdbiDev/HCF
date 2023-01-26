@@ -104,6 +104,11 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new Click_RankPriority(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new Stats_Inventory(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new HistoryEvent(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_AllyMain(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_AllyRequests(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_AllyManageList(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_AllyUnRequest(), Main.getPlugin(Main.class));
+
         getServer().getPluginManager().registerEvents(new Rogue(), Main.getPlugin(Main.class));
     }
 }

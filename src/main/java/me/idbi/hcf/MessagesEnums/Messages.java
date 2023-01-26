@@ -27,7 +27,7 @@ public enum Messages {
 
     DONT_HAVE_ITEM("%prefix% &cYou don't have enough items in your inventory!"),
 
-    // Errors - faction
+    // Errors - faction.language(p)
     EXISTS_FACTION_NAME("%prefix% &cThis faction name already exists!"),
     YOU_ALREADY_IN_FACTION("%prefix% &cYou are already in faction!"),
     NOT_IN_FACTION("%prefix% &cYou are not in a faction!"),

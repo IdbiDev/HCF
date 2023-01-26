@@ -1,7 +1,7 @@
 package me.idbi.hcf.events;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.*;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
@@ -35,9 +35,13 @@ public class onDeath implements Listener {
         Player victim = e.getEntity().getPlayer();
         Faction faction = playertools.getPlayerFaction(victim);
         if (damager != null) {
-            e.setDeathMessage(Messages.KILL_MESSAGE_BROADCAST.repDeathWithKills(victim,damager).queue());
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.sendMessage(Messages.kill_message_broadcast.language(player).setVictimWithKills(victim, damager).queue());
+            }
             if(faction !=null){
-                faction.BroadcastFaction(Messages.KILL_MESSAGE_FACTION.repDeath(victim,damager).queue());
+                for (Player member : faction.getMembers()) {
+                    member.sendMessage(Messages.kill_message_faction.language(member).setDeath(victim,damager).queue());
+                }
             }
             playertools.setMetadata(damager,"kills",Integer.parseInt(playertools.getMetadata(damager,"kills"))+1);
             playertools.setMetadata(victim,"deaths",Integer.parseInt(playertools.getMetadata(victim,"deaths")+1));
@@ -52,12 +56,15 @@ public class onDeath implements Listener {
            SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString());
         } else {
             SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString());
-            e.setDeathMessage(Messages.KILL_MESSAGE_BROADCAST_WITHOUT_VICTIM.repDeathWithoutKiller(victim).queue());
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.sendMessage(Messages.kill_message_broadcast_without_victim.language(player).setDeathWithoutKiller(victim).queue());
+            }
         }
 
         HCF_Timer.removePVPTag(victim);
         if (!Main.deathban) {
-            victim.kickPlayer(Messages.NO_DEATHBAN_KICK.queue());
+            victim.kickPlayer(Messages.no_deathban_kick.language(victim).queue());
             SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", victim.getUniqueId().toString(), "0");
 
         } else {

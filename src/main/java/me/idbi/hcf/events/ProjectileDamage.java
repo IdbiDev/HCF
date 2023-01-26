@@ -21,16 +21,16 @@ public class ProjectileDamage implements Listener {
             int victim_faction = Integer.parseInt(playertools.getMetadata(victim, "factionid"));
 
             if (isTeammate(damager,victim)) {
-                damager.sendMessage(Messages.TEAMMATE_DAMAGE.queue());
+                damager.sendMessage(Messages.teammate_damage.language(damager).queue());
                 e.setCancelled(true);
                 return;
             }
             //Add combatTimer
             if (HCF_Timer.addCombatTimer(victim)) {
-                victim.sendMessage(Messages.COMBAT_MESSAGE.queue().replace("%sec%", ConfigLibrary.Combat_time.getValue()));
+                victim.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.combattag.asStr()));
             }
             if (HCF_Timer.addCombatTimer(damager)) {
-                damager.sendMessage(Messages.COMBAT_MESSAGE.queue().replace("%sec%", ConfigLibrary.Combat_time.getValue()));
+                damager.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.combattag.asStr()));
             }
             if (damager_faction == 0 && victim_faction == 0) {
                 if (!HCF_Timer.checkArcherTimer(victim) && playertools.getMetadata(damager, "class").equalsIgnoreCase("archer")){
@@ -40,7 +40,7 @@ public class ProjectileDamage implements Listener {
             }
 
             if (damager_faction == victim_faction) {
-                damager.sendMessage(Messages.TEAMMATE_DAMAGE.queue());
+                damager.sendMessage(Messages.teammate_damage.language(damager).queue());
                 // damager.sendMessage(Main.servername+ChatColor.RED+"Nem sebezheted a csapattársad!");
                 e.setCancelled(true);
                 return;

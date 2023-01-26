@@ -6,7 +6,7 @@ import me.idbi.hcf.FrakcioGUI.Items.PM_Items;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.PlayerRankManagerInventory;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
@@ -36,7 +36,7 @@ public class Click_PlayerManage implements Listener {
 
         if(e.getCurrentItem().isSimilar(PM_Items.kick())) {
             if(!playertools.hasPermission((Player) e.getWhoClicked(), Faction_Rank_Manager.Permissions.MANAGE_KICK)){
-                e.getWhoClicked().sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
+                e.getWhoClicked().sendMessage(Messages.no_permission_in_faction.language(((Player) e.getWhoClicked())).queue());
                 GUI_Sound.playSound((Player) e.getWhoClicked(), "error");
                 e.getWhoClicked().closeInventory();
                 return;

@@ -3,7 +3,6 @@ package me.idbi.hcf.WorldModes;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.*;
@@ -26,7 +25,7 @@ public class EOTW {
         try{
             spawnClaim = Main.faction_cache.get(1).claims.get(0);
         }catch (Exception ignored){
-            Main.sendCmdMessage(Messages.CANT_START_EOTW.queue());
+            Main.sendCmdMessage(Messages.cant_start_eotw.queue());
             return;
         }
 
@@ -42,8 +41,8 @@ public class EOTW {
 
         for(Player p : Bukkit.getOnlinePlayers()){
             p.sendTitle(
-                    Messages.EOTW_START_TITLE.queue(),
-                    Messages.EOTW_START_SUBTITLE.queue()
+                    Messages.eotw_start_title.language(p).queue(),
+                    Messages.eotw_start_subtitle.language(p).queue()
             );
             p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL,1f,1f);
         }

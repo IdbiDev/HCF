@@ -1,7 +1,8 @@
 package me.idbi.hcf.events;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.HCF_Rules;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.classes.subClasses.Bard;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;

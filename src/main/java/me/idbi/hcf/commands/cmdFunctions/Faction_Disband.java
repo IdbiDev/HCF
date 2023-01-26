@@ -2,7 +2,7 @@ package me.idbi.hcf.commands.cmdFunctions;
 
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Objects.FactionHistory;
@@ -22,7 +22,7 @@ public class Faction_Disband {
 
     public static void disband(Player p, String faction) {
         if (!Objects.equals(playertools.getMetadata(p, "faction"), faction)) {
-            p.sendMessage(Messages.NOT_FOUND_FACTION.queue());
+            p.sendMessage(Messages.not_found_faction.language(p).queue());
             GUI_Sound.playSound(p,"error");
             return;
         }
@@ -30,7 +30,7 @@ public class Faction_Disband {
         Faction selectedFaction = Main.nameToFaction.get(playertools.getMetadata(p, "faction"));
         if (!Objects.equals(selectedFaction.leader, p.getUniqueId().toString())) {
             //Todo: Nope factionLeader
-            p.sendMessage(Messages.NOT_LEADER.queue());
+            p.sendMessage(Messages.not_leader.language(p).queue());
             GUI_Sound.playSound(p,"error");
             return;
         }
@@ -61,11 +61,15 @@ public class Faction_Disband {
             }
             Main.playerStatistics.put(player.getUniqueId(),stat);
         }
-        LogLibrary.sendFactionDisband(p, selectedFaction.name);
-        Bukkit.broadcastMessage(Messages.FACTION_DISBAND
-                .repPlayer(p)
-                .setFaction(selectedFaction.name)
-                .queue());
+        // LogLibrary.sendFactionDisband(p, selectedFaction.name);
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            onlinePlayer.sendMessage(Messages.faction_disband
+                    .language(onlinePlayer)
+                    .setPlayer(p)
+                    .setFaction(selectedFaction.name).queue());
+        }
+
         Scoreboards.refresh(p);
         GUI_Sound.playSound(p,"success");
         NameChanger.refresh(p);
