@@ -1,10 +1,10 @@
-package me.idbi.hcf.commands.cmdFunctions;
+package me.idbi.hcf.commands.allyCommands;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Objects.FactionHistory;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.SQL_Connection;
@@ -13,15 +13,12 @@ import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
-import java.sql.Connection;
 import java.util.Date;
 import java.util.Map;
 
-public class Faction_Join {
-
-    private static final Connection con = Main.getConnection("commands.Faction");
-
+public class ally_Accept {
     public static void JoinToFaction(Player p, String factionname) {
+
         if (playertools.getMetadata(p, "factionid").equals("0")) {
             Integer id_faction = 0;
             for (Map.Entry<Integer, String> entry : Main.factionToname.entrySet()) {
@@ -37,7 +34,7 @@ public class Faction_Join {
                 faction.unInvitePlayer(p);
 
                 //Sikeres belépés
-                p.sendMessage(Messages.JOIN_MESSAGE.queue());
+                p.sendMessage(Messages.join_message.language(p).queue());
                 playertools.setMetadata(p, "factionid", id_faction);
                 playertools.setMetadata(p, "faction", faction.name);
                 Faction_Rank_Manager.Rank defa = faction.getDefaultRank();
@@ -45,9 +42,11 @@ public class Faction_Join {
                 //Faction -> xy belépett
                 faction.memberCount++;
                 //Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
-                faction.BroadcastFaction(Messages.BC_JOIN_MESSAGE.repPlayer(p).queue());
+                for (Player member : faction.getMembers()) {
+                    member.sendMessage(Messages.bc_join_message.language(member).setPlayer(p).queue());
+                }
 
-                SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',factionname='?',rank='?' WHERE uuid='?'", String.valueOf(id_faction), faction.name, faction.getDefaultRank().name, p.getUniqueId().toString());
+                //SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',factionname='?',rank='?' WHERE uuid='?'", String.valueOf(id_faction), faction.name, faction.getDefaultRank().name, p.getUniqueId().toString());
 
                 // displayTeams.addPlayerToTeam(p);
                 //faction.addPrefixPlayer(p);
@@ -65,11 +64,11 @@ public class Faction_Join {
 
             } else {
                 //Nem vagy meghíva ebbe a facionbe
-                p.sendMessage(Messages.NOT_INVITED.queue());
+                p.sendMessage(Messages.not_invited.language(p).queue());
             }
         } else {
             // Már vagy egy factionbe
-            p.sendMessage(Messages.YOU_ALREADY_IN_FACTION.queue());
+            p.sendMessage(Messages.you_already_in_faction.language(p).queue());
         }
     }
 }

@@ -5,16 +5,15 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import me.idbi.hcf.Bossbar.Bossbar;
 import me.idbi.hcf.CustomFiles.*;
-import me.idbi.hcf.CustomFiles.Configs.SimpleConfig;
-import me.idbi.hcf.CustomFiles.Configs.SimpleConfigManager;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.CustomTimers;
-import me.idbi.hcf.TabManager.PlayerList;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
 import me.idbi.hcf.koth.AutoKoth;
 import me.idbi.hcf.koth.KOTH;
-import me.idbi.hcf.particles.Shapes;
 import me.idbi.hcf.tools.*;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Objects.FactionHistory;
@@ -37,7 +36,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.sql.Connection;
 import java.util.*;
 
@@ -46,10 +44,10 @@ import static me.idbi.hcf.HCF_Rules.*;
 
 
 public final class Main extends JavaPlugin implements Listener {
-    public SimpleConfigManager manager;
+    /*public SimpleConfigManager manager;
 
     public SimpleConfig config;
-    public SimpleConfig messages;
+    public SimpleConfig messages;*/
 
 
     // Beállítások configba
@@ -58,8 +56,9 @@ public final class Main extends JavaPlugin implements Listener {
     public static int death_time;
     public static double claim_price_multiplier;
     public static boolean debug;
-    public static int faction_startingmoney;
+    public static int member_starting_money;
     public static int max_members_pro_faction;
+    public static int max_allies_pro_faction;
     public static int stuck_duration;
     public static long EOTWStarted;
     public static long SOTWSTARTED;
@@ -72,7 +71,6 @@ public final class Main extends JavaPlugin implements Listener {
     public static boolean customenchants_loaded = false;
     public static boolean discord_log_loaded = false;
     public static HashMap<String, CustomTimers> customSBTimers;
-
     public static int DTR_REGEN_TIME;
 
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
@@ -84,11 +82,12 @@ public final class Main extends JavaPlugin implements Listener {
     public static HashMap<Integer, Long> DTR_REGEN = new HashMap<>();
     public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
     public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
-    public static HashMap<Player, PlayerStatistic> playerStatistics = new HashMap<>();
+
+    public static HashMap<UUID, PlayerStatistic> playerStatistics = new HashMap<>();
     public static ArrayList<UUID> death_wait_clear = new ArrayList<>();
     //public static HashMap<Faction, Scoreboard> teams = new HashMap<>();
 
-    public static HashMap<Player, List<Location>> player_block_changes = new HashMap<>();
+    public static HashMap<UUID, List<Location>> player_block_changes = new HashMap<>();
     private static Connection con;
     public static ArrayList<UUID> kothRewardsGUI;
 
@@ -112,7 +111,6 @@ public final class Main extends JavaPlugin implements Listener {
 
     public static void SavePlayers() {
         for (Map.Entry<Player, PlayerObject> value : player_cache.entrySet()) {
-
             PlayerObject p_Obj = value.getValue();
             Player p = value.getKey();
             if (p == null)
@@ -136,10 +134,11 @@ public final class Main extends JavaPlugin implements Listener {
         blacklistedRankNames = new ArrayList<>();
         blacklistedRankNames = getConfig().getStringList("Blacklisted-rankNames");
         Bossbar.bars = new HashMap<>();
-        MessagesFile.setup();
-        DiscordFile.setup();
-        if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", true);
-        ConfigManager.getManager().setup();
+        currentLanguages = new HashMap<>();
+        //MessagesFile.setup();
+        //DiscordFile.setup();
+        // if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", true);
+       // ConfigManager.getManager().setup();
 //        DiscordFile.getDiscord().options().copyDefaults(true);
 //        DiscordFile.saveDiscord();
 //        saveDefaultConfig();
@@ -151,20 +150,20 @@ public final class Main extends JavaPlugin implements Listener {
         this.messages = manager.getNewConfig("messages/messages_en.yml");*/
 
         // Setup variables
-        deathban = Boolean.parseBoolean(ConfigLibrary.Deathban.getValue());
-        claim_price_multiplier = Double.parseDouble(ConfigLibrary.Claim_price_multiplier.getValue());
-        death_time = Integer.parseInt(ConfigLibrary.Death_time_seconds.getValue());
-        //debug = Boolean.parseBoolean(ConfigLibrary.Debug.getValue());
+        DTR_REGEN_TIME = Config.dtr_regen.asInt() * 1000;
+        death_time = Config.deathban.asInt() * 1000;
+        stuck_duration = Config.stuck_timer.asInt() * 1000;
+        KOTH.GLOBAL_TIME = Config.koth_length.asInt() * 1000;
+        deathban = Config.deathban_enabled.asBoolean();
+        member_starting_money = Config.default_balance.asInt();
+        claim_price_multiplier = Config.claim_price.asDouble();
         debug = false;
-        faction_startingmoney = Integer.parseInt(ConfigLibrary.Faction_default_balance.getValue());
-        max_members_pro_faction = Integer.parseInt(ConfigLibrary.MAX_FACTION_MEMBERS.getValue());
-        DTR_REGEN_TIME = Integer.parseInt(ConfigLibrary.DTR_REGEN_TIME_SECONDS.getValue());
-        world_border_radius = Integer.parseInt(ConfigLibrary.WORLD_BORDER_DISTANCE.getValue());
-        stuck_duration =  Integer.parseInt(ConfigLibrary.STUCK_TIMER_DURATION.getValue());
-        KOTH.GLOBAL_TIME =  Integer.parseInt(ConfigLibrary.KOTH_TIME.getValue()) * 60;
-        WARZONE_SIZE =  Integer.parseInt(ConfigLibrary.WARZONE_SIZE.getValue()) * 60;
-        MAX_DTR = Double.parseDouble(ConfigLibrary.MAX_DTR.getValue());
-        DEATH_DTR = Double.parseDouble(ConfigLibrary.DEATH_DTR.getValue());
+        max_members_pro_faction = Config.max_member.asInt();
+        max_allies_pro_faction = Config.max_allies.asInt();
+        world_border_radius = Config.world_border_size.asInt();
+        WARZONE_SIZE = Config.warzone_size.asInt();
+        MAX_DTR = Config.max_dtr.asDouble();
+        DEATH_DTR = Config.death_dtr.asDouble();
         con = SQL_Connection.dbConnect(
                 ConfigLibrary.DATABASE_HOST.getValue(),
                 ConfigLibrary.DATABASE_PORT.getValue(),
@@ -270,7 +269,7 @@ public final class Main extends JavaPlugin implements Listener {
         //displayTeams.setupAllTeams();
 
         //SpawnShield.CalcWall();
-        new Shapes(20);
+
         if(Main.debug) {
             sendCmdMessage("§1Finished loading the plugin! (" + (System.currentTimeMillis() - deltatime) + " ms)");
             if (multi != null)
@@ -292,18 +291,17 @@ public final class Main extends JavaPlugin implements Listener {
         if(e.getPlugin().equals(this)) {
             try {
                 for(Player player : Bukkit.getOnlinePlayers()){
-                    playerStatistics.get(player).Save(player);
-                    new PlayerList(player, PlayerList.SIZE_FOUR).clearCustomTabs();
-                    if(!Main.player_block_changes.containsKey(player)) continue;
-                    List<Location> copy = Main.player_block_changes.get(player);
+                    playerStatistics.get(player.getUniqueId()).Save(player);
+                    if(!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
+                    List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
                     for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
                         Location loc = it.next();
                         player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                        if (Main.player_block_changes.containsKey(player)) {
-                            List<Location> l = Main.player_block_changes.get(player);
+                        if (Main.player_block_changes.containsKey(player.getUniqueId())) {
+                            List<Location> l = Main.player_block_changes.get(player.getUniqueId());
                             it.remove();
                             //l.remove(loc);
-                            Main.player_block_changes.put(player, l);
+                            Main.player_block_changes.put(player.getUniqueId(), l);
                         }
                     }
 
@@ -327,18 +325,17 @@ public final class Main extends JavaPlugin implements Listener {
         //SaveAll();
         try {
             for(Player player : Bukkit.getOnlinePlayers()){
-                playerStatistics.get(player).Save(player);
-                new PlayerList(player, PlayerList.SIZE_FOUR).clearCustomTabs();
-                if(!Main.player_block_changes.containsKey(player)) continue;
-                List<Location> copy = Main.player_block_changes.get(player);
+                playerStatistics.get(player.getUniqueId()).Save(player);
+                if(!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
+                List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
                 for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
                     Location loc = it.next();
                     player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                    if (Main.player_block_changes.containsKey(player)) {
-                        List<Location> l = Main.player_block_changes.get(player);
+                    if (Main.player_block_changes.containsKey(player.getUniqueId())) {
+                        List<Location> l = Main.player_block_changes.get(player.getUniqueId());
                         it.remove();
                         //l.remove(loc);
-                        Main.player_block_changes.put(player, l);
+                        Main.player_block_changes.put(player.getUniqueId(), l);
                     }
                 }
 

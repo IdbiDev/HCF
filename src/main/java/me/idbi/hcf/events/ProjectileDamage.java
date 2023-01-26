@@ -1,7 +1,7 @@
 package me.idbi.hcf.events;
 
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;

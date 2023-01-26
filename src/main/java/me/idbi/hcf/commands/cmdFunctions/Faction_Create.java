@@ -1,6 +1,5 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
-import me.idbi.hcf.Discord.LogLibrary;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
@@ -27,14 +26,14 @@ public class Faction_Create {
             if (!isFactionNameTaken(name)) {
                 for(String blacklisted_word : Main.blacklistedRankNames){
                     if(name.toLowerCase().contains(blacklisted_word.toLowerCase())){
-                        p.sendMessage(Messages.PREFIX.queue()+ " " +Messages.GUI_BAD_WORD.queue());
+                        p.sendMessage(Messages.prefix_cmd.language(p).queue()+ " " + Messages.gui_bad_word.language(p).queue());
                         GUI_Sound.playSound(p,"error");
                         return;
                     }
                 }
                 //Create Faction
                 int x = SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?', leader='?'", name, p.getUniqueId().toString());
-                Faction faction = new Faction(x, name, p.getUniqueId().toString(), Main.faction_startingmoney);
+                Faction faction = new Faction(x, name, p.getUniqueId().toString(), 0);
                 //
                 playertools.setMetadata(p, "faction", name);
                 playertools.setMetadata(p, "factionid", x);
@@ -69,9 +68,9 @@ public class Faction_Create {
                 LogLibrary.sendFactionCreate(p, faction.name);
                 faction.refreshDTR();
                 GUI_Sound.playSound(p,"success");
-                PlayerStatistic stat = Main.playerStatistics.get(p);
+                PlayerStatistic stat = Main.playerStatistics.get(p.getUniqueId());
                 stat.factionHistory.add(0, new FactionHistory(new Date().getTime(),0L,"",faction.name, leader_rank.name,faction.id));
-                Main.playerStatistics.put(p,stat);
+                Main.playerStatistics.put(p.getUniqueId(),stat);
                 //HashMap<String, Object> factionMap = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID='?'", String.valueOf(faction.id));
                 faction.loadFactionHistory(faction.assembleFactionHistory());
                 faction.saveFactionData();

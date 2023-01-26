@@ -38,6 +38,15 @@ public class HCF_Rules {
         add(Material.FURNACE);
         add(Material.BURNING_FURNACE);
     }};
+    public final static ArrayList<Material> usableBlacklist = new ArrayList<Material>() {{
+        add(Material.CHEST);
+        add(Material.TRAPPED_CHEST);
+        add(Material.ENDER_CHEST);
+        add(Material.HOPPER);
+        add(Material.BREWING_STAND);
+        add(Material.FURNACE);
+        add(Material.BURNING_FURNACE);
+    }};
     public final static HashMap<PotionEffectType, Integer> PotionLimits = new HashMap<PotionEffectType,Integer>() {{
         put(PotionEffectType.INCREASE_DAMAGE, 2);
         put(PotionEffectType.SPEED, 4);
@@ -161,6 +170,7 @@ public class HCF_Rules {
     public static final int maxInvitesPerFaction = 14; // >> GUI limit
     public static final int maxMembersPerFaction = 14; // >> GUI limit
     public static final int maxRanksPerFaction = 28; // >> GUI limit
+    public static final int maxAlliesPerFaction = 14; // >> GUI limit
 
     public static final String VERSION = "0.1";
     public static final String AUTHORS = "Idbi & Koba";

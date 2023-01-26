@@ -1,6 +1,6 @@
 package me.idbi.hcf.tools;
 
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import org.bukkit.entity.Player;
 
@@ -18,17 +18,17 @@ public class HCF_Timer {
     public static final HashMap<UUID, Long> PVPTimers = new HashMap<>();
     public static final HashMap<UUID, Long> BardCooldown = new HashMap<>();
     // Ms >> Duration
-    private static final int combatTimerDuration = Integer.parseInt(ConfigLibrary.Combat_time.getValue()) * 1000;
+    private static final int combatTimerDuration = Config.combattag.asInt() * 1000;
     // Ms >> Duration
-    private static final int ArcherTimerDuration = Integer.parseInt(ConfigLibrary.Archer_tag.getValue()) * 1000;
+    private static final int ArcherTimerDuration = Config.archertag.asInt() * 1000;
 
-    private static final int EpTimerDuration = Integer.parseInt(ConfigLibrary.enderpearl_delay.getValue()) * 1000;
+    private static final int EpTimerDuration = Config.enderpearl.asInt() * 1000;
 
-    private static final int StuckTimerDuration = Integer.parseInt(ConfigLibrary.STUCK_TIMER_DURATION.getValue()) * 1000;
-    private static final int Golden_Apple_Cooldown = Integer.parseInt(ConfigLibrary.Golden_Apple_Cooldown.getValue()) * 1000;
-    private static final int OP_Golden_Apple_Cooldown = Integer.parseInt(ConfigLibrary.OP_Golden_Apple_Cooldown.getValue()) * 1000;
-    private static final int PvpTimerDuration = Integer.parseInt(ConfigLibrary.OP_Golden_Apple_Cooldown.getValue()) * 1000;
-    private static final int BardCooldownDuration = Integer.parseInt(ConfigLibrary.Bard_Energy_Cooldown.getValue()) * 1000;
+    private static final int StuckTimerDuration = Config.stuck_timer.asInt() * 1000;
+    private static final int Golden_Apple_Cooldown = Config.golden_apple.asInt() * 1000;
+    private static final int OP_Golden_Apple_Cooldown = Config.enchanted_golden_apple.asInt() * 1000;
+    private static final int PvpTimerDuration = Config.pvp.asInt() * 1000;
+    private static final int BardCooldownDuration = Config.bard_energy.asInt() * 1000;
 
     public static boolean addCombatTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá

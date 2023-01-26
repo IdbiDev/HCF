@@ -1,6 +1,6 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.ListMessages;
 import me.idbi.hcf.MessagesEnums.Messages;

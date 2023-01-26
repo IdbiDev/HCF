@@ -51,8 +51,8 @@ public class Click_InvitedPlayers implements Listener {
                     new Date().getTime(),
                     false
             ));
-            ((Player) e.getWhoClicked()).sendMessage(Messages.UNINVITE_EXECUTOR.repPlayer(p).queue());
-            p.sendMessage(Messages.UNINVITE_TARGET.repPlayer((Player) e.getWhoClicked()).queue());
+            ((Player) e.getWhoClicked()).sendMessage(Messages.uninvite_executor.language(((Player) e.getWhoClicked())).setPlayer(p).queue());
+            p.sendMessage(Messages.uninvite_target.language(p).setPlayer((Player) e.getWhoClicked()).queue());
             e.getWhoClicked().openInventory(InviteManagerInventory.invitedPlayers((Player) e.getWhoClicked()));
             GUI_Sound.playSound(p,"");
             GUI_Sound.playSound((Player) e.getWhoClicked(), "success");

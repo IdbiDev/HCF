@@ -40,6 +40,16 @@ public class onPlayerMove implements Listener {
                     e.getPlayer().sendMessage(Messages.CANT_TELEPORT_TO_SAFEZONE.queue());
                 }
             }
+            String c = HCF_Claiming.sendFactionTerritory(e.getPlayer());
+            if (!(playertools.getMetadata(e.getPlayer(), "current_loc").equalsIgnoreCase(c))) {
+                e.getPlayer().sendMessage(Messages.leave_zone.language(p).setZone(playertools.getMetadata(e.getPlayer(), "current_loc")).queue());
+                e.getPlayer().sendMessage(Messages.entered_zone.language(p).setZone(c).queue());
+                playertools.setMetadata(e.getPlayer(), "current_loc", c);
+                Scoreboards.refresh(e.getPlayer());
+            }
+            if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("miner")) {
+                Miner.setInvisMode(e.getPlayer(), e.getTo().getY() <= Miner.min_y_value);
+            }
         }
             if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "freeze"))) {
                 e.setCancelled(true);

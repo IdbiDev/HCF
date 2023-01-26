@@ -41,7 +41,7 @@ public class SQL_Generator {
                       `rank` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT 'None',
                       `kills` int(255) NOT NULL DEFAULT 0,
                       `deaths` int(255) NOT NULL DEFAULT 0,
-                      `money` int(255) NOT NULL DEFAULT 5000,
+                      `money` int(255) NOT NULL DEFAULT 0,
                       `uuid` text DEFAULT NULL,
                       `online` int(2) NOT NULL DEFAULT 0,
                       `factionname` varchar(255) NOT NULL DEFAULT 'None',

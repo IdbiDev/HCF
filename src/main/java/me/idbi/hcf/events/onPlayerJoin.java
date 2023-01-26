@@ -1,6 +1,7 @@
 package me.idbi.hcf.events;
 
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;

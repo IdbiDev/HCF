@@ -1,6 +1,6 @@
 package me.idbi.hcf.Scoreboard;
 
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.*;
 import me.idbi.hcf.tools.Objects.Faction;

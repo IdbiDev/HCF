@@ -135,7 +135,7 @@ public class Faction_Rank_Manager {
                 uwu.printStackTrace();
             }
         }
-        public boolean hasPermission(Permissions perm){
+        public boolean hasPermission(Permissions perm) {
             if(class_permissions.get(Permissions.MANAGE_ALL))
                 return true;
             return class_permissions.get(perm);

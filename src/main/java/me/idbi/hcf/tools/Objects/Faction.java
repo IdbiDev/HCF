@@ -1,7 +1,9 @@
 package me.idbi.hcf.tools.Objects;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.FrakcioGUI.Items.Ally_Items;
 import me.idbi.hcf.HCF_Rules;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.*;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+import static me.idbi.hcf.Main.max_allies_pro_faction;
 import static me.idbi.hcf.Main.max_members_pro_faction;
 import static me.idbi.hcf.commands.cmdFunctions.Faction_Create.con;
 
@@ -33,6 +36,7 @@ public class Faction {
     public double DTR_MAX = 0;
     public long DTR_TIMEOUT = 0L;
     public inviteManager.factionInvite invites;
+    public allyManager allyinvites;
 
     public Location homeLocation;
 
@@ -48,12 +52,15 @@ public class Faction {
     public ArrayList<HistoryEntrys.FactionJoinLeftEntry> factionjoinLeftHistory = new ArrayList<>();
     public ArrayList<HistoryEntrys.InviteEntry> inviteHistory = new ArrayList<>();
     public ArrayList<HistoryEntrys.RankEntry> rankCreateHistory = new ArrayList<>();
+    public ArrayList<AllyFaction> Allies = new ArrayList<>();
+
 
     public Faction(int id, String name, String leader, int balance) {
         this.id = id;
         this.name = name;
         this.leader = leader;
         this.invites = new inviteManager.factionInvite();
+        this.allyinvites = new allyManager();
         this.balance = balance;
 
     }
@@ -226,18 +233,36 @@ public class Faction {
     }
     public void invitePlayer(Player p) {
         if(memberCount + 1 > max_members_pro_faction || invites.getInvitedPlayers().size()+1 > HCF_Rules.maxInvitesPerFaction ) {
-            p.sendMessage(Messages.MAX_MEMBERS_REACHED.queue());
+            p.sendMessage(Messages.max_members_reached.language(p).queue());
             return;
         }
         invites.invitePlayerToFaction(p);
     }
-
     public void unInvitePlayer(Player p) {
         invites.removePlayerFromInvite(p);
     }
 
     public boolean isPlayerInvited(Player p) {
         return invites.isPlayerInvited(p);
+    }
+
+    public void unInviteAlly(Faction faction) {
+        allyinvites.removePlayerFromInvite(faction);
+    }
+
+    public boolean isFactionAllyInvited(Faction faction) {
+        return allyinvites.isFactionInvited(faction);
+    }
+    public boolean inviteFactionAlly(Faction ally) {
+        if(Allies.size() + 1 > max_allies_pro_faction || allyinvites.getInvitedAllies().size()+1 > HCF_Rules.maxAlliesPerFaction ) {
+            return false;
+        }
+        allyinvites.inviteFactionToAlly(ally);
+        return true;
+    }
+    public boolean resolveFactionAlly(Faction ally) {
+        Allies.removeIf(allyFaction -> allyFaction.getAllyFaction().id == ally.id);
+        return true;
     }
 
     public void addClaim(HCF_Claiming.Faction_Claim claimid) {
@@ -359,4 +384,29 @@ public class Faction {
     public void refreshDTR(){
         this.DTR_MAX = Double.parseDouble(playertools.CalculateDTR(this));
     }
+
+    public void setupAllies() throws SQLException {
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM allyfactions WHERE mainfaction = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Faction Ally = Main.faction_cache.get(rs.getInt("allyfaction"));
+            if(Ally != null){
+                AllyFaction AllyFaction = new AllyFaction(rs.getInt("ID"),Ally);
+                this.Allies.add(AllyFaction);
+            }else{
+                SQL_Connection.dbExecute(con,"DELETE FROM allyfactions WHERE ID='?'",String.valueOf(rs.getInt("ID")));
+            }
+        }
+
+    }
+    public boolean HaveAllyPermission(Faction faction,Permissions perm){
+        if(faction.claims.isEmpty()) return true;
+        if(faction.DTR <= 0) return true;
+       for(AllyFaction allyFaction : this.Allies){
+            return (allyFaction.getAllyFaction().id == faction.id) && allyFaction.hasPermission(perm);
+       }
+       return true;
+    }
+
 }

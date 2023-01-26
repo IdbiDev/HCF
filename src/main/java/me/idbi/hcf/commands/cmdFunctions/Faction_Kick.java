@@ -53,7 +53,7 @@ public class Faction_Kick {
 //                    displayTeams.removePlayerFromTeam(targetPlayer_Online);
 //                    displayTeams.addToNonFaction(targetPlayer_Online);
                     //f.removePrefixPlayer(targetPlayer_Online);
-                    PlayerStatistic stat = Main.playerStatistics.get(targetPlayer_Online);
+                    PlayerStatistic stat = Main.playerStatistics.get(targetPlayer_Online.getUniqueId());
                     for(FactionHistory statF : stat.factionHistory){
                         if(statF.id == f.id){
                             statF.left = new Date();
@@ -62,7 +62,7 @@ public class Faction_Kick {
                             statF.name = f.name;
                         }
                     }
-                    Main.playerStatistics.put(targetPlayer_Online,stat);
+                    Main.playerStatistics.put(targetPlayer_Online.getUniqueId(),stat);
                     f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(targetPlayer_Online.getName(),"kicked",new Date().getTime()));
 
                     Scoreboards.RefreshAll();

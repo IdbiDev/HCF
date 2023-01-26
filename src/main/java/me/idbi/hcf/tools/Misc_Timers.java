@@ -23,6 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static me.idbi.hcf.koth.KOTH.GLOBAL_TIME;
 import static me.idbi.hcf.koth.KOTH.stopKoth;
@@ -107,19 +108,20 @@ public class Misc_Timers {
                         Main.saved_players.put(key, val - 1000);
                     }
                 }
-                for(Map.Entry<Player, PlayerStatistic> entry : Main.playerStatistics.entrySet()){
+                for(Map.Entry<UUID, PlayerStatistic> entry : Main.playerStatistics.entrySet()){
+                    Player p = Bukkit.getPlayer(entry.getKey());
                     entry.getValue().TimePlayed += 1000L;
-                    if (!playertools.HasMetaData(entry.getKey(), "class")) continue;
-                    if(playertools.getMetadata(entry.getKey(), "class").equalsIgnoreCase("Assassin")){
+                    if (!playertools.HasMetaData(p, "class")) continue;
+                    if(playertools.getMetadata(p, "class").equalsIgnoreCase("Assassin")){
                         entry.getValue().TotalAssassinClassTime += 1000L;
                     }
-                    if(playertools.getMetadata(entry.getKey(), "class").equalsIgnoreCase("Archer")){
+                    if(playertools.getMetadata(p, "class").equalsIgnoreCase("Archer")){
                         entry.getValue().TotalArcherClassTime += 1000L;
                     }
-                    if(playertools.getMetadata(entry.getKey(), "class").equalsIgnoreCase("Bard")){
+                    if(playertools.getMetadata(p, "class").equalsIgnoreCase("Bard")){
                         entry.getValue().TotalBardClassTime += 1000L;
                     }
-                    if(playertools.getMetadata(entry.getKey(), "class").equalsIgnoreCase("Miner")){
+                    if(playertools.getMetadata(p, "class").equalsIgnoreCase("Miner")){
                         entry.getValue().TotalMinerClassTime += 1000L;
                     }
                 }
@@ -245,8 +247,8 @@ public class Misc_Timers {
 
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                     SpawnShield.CalcWall(player);
-                    if(!Main.player_block_changes.containsKey(player)) continue;
-                    List<Location> copy = Main.player_block_changes.get(player);
+                    if(!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
+                    List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
                     Location cur = null;
                     try{
                         for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
@@ -256,11 +258,11 @@ public class Misc_Timers {
                             //System.out.println(player.getLocation().distance(loc));
                             if (player.getLocation().distance(loc) > 12) {
                                 player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                                if (Main.player_block_changes.containsKey(player)) {
-                                    List<Location> l = Main.player_block_changes.get(player);
+                                if (Main.player_block_changes.containsKey(player.getUniqueId())) {
+                                    List<Location> l = Main.player_block_changes.get(player.getUniqueId());
                                     it.remove();
                                     //l.remove(loc);
-                                    Main.player_block_changes.put(player, l);
+                                    Main.player_block_changes.put(player.getUniqueId(), l);
                                 }
                             }
                         }
@@ -345,8 +347,8 @@ public class Misc_Timers {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if(!Main.player_block_changes.containsKey(player)) return;
-                List<Location> copy = Main.player_block_changes.get(player);
+                if(!Main.player_block_changes.containsKey(player.getUniqueId())) return;
+                List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
                 Location cur = null;
                 try{
                     for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
@@ -354,11 +356,11 @@ public class Misc_Timers {
                         Location loc = it.next();
                         //cur = loc;
                         player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                        if (Main.player_block_changes.containsKey(player)) {
-                            List<Location> l = Main.player_block_changes.get(player);
+                        if (Main.player_block_changes.containsKey(player.getUniqueId())) {
+                            List<Location> l = Main.player_block_changes.get(player.getUniqueId());
                             it.remove();
                             //l.remove(loc);
-                            Main.player_block_changes.put(player, l);
+                            Main.player_block_changes.put(player.getUniqueId(), l);
                         }
                     }
                 }catch (Exception e){
@@ -385,6 +387,12 @@ public class Misc_Timers {
             @Override
             public void run() {
                 Main.SaveAll();
+                Runtime runtime = Runtime.getRuntime();
+                long totalMemory = runtime.totalMemory();
+                long freeMemory = runtime.freeMemory();
+
+                System.out.println("Memory: Used=" + (totalMemory - freeMemory) + " Total=" + totalMemory + " Free=" + freeMemory);
+
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 6000, 6000);
     }

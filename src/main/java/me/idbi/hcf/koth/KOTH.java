@@ -1,9 +1,9 @@
 package me.idbi.hcf.koth;
 
 import me.idbi.hcf.Bossbar.BossbarTools;
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.koth.GUI.KOTHItemManager;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.HCF_Claiming;

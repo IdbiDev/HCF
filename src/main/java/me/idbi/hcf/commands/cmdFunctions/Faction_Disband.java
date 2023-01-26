@@ -1,6 +1,5 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
-import me.idbi.hcf.Discord.LogLibrary;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
@@ -51,7 +50,7 @@ public class Faction_Disband {
             playertools.setMetadata(player, "rank", "none");
             Scoreboards.refresh(player);
             NameChanger.refresh(player);
-            PlayerStatistic stat = Main.playerStatistics.get(player);
+            PlayerStatistic stat = Main.playerStatistics.get(player.getUniqueId());
             for(FactionHistory f : stat.factionHistory){
                 if(f.id == selectedFaction.id){
                     f.left = new Date();
@@ -60,7 +59,7 @@ public class Faction_Disband {
                     f.name = selectedFaction.name;
                 }
             }
-            Main.playerStatistics.put(player,stat);
+            Main.playerStatistics.put(player.getUniqueId(),stat);
         }
         LogLibrary.sendFactionDisband(p, selectedFaction.name);
         Bukkit.broadcastMessage(Messages.FACTION_DISBAND

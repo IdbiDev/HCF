@@ -1,6 +1,6 @@
 package me.idbi.hcf.tools;
 
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;

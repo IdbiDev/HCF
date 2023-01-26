@@ -41,12 +41,12 @@ public class onDeath implements Listener {
             }
             playertools.setMetadata(damager,"kills",Integer.parseInt(playertools.getMetadata(damager,"kills"))+1);
             playertools.setMetadata(victim,"deaths",Integer.parseInt(playertools.getMetadata(victim,"deaths")+1));
-            PlayerStatistic cica = Main.playerStatistics.get(damager);
+            PlayerStatistic cica = Main.playerStatistics.get(damager.getUniqueId());
             cica.kills++;
-            Main.playerStatistics.put(damager,cica);
-            cica = Main.playerStatistics.get(victim);
+            Main.playerStatistics.put(damager.getUniqueId(),cica);
+            cica = Main.playerStatistics.get(victim.getUniqueId());
             cica.deaths++;
-            Main.playerStatistics.put(victim,cica);
+            Main.playerStatistics.put(victim.getUniqueId(),cica);
 
             SQL_Connection.dbExecute(con,"UPDATE members SET kills=kills+1 WHERE uuid='?'",damager.getUniqueId().toString());
            SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString());
@@ -67,7 +67,7 @@ public class onDeath implements Listener {
 
         if (faction !=null) {
             if (!Main.DTR_REGEN.containsKey(faction.id)) {
-                Main.DTR_REGEN.put(faction.id, System.currentTimeMillis() + DTR_REGEN_TIME * 1000L);
+                Main.DTR_REGEN.put(faction.id, System.currentTimeMillis() + DTR_REGEN_TIME);
                 if (Main.debug)
                     System.out.println("Death >> " + faction.name);
                 faction.DTR -= Main.DEATH_DTR;

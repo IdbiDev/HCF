@@ -27,7 +27,7 @@ public class PlayerHistoryItems {
         ItemStack is = new ItemStack(Material.PAPER);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§6☰ §eStatistics");
-        PlayerStatistic stats = Main.playerStatistics.get(p);
+        PlayerStatistic stats = Main.playerStatistics.get(p.getUniqueId());
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         im.setLore(Arrays.asList(
@@ -59,7 +59,7 @@ public class PlayerHistoryItems {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§2☰ §aClass Statistics");
 
-        PlayerStatistic stats = Main.playerStatistics.get(p);
+        PlayerStatistic stats = Main.playerStatistics.get(p.getUniqueId());
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
 
         long total = 0L;

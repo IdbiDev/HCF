@@ -1,18 +1,8 @@
 package me.idbi.hcf.MessagesEnums;
 
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
-import me.idbi.hcf.CustomFiles.ConfigManager;
-import me.idbi.hcf.CustomFiles.MessagesFile;
-import me.idbi.hcf.tools.playertools;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 public enum Messages {
 
-    PREFIX("&8[&2HCF&a+&8] &7>"),
+    /*PREFIX("&8[&2HCF&a+&8] &7>"),
     PREFIX_CMD("&r[&2HCF&a+&r] &r"),
     RELOAD("%prefix% &aSuccessfully reloaded configuration files!"),
     CANT_START_EOTW("%prefix% &cEOTW Start failed! (No spawn location defined! Please use &n/a spawnclaim&f&c)"),
@@ -96,7 +86,7 @@ public enum Messages {
     DEPOSIT_MESSAGE("%prefix% &eYou deposited &6&o$%amount% &eto faction bank!"),
     EXECUTOR_INVITE_MESSAGE("&eYou invited &6&o%player% &eto your faction!"),
     INVITED_INVITE_MESSAGE("&eYou invited to &6&o%faction_name% &efaction by &6&o%executor%&e!"),*/
-    LEADER_LEAVING_FACTION("%prefix% &cYou can't leave this faction, because you are the leader! Use &e&l/f disband &r&cinstead!"),
+    /*LEADER_LEAVING_FACTION("%prefix% &cYou can't leave this faction, because you are the leader! Use &e&l/f disband &r&cinstead!"),
     NOT_LEADER("%prefix% &cYou are not the faction leader!"),
     CANT_KICK_YOURSELF("%prefix% &cYou can't kick yourself!"),
     CANT_KICK_LEADER("%prefix% &cYou can't the faction leader!"),
@@ -266,20 +256,20 @@ public enum Messages {
     private String message;
     private String prefix;
 
-    Messages(String msg) {
+    Messages3(String msg) {
         this.msg = msg;
         this.defaultMsg = msg;
         this.message = msg;
     }
 
-    public Messages getMessage() {
+    public Messages3 getMessage() {
         message = ChatColor.translateAlternateColorCodes('&', msg
                 .replace("%newline%", "\n")
-                .replace("%prefix%",  ChatColor.translateAlternateColorCodes('&', Messages.PREFIX.msg)));
+                .replace("%prefix%",  ChatColor.translateAlternateColorCodes('&', Messages3.PREFIX.msg)));
         return this;
     }
 
-    public Messages setMessage(String message) {
+    public Messages3 setMessage(String message) {
         this.message = msg.replace("%message%", message);
         this.msg = this.message;
         return this;
@@ -290,7 +280,7 @@ public enum Messages {
         return "";
     }
 
-    public Messages getDefaultMessage() {
+    public Messages3 getDefaultMessage() {
         defaultMsg = ChatColor.translateAlternateColorCodes('&', defaultMsg
                 .replace("%newline%", "\n")
                 .replace("%prefix%",  ChatColor.translateAlternateColorCodes('&', prefix)));
@@ -305,29 +295,29 @@ public enum Messages {
         );
     }
 
-    public Messages repDeath(Player victim, Player killer) {
+    public Messages3 repDeath(Player victim, Player killer) {
         message = msg.replace("%victim%", victim.getName()).replace("%killer%", killer.getName());
         this.msg = message;
         return this;
     }
-    public Messages repBardEffects(Player bard, String effect,String members) {
+    public Messages3 repBardEffects(Player bard, String effect, String members) {
         message = msg.replace("%bard%", bard.getName()).replace("%effect%", effect).replace("%count%",members);
         this.msg = message;
         return this;
     }
-    public Messages repLoc(int x, int z) {
+    public Messages3 repLoc(int x, int z) {
         message = msg.replace("%loc%", "X:"+x + " Y:"+z);
         this.msg = message;
         return this;
     }
-    public Messages repDeathWithoutKiller(Player victim) {
+    public Messages3 repDeathWithoutKiller(Player victim) {
         String victim_kills = playertools.getMetadata(victim,"kills");
         message = msg.replace("%victim%", victim.getName())
                 .replace("%victim_kills%",victim_kills);
         this.msg = message;
         return this;
     }
-    public Messages repDeathWithKills(Player victim, Player killer) {
+    public Messages3 repDeathWithKills(Player victim, Player killer) {
         String weaponName = (killer.getItemInHand().hasItemMeta()) ?
                 (killer.getItemInHand().getItemMeta().hasDisplayName()
                         ? killer.getItemInHand().getItemMeta().getDisplayName()
@@ -344,17 +334,17 @@ public enum Messages {
         return this;
     }
 
-    public Messages repPlayer(Player p) {
+    public Messages3 repPlayer(Player p) {
         message = msg.replace("%player%", p.getName());
         this.msg = message;
         return this;
     }
-    public Messages repPlayer(OfflinePlayer p) {
+    public Messages3 repPlayer(OfflinePlayer p) {
         message = msg.replace("%player%", p.getName());
         this.msg = message;
         return this;
     }
-    public Messages setDisplayName(Player p) {
+    public Messages3 setDisplayName(Player p) {
         if(p.getDisplayName() == null) {
             message = msg.replace("%player_displayname%", p.getName());
         } else {
@@ -363,7 +353,7 @@ public enum Messages {
         this.msg = message;
         return this;
     }
-    public Messages repTime_formatted(int seconds) {
+    public Messages3 repTime_formatted(int seconds) {
         long MM = (seconds % 3600) / 60;
         long SS = seconds % 60;
         message = msg.replace("%format_time%", String.format("%02d:%02d",MM,SS));
@@ -371,19 +361,19 @@ public enum Messages {
         return this;
     }
 
-    public Messages repDeathTime() {
-        message = msg.replace("%player%",String.valueOf(Integer.parseInt(ConfigLibrary.Death_time_seconds.getValue()) / 60));
+    public Messages3 repDeathTime() {
+        message = msg.replace("%player%",String.valueOf(Config.deathban.asInt() / 60));
         this.msg = message;
         return this;
     }
 
-    public Messages setZone(String zoneName) {
+    public Messages3 setZone(String zoneName) {
         message = msg.replace("%zone_name%", zoneName);
         this.msg = message;
         return this;
     }
 
-    public Messages repCoords(int x, int y, int z) {
+    public Messages3 repCoords(int x, int y, int z) {
         message = msg.replace(msg, msg
                 .replace("%location_x%", x + "")
                 .replace("%location_y%", y + "")
@@ -392,50 +382,50 @@ public enum Messages {
         return this;
     }
 
-    public Messages setFaction(String factionName) {
+    public Messages3 setFaction(String factionName) {
         message = msg.replace(msg, msg.replace("%faction_name%", factionName));
         this.msg = message;
         return this;
     }
 
-    public Messages setAmount(String amount) {
+    public Messages3 setAmount(String amount) {
         message = msg.replace("%amount%", amount);
         this.msg = message;
         return this;
     }
 
-    public Messages setRank(String rank) {
+    public Messages3 setRank(String rank) {
         message = msg.replace("%rank%", rank);
         this.msg = message;
         return this;
     }
 
-    public Messages repExecutor(Player executor) {
+    public Messages3 repExecutor(Player executor) {
         message = msg.replace("%executor%", executor.getName());
         this.msg = message;
         return this;
     }
 
-    public Messages setPrice(int price) {
+    public Messages3 setPrice(int price) {
         message = msg.replace("%price%", String.valueOf(price));
         this.msg = message;
         return this;
     }
 
-    public Messages setItem(ItemStack item) {
+    public Messages3 setItem(ItemStack item) {
         message = msg.replace("%item%", (item.getType().name().charAt(0) + item.getType().name().substring(1).toLowerCase()).replace("_", " "));
         this.msg = message;
         return this;
     }
 
-    public Messages repPlayerExecutor(Player p, Player executor) {
+    public Messages3 repPlayerExecutor(Player p, Player executor) {
         message = msg.replace("%executor%", executor.getName()).replace("%player%", p.getName());
         this.msg = message;
         return this;
-    }
+    }*/
 
-    public void load() {
-        FileConfiguration msgs = ConfigManager.getManager().getMessages();
+    /*public void load() {
+        FileConfiguration msgs = ConfigManager.getEnglishMessages().;
 
         if (msgs == null) return;
 
@@ -457,5 +447,5 @@ public enum Messages {
         msgs.set(this.toString(), msg);
 
         MessagesFile.saveMessages();
-    }
+    }*/
 }

@@ -1,6 +1,7 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.AnvilGUI.AnvilItems;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
@@ -9,7 +10,6 @@ import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
 import me.idbi.hcf.HistoryGUI.History.FactionHistoryInventory;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
@@ -36,7 +36,7 @@ public class Click_MainInventory implements Listener {
 
          if(e.getCurrentItem().isSimilar(GUI_Items.rankManager())) {
             if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_RANKS)){
-                p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
+                p.sendMessage(Messages.no_permission.language(p).queue());
                 GUI_Sound.playSound(p,"error");
                 return;
 
@@ -47,7 +47,7 @@ public class Click_MainInventory implements Listener {
 
         else if(e.getCurrentItem().isSimilar(GUI_Items.playerManager())) {
             if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_PLAYERS)) {
-                p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
+                p.sendMessage(Messages.no_permission.language(p).queue());
                 GUI_Sound.playSound(p,"error");
                 return;
             }
@@ -57,7 +57,7 @@ public class Click_MainInventory implements Listener {
 
         else if(e.getCurrentItem().isSimilar(IM_Items.inviteManager())) {
             if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_INVITE)) {
-                p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
+                p.sendMessage(Messages.no_permission.language(p).queue());
                 GUI_Sound.playSound(p,"error");
                 return;
             }
@@ -79,7 +79,7 @@ public class Click_MainInventory implements Listener {
 
         else if(e.getCurrentItem().isSimilar(GUI_Items.renameFaction())) {
             if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_ALL)){
-                p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
+                p.sendMessage(Messages.no_permission.language(p).queue());
                 GUI_Sound.playSound(p,"error");
                 return;
             }
@@ -102,12 +102,12 @@ public class Click_MainInventory implements Listener {
                         return AnvilGUI.Response.close();
                     } else {
                         GUI_Sound.playSound(p,"error");
-                        return AnvilGUI.Response.text(Messages.GUI_INVALID_TYPE_TEXT.queue());
+                        return AnvilGUI.Response.text(Messages.gui_invalid_type_text.language(p).queue());
 
                     }
                 })
                 //.preventClose()//prevents the inventory from being closed
-                .text(Messages.GUI_RENAME_FACTION_TEXT.queue())                              //sets the text the GUI should start with
+                .text(Messages.gui_rename_faction_text.language(p).queue())                              //sets the text the GUI should start with
                 .itemLeft(AnvilItems.left())                      //use a custom item for the first slot
                 //.itemRight(AnvilItems.done())                     //use a custom item for the second slot
                 .plugin(m)                                          //set the plugin instance

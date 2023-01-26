@@ -1,8 +1,8 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.tools.*;
 import me.idbi.hcf.tools.Objects.Faction;
 import org.bukkit.Bukkit;

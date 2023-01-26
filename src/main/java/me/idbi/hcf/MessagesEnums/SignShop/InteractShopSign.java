@@ -84,7 +84,7 @@ public class InteractShopSign implements Listener {
                                 }
 
                                 playertools.setPlayerBalance(p, playerBalance - fertigPreise);
-                                PlayerStatistic stat = Main.playerStatistics.get(p);
+                                PlayerStatistic stat = Main.playerStatistics.get(p.getUniqueId());
                                 stat.MoneySpend+=fertigPreise;
                                 Main.playerStatistics.put(p,stat);
                                 p.sendMessage(Messages.SIGN_SHOP_BOUGHT.setItem(new ItemStack(material, remainingSpace, Short))
@@ -107,9 +107,9 @@ public class InteractShopSign implements Listener {
                                         .setAmount(String.valueOf(amount))
                                         .queue());
                                 playertools.setPlayerBalance(p, playerBalance - signPrice);
-                                PlayerStatistic stat = Main.playerStatistics.get(p);
+                                PlayerStatistic stat = Main.playerStatistics.get(p.getUniqueId());
                                 stat.MoneySpend+=signPrice;
-                                Main.playerStatistics.put(p,stat);
+                                Main.playerStatistics.put(p.getUniqueId(),stat);
                             }
 
                             Scoreboards.refresh(p);
@@ -152,9 +152,9 @@ public class InteractShopSign implements Listener {
                                 );
                                 Scoreboards.refresh(p);
                                 playertools.setMetadata(p, "money", Integer.parseInt(playertools.getMetadata(p, "money")) + price);
-                                PlayerStatistic stat = Main.playerStatistics.get(p);
+                                PlayerStatistic stat = Main.playerStatistics.get(p.getUniqueId());
                                 stat.MoneyEarned+=price;
-                                Main.playerStatistics.put(p,stat);
+                                Main.playerStatistics.put(p.getUniqueId(),stat);
                             } else {
                                 p.sendMessage(Messages.DONT_HAVE_ITEM.queue());
                             }

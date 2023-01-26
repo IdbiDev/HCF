@@ -129,9 +129,9 @@ public class adminMain {
 
         player.sendMessage(Messages.TAKE_MONEY.repExecutor(admin).setAmount(String.valueOf(amount)).queue());
         Scoreboards.refresh(player);
-        PlayerStatistic stat = Main.playerStatistics.get(player);
+        PlayerStatistic stat = Main.playerStatistics.get(player.getUniqueId());
         stat.MoneySpend += amount;
-        Main.playerStatistics.put(player,stat);
+        Main.playerStatistics.put(player.getUniqueId(),stat);
     }
 
     public static void DeleteFaction(Player admin, String faction) {
@@ -153,7 +153,7 @@ public class adminMain {
             playertools.setMetadata(player, "faction", "None");
             playertools.setMetadata(player, "factionid", "0");
             playertools.setMetadata(player, "rank", "none");
-            PlayerStatistic stat = Main.playerStatistics.get(player);
+            PlayerStatistic stat = Main.playerStatistics.get(player.getUniqueId());
             for(FactionHistory statF : stat.factionHistory){
                 if(statF.id == selectedFaction.id){
                     statF.left = new Date();
@@ -162,7 +162,7 @@ public class adminMain {
                     statF.name = selectedFaction.name;
                 }
             }
-            Main.playerStatistics.put(player,stat);
+            Main.playerStatistics.put(player.getUniqueId(),stat);
             NameChanger.refresh(player);
         }
 

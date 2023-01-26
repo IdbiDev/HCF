@@ -2,11 +2,9 @@ package me.idbi.hcf.MessagesEnums;
 
 //import com.sun.xml.internal.stream.StaxErrorReporter;
 
-import me.idbi.hcf.CustomFiles.ConfigManager;
-import me.idbi.hcf.CustomFiles.MessagesFile;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
 
@@ -245,11 +243,11 @@ public enum ListMessages {
     }
 
     public void save() {
-        FileConfiguration msgs = MessagesFile.getMessages();
+        *//*FileConfiguration msgs = MessagesFile.getMessages();
 
         msgs.set(this.toString(), list);
 
-        MessagesFile.saveMessages();
+        MessagesFile.saveMessages();*//*
     }
 
 //    private static HashMap sort(HashMap map) {
@@ -269,7 +267,7 @@ public enum ListMessages {
 //    }
 
     public void load() {
-        FileConfiguration msgs = ConfigManager.getManager().getListMessage();
+        *//*FileConfiguration msgs = ConfigManager.getManager().getListMessage();
 
         if (msgs == null) return;
 
@@ -279,6 +277,6 @@ public enum ListMessages {
             return;
         }
 
-        list = msgs.getStringList(this.toString());
-    }
+        list = msgs.getStringList(this.toString());*//*
+    }*/
 }

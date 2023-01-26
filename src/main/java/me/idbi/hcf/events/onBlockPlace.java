@@ -1,7 +1,10 @@
 package me.idbi.hcf.events;
 
-import me.idbi.hcf.MessagesEnums.Messages;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.HCF_Claiming;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.Permissions;
 import me.idbi.hcf.tools.brewing;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
@@ -20,8 +23,27 @@ public class onBlockPlace implements Listener {
     public void onBlockPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
         Block block = e.getBlock();
-        if (HCF_Claiming.checkEnemyClaimAction(block.getX(), block.getZ(),playertools.getPlayerFaction(p))&& !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
-            p.sendMessage(Messages.YOU_CANT_DO.setFaction(HCF_Claiming.sendFactionTerretoryByXZ(block.getX(), block.getZ())).queue());
+        Faction f = playertools.getPlayerFaction(p);
+        HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(block.getX(),block.getZ());
+        Faction baszogatottFaction;
+        if(claim != null){
+            baszogatottFaction = Main.faction_cache.get(claim.faction);
+        }else{
+            baszogatottFaction = Main.faction_cache.get(1);
+        }
+        boolean shouldCancel = false;
+        if(Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
+            shouldCancel = false;
+        }
+        if(HCF_Claiming.checkEnemyClaimAction(block.getX(),block.getZ(), f)) {
+            shouldCancel = true;
+        }
+        if(f.HaveAllyPermission(baszogatottFaction, Permissions.USEBLOCK)){
+            shouldCancel = false;
+        }
+        //if (HCF_Claiming.checkEnemyClaimAction(block.getX(), block.getZ(),f )&& !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty")) && !f.HaveAllyPermission(baszogatottFaction, Permissions.USEBLOCK)) {
+        if(shouldCancel){
+            p.sendMessage(Messages.you_cant_do.language(p).replace("%faction%", HCF_Claiming.sendFactionTerretoryByXZ(block.getX(), block.getZ())).queue());
             e.setCancelled(true);
             return;
         }

@@ -1,6 +1,7 @@
 package me.idbi.hcf.WorldModes;
 
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.playertools;
@@ -25,7 +26,7 @@ public class SOTW {
             return;
         }*/
         Main.sendCmdMessage("&1&bSOTW STARTED Successfully!");
-        Main.SOTWSTARTED = System.currentTimeMillis() + (timeInSeconds * 1000L);
+        Main.SOTWSTARTED = System.currentTimeMillis() + SOTWTime;
         for(Player p : Bukkit.getOnlinePlayers()){
             p.sendTitle(
                     Messages.SOTW_START_TITLE.queue(),

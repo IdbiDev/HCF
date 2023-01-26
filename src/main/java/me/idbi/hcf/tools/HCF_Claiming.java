@@ -340,7 +340,7 @@ public class HCF_Claiming {
                 }
             }
         }
-        return ChatColor.DARK_RED + "Unknown";
+        return ChatColor.DARK_GREEN + "Wilderness";
     }
     public static Faction_Claim sendClaimByXZ(int x, int z) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {

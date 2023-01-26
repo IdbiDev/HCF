@@ -1,6 +1,8 @@
 package me.idbi.hcf.events;
 
 import me.idbi.hcf.Bossbar.BossbarTools;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.MessagesEnums.Messages;
 import me.idbi.hcf.tools.*;
@@ -57,20 +59,20 @@ public class onPlayerLeft implements Listener {
         if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "freeze"))) {
             Bukkit.getBanList(BanList.Type.NAME).addBan(e.getPlayer().getName(),
                             m.getConfig().getString("Freeze.Reason"),
-                            new Date(System.currentTimeMillis() + m.getConfig().getInt("Freeze.BanTimeSeconds") * 1000L),
+                            new Date(System.currentTimeMillis() + Config.deathban.asInt()),
                             null)
                     .save();
         }
         Main.player_cache.remove(e.getPlayer());
-        Main.playerStatistics.get(e.getPlayer()).Save(e.getPlayer());
-        Main.playerStatistics.remove(e.getPlayer());
+        Main.playerStatistics.get(e.getPlayer().getUniqueId()).Save(e.getPlayer());
+        Main.playerStatistics.remove(e.getPlayer().getUniqueId());
 
         setCombatLogger(e.getPlayer());
     }
 
 
     public void setCombatLogger(Player p) {
-        if (!HCF_Timer.timers.containsKey(p)) {
+        if (!HCF_Timer.timers.containsKey(p.getUniqueId())) {
             return;
         }
         long combatTimer = HCF_Timer.getCombatTime(p);

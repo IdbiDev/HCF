@@ -1,7 +1,7 @@
 package me.idbi.hcf.tools;
 
-import me.idbi.hcf.CustomFiles.ConfigLibrary;
-import me.idbi.hcf.CustomFiles.ConfigManager;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.koth.KOTH;
@@ -32,6 +32,7 @@ import java.util.*;
 public class playertools {
     private static final Connection con = Main.getConnection("Playertools");
 
+
     public static void LoadPlayer(Player player) {
         // Loading player From SQL
         HashMap<String, Object> playerMap = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid = '?'", player.getUniqueId().toString());
@@ -41,7 +42,7 @@ public class playertools {
             setMetadata(player, "kills", playerMap.get("kills"));
             setMetadata(player, "deaths", playerMap.get("deaths"));
             setMetadata(player, "money", playerMap.get("money"));
-            setMetadata(player, "class", "none");
+            setMetadata(player, "class", "None");
             setMetadata(player, "faction", playerMap.get("factionname"));
             setMetadata(player, "adminDuty", false);
             setMetadata(player, "rank", "None");
@@ -60,12 +61,12 @@ public class playertools {
             PlayerStatistic statistic = new PlayerStatistic(new JSONObject(playerMap.get("statistics").toString()));
             statistic.kills = (int) playerMap.get("kills");
             statistic.deaths = (int) playerMap.get("deaths");
-            Main.playerStatistics.put(player,statistic);
+            Main.playerStatistics.put(player.getUniqueId(),statistic);
             NameChanger.refresh(player);
 
         } else {
             // Játékos létrehozása SQL-ben, majd újra betöltjük
-            SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',online=0", player.getName(), player.getUniqueId().toString());
+            SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',online=0,money='?'", player.getName(), player.getUniqueId().toString(),Config.default_balance.asStr());
             JSONObject jsonComp = new JSONObject();
             JSONArray factions = new JSONArray();
             //JSONArray ClassTimes = new JSONArray();
@@ -301,7 +302,6 @@ public class playertools {
 
     public static void setFactionCache() {
         try {
-            Scoreboard main_score = Bukkit.getScoreboardManager().getMainScoreboard();
             Main.factionToname.clear();
             Main.faction_cache.clear();
             PreparedStatement ps = con.prepareStatement("SELECT * FROM factions");
@@ -334,7 +334,7 @@ public class playertools {
                     continue;
                 Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(rs.getString("home")));
                 Location loc = new Location(
-                        Bukkit.getWorld(ConfigLibrary.World_name.getValue()),
+                        Bukkit.getWorld(Config.warzone_size.asStr()),
                         Integer.parseInt(map.get("X").toString()),
                         Integer.parseInt(map.get("Y").toString()),
                         Integer.parseInt(map.get("Z").toString()),
@@ -346,10 +346,10 @@ public class playertools {
 
             }
             //Check if warzone enabled, and the spawn location is setted
-            if(Integer.parseInt(ConfigLibrary.WARZONE_SIZE.getValue()) != 0 && !Main.faction_cache.get(1).claims.isEmpty()) {
-                String str = ConfigLibrary.Spawn_location.getValue();
+            if(Config.warzone_size.asInt() != 0 && !Main.faction_cache.get(1).claims.isEmpty()) {
+                String str = Config.spawn_location.asStr();
                 Location spawn = new Location(
-                        Bukkit.getWorld(ConfigLibrary.World_name.getValue()),
+                        Bukkit.getWorld(Config.world_name.asStr()),
                         Integer.parseInt(str.split(" ")[0]),
                         Integer.parseInt(str.split(" ")[1]),
                         Integer.parseInt(str.split(" ")[2]),
@@ -357,13 +357,20 @@ public class playertools {
                         Integer.parseInt(str.split(" ")[4])
                 );
                 Faction f = Main.faction_cache.get(2);
-                int warzoneSize = Integer.parseInt(ConfigLibrary.WARZONE_SIZE.getValue());
+                int warzoneSize = Config.warzone_size.asInt();
                 HCF_Claiming.Faction_Claim claim;
                 claim = new HCF_Claiming.Faction_Claim(spawn.getBlockX() - warzoneSize, spawn.getBlockX() + warzoneSize, spawn.getBlockZ() - warzoneSize, spawn.getBlockZ() + warzoneSize, 2, HCF_Claiming.ClaimAttributes.SPECIAL);
                 f.addClaim(claim);
             }
         } catch (SQLException | JSONException e) {
             e.printStackTrace();
+        }
+        for(Map.Entry<Integer, Faction> f : Main.faction_cache.entrySet()){
+            try {
+                f.getValue().setupAllies();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -493,9 +500,9 @@ public class playertools {
     }
 
     public static Location getSpawn() {
-            String[] spawnLocs = ConfigLibrary.Spawn_location.getValue().split(" ");
+        String[] spawnLocs = Config.spawn_location.asStr().split(" ");
         Integer[] ints = getInts(spawnLocs);
-        return new Location(Bukkit.getWorld(ConfigLibrary.World_name.getValue()), ints[0], ints[1], ints[2], ints[3], ints[4]);
+        return new Location(Bukkit.getWorld(Config.world_name.asStr()), ints[0], ints[1], ints[2], ints[3], ints[4]);
     }
 
     public static Integer[] getInts(String[] string) {
@@ -544,14 +551,14 @@ public class playertools {
         return (Math.abs(p1.getBlockX()-p2.getBlockX()) + Math.abs(p1.getBlockZ()-p2.getBlockZ()));
     }
     public static void placeBlockChange(Player p,Location loc){
-        if(Main.player_block_changes.containsKey(p)) {
-            List<Location> l = Main.player_block_changes.get(p);
+        if(Main.player_block_changes.containsKey(p.getUniqueId())) {
+            List<Location> l = Main.player_block_changes.get(p.getUniqueId());
             l.add(loc);
-            Main.player_block_changes.put(p,l);
+            Main.player_block_changes.put(p.getUniqueId(),l);
         } else {
             List<Location> l = new ArrayList<>();
             l.add(loc);
-            Main.player_block_changes.put(p,l);
+            Main.player_block_changes.put(p.getUniqueId(),l);
         }
     }
 

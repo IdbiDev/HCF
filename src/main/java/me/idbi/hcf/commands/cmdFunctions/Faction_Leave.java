@@ -38,7 +38,7 @@ public class Faction_Leave {
                 f.BroadcastFaction(Messages.BC_LEAVE_MESSAGE.repPlayer(player).queue());
                 Scoreboards.refresh(player);
                 f.refreshDTR();
-                PlayerStatistic stat = Main.playerStatistics.get(player);
+                PlayerStatistic stat = Main.playerStatistics.get(player.getUniqueId());
                 for(FactionHistory statF : stat.factionHistory){
                     if(statF.id == f.id){
                         statF.left = new Date();
@@ -48,7 +48,7 @@ public class Faction_Leave {
                     }
                 }
                 f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(player.getName(),"leaved",new Date().getTime()));
-                Main.playerStatistics.put(player,stat);
+                Main.playerStatistics.put(player.getUniqueId(),stat);
                 NameChanger.refresh(player);
             } else {
                 //Todo: Factin leader is a fucking retarded bc he wanna leave the faction. Use /f disband
