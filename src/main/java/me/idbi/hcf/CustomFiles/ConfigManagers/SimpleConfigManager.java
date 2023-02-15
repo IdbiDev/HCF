@@ -364,7 +364,7 @@ public class SimpleConfigManager {
                     if(comment.startsWith("# ' ")) {
                         normalComment = comment.substring(0, comment.length() - 1).replaceFirst("# ' ", "# ");
                     } else {
-                        normalComment = comment;
+                        normalComment = comment.substring(0, comment.length() - 1);
                     }
 
                     if(lastLine == 0) {

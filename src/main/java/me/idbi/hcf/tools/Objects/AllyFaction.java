@@ -1,12 +1,9 @@
 package me.idbi.hcf.tools.Objects;
 
 import me.idbi.hcf.Main;
-import me.idbi.hcf.tools.SQL_Connection;
-import org.json.JSONObject;
 
 import java.sql.Connection;
 import java.util.HashMap;
-
 
 
 public class AllyFaction {
@@ -15,13 +12,14 @@ public class AllyFaction {
      * Az a faction, akivel szövetkezett a super class.
      */
     private final Faction AllyFaction;
-    private final int thisid;
+    private final int factionid;
     private final HashMap<Permissions, Boolean> class_permissions = new HashMap<>();
-    public AllyFaction(int thisid,Faction AllyFaction) {
+
+    public AllyFaction(int factionid,Faction AllyFaction) {
+        this.factionid = factionid;
         this.AllyFaction = AllyFaction;
-        this.thisid = thisid;
         for(Permissions p : Permissions.values()){
-            class_permissions.put(p,false);
+            class_permissions.put(p, false);
         }
     }
 
@@ -37,7 +35,7 @@ public class AllyFaction {
      * @return Faction (Faction Ally Object)
      */
 
-    public Faction getAllyFaction(){
+    public Faction getAllyFaction() {
         return this.AllyFaction;
     }
     public HashMap<Permissions, Boolean> getPermissions() {
@@ -51,8 +49,10 @@ public class AllyFaction {
         class_permissions.put(perm,state);
     }
 }
-class AllyTools {
+
+class AllyCon {
     protected static final Connection con = Main.getConnection("AllyFaction");
+
 }
 /*
     CukiMC:

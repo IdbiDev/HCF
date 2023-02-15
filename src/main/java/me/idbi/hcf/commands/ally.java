@@ -16,7 +16,6 @@ import java.util.List;
 public class ally implements CommandExecutor, TabCompleter {
     private final Main m = Main.getPlugin(Main.class);
 
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player p) {
