@@ -3,6 +3,7 @@ package me.idbi.hcf.MessagesEnums.SignShop;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
@@ -77,7 +78,6 @@ public class InteractShopSign implements Listener {
                                     p.sendMessage(Messages.not_enough_slot.language(p).queue());
                                     return;
                                 }
-
                                 if (playerBalance < fertigPreise) {
                                     p.sendMessage(Messages.not_enough_money.language(p).queue());
                                     return;
@@ -86,7 +86,6 @@ public class InteractShopSign implements Listener {
                                 playertools.setPlayerBalance(p, playerBalance - fertigPreise);
                                 PlayerStatistic stat = Main.playerStatistics.get(p.getUniqueId());
                                 stat.MoneySpend+=fertigPreise;
-                                Main.playerStatistics.put(p.getUniqueId(),stat);
                                 p.sendMessage(Messages.sign_shop_bought.language(p).setItem(new ItemStack(material, remainingSpace, Short))
                                         .setPrice(fertigPreise)
                                         .setAmount(String.valueOf(remainingSpace))

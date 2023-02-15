@@ -1,7 +1,7 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
-import me.idbi.hcf.HistoryGUI.Player.PlayerStatInventory;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.HistoryGUI.Player.PlayerStatInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

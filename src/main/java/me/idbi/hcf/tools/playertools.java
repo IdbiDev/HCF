@@ -28,12 +28,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static me.idbi.hcf.Main.ranks;
+
 
 public class playertools {
     private static final Connection con = Main.getConnection("Playertools");
 
 
     public static void LoadPlayer(Player player) {
+
         // Loading player From SQL
         HashMap<String, Object> playerMap = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid = '?'", player.getUniqueId().toString());
         if (!playerMap.isEmpty()) {
@@ -63,7 +66,6 @@ public class playertools {
             statistic.deaths = (int) playerMap.get("deaths");
             Main.playerStatistics.put(player.getUniqueId(),statistic);
             NameChanger.refresh(player);
-
         } else {
             // Játékos létrehozása SQL-ben, majd újra betöltjük
             SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',online=0,money='?'", player.getName(), player.getUniqueId().toString(),Config.default_balance.asStr());
@@ -89,6 +91,100 @@ public class playertools {
             //SQL_Connection.dbExecute(con, "INSERT INTO playerstatistics SET uuid='?',StartDate='?',LastLogin='?'", player.getUniqueId().toString(), new Date().toInstant().toString(),new Date().toInstant().toString());
             LoadPlayer(player);
         }
+    }
+
+    //OnJoin
+    public static void loadOnlinePlayer(Player player) {
+        if(!player.hasPlayedBefore() || !Main.player_cache.containsKey(player.getUniqueId())) {
+            System.out.println("NEW PLAYER UWU");
+            SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',money='?'", player.getName(), player.getUniqueId().toString(),Config.default_balance.asInt() + "");
+            JSONObject jsonComp = new JSONObject();
+            JSONArray factions = new JSONArray();
+            //JSONArray ClassTimes = new JSONArray();
+            JSONObject classTimes = new JSONObject();
+            classTimes.put("Bard",0);
+            classTimes.put("Assassin",0);
+            classTimes.put("Archer",0);
+            classTimes.put("Miner",0);
+            classTimes.put("Total",0);
+            jsonComp.put("totalFactions", 0);
+            jsonComp.put("MoneySpend", 0);
+            jsonComp.put("MoneyEarned", 0);
+            jsonComp.put("TimePlayed", 0);
+            jsonComp.put("startDate", new Date().getTime());
+            jsonComp.put("lastLogin", new Date().getTime());
+            jsonComp.put("FactionHistory", factions);
+            jsonComp.put("ClassTimes", classTimes);
+            PlayerStatistic thisM = new PlayerStatistic(jsonComp);
+            HCFPlayer.createPlayer(player);
+            thisM.save(player.getUniqueId());
+        }
+
+        HCFPlayer hcf = HCFPlayer.getPlayer(player);
+        hcf.currentArea = HCF_Claiming.getPlayerArea(player);
+
+        Scoreboards.refresh(player);
+        NameChanger.refresh(player);
+    }
+
+    public static void cacheAll() {
+        boolean shouldUseAsync = Bukkit.getOnlinePlayers().size() == 0;
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM members");
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                if(!shouldUseAsync)
+                    cachePlayerSync(UUID.fromString(rs.getString("uuid")), rs);
+                else
+                    cachePlayer(UUID.fromString(rs.getString("uuid")));
+                Main.sendCmdMessage("Player " + rs.getString("uuid") + " cached!");
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+            
+        }
+    }
+    public static void cachePlayerSync(UUID uuid, ResultSet rs) {
+        try {
+            HCFPlayer hcf = new HCFPlayer(
+                    uuid,
+                    rs.getInt("kills"),
+                    rs.getInt("deaths"),
+                    Main.faction_cache.get(rs.getInt("faction")),
+                    rs.getInt("money"),
+                    new PlayerStatistic(new JSONObject(rs.getString("statistics"))),
+                    rs.getString("rank"),
+                    rs.getString("language")
+            );
+            System.out.println(uuid.toString() + "Done loading! Some info:");
+            System.out.println("Faction: " + hcf.faction);
+                System.out.println("Name: " + hcf.name);
+                System.out.println("Rank: " + hcf.rank);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    //Reload / Restart / Mindig létezik
+    public static void cachePlayer(UUID uuid) {
+        AsyncSQL.dbPollAsync(con, "SELECT * FROM members WHERE uuid='?'",uuid.toString()).thenAcceptAsync(playerMap -> {
+            if (!playerMap.isEmpty()) {
+                HCFPlayer hcf = new HCFPlayer(
+                        uuid,
+                        (int) playerMap.get("kills"),
+                        (int) playerMap.get("deaths"),
+                        Main.faction_cache.get((int) playerMap.get("faction")),
+                        (int) playerMap.get("money"),
+                        new PlayerStatistic(new JSONObject(playerMap.get("statistics").toString())),
+                        playerMap.get("rank").toString(),
+                        playerMap.get("language").toString()
+                );
+                System.out.println(uuid.toString() + "Done loading! Some info:");
+                /*System.out.println("Faction: " + hcf.faction);
+                System.out.println("Name: " + hcf.name);
+                System.out.println("Rank: " + hcf.rank);*/
+            }
+        });
     }
 
     public static List<Player> getPlayersInDistance(Player p, double distance) {
@@ -135,11 +231,12 @@ public class playertools {
         return false;
     }
     public static Faction getFactionByName(String name){
-        try{
-            return Main.nameToFaction.get(name);
-        }catch (Exception e){
-            return null;
+        for (Map.Entry<Integer, Faction> entry : Main.faction_cache.entrySet())
+        {
+            if(entry.getValue().name.equalsIgnoreCase(name))
+                return entry.getValue();
         }
+        return null;
     }
     public static  ArrayList<Player> getFactionOnlineMembers(Faction faction) {
         ArrayList<Player> players = new ArrayList<Player>();
@@ -151,22 +248,14 @@ public class playertools {
         return players;
     }
 
-    public static HashMap<String, String> getFactionMembers(int id) {
-        HashMap<String,String> players = new HashMap<>();
-        try {
-
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction = ?");
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                players.put(rs.getString("name"),rs.getString("uuid"));
-            }
-            return players;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+    public static ArrayList<String> getFactionMembers(int id) {
+        ArrayList<String> players = new ArrayList<>();
+        Faction f = Main.faction_cache.get(id);
+        assert null != f;
+        for (HCFPlayer member : f.members) {
+            players.add(member.name);
         }
+        return players;
     }
     public static void RenameFaction(Faction faction,String name){
         for(Player p : getFactionOnlineMembers(faction)){
@@ -192,23 +281,33 @@ public class playertools {
 
     }
 
-    public static void setMetadata(Player p, String key, Object data) {
-        if (Main.player_cache.containsKey(p)) {
-            PlayerObject obj = Main.player_cache.get(p);
+    /*public static void setMetadata(Player p, String key, Object data) {
+        if (Main.player_cache.containsKey(p.getUniqueId())) {
+            PlayerObject obj = Main.player_cache.get(p.getUniqueId());
             obj.setData(key, data);
-        } else {
-            if (Main.debug)
-                Bukkit.getLogger().severe("SET Nem tartalmazza a playert a cache! >> " + p.getDisplayName());
+        }
+    }
+    public static void setMetadata(UUID uuid, String key, Object data) {
+        if (Main.player_cache.containsKey(uuid)) {
+            PlayerObject obj = Main.player_cache.get(uuid);
+            obj.setData(key, data);
         }
     }
 
     public static String getMetadata(Player p, String key) {
-        if (Main.player_cache.containsKey(p)) {
-            PlayerObject obj = Main.player_cache.get(p);
+        if (Main.player_cache.containsKey(p.getUniqueId())) {
+            PlayerObject obj = Main.player_cache.get(p.getUniqueId());
             return obj.getData(key);
         } else {
-            if (Main.debug)
-                Bukkit.getLogger().severe("GET Nem tartalamzza a playert a cache! >> " + p.getDisplayName() + "KEY >> " + key);
+            return "0";
+        }
+    }
+
+    public static String getMetadata(UUID uuid, String key) {
+        if (Main.player_cache.containsKey(uuid)) {
+            PlayerObject obj = Main.player_cache.get(uuid);
+            return obj.getData(key);
+        } else {
             return "0";
         }
     }
@@ -255,10 +354,12 @@ public class playertools {
                     } else if (rs.getString("type").equalsIgnoreCase("koth")) {
                         at = HCF_Claiming.ClaimAttributes.KOTH;
                     }
-                    HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt(3), rs.getInt(5), rs.getInt(4), rs.getInt(6), rs.getInt(2),at);
                     Faction f =  Main.faction_cache.get(rs.getInt("factionid"));
-                    if(f != null)
+                    if(f != null){
+                        HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt("startX"), rs.getInt("endX"), rs.getInt("startZ"), rs.getInt("endZ"), rs.getInt("factionid"),at,rs.getString("world"));
                         f.addClaim(claim);
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -359,67 +460,36 @@ public class playertools {
                 Faction f = Main.faction_cache.get(2);
                 int warzoneSize = Config.warzone_size.asInt();
                 HCF_Claiming.Faction_Claim claim;
-                claim = new HCF_Claiming.Faction_Claim(spawn.getBlockX() - warzoneSize, spawn.getBlockX() + warzoneSize, spawn.getBlockZ() - warzoneSize, spawn.getBlockZ() + warzoneSize, 2, HCF_Claiming.ClaimAttributes.SPECIAL);
+                claim = new HCF_Claiming.Faction_Claim(spawn.getBlockX() - warzoneSize, spawn.getBlockX() + warzoneSize, spawn.getBlockZ() - warzoneSize, spawn.getBlockZ() + warzoneSize, 2, HCF_Claiming.ClaimAttributes.SPECIAL,spawn.getWorld().getName());
                 f.addClaim(claim);
             }
         } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
         for(Map.Entry<Integer, Faction> f : Main.faction_cache.entrySet()){
-            try {
-                f.getValue().setupAllies();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            f.getValue().setupAllies();
         }
     }
 
 
-    public static HashMap<String, String> getPlayersKills() {
+    public static HashMap<String, String> getFactionKills(Faction faction) {
         HashMap<String, String> returnHashMap = new HashMap<>();
+        for(HCFPlayer p : Main.player_cache.values()){
+            if (p.faction == faction)
+                returnHashMap.put(p.name, String.valueOf(p.getKills()));
 
-        try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM members");
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                String kills = rs.getString("kills");
-
-                returnHashMap.put(rs.getString("name"), kills);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
         return returnHashMap;
     }
-
-    public static HashMap<String, List<String>> getRankPlayers(String factionName) {
+    //TRASH RAM BOL        <RANK, PLAYERS>
+    public static HashMap<String, List<String>> getRankPlayers(Faction faction) {
         HashMap<String, List<String>> returnHashMap = new HashMap<>();
+        List<String> alreadyMembers = new ArrayList<>();
+        for(HCFPlayer hcf : faction.members){
+            alreadyMembers.add(hcf.name);
+            returnHashMap.put(hcf.rank.name, alreadyMembers);
 
-        try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM members");
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                if (rs.getString("factionname").equalsIgnoreCase(factionName)) {
-                    String rank = rs.getString("rank");
-                    List<String> players;
-                    try {
-                        players = returnHashMap.get(rank);
-                        players.add(rs.getString("name"));
-                    } catch (NullPointerException ex) {
-                        players = new ArrayList();
-                        players.add(rs.getString("name"));
-                    }
-
-                    returnHashMap.put(rank, players);
-
-                }
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
         return returnHashMap;
     }
@@ -445,9 +515,12 @@ public class playertools {
                     Faction faction = f.getValue();
                     if (id.equals(rank_rs.getInt("faction"))) {
                         Faction_Rank_Manager.Rank rank = new Faction_Rank_Manager.Rank(rank_rs.getInt("ID"), rank_rs.getString("name"));
-                        faction.ranks.add(rank);
+
                         rank.isLeader = rank_rs.getInt("isLeader") == 1;
                         rank.isDefault = rank_rs.getInt("isDefault") == 1;
+                        ranks.add(rank);
+                        faction.ranks.add(rank);
+
                     }
                 }
             }
@@ -483,21 +556,6 @@ public class playertools {
         }
         return String.valueOf(addedDTR);
     }
-    public static int countMembers(Faction faction) {
-        int count = 0;
-        try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction=?");
-            ps.setInt(1,faction.id);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                count++;
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return count;
-    }
 
     public static Location getSpawn() {
         String[] spawnLocs = Config.spawn_location.asStr().split(" ");
@@ -513,17 +571,38 @@ public class playertools {
 
         return list.toArray(new Integer[list.size()]);
     }
+    public static int getFreeFactionId(){
+        int largestID = 0;
+        ArrayList<Integer> hashKeys = new ArrayList<>(Main.faction_cache.keySet());
+        for (Integer hashKey : hashKeys) {
+            if (hashKey > largestID) {
+                largestID = hashKey;
+            }
+        }
 
+        return largestID + 1;
+    }
+    public static int getFreeRankId(){
+        int largestID = 0;
+        for (Faction_Rank_Manager.Rank hashKey : ranks) {
+            if (hashKey.id > largestID) {
+                largestID = hashKey.id;
+            }
+        }
+
+        return largestID + 1;
+    }
     public static int createCustomFaction(String name,String leader){
-        //getting the last minus value
-        int id = SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?',leader='?'", name,leader);
-        Faction faction = new Faction(id, name, "", 0);
+        int largestID = getFreeFactionId();
+        Faction faction = new Faction(largestID, name, "", 0);
 
         Main.faction_cache.put(id, faction);
         Main.factionToname.put(id, faction.name);
         Main.nameToFaction.put(faction.name, faction);
-        return id;
+        SQL_Connection.dbExecute(con, "INSERT INTO factions SET ID='?' name='?',leader='?'", String.valueOf(faction.id), name,leader);
+        return largestID;
     }
+
 
 
     //Koba, ne nyírj ki ha nem működik gec XD
@@ -572,7 +651,8 @@ public class playertools {
                     KOTH.koth_area temp = new KOTH.koth_area(
                             faction,
                             new HCF_Claiming.Point(claim.startX, claim.startZ),
-                            new HCF_Claiming.Point(claim.endX, claim.endZ)
+                            new HCF_Claiming.Point(claim.endX, claim.endZ),
+                            claim.world
                     );
                     Main.koth_cache.put(faction.name, temp);
                     //eci.put(faction.factioname, temp);

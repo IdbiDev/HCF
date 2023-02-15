@@ -1,10 +1,11 @@
 package me.idbi.hcf.commands.cmdFunctions.Bank;
 
-import me.idbi.hcf.Main;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;

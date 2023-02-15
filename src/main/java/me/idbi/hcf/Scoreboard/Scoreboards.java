@@ -2,9 +2,13 @@ package me.idbi.hcf.Scoreboard;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.tools.*;
+import me.idbi.hcf.tools.HCF_Claiming;
+import me.idbi.hcf.tools.HCF_Timer;
+import me.idbi.hcf.tools.Misc_Timers;
 import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
+import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

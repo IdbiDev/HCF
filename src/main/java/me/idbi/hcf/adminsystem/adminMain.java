@@ -1,14 +1,18 @@
 package me.idbi.hcf.adminsystem;
 
-import me.idbi.hcf.Main;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.AdminScoreboard;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.*;
+import me.idbi.hcf.tools.AdminTools;
+import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Objects.FactionHistory;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
+import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
+import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -159,7 +163,7 @@ public class adminMain {
         SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(selectedFaction.id));
         SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(selectedFaction.id));
         SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(selectedFaction.id));
-        SQL_Connection.dbExecute(con, "UPDATE members SET rank='None',faction=0,factionname='None' WHERE faction='?'", String.valueOf(selectedFaction.id));
+        SQL_Connection.dbExecute(con, "UPDATE members SET rank='None',faction=0 WHERE faction='?'", String.valueOf(selectedFaction.id));
         for (Player player : playertools.getFactionOnlineMembers(selectedFaction)) {
             playertools.setMetadata(player, "faction", "None");
             playertools.setMetadata(player, "factionid", "0");

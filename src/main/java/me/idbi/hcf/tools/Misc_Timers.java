@@ -1,7 +1,6 @@
 package me.idbi.hcf.tools;
 
 
-import me.idbi.hcf.Bossbar.BarUtil;
 import me.idbi.hcf.Bossbar.BossbarTools;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.HCF_Rules;
@@ -215,9 +214,9 @@ public class Misc_Timers {
                     }
                 }
 
-                for (Player online : Bukkit.getOnlinePlayers()) {
-                    BarUtil.setBar(online, "Igen nem §cTe köcsög §cigen " + GLOBAL_TIME, 50);
-                }
+//                for (Player online : Bukkit.getOnlinePlayers()) {
+//                    BarUtil.setBar(online, "Igen nem §cTe köcsög §cigen " + GLOBAL_TIME, 50);
+//                }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }

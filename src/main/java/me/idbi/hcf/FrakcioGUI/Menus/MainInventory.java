@@ -5,7 +5,6 @@ import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

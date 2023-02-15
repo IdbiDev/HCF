@@ -4,10 +4,10 @@ package me.idbi.hcf;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import me.idbi.hcf.Bossbar.Bossbar;
-import me.idbi.hcf.CustomFiles.*;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.Configs.Config;
+import me.idbi.hcf.CustomFiles.KothRewardsFile;
 import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
@@ -78,8 +78,6 @@ public final class Main extends JavaPlugin implements Listener {
     public static HashMap<Integer, Long> DTR_REGEN = new HashMap<>();
     public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
     public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
-
-    public static HashMap<UUID, PlayerStatistic> playerStatistics = new HashMap<>();
     public static ArrayList<UUID> death_wait_clear = new ArrayList<>();
     public static ArrayList<String> availableLanguages = new ArrayList<>();
     //public static HashMap<Faction, Scoreboard> teams = new HashMap<>();
@@ -104,7 +102,8 @@ public final class Main extends JavaPlugin implements Listener {
     public static void SaveFactions() {
         for (Map.Entry<Integer, Faction> faction : faction_cache.entrySet()) {
             Faction f = faction.getValue();
-            SQL_Connection.dbExecute(con, "UPDATE factions SET money='?',name='?' WHERE ID = '?'", String.valueOf(f.balance), f.name, String.valueOf(f.id));
+            f.saveFactionData();
+            //SQL_Connection.dbExecute(con, "UPDATE factions SET money='?',name='?',Allies='?' WHERE ID = '?'", String.valueOf(f.balance), f.name,AlliesEntry, String.valueOf(f.id));
         }
     }
 
@@ -227,6 +226,7 @@ public final class Main extends JavaPlugin implements Listener {
         playertools.cacheFactionClaims();
         playertools.LoadRanks();
         playertools.prepareKoths();
+        playertools.cacheAll();
         new NameChanger(this);
         // Load online players
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
@@ -283,6 +283,11 @@ public final class Main extends JavaPlugin implements Listener {
         }
         if(max_members_pro_faction > maxMembersPerFaction){
             Main.sendCmdMessage(ChatColor.DARK_RED + "The maximum value that can be set is 14. A faction per member should not exceed this!");
+            Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
+            Bukkit.getServer().shutdown();
+        }
+        if(Bukkit.getWorld(Config.world_name.asStr()) == null){
+            Main.sendCmdMessage(ChatColor.DARK_RED + "World not found!");
             Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
             Bukkit.getServer().shutdown();
         }

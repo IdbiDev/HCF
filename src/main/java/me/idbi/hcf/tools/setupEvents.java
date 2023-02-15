@@ -86,7 +86,7 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new Spawn_Claim(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new Koth_Claim(), Main.getPlugin(Main.class));
 
-        getServer().getPluginManager().registerEvents(new PlacePVPTag(), Main.getPlugin(Main.class));
+        //getServer().getPluginManager().registerEvents(new PlacePVPTag(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new ProjectileDamage(), Main.getPlugin(Main.class));
 
         // Faction GUI

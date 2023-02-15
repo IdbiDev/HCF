@@ -20,38 +20,43 @@ public class Faction_Rank_Manager {
         MANAGE_KICK    // Can rename the faction
     }
     private static final Connection con = Main.getConnection("rankManagerNew");
-    public static Rank CreateRank(Faction faction, String name) {
-        for (Faction_Rank_Manager.Rank rank : faction.ranks)
-            if (rank.name.equalsIgnoreCase(name))
-                return null;
+    // public static Rank create(Faction faction, String name) {
+//        for (Faction_Rank_Manager.Rank rank : faction.ranks)
+//            if (rank.name.equalsIgnoreCase(name))
+//                return null;
+//
+//
+//        int id = SQL_Connection.dbSyncExec(con, "INSERT INTO ranks SET name = '?', faction='?'", name, String.valueOf(faction.id));
+//        Rank rank = new Rank(id, name);
+//        faction.ranks.add(rank);
+//
+//        rank.priority = -9999 + faction.ranks.size();
+//        rank.saveRank();
+//
+//        Scoreboards.RefreshAll();
+//        result.complete(rank);
+//
+//        return result;
+//    }
 
-
-        int id = SQL_Connection.dbExecute(con, "INSERT INTO ranks SET name = '?', faction='?'",
-                name,
-                String.valueOf(faction.id)
-        );
-        Rank rank = new Rank(id, name);
-        faction.ranks.add(rank);
-        rank.priority = -9999 + faction.ranks.size();
-        rank.saveRank();
-        Scoreboards.RefreshAll();
-        return rank;
-    }
-    public static Rank CreateRank(Player player, String name) {
+    public static Rank create(Player player, String name) {
         Faction faction = playertools.getPlayerFaction(player);
         assert faction != null;
         for (Faction_Rank_Manager.Rank rank : faction.ranks)
             if (rank.name.equalsIgnoreCase(name))
                 return null;
-        int id = SQL_Connection.dbExecute(con, "INSERT INTO ranks SET name = '?', faction='?'",
-                name,
-                String.valueOf(faction.id)
-        );
+
+        int id = playertools.getFreeRankId();
         Rank rank = new Rank(id, name);
         faction.ranks.add(rank);
+
         rank.priority = -9999 + faction.ranks.size();
         rank.saveRank();
+
         Scoreboards.RefreshAll();
+        Main.ranks.add(rank);
+        SQL_Connection.dbExecute(con, "INSERT INTO ranks SET name = '?', faction='?', ID='?'", name, String.valueOf(faction.id), String.valueOf(id));
+
         return rank;
     }
     public static boolean RenameRank(Faction faction,String oldName,String newName) {
@@ -69,10 +74,9 @@ public class Faction_Rank_Manager {
     }
     public static void DeleteRank(Faction faction, String name) {
         Rank rank = faction.FindRankByName(name);
-        for(Map.Entry<Player, Rank> entry : faction.player_ranks.entrySet()) {
-            if (entry.getValue().name.equals(rank.name)) {
-                playertools.setMetadata(entry.getKey(), "rank", faction.getDefaultRank().name);
-                entry.setValue(faction.getDefaultRank());
+        for(HCFPlayer hcfPlayer : faction.members) {
+            if (hcfPlayer.rank.name.equalsIgnoreCase(rank.name)) {
+                hcfPlayer.setRank(faction.getDefaultRank());
             }
         }
         SQL_Connection.dbExecute(con,"UPDATE members SET rank='?' WHERE faction='?' AND rank='?'",
@@ -80,15 +84,16 @@ public class Faction_Rank_Manager {
                 String.valueOf(faction.id),
                 name
         );
-        SQL_Connection.dbExecute(con,"DELETE FROM ranks WHERE ID = '?'", rank.id.toString());
+        SQL_Connection.dbExecute(con,"DELETE FROM ranks WHERE ID = '?'", String.valueOf(rank.id));
         faction.ranks.remove(rank);
+        Main.ranks.remove(rank);
         Scoreboards.RefreshAll();
     }
 
 
     public static class Rank {
         public String name;
-        private final Integer id;
+        public final int id;
         public boolean isDefault = false;
         public boolean isLeader = false;
         public int priority;
@@ -103,34 +108,34 @@ public class Faction_Rank_Manager {
         }
         private void loadPermissions() {
             try {
-                HashMap<String, Object> permissionmap = SQL_Connection.dbPoll(con, "SELECT * FROM ranks WHERE ID='?'", String.valueOf(id));
-                if( (Boolean) permissionmap.get("ALL_Permission"))
-                    class_permissions.put(Permissions.MANAGE_ALL,true);
+                AsyncSQL.dbPollAsync(con, "SELECT * FROM ranks WHERE ID='?'", String.valueOf(id)).thenAcceptAsync(permissionmap -> {
+                    if( (Boolean) permissionmap.get("ALL_Permission"))
+                        class_permissions.put(Permissions.MANAGE_ALL,true);
 
-                if((Boolean) permissionmap.get("MONEY_Permission"))
-                    class_permissions.put(Permissions.MANAGE_MONEY,true);
+                    if((Boolean) permissionmap.get("MONEY_Permission"))
+                        class_permissions.put(Permissions.MANAGE_MONEY,true);
 
-                if((Boolean) permissionmap.get("INVITE_Permission"))
-                    class_permissions.put(Permissions.MANAGE_INVITE,true);
+                    if((Boolean) permissionmap.get("INVITE_Permission"))
+                        class_permissions.put(Permissions.MANAGE_INVITE,true);
 
-                if((Boolean) permissionmap.get("RANK_Permission"))
-                    class_permissions.put(Permissions.MANAGE_RANKS,true);
+                    if((Boolean) permissionmap.get("RANK_Permission"))
+                        class_permissions.put(Permissions.MANAGE_RANKS,true);
 
-                if((Boolean) permissionmap.get("PLAYER_Permission"))
-                    class_permissions.put(Permissions.MANAGE_PLAYERS,true);
+                    if((Boolean) permissionmap.get("PLAYER_Permission"))
+                        class_permissions.put(Permissions.MANAGE_PLAYERS,true);
 
-                if((Boolean) permissionmap.get("KICK_Permission"))
-                    class_permissions.put(Permissions.MANAGE_KICK,true);
-                if((Boolean) permissionmap.get("isDefault")){
-                    isDefault = (Boolean) permissionmap.get("isDefault");
-                    priority = -9999;
-                }
-                if((Boolean) permissionmap.get("isLeader")){
-                    isLeader = (Boolean)  permissionmap.get("isLeader");
-                    priority = 9999;
-                }
-                priority = (int) permissionmap.get("priority");
-
+                    if((Boolean) permissionmap.get("KICK_Permission"))
+                        class_permissions.put(Permissions.MANAGE_KICK,true);
+                    if((Boolean) permissionmap.get("isDefault")){
+                        isDefault = (Boolean) permissionmap.get("isDefault");
+                        priority = -9999;
+                    }
+                    if((Boolean) permissionmap.get("isLeader")){
+                        isLeader = (Boolean)  permissionmap.get("isLeader");
+                        priority = 9999;
+                    }
+                    priority = (int) permissionmap.get("priority");
+                });
             } catch (Exception uwu) {
                 uwu.printStackTrace();
             }
@@ -159,15 +164,15 @@ public class Faction_Rank_Manager {
                             "priority='?'" +
                             "WHERE ID = '?'",
                     String.valueOf(this.name),
-                    (class_permissions.get(Permissions.MANAGE_ALL)) ? "1" : "0",
-                    (class_permissions.get(Permissions.MANAGE_MONEY)) ? "1" : "0",
-                    (class_permissions.get(Permissions.MANAGE_INVITE)) ? "1" : "0",
-                    (class_permissions.get(Permissions.MANAGE_RANKS)) ? "1" : "0",
-                    (class_permissions.get(Permissions.MANAGE_PLAYERS)) ? "1" : "0",
-                    (class_permissions.get(Permissions.MANAGE_KICK)) ? "1" : "0",
-                    (isDefault) ? "1" : "0",
-                    (isLeader) ? "1" : "0",
-                    String.valueOf(priority),
+                    (this.class_permissions.get(Permissions.MANAGE_ALL)) ? "1" : "0",
+                    (this.class_permissions.get(Permissions.MANAGE_MONEY)) ? "1" : "0",
+                    (this.class_permissions.get(Permissions.MANAGE_INVITE)) ? "1" : "0",
+                    (this.class_permissions.get(Permissions.MANAGE_RANKS)) ? "1" : "0",
+                    (this.class_permissions.get(Permissions.MANAGE_PLAYERS)) ? "1" : "0",
+                    (this.class_permissions.get(Permissions.MANAGE_KICK)) ? "1" : "0",
+                    (this.isDefault) ? "1" : "0",
+                    (this.isLeader) ? "1" : "0",
+                    String.valueOf(this.priority),
                     String.valueOf(this.id)
             );
         }

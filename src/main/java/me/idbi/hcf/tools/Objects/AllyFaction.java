@@ -10,7 +10,10 @@ import java.util.HashMap;
 
 
 public class AllyFaction {
-    private final Connection con = AllyTools.con;
+    private final Connection con = AllyCon.con;
+    /**
+     * Az a faction, akivel szövetkezett a super class.
+     */
     private final Faction AllyFaction;
     private final int thisid;
     private final HashMap<Permissions, Boolean> class_permissions = new HashMap<>();
@@ -20,35 +23,32 @@ public class AllyFaction {
         for(Permissions p : Permissions.values()){
             class_permissions.put(p,false);
         }
-        loadPermissions();
     }
+
+    /**
+     * Gets the current AllyFaction Id
+     * @return Integer Faction Id
+     */
+    public int getFactionId(){
+        return this.factionid;
+    }
+    /**
+     * Gets the current AllyFaction Class
+     * @return Faction (Faction Ally Object)
+     */
 
     public Faction getAllyFaction(){
         return this.AllyFaction;
     }
-    private void loadPermissions() {
-        try {
-            HashMap<String, Object> permissionmap = SQL_Connection.dbPoll(con, "SELECT * FROM allyfactions WHERE ID='?'", String.valueOf(thisid));
-            JSONObject perms = new JSONObject((String) permissionmap.get("permissions"));
-            for(Permissions name : Permissions.values()) {
-                class_permissions.put(name, (Boolean) perms.get(name.name()));
-            }
-        } catch (Exception uwu) {
-            uwu.printStackTrace();
-        }
+    public HashMap<Permissions, Boolean> getPermissions() {
+        return this.class_permissions;
     }
+
     public boolean hasPermission(Permissions perm) {
         return class_permissions.get(perm);
     }
     public void setPermission(Permissions perm, boolean state) {
         class_permissions.put(perm,state);
-        saveRank();
-    }
-    public void saveRank(){
-        SQL_Connection.dbExecute(con,"UPDATE allyfactions SET permissions = '?' WHERE ID = '?'",
-                new JSONObject(class_permissions).toString(),
-                String.valueOf(thisid)
-        );
     }
 }
 class AllyTools {
@@ -69,4 +69,8 @@ class AllyTools {
    Értesítés minden esetbe ha változás van
  */
 
+
+/*
+    Faction  -> Allies 1. ->permissions
+ */
 

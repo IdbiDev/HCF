@@ -17,8 +17,8 @@ public class ProjectileDamage implements Listener {
     public void ProjectileDamage(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Projectile projectile && e.getEntity() instanceof Player victim) {
             if (!(projectile.getShooter() instanceof Player damager)) return;
-            int damager_faction = Integer.parseInt(playertools.getMetadata(damager, "factionid"));
-            int victim_faction = Integer.parseInt(playertools.getMetadata(victim, "factionid"));
+            Faction damager_faction = playertools.getPlayerFaction(damager);
+            Faction victim_faction = playertools.getPlayerFaction(victim);
 
             if (isTeammate(damager,victim)) {
                 damager.sendMessage(Messages.teammate_damage.language(damager).queue());

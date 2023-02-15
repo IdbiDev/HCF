@@ -2,7 +2,8 @@ package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
-import me.idbi.hcf.FrakcioGUI.Menus.*;
+import me.idbi.hcf.FrakcioGUI.Menus.Alley_MainInventory;
+import me.idbi.hcf.FrakcioGUI.Menus.Ally_ManageAlly;
 import me.idbi.hcf.tools.Objects.AllyFaction;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;

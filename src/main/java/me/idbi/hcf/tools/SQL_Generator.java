@@ -18,19 +18,21 @@ public class SQL_Generator {
                       `endX` int(255) NOT NULL DEFAULT 0,
                       `endZ` int(255) NOT NULL DEFAULT 0,
                       `type` varchar(255) NOT NULL DEFAULT 'normal' COMMENT 'Types: normal;protected;koth;end;',
+                      `world` text NOT NULL DEFAULT 'world',
                       PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,
                 """
-                     CREATE TABLE IF NOT EXISTS `factions` (
+                    CREATE TABLE IF NOT EXISTS `factions` (
                       `ID` int(255) NOT NULL AUTO_INCREMENT,
                       `name` varchar(255) NOT NULL,
                       `money` bigint(255) NOT NULL DEFAULT 0,
                       `home` text CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT NULL,
                       `leader` text NOT NULL,
                       `statistics` longtext DEFAULT NULL,
+                      `Allies` longtext NOT NULL DEFAULT '{}',
                       PRIMARY KEY (`ID`)
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
                 """,
                 """
@@ -43,9 +45,8 @@ public class SQL_Generator {
                       `deaths` int(255) NOT NULL DEFAULT 0,
                       `money` int(255) NOT NULL DEFAULT 0,
                       `uuid` text DEFAULT NULL,
-                      `online` int(2) NOT NULL DEFAULT 0,
-                      `factionname` varchar(255) NOT NULL DEFAULT 'None',
-                      `statistics` longtext NOT NULL DEFAULT '\\'{"totalFactions":0,"lastLogin":0,"TimePlayed":0,"MoneySpend":0,"ClassTimes":{"Miner":0,"Archer":0,"Assassin":0,"Total":0,"Bard":0},"MoneyEarned":0,"FactionHistory":[],"startDate":0}\\'',
+                      `language` varchar(255) NOT NULL DEFAULT '%default_language%',
+                      `statistics` longtext NOT NULL DEFAULT '%player_statistics%',
                         PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -79,14 +80,14 @@ public class SQL_Generator {
 
 
                 """,
-                """
-                    CREATE TABLE IF NOT EXISTS `playerstatistics` (
-                      `ID` int(255) NOT NULL AUTO_INCREMENT,
-                      `uuid` varchar(255) NOT NULL,
-                      `statistics` text NOT NULL DEFAULT '{"totalFactions":0,"lastLogin":0,"TimePlayed":0,"MoneySpend":0,"ClassTimes":{"Miner":0,"Archer":0,"Assassin":0,"Total":0,"Bard":0},"MoneyEarned":0,"FactionHistory":[],"startDate":0}',
-                      PRIMARY KEY (`ID`)
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-                """,
+//                """
+//                    CREATE TABLE IF NOT EXISTS `playerstatistics` (
+//                      `ID` int(255) NOT NULL AUTO_INCREMENT,
+//                      `uuid` varchar(255) NOT NULL,
+//                      `statistics` text NOT NULL DEFAULT '{"totalFactions":0,"lastLogin":0,"TimePlayed":0,"MoneySpend":0,"ClassTimes":{"Miner":0,"Archer":0,"Assassin":0,"Total":0,"Bard":0},"MoneyEarned":0,"FactionHistory":[],"startDate":0}',
+//                      PRIMARY KEY (`ID`)
+//                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+//                """,
                 """
                 CREATE TABLE IF NOT EXISTS `logs` (
                   `ID` bigint(255) NOT NULL AUTO_INCREMENT,
@@ -106,7 +107,7 @@ public class SQL_Generator {
                 """
         };
         for (String data : tables) {
-            SQL_Connection.dbExecute(con, data);
+            SQL_Connection.dbSyncExec(con, data);
         }
     }
 

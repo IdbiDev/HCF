@@ -1,7 +1,6 @@
 package me.idbi.hcf.tools.Objects;
 
 import me.idbi.hcf.CustomFiles.Comments.Messages;
-import me.idbi.hcf.FrakcioGUI.Items.Ally_Items;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.*;
@@ -19,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static me.idbi.hcf.Main.max_allies_pro_faction;
@@ -41,10 +41,7 @@ public class Faction {
     public Location homeLocation;
 
     public ArrayList<Faction_Rank_Manager.Rank> ranks = new ArrayList<>();
-    public HashMap<Player, Faction_Rank_Manager.Rank> player_ranks = new HashMap<>();
-
-    public int memberCount;
-
+    public ArrayList<HCFPlayer> members = new ArrayList<>();
     //Statistics
     public ArrayList<HistoryEntrys.BalanceEntry> balanceHistory = new ArrayList<>();
     public ArrayList<HistoryEntrys.KickEntry> kickHistory = new ArrayList<>();
@@ -52,7 +49,7 @@ public class Faction {
     public ArrayList<HistoryEntrys.FactionJoinLeftEntry> factionjoinLeftHistory = new ArrayList<>();
     public ArrayList<HistoryEntrys.InviteEntry> inviteHistory = new ArrayList<>();
     public ArrayList<HistoryEntrys.RankEntry> rankCreateHistory = new ArrayList<>();
-    public ArrayList<AllyFaction> Allies = new ArrayList<>();
+    public HashMap<Integer,AllyFaction> Allies = new HashMap<>();
 
 
     public Faction(int id, String name, String leader, int balance) {
@@ -229,10 +226,11 @@ public class Faction {
         return main;
     }
     public void saveFactionData(){
-        SQL_Connection.dbExecute(con,"UPDATE factions SET name='?',money='?',leader='?',`statistics`='?' WHERE ID='?'", name, String.valueOf(balance),leader,assembleFactionHistory().toString(),String.valueOf(id));
+        String AlliesEntry = AllyTools.getAlliesJson(this);
+        SQL_Connection.dbExecute(con,"UPDATE factions SET name='?',money='?',leader='?',`statistics`='?',Allies='?' WHERE ID='?'", name, String.valueOf(balance),leader,assembleFactionHistory().toString(),AlliesEntry,String.valueOf(id));
     }
     public void invitePlayer(Player p) {
-        if(memberCount + 1 > max_members_pro_faction || invites.getInvitedPlayers().size()+1 > HCF_Rules.maxInvitesPerFaction ) {
+        if(getMemberCount() + 1 > max_members_pro_faction || invites.getInvitedPlayers().size()+1 > HCF_Rules.maxInvitesPerFaction ) {
             p.sendMessage(Messages.max_members_reached.language(p).queue());
             return;
         }
@@ -253,12 +251,12 @@ public class Faction {
     public boolean isFactionAllyInvited(Faction faction) {
         return allyinvites.isFactionInvited(faction);
     }
-    public boolean inviteFactionAlly(Faction ally) {
+    public void inviteFactionAlly(Faction ally) {
         if(Allies.size() + 1 > max_allies_pro_faction || allyinvites.getInvitedAllies().size()+1 > HCF_Rules.maxAlliesPerFaction ) {
-            return false;
+            return;
         }
         allyinvites.inviteFactionToAlly(ally);
-        return true;
+        Main.sendCmdMessage("Invite requested! Requester: " + this.name + " Receiver: " + ally.name);
     }
     public boolean resolveFactionAlly(Faction ally) {
         Allies.removeIf(allyFaction -> allyFaction.getAllyFaction().id == ally.id);
@@ -274,22 +272,18 @@ public class Faction {
             ex.printStackTrace();
         }
     }
-
     public HCF_Claiming.Faction_Claim getFactionClaim(Integer id) {
         return claims.get(id);
     }
 
-    public void ApplyPlayerRank(Player p, String name) {
+    public Faction_Rank_Manager.Rank getRank(String name) {
         for (Faction_Rank_Manager.Rank rank : ranks) {
-            if (Objects.equals(rank.name, name)) {
-                player_ranks.put(p, rank);
-                playertools.setMetadata(p, "rank", rank.name);
-                SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE uuid='?'", rank.name, p.getUniqueId().toString());
-                NameChanger.refresh(p);
-                break;
+            if (name.equalsIgnoreCase(rank.name)) {
+                return rank;
             }
         }
-        NameChanger.refresh(p);
+        //NameChanger.refresh(p);
+        return getDefaultRank();
     }
     public void ApplyPlayerRank(OfflinePlayer p, String name) {
         for (Faction_Rank_Manager.Rank rank : ranks) {
@@ -362,17 +356,8 @@ public class Faction {
 
     public int getKills(){
         int total = 0;
-        try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM members WHERE faction = ?");
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                total += rs.getInt("kills");
-
-            }
-        }catch (SQLException ignored) {
-
+        for(HCFPlayer members : this.members){
+            total += members.getKills();
         }
         return total;
     }
@@ -409,16 +394,38 @@ public class Faction {
             }else{
                 SQL_Connection.dbExecute(con,"DELETE FROM allyfactions WHERE ID='?'",String.valueOf(rs.getInt("ID")));
             }
+            this.Allies.put(id,allyFaction);
         }
 
     }
-    public boolean HaveAllyPermission(Faction faction,Permissions perm){
-        if(faction.claims.isEmpty()) return true;
-        if(faction.DTR <= 0) return true;
-       for(AllyFaction allyFaction : this.Allies){
+
+    public boolean HaveAllyPermission(Faction faction, Permissions perm){
+
+//        //if(faction == null) return true;
+//        if(faction.claims.isEmpty()) return true;
+//        if(this.Allies.size() == 0) return false;
+//        if(faction.DTR <= 0) return true;
+        if(faction == null) return true;
+       for(AllyFaction allyFaction : this.Allies.values()){
             return (allyFaction.getAllyFaction().id == faction.id) && allyFaction.hasPermission(perm);
        }
        return true;
     }
+    public boolean isAlly(Faction faction){
+        for(AllyFaction allyFaction : this.Allies.values()) {
+            if(allyFaction.getFactionId() == faction.id){
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public void selfDestruct() {
+        Main.faction_cache.remove(this.id);
+        Main.nameToFaction.remove(this.name);
+        SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(this.id));
+        SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(this.id));
+        SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(this.id));
+        SQL_Connection.dbExecute(con, "UPDATE members SET rank='None',faction=0 WHERE faction='?'", String.valueOf(this.id));
+    }
 }

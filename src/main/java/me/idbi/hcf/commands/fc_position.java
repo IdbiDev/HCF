@@ -22,11 +22,11 @@ public class fc_position implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(sender instanceof Player p){
-            if(playertools.getMetadata(p,"factionid").equals("0")){
+            if(playertools.getPlayerFaction(p) == null){
                 p.sendMessage(Messages.not_in_faction.language(p).queue());
                 return false;
             }
-            Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p,"factionid")));
+            Faction faction = playertools.getPlayerFaction(p);
            //faction.BroadcastFaction("&2"+p.getName()+" >> &o" +  convertLocation(p,p.getLocation()));
 
             for (Player member : faction.getMembers()) {

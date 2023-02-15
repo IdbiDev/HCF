@@ -5,11 +5,13 @@ import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.koth.GUI.KOTHItemManager;
-import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.HCF_Claiming;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -61,9 +63,9 @@ public class KOTH implements Listener {
     public static class koth_area {
         HCF_Claiming.Faction_Claim claim;
         public Faction faction;
-        public koth_area(Faction f, HCF_Claiming.Point start, HCF_Claiming.Point end){
+        public koth_area(Faction f, HCF_Claiming.Point start, HCF_Claiming.Point end, World world){
             faction = f;
-            claim = new HCF_Claiming.Faction_Claim(start.x,end.x,start.z,end.z,faction.id, HCF_Claiming.ClaimAttributes.KOTH);
+            claim = new HCF_Claiming.Faction_Claim(start.x,end.x,start.z,end.z,faction.id, HCF_Claiming.ClaimAttributes.KOTH,world.getName());
         }
     }
 

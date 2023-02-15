@@ -2,19 +2,8 @@ package me.idbi.hcf.CustomFiles.ConfigManagers;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 
 public class SimpleConfigManager {

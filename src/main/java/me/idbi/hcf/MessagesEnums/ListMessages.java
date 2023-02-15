@@ -3,11 +3,6 @@ package me.idbi.hcf.MessagesEnums;
 //import com.sun.xml.internal.stream.StaxErrorReporter;
 
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-
-import java.util.*;
-
 public enum ListMessages {
 
     /*FACTION_SHOW(Arrays.asList(

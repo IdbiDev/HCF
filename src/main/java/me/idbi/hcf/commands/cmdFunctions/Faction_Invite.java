@@ -1,10 +1,10 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
 import me.idbi.hcf.ClickableMessages.Clickable_Join;
-import me.idbi.hcf.Main;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
-import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
@@ -14,7 +14,7 @@ import java.util.Date;
 
 public class Faction_Invite {
     public static void InvitePlayerToFaction(Player p, String name) {
-        if (!playertools.getMetadata(p, "factionid").equalsIgnoreCase("0")) {
+        if (playertools.getPlayerFaction(p) != null) {
             if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_INVITE)) {
                 //Todo nincs jog
                 p.sendMessage(Messages.no_permission.language(p).queue());
@@ -22,8 +22,8 @@ public class Faction_Invite {
             }
             Player target = Bukkit.getPlayer(name);
             if (target != null) {
-                if (playertools.getMetadata(target, "factionid").equals("0")) {
-                    Faction faction = Main.faction_cache.get(Integer.valueOf(playertools.getMetadata(p, "factionid")));
+                if (playertools.getPlayerFaction(target) == null) {
+                    Faction faction = playertools.getPlayerFaction(p);
 
                     if (!faction.isPlayerInvited(target)) {
                         faction.invitePlayer(target);

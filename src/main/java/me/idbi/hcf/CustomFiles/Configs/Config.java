@@ -4,18 +4,17 @@ import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
 import org.bukkit.ChatColor;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public enum Config {
 
     default_language("Language", "en", createComment("Sets the deafult language to the players")),
-    host("Database", "localhost"),
+    host("Database", "na04-sql.pebblehost.com"),
     port("Database", "3306"),
-    database("Database", "hcf+"),
-    username("Database", "root"),
-    password("Database", ""),
+    database("Database", "customer_429941_buildffa"),
+    username("Database", "customer_429941_buildffa"),
+    password("Database", "N9QPK3U#-fdnXIkDay1h"),
     enderpearl("Cooldowns", 10, createComment("Sets the enderpearl cooldown after thrown.", "Must be in seconds")),
     pvp("Cooldowns", 30, createComment("This will be set if after joining, or respawning.", "Must be in seconds")),
     combattag("Cooldowns", 30, createComment("This will be set if you are hitted", "Must be in seconds")),

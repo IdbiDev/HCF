@@ -2,7 +2,8 @@ package me.idbi.hcf.commands;
 
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.commands.cmdFunctions.Faction_Create;
+import me.idbi.hcf.commands.allyCommands.ally_Accept;
+import me.idbi.hcf.commands.allyCommands.ally_Invite;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,7 +24,7 @@ public class ally implements CommandExecutor, TabCompleter {
                 switch (args[0].toLowerCase()) {
                     case "request":
                         try {
-
+                            ally_Invite.InvitePlayerToFaction(p,args[1]);
                         } catch (IndexOutOfBoundsException ignored) {
                             p.sendMessage(Messages.missing_argument.language(p).queue());
                             //Kiíratás hogy balfaszul használta a commandot
@@ -35,6 +36,7 @@ public class ally implements CommandExecutor, TabCompleter {
                     case "accept":
                         try {
                             //TODO:ACCEPT
+                            ally_Accept.AcceptAlly(p, args[1]);
                         } catch (IndexOutOfBoundsException ignored) {
                             p.sendMessage(Messages.missing_argument.language(p).queue());
                             //Kiíratás hogy balfaszul használta a commandot

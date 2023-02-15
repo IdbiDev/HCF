@@ -2,9 +2,11 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.classes.Classes;
 import me.idbi.hcf.classes.subClasses.Miner;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.SpawnShield;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Location;
@@ -14,12 +16,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import static me.idbi.hcf.tools.HCF_Timer.checkCombatTimer;
-import static me.idbi.hcf.tools.playertools.getRealMetadata;
 
 public class onPlayerMove implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
+        HCFPlayer player = HCFPlayer.getPlayer(p); // nincsen tabomxd
         if (e.getFrom().getBlockX() != e.getTo().getBlockX()
                 || e.getFrom().getBlockY() != e.getTo().getBlockY()
                 || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
@@ -39,22 +41,46 @@ public class onPlayerMove implements Listener {
                     e.getPlayer().sendMessage(Messages.cant_teleport_to_safezone.language(p).queue());
                 }
             }
-            String c = HCF_Claiming.sendFactionTerritory(e.getPlayer());
-            if (!(playertools.getMetadata(e.getPlayer(), "current_loc").equalsIgnoreCase(c))) {
-                e.getPlayer().sendMessage(Messages.leave_zone.language(p).setZone(playertools.getMetadata(e.getPlayer(), "current_loc")).queue());
-                e.getPlayer().sendMessage(Messages.entered_zone.language(p).setZone(c).queue());
-                playertools.setMetadata(e.getPlayer(), "current_loc", c);
+
+            HCF_Claiming.Faction_Claim c = HCF_Claiming.getPlayerArea(e.getPlayer());
+            if (player.currentArea != c) {
+
+                String wilderness = Messages.wilderness.language(p).queue();
+                Messages leaveZone = Messages.leave_zone.language(p);
+                Messages enteredZone = Messages.entered_zone.language(p);
+
+                Messages enemy = Messages.zone_enemy.language(p);
+                Messages friendly = Messages.zone_friendly.language(p);
+
+                e.getPlayer().sendMessage(leaveZone.setZone(player.getLocationFormatted()).queue());
+
+                if(c == null) {
+                    e.getPlayer().sendMessage(enteredZone.language(p).setZone(wilderness).queue());
+                } else {
+                    boolean zoneIsFriendly = c.faction == player.faction;
+                    if(!zoneIsFriendly) {
+                        zoneIsFriendly = c.faction.isAlly(player.faction);
+                    }
+                    if(zoneIsFriendly) {
+                        e.getPlayer().sendMessage(enteredZone.setZone(friendly.setZone(c.faction.name).queue()).queue());
+                    } else {
+                        e.getPlayer().sendMessage(enteredZone.setZone(enemy.setZone(c.faction.name).queue()).queue());
+                    }
+                }
+                player.setLocation(c);
                 Scoreboards.refresh(e.getPlayer());
+            } else {
+
             }
-            if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("miner")) {
+            if (player.playerClass == Classes.MINER) {
                 Miner.setInvisMode(e.getPlayer(), e.getTo().getY() <= Miner.min_y_value);
             }
         }
-        if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "freeze"))) {
+        if (player.freezeStatus) {
             e.setCancelled(true);
         }
         if (HCF_Timer.checkStuckTimer(e.getPlayer())) {
-            if (e.getTo().distance((Location) getRealMetadata(e.getPlayer(), "stuck_loc")) > 4) {
+            if (e.getTo().distance(player.stuckLocation) > 4) {
                 HCF_Timer.stuckTimers.remove(e.getPlayer().getUniqueId());
                 e.getPlayer().sendMessage(Messages.stuck_finished.language(p).queue());
             }

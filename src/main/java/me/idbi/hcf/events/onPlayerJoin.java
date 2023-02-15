@@ -60,7 +60,8 @@ public class onPlayerJoin implements Listener {
             AdminTools.InvisibleManager.hidePlayer(admins);
         }
 
-        if (!Objects.equals(playertools.getMetadata(p, "factionid"), "0")) {
+
+        if (hcf.inFaction()) { // írjad csöves
             Faction f = playertools.getPlayerFaction(e.getPlayer());
             if(f != null) {
                 for (Player member : f.getMembers()) {
@@ -87,7 +88,7 @@ public class onPlayerJoin implements Listener {
                 }
             }
         }
-        PlayerStatistic statistic = Main.playerStatistics.get(e.getPlayer());
+        PlayerStatistic statistic = hcf.playerStatistic;
         p.sendMessage("Started:"+new Date(statistic.startDate));
         p.sendMessage("Last Login:"+new Date(statistic.lastLogin));
         p.sendMessage("Time Played"+(statistic.TimePlayed/1000)/60);

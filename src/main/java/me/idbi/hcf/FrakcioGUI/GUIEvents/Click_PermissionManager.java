@@ -2,8 +2,8 @@ package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.RP_Items;
-import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;

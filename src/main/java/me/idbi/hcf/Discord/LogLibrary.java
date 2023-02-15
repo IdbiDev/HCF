@@ -1,7 +1,6 @@
 package me.idbi.hcf.Discord;
 
 import club.minnced.discord.webhook.WebhookClientBuilder;
-import org.bukkit.entity.Player;
 
 public class LogLibrary {
 

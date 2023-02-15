@@ -2,8 +2,9 @@ package me.idbi.hcf.FrakcioGUI.Menus;
 
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
@@ -62,7 +63,7 @@ public class PlayerRankManagerInventory {
 
         Faction faction = playertools.getPlayerFaction(p);
         for(Map.Entry<Integer, Faction_Rank_Manager.Rank> rank : playertools.sortByPriority(playertools.getPlayerFaction(p)).entrySet()) {
-            if(faction.player_ranks.get(p).name.equalsIgnoreCase(rank.getValue().name)) {
+            if(hcfPlayer.rank.name.equalsIgnoreCase(rank.getValue().name)) { // what is this gondolkodom rajta én isxyd?
                 inv.addItem(rank(rank.getValue().name, true));
                 continue;
             }

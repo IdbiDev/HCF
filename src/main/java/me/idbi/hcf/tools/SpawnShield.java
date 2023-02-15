@@ -20,14 +20,13 @@ public class SpawnShield {
         Faction player_faction = playertools.getPlayerFaction(p);
         for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {
             for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().claims) {
+                if (!p.getWorld().getName().equalsIgnoreCase(claim.world.getName())) continue;
                 boolean kellfal = false;
                 //true              //    true - > NINCS
                 if ((pvpCooldown(p) && !claim.attribute.equals(HCF_Claiming.ClaimAttributes.PROTECTED))) {
                     kellfal = true;
-                    Main.sendCmdMessage("PVP TIMER");
                 }
-                else if ((Main.SOTW_ENABLED && (claim.attribute.equals(HCF_Claiming.ClaimAttributes.NORMAL) && claim.faction != (player_faction != null ? player_faction.id : 0)))) {
-                    Main.sendCmdMessage("SOTW");
+                else if ((Main.SOTW_ENABLED && (claim.attribute.equals(HCF_Claiming.ClaimAttributes.NORMAL) && claim.faction.id != (player_faction != null ? player_faction.id : 0)))) {
                     kellfal = true;
                 }
                 else if ((HCF_Timer.getCombatTime(p) != 0 && claim.attribute.equals(HCF_Claiming.ClaimAttributes.PROTECTED))) {
@@ -103,7 +102,8 @@ public class SpawnShield {
 
 
 
-    public static void placeWall(Player p,Location loc,String side,HCF_Claiming.Faction_Claim claim){
+    public static void placeWall(Player p,Location loc,String side,HCF_Claiming.Faction_Claim claim) {
+
         if(side.equals("x")){
             for(int x= -5;x<=5;x++){
                 for(int y=-5;y<=5;y++){

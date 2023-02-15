@@ -1,11 +1,12 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.AsyncSQL;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Objects.FactionHistory;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.SQL_Connection;
@@ -22,7 +23,7 @@ public class Faction_Create {
     public static Connection con = Main.getConnection("cmd.FactionCreate");
 
     public static void CreateFaction(Player p, String name) {
-        if (playertools.getMetadata(p, "factionid").equalsIgnoreCase("0")) {
+        if (playertools.getPlayerFaction(p) == null) {
             if (!isFactionNameTaken(name)) {
                 for(String blacklisted_word : Main.blacklistedRankNames){
                     if(name.toLowerCase().contains(blacklisted_word.toLowerCase())){
@@ -32,53 +33,56 @@ public class Faction_Create {
                     }
                 }
                 //Create Faction
-                int x = SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?', leader='?'", name, p.getUniqueId().toString());
+                int x = playertools.getFreeFactionId();
+                SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?', leader='?',ID = '?'", name, p.getUniqueId().toString(), String.valueOf(x));
                 Faction faction = new Faction(x, name, p.getUniqueId().toString(), 0);
-                //
-                playertools.setMetadata(p, "faction", name);
-                playertools.setMetadata(p, "factionid", x);
+                    //
 
                 Main.faction_cache.put(x, faction);
-                Main.factionToname.put(x, faction.name);
                 Main.nameToFaction.put(faction.name, faction);
 
-                Faction_Rank_Manager.Rank default_rank = Faction_Rank_Manager.CreateRank(faction, "Default");
-                Faction_Rank_Manager.Rank leader_rank = Faction_Rank_Manager.CreateRank(faction, "Leader");
-                assert default_rank != null;
-                assert leader_rank != null;
-                default_rank.isDefault = true;
-                leader_rank.isLeader = true;
-                default_rank.priority   = -9999;
-                leader_rank.priority    =  9999;
-                leader_rank.saveRank();
-                default_rank.saveRank();
-                faction.ApplyPlayerRank(p, leader_rank.name);
+                HCFPlayer hcf = HCFPlayer.getPlayer(p);
+                hcf.setFaction(faction);
 
-                SQL_Connection.dbExecute(con, "UPDATE members SET faction = ?,factionname='?',rank='?' WHERE uuid = '?'", String.valueOf(x), name, "Leader", p.getUniqueId().toString());
+                Faction_Rank_Manager.Rank defaultRank = Faction_Rank_Manager.create(p, "Default");
+                assert defaultRank != null;
+                defaultRank.isDefault = true;
+                defaultRank.priority   = -9999;
+                //defaultRank.saveRank();
+                Faction_Rank_Manager.Rank leaderRank = Faction_Rank_Manager.create(p, "Leader");
+                assert leaderRank != null;
+                leaderRank.isLeader   = true;
+                leaderRank.priority    =  9999;
+                hcf.setRank(leaderRank);
+                //leaderRank.saveRank();
 
-                // Kiíratás global chatre ->
-                //                              xy faction létre jött
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    onlinePlayer.sendMessage(Messages.faction_creation.language(onlinePlayer).setFaction(name).setPlayer(p).queue());
-                }
 
-                // displayTeams.createTeam(faction);
-                // displayTeams.addPlayerToTeam(p);
-                //faction.addPrefixPlayer(p);
+                    SQL_Connection.dbExecute(con, "UPDATE members SET faction = ?,rank='?' WHERE uuid = '?'", String.valueOf(x), "Leader", p.getUniqueId().toString());
 
-                Scoreboards.refresh(p);
-                // LogLibrary.sendFactionCreate(p, faction.name);
-                faction.refreshDTR();
-                GUI_Sound.playSound(p,"success");
-                PlayerStatistic stat = Main.playerStatistics.get(p.getUniqueId());
-                stat.factionHistory.add(0, new FactionHistory(new Date().getTime(),0L,"",faction.name, leader_rank.name,faction.id));
-                Main.playerStatistics.put(p.getUniqueId(),stat);
-                //HashMap<String, Object> factionMap = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID='?'", String.valueOf(faction.id));
-                faction.loadFactionHistory(faction.assembleFactionHistory());
-                faction.saveFactionData();
-                faction.DTR = faction.DTR_MAX;
-                faction.memberCount++;
-                NameChanger.refresh(p);
+                    // Kiíratás global chatre ->
+                    //                              xy faction létre jött
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        onlinePlayer.sendMessage(Messages.faction_creation.language(onlinePlayer).setFaction(name).setPlayer(p).queue());
+                    }
+
+                    // displayTeams.createTeam(faction);
+                    // displayTeams.addPlayerToTeam(p);
+                    //faction.addPrefixPlayer(p);
+
+                    Scoreboards.refresh(p);
+                    // LogLibrary.sendFactionCreate(p, faction.name);
+                    faction.members.add(hcf);
+                    faction.refreshDTR();
+                    GUI_Sound.playSound(p,"success");
+                    PlayerStatistic stat = hcf.playerStatistic;
+                    stat.factionHistory.add(0, new FactionHistory(new Date().getTime(),0L,"", faction.name, "Leader", faction.id));
+
+                    //HashMap<String, Object> factionMap = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID='?'", String.valueOf(faction.id));
+                    faction.loadFactionHistory(faction.assembleFactionHistory());
+                    faction.saveFactionData();
+                    faction.DTR = faction.DTR_MAX;
+                    NameChanger.refresh(p);
+
             } else {
                 p.sendMessage(Messages.exists_faction_name.language(p).queue());
                 GUI_Sound.playSound(p,"error");

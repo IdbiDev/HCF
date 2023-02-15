@@ -55,6 +55,10 @@ public enum Messages {
 
     already_invited_ally("%prefix% &cThis faction is already invited to your ally."),
     not_invited_ally("%prefix% &cThis faction didnt invited you to their ally."),
+    //
+    faction_invited_ally("%prefix% &2&o%faction_name% &awas invited to join this faction ally."),
+    joined_ally("%prefix% &2&o%faction_name% &anow is your ally!"),
+
     // Commands
     faction_creation("%prefix% &2&o%faction_name% &awas created by &2&o%player%&a!"),
     faction_disband("%prefix% &2&o%faction_name% &awas disbanded by &2&o%player%&a!"),
@@ -67,6 +71,7 @@ public enum Messages {
     faction_claim_overlap("%prefix% &cYour claim can't overlap an existing claim!"),
     faction_claim_too_small("%prefix% &cyour claim is too small! (Min size: 4x4)"),
     faction_claim_overlap_plus_one("%prefix% &cYour claim can't overlap an existing claim! Leave a block between the two claims"),
+
 
     // Commands - invite
     invited_by("%prefix% &6&o%executor% &einvited you to join &6&o%faction_name%&e!"),
@@ -237,6 +242,7 @@ public enum Messages {
 
     // Hover things
     hover_join("&7Click here to join!"),
+    hover_accept("&7Click here to accept!"),
 
     // Staff messages
     staff_chat("&8[&eStaffChat&8] &b%player%&7: &e%message%"),
@@ -685,6 +691,12 @@ public enum Messages {
         if(this.isString())
             this.playerMessage = this.playerMessage.replaceAll("%player%", p.getName());
         else replaceList("%player%", p.getName());
+        return this;
+    }
+    public Messages setPlayer(HCFPlayer p) {
+        if(this.isString())
+            this.playerMessage = this.playerMessage.replaceAll("%player%", p.name);
+        else replaceList("%player%", p.name);
         return this;
     }
 

@@ -1,12 +1,12 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.PM_Items;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
 import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.PlayerRankManagerInventory;
-import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;

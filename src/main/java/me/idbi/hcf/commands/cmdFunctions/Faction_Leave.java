@@ -1,10 +1,11 @@
 package me.idbi.hcf.commands.cmdFunctions;
 
-import me.idbi.hcf.Main;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Objects.FactionHistory;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
@@ -20,16 +21,19 @@ public class Faction_Leave {
     private static final Connection con = Main.getConnection("command.factions");
 
     public static void leave_faction(Player player) {
-        if (!playertools.getMetadata(player, "factionid").equals("0")) {
-            if (!Objects.equals(Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(player, "factionid"))).leader, player.getUniqueId().toString())) {
+        if (playertools.getPlayerFaction(player) != null) {
 
-                SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?',factionname='?' WHERE uuid = '?'", "None","0", "None", player.getUniqueId().toString());
-                // Koba moment :3
+            Faction f = playertools.getPlayerFaction(player);
+            if (!Objects.equals(f.leader, player.getUniqueId().toString())) {
+
+                SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?' WHERE uuid = '?'", "None","0", player.getUniqueId().toString());
+
                 player.sendMessage(Messages.leave_message.language(player).queue());
-                Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(player, "factionid")));
-                playertools.setMetadata(player, "faction", "None");
-                playertools.setMetadata(player, "factionid", "0");
-                playertools.setMetadata(player, "rank", "None");
+
+                HCFPlayer hcf = HCFPlayer.getPlayer(player);
+                final String rankForLejjebb = hcf.rank.name;
+
+                hcf.removeFaction();
 
 //                displayTeams.removePlayerFromTeam(player);
 //                displayTeams.addToNonFaction(player);

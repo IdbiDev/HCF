@@ -49,8 +49,8 @@ public class faction implements CommandExecutor, TabCompleter {
                             Faction_Show.show(p, playertools.getMetadata(p, "faction"));
                             return false;
                         } else if (args.length == 2) {
+                            Faction arg1Faction = playertools.getFactionByName(args[1]);
                             if (Bukkit.getPlayer(args[1]) != null) {
-                                args[1] = Main.factionToname.get(Integer.parseInt(playertools.getMetadata(Bukkit.getPlayer(args[1]), "factionid")));
                                 if (args[1] != null) {
                                     Faction_Show.show(p, args[1]);
                                     playertools.getPlayerFaction(p).DTR--;

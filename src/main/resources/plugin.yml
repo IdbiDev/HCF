@@ -31,6 +31,8 @@ commands:
   setuplogs:
   customtimer:
     aliases: [ ct, customt, ctimer ]
+  ally:
+    description: HCF+ ally functions
 
 permissions:
   factions.reload:

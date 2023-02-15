@@ -17,6 +17,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.Objects;
+
 import static me.idbi.hcf.classes.subClasses.Assassin.TeleportBehindPlayer;
 
 
@@ -39,35 +41,33 @@ public class onPlayerInteract implements Listener {
             Block block = e.getClickedBlock();
             Faction f = playertools.getPlayerFaction(p);
             HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(block.getX(),block.getZ());
-            Faction baszogatottFaction;
-            if(claim != null){
-                baszogatottFaction = Main.faction_cache.get(claim.faction);
-            }else{
-                baszogatottFaction = Main.faction_cache.get(1);
+            if(claim == null) {
+                return;
             }
-            boolean shouldCancel = false;
-            if(Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
-                shouldCancel = false;
+            if(claim.faction == null) {
+                Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
+                Bukkit.getPluginManager().disablePlugin(Main.getPlugin(Main.class));
             }
-            if(HCF_Claiming.checkEnemyClaimAction(block.getX(),block.getZ(), f)) {
-                shouldCancel = true;
-            }
-            if(f.HaveAllyPermission(baszogatottFaction, Permissions.USEBLOCK)){
-                shouldCancel = false;
-            }
-            if (shouldCancel) {
+            Faction baszogatottFaction = claim.faction;
+           //if(Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
+//                shouldCancel = false;
+//            }
+//
+            Faction f = playertools.getPlayerFaction(p);
+            if(f == null) return;
+            if (HCF_Claiming.checkEnemyClaimAction(block.getX(),block.getZ(), f) && !Objects.requireNonNull(f).HaveAllyPermission(baszogatottFaction, Permissions.USEBLOCK)) {
                 if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType())) {
                     e.setCancelled(true);
                     p.sendMessage(Messages.no_permission.language(p).queue());
                 }
-            }else{
+            }/*else{
                 if (HCF_Rules.usableBlacklist.contains(e.getClickedBlock().getType())) {
-                    if(!f.HaveAllyPermission(baszogatottFaction, Permissions.VIEWITEMS)){
+                    if(!Objects.requireNonNull(f).HaveAllyPermission(baszogatottFaction, Permissions.VIEWITEMS)){
                         e.setCancelled(true);
                         p.sendMessage(Messages.no_permission.language(p).queue());
                     }
                 }
-            }
+            }*/
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             if (e.getItem() != null) {

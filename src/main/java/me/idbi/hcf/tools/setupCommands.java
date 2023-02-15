@@ -13,5 +13,6 @@ public class setupCommands {
         m.getCommand("koth").setExecutor(new koth());
         m.getCommand("setuplogs").setExecutor(new Command_test());
         m.getCommand("customtimer").setExecutor(new Command_customtimer());
+        m.getCommand("ally").setExecutor(new ally());
     }
 }

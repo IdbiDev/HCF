@@ -2,6 +2,8 @@ package me.idbi.hcf.commands.cmdFunctions;
 
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.HCF_Claiming;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,7 +16,8 @@ import java.util.List;
 public class Faction_Claim {
 
     public static boolean PrepareClaiming(Player p) {
-        if (!playertools.getMetadata(p, "factionid").equals("0")) {
+        HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
+        if (playertools.getPlayerFaction(p) != null) {
             if (!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_ALL)) {
                 p.sendMessage(Messages.no_permission.language(p).queue());
                 return false;
@@ -34,7 +37,7 @@ public class Faction_Claim {
                 p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
 
                 //ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
-                playertools.setMetadata(p, "spawnclaiming", false);
+                hcfPlayer.claimType = HCF_Claiming.ClaimTypes.FACTION;
                 return true;
             } else {
                 p.sendMessage(Messages.not_enough_slot.language(p).queue());

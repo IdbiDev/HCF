@@ -6,7 +6,7 @@ import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.Alley_MainInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.Alley_ManageRequests;
 import me.idbi.hcf.FrakcioGUI.Menus.Ally_AllyListInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
+import me.idbi.hcf.FrakcioGUI.Menus.Ally_ManageAlly;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -1,6 +1,7 @@
 package me.idbi.hcf.MessagesEnums.SignShop;
 
 import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -44,8 +45,9 @@ CreateShopSign implements Listener {
         String line0 = e.getLine(0);
 
         if (line0 != null) {
+            HCFPlayer hcfPlayer = HCFPlayer.getPlayer(e.getPlayer());
             if (line0.equalsIgnoreCase("[buy]")) {
-                if (!Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "adminDuty"))) {
+                if (!hcfPlayer.inDuty) {
                     e.getPlayer().sendMessage(Messages.no_permission.language(e.getPlayer()).queue());
                     return;
                 }
@@ -68,7 +70,7 @@ CreateShopSign implements Listener {
                 e.setLine(0, "§a[Buy]");
             }
             if (line0.equalsIgnoreCase("[sell]")) {
-                if (!Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "adminDuty"))) {
+                if (!hcfPlayer.inDuty) {
                     e.getPlayer().sendMessage(Messages.no_permission.language(e.getPlayer()).queue());
                     return;
                 }

@@ -1,7 +1,8 @@
 package me.idbi.hcf.classes.subClasses;
 
-import me.idbi.hcf.Main;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.Main;
+import me.idbi.hcf.classes.Classes;
 import me.idbi.hcf.classes.HCF_Class;
 import me.idbi.hcf.particles.Shapes;
 import me.idbi.hcf.tools.HCF_Timer;

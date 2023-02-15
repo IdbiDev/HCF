@@ -1,6 +1,7 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.AnvilGUI.AnvilItems;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RM_Items;
@@ -9,9 +10,8 @@ import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankManagerInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankPriorityInventory;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.CustomFiles.Comments.Messages;
-import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
+import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.ChatColor;

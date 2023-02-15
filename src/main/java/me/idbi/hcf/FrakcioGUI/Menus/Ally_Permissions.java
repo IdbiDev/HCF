@@ -3,7 +3,6 @@ package me.idbi.hcf.FrakcioGUI.Menus;
 import me.idbi.hcf.FrakcioGUI.Items.Ally_Items;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Items.RP_Items;
-import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.Objects.AllyFaction;
 import me.idbi.hcf.tools.Objects.Permissions;
 import org.bukkit.Bukkit;
