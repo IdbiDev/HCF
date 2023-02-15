@@ -47,19 +47,16 @@ public class onDeath implements Listener {
                     member.sendMessage(Messages.kill_message_faction.language(member).setDeath(victim,damager).queue());
                 }
             }
-            playertools.setMetadata(damager,"kills",Integer.parseInt(playertools.getMetadata(damager,"kills"))+1);
-            playertools.setMetadata(victim,"deaths",Integer.parseInt(playertools.getMetadata(victim,"deaths")+1));
-            PlayerStatistic cica = Main.playerStatistics.get(damager.getUniqueId());
-            cica.kills++;
-            Main.playerStatistics.put(damager.getUniqueId(),cica);
-            cica = Main.playerStatistics.get(victim.getUniqueId());
-            cica.deaths++;
-            Main.playerStatistics.put(victim.getUniqueId(),cica);
+            HCFPlayer hcfDamager = HCFPlayer.getPlayer(damager);
+            HCFPlayer hcfVictim = HCFPlayer.getPlayer(victim);
 
-            SQL_Connection.dbExecute(con,"UPDATE members SET kills=kills+1 WHERE uuid='?'",damager.getUniqueId().toString());
-           SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString());
+            hcfDamager.addKills();
+            hcfVictim.addDeaths();
+
+            //SQL_Connection.dbExecute(con,"UPDATE members SET kills=kills+1 WHERE uuid='?'",damager.getUniqueId().toString());
+           //SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString());
         } else {
-            SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString());
+            //SQL_Connection.dbExecute(con,"UPDATE members SET deaths=deaths+1 WHERE uuid='?'",victim.getUniqueId().toString());
 
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.sendMessage(Messages.kill_message_broadcast_without_victim.language(player).setDeathWithoutKiller(victim).queue());

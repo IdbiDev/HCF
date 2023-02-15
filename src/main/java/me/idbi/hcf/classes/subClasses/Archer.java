@@ -1,6 +1,8 @@
 package me.idbi.hcf.classes.subClasses;
 
+import me.idbi.hcf.classes.Classes;
 import me.idbi.hcf.classes.HCF_Class;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -49,7 +51,8 @@ public class Archer implements HCF_Class {
         for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
             addEffect(p,potionEffectTypeIntegerEntry.getKey(),potionEffectTypeIntegerEntry.getValue());
         }
-        playertools.setMetadata(p, "class", "Archer");
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
+        hcf.setClass(Classes.ARCHER);
     }
 
     @Override
@@ -63,7 +66,8 @@ public class Archer implements HCF_Class {
         for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
             p.removePotionEffect(potionEffectTypeIntegerEntry.getKey());
         }
-        playertools.setMetadata(p, "class", "None");
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
+        hcf.setClass(Classes.NONE);
     }
     
 }

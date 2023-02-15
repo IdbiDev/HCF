@@ -1,6 +1,8 @@
 package me.idbi.hcf.FrakcioGUI.Items;
 
+import me.idbi.hcf.CustomFiles.GUIMessages.GUIMessages;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -8,62 +10,47 @@ import java.util.Arrays;
 
 public class RM_Items {
 
-    public static ItemStack rank(String name) {
+    public static ItemStack rank(Player p, String name) {
         ItemStack is = new ItemStack(Material.PAPER);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§e" + name);
-        im.setLore(Arrays.asList(
-                "§5",
-                "§7Click here to manage rank!"
-        ));
+        im.setDisplayName(GUIMessages.manage_rank.language(p).setRank(name).getName());
+        im.setLore(GUIMessages.manage_rank.language(p).setRank(name).getLore());
         is.setItemMeta(im);
         return is;
     }
 
-    public static ItemStack create() {
+    public static ItemStack create(Player p) {
         ItemStack is = new ItemStack(Material.CHEST);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§aCreate a New Rank");
-        im.setLore(Arrays.asList(
-                "§5",
-                "§7Click here to create a rank!"
-        ));
+        im.setDisplayName(GUIMessages.create_rank.language(p).getName());
+        im.setLore(GUIMessages.create_rank.language(p).getLore());
         is.setItemMeta(im);
         return is;
     }
 
-    public static ItemStack rename() {
+    public static ItemStack rename(Player p) {
         ItemStack is = new ItemStack(Material.NAME_TAG);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§eRename Rank");
-        im.setLore(Arrays.asList(
-                "§5",
-                "§7Click here to rename rank!"
-        ));
+        im.setDisplayName(GUIMessages.rename_rank.language(p).getName());
+        im.setLore(GUIMessages.rename_rank.language(p).getLore());
         is.setItemMeta(im);
         return is;
     }
 
-    public static ItemStack permissionManager() {
+    public static ItemStack permissionManager(Player p) {
         ItemStack is = new ItemStack(Material.SLIME_BALL);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§ePermission Manager");
-        im.setLore(Arrays.asList(
-                "§5",
-                "§7Click here to manage permissions!"
-        ));
+        im.setDisplayName(GUIMessages.rank_permission_manager.language(p).getName());
+        im.setLore(GUIMessages.rank_permission_manager.language(p).getLore());
         is.setItemMeta(im);
         return is;
     }
 
-    public static ItemStack deleteRank() {
+    public static ItemStack deleteRank(Player p) {
         ItemStack is = new ItemStack(Material.LAVA_BUCKET);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§cDelete Rank");
-        im.setLore(Arrays.asList(
-                "§5",
-                "§7Click here to delete rank!"
-        ));
+        im.setDisplayName(GUIMessages.delete_rank.language(p).getName());
+        im.setLore(GUIMessages.delete_rank.language(p).getLore());
         is.setItemMeta(im);
         return is;
     }

@@ -8,6 +8,7 @@ import me.idbi.hcf.tools.AsyncSQL;
 import me.idbi.hcf.tools.Faction_Rank_Manager;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.Objects.FactionHistory;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.SQL_Connection;
 import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
@@ -95,7 +96,6 @@ public class Faction_Create {
     }
 
     public static boolean isFactionNameTaken(String name) {
-        HashMap<String, Object> factionMap = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE name='?'", name);
-        return (factionMap.size() > 0);
+        return Main.nameToFaction.containsKey(name);
     }
 }

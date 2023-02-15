@@ -5,6 +5,7 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.classes.subClasses.Archer;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +21,8 @@ public class onDamage implements Listener {
     public void onDamage(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player damager && e.getEntity() instanceof Player victim) {
             // Check Friendly Fire
-            if (Boolean.parseBoolean(playertools.getMetadata(damager, "adminDuty"))) {
+            HCFPlayer player = HCFPlayer.getPlayer(damager);
+            if (player.inDuty) {
                 damager.sendMessage(Messages.cant_damage_admin.language(damager).queue());
                 e.setCancelled(true);
             }

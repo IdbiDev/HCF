@@ -124,7 +124,7 @@ public class Ally_Items {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§7Permission: §e§oFriendly Fire");
-        im.addEnchant(Enchantment.DURABILITY, 2, true);
+        im.addEnchant(Enchantment.DURABILITY, 1, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         is.setItemMeta(im);
         return is;
@@ -144,7 +144,7 @@ public class Ally_Items {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§7Permission: §e§oView Items");
-        im.addEnchant(Enchantment.DURABILITY, 2, true);
+        im.addEnchant(Enchantment.DURABILITY, 3, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         is.setItemMeta(im);
         return is;
@@ -154,7 +154,7 @@ public class Ally_Items {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§7Permission: §e§oBlock Break");
-        im.addEnchant(Enchantment.DURABILITY, 2, true);
+        im.addEnchant(Enchantment.DURABILITY, 4, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         is.setItemMeta(im);
         return is;

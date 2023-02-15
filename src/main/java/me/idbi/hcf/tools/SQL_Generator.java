@@ -1,6 +1,8 @@
 package me.idbi.hcf.tools;
 
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.PlayerStatistic;
 
 import java.sql.Connection;
 
@@ -50,7 +52,7 @@ public class SQL_Generator {
                         PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-                """,
+                """.replace("%default_language%", Config.default_language.asStr()).replace("%player_statistics%", PlayerStatistic.defaultStats),
                 """
                      CREATE TABLE IF NOT EXISTS `ranks` (
                       `ID` int(11) NOT NULL AUTO_INCREMENT,

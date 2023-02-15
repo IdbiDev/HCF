@@ -29,7 +29,7 @@ public class Click_PlayerRankManager implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) return;
         if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
+        if (e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
             e.getWhoClicked().openInventory(MemberListInventory.members((Player) e.getWhoClicked()));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;

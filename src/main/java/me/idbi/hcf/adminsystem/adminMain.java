@@ -30,7 +30,8 @@ public class adminMain {
     public static void setAdminDuty(Player player, boolean state) {
         if (state) {
             player.setGameMode(GameMode.CREATIVE);
-            playertools.setMetadata(player, "adminDuty", true);
+            HCFPlayer hcf = HCFPlayer.getPlayer(player);
+            hcf.setDuty(true);
 
             AdminTools.InvisibleManager.hidePlayer(player);
 
@@ -41,7 +42,8 @@ public class adminMain {
         } else {
             player.setGameMode(GameMode.SURVIVAL);
 
-            playertools.setMetadata(player, "adminDuty", false);
+            HCFPlayer hcf = HCFPlayer.getPlayer(player);
+            hcf.setDuty(false);
             AdminTools.InvisibleManager.showPlayer(player);
 
             Scoreboards.refresh(player);
@@ -121,13 +123,14 @@ public class adminMain {
             return;
         }
         Player player = Bukkit.getPlayer(target);
-        playertools.setMetadata(player, "money", Integer.parseInt(playertools.getMetadata(player, "money")) + amount);
+        HCFPlayer hcf = HCFPlayer.getPlayer(player);
+        hcf.addMoney(amount);
 
         player.sendMessage(Messages.give_money.language(admin).setExecutor(admin).setAmount(String.valueOf(amount)).queue());
         Scoreboards.refresh(player);
-        PlayerStatistic stat = Main.playerStatistics.get(player.getUniqueId());
+
+        PlayerStatistic stat = hcf.playerStatistic;
         stat.MoneyEarned += amount;
-        Main.playerStatistics.put(player.getUniqueId(),stat);
     }
 
     public static void TakeMoney(Player admin, String target, int amount) {
@@ -140,13 +143,13 @@ public class adminMain {
             return;
         }
         Player player = Bukkit.getPlayer(target);
-        playertools.setMetadata(player, "money", Integer.parseInt(playertools.getMetadata(player, "money")) - amount);
+        HCFPlayer hcf = HCFPlayer.getPlayer(player);
+        hcf.takeMoney(amount);
 
         player.sendMessage(Messages.take_money.language(admin).setExecutor(admin).setAmount(String.valueOf(amount)).queue());
         Scoreboards.refresh(player);
-        PlayerStatistic stat = Main.playerStatistics.get(player.getUniqueId());
+        PlayerStatistic stat = hcf.playerStatistic;
         stat.MoneySpend += amount;
-        Main.playerStatistics.put(player.getUniqueId(),stat);
     }
 
     public static void DeleteFaction(Player admin, String faction) {
@@ -159,25 +162,24 @@ public class adminMain {
 
         Main.faction_cache.remove(selectedFaction.id);
         Main.nameToFaction.remove(selectedFaction.name);
-        Main.factionToname.remove(selectedFaction.id);
         SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(selectedFaction.id));
         SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(selectedFaction.id));
         SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(selectedFaction.id));
         SQL_Connection.dbExecute(con, "UPDATE members SET rank='None',faction=0 WHERE faction='?'", String.valueOf(selectedFaction.id));
         for (Player player : playertools.getFactionOnlineMembers(selectedFaction)) {
-            playertools.setMetadata(player, "faction", "None");
-            playertools.setMetadata(player, "factionid", "0");
-            playertools.setMetadata(player, "rank", "none");
-            PlayerStatistic stat = Main.playerStatistics.get(player.getUniqueId());
+            HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
+            final String rank = hcfPlayer.rank.name;
+            hcfPlayer.removeFaction();
+
+            PlayerStatistic stat = hcfPlayer.playerStatistic;
             for(FactionHistory statF : stat.factionHistory){
                 if(statF.id == selectedFaction.id){
                     statF.left = new Date();
                     statF.cause = "Deleted";
-                    statF.lastRole = selectedFaction.player_ranks.get(player).name;
+                    statF.lastRole = rank;
                     statF.name = selectedFaction.name;
                 }
             }
-            Main.playerStatistics.put(player.getUniqueId(),stat);
             NameChanger.refresh(player);
         }
 
@@ -219,9 +221,11 @@ public class adminMain {
         }
         Player p = Bukkit.getPlayer(target);
         Faction selectedFaction = Main.nameToFaction.get(faction);
-        playertools.setMetadata(p, "factionid", selectedFaction.id);
-        playertools.setMetadata(p, "faction", selectedFaction.name);
-        SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',factionname='?' WHERE uuid='?'", String.valueOf(selectedFaction.id), selectedFaction.name, p.getUniqueId().toString());
+        HCFPlayer player = HCFPlayer.getPlayer(p);
+
+        player.setFaction(selectedFaction);
+
+        SQL_Connection.dbExecute(con, "UPDATE members SET faction='?' WHERE uuid='?'", String.valueOf(selectedFaction.id), p.getUniqueId().toString());
 
         //Sikeres belépés
         p.sendMessage(Messages.join_message.language(p).queue());
@@ -249,9 +253,10 @@ public class adminMain {
             return;
         }
         Player p = Bukkit.getPlayer(target);
-        playertools.setMetadata(p, "factionid", "0");
-        playertools.setMetadata(p, "faction", "None");
-        SQL_Connection.dbExecute(con, "UPDATE members SET faction=0,factionname='None' WHERE uuid='?'", p.getUniqueId().toString());
+        HCFPlayer player = HCFPlayer.getPlayer(p);
+        player.removeFaction();
+
+        SQL_Connection.dbExecute(con, "UPDATE members SET faction=0 WHERE uuid='?'", p.getUniqueId().toString());
         Scoreboards.refresh(p);
         NameChanger.refresh(p);
 
@@ -264,7 +269,8 @@ public class adminMain {
             return;
         }
         Player p = Bukkit.getPlayer(target);
-        boolean state = Boolean.parseBoolean(playertools.getMetadata(p, "freeze"));
+        HCFPlayer player = HCFPlayer.getPlayer(p);
+        boolean state = player.freezeStatus;
         // Freeze
         if (!state) {
             admin.sendMessage(Messages.freeze_executor_on.language(admin).setPlayer(p).queue());
@@ -274,34 +280,35 @@ public class adminMain {
             admin.sendMessage(Messages.freeze_executor_off.language(admin).setPlayer(p).queue());
             p.sendMessage(Messages.freeze_player_off.language(p).setExecutor(admin).queue());
         }
-        playertools.setMetadata(p, "freeze", !state);
+        player.setFreezeStatus(!player.freezeStatus);
     }
 
     public static void SpawnPlace(Player admin, String state) {
+        HCFPlayer player = HCFPlayer.getPlayer(admin);
         if (state.equalsIgnoreCase("start")) {
             for (String lines : Messages.claim_info_admin.queueList()) {
 
                 admin.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));
             }
 
-            playertools.setMetadata(admin, "spawnclaiming", true);
+            player.setClaimType(HCF_Claiming.ClaimTypes.SPAWN);
             HCF_Claiming.SpawnPrepare(admin);
         } else if (state.equalsIgnoreCase("claim")) {
             if (HCF_Claiming.ForceFinishClaim(1,admin, HCF_Claiming.ClaimAttributes.PROTECTED)) {
                 //Todo: Kurvva sikerült
-                playertools.setMetadata(admin, "spawnclaiming", false);
+                player.setClaimType(HCF_Claiming.ClaimTypes.NONE);
                 admin.sendMessage(Messages.spawn_claim_success.language(admin).queue());
-                admin.getInventory().remove(Material.GOLD_HOE);
+                admin.getInventory().remove(HCF_Claiming.spawnWand());
             } else {
                 //Todo: nem sikerült, balfasz vagy és nem raktad le
-                playertools.setMetadata(admin, "spawnclaiming", false);
+                player.setClaimType(HCF_Claiming.ClaimTypes.NONE);
                 admin.sendMessage(Messages.faction_claim_invalid_zone.language(admin).queue());
-                admin.getInventory().remove(Material.GOLD_HOE);
+                admin.getInventory().remove(HCF_Claiming.spawnWand());
             }
         } else if (state.equalsIgnoreCase("stop")) {
-            playertools.setMetadata(admin, "spawnclaiming", false);
+            player.setClaimType(HCF_Claiming.ClaimTypes.NONE);
             admin.sendMessage(Messages.faction_claim_decline.language(admin).queue());
-            admin.getInventory().remove(Material.GOLD_HOE);
+            admin.getInventory().remove(HCF_Claiming.spawnWand());
         }
     }
 
@@ -310,17 +317,14 @@ public class adminMain {
             admin.sendMessage(Messages.not_in_duty.language(admin).queue());
             return;
         }
-        String staffChatState = playertools.getMetadata(admin, "staffchat");
+        HCFPlayer player = HCFPlayer.getPlayer(admin);
         if(args.length == 1) {
             if (args[0].equalsIgnoreCase("chat")) {
-                if(staffChatState.equals("")) {
-                    playertools.setMetadata(admin, "staffchat", true);
+                if(!player.staffChat) {
+                    player.setStaffChat(true);
                     admin.sendMessage(Messages.staff_chat.language(admin).queue());
-                } else if(staffChatState.equalsIgnoreCase("false")) {
-                    playertools.setMetadata(admin, "staffchat", true);
-                    admin.sendMessage(Messages.staff_chat_on.language(admin).queue());
                 } else {
-                    playertools.setMetadata(admin, "staffchat", false);
+                    player.setStaffChat(false);
                     admin.sendMessage(Messages.staff_chat_off.language(admin).queue());
                 }
             }
@@ -328,11 +332,12 @@ public class adminMain {
         }
         else if(args.length == 2) {
             if (args[0].equalsIgnoreCase("chat")) {
+                HCFPlayer hcf = HCFPlayer.getPlayer(admin);
                 if(args[1].equalsIgnoreCase("on")) {
-                    playertools.setMetadata(admin, "staffchat", true);
+                    hcf.setStaffChat(true);
                     admin.sendMessage(Messages.staff_chat_on.language(admin).queue());
                 } else if(args[1].equalsIgnoreCase("off")) {
-                    playertools.setMetadata(admin, "staffchat", false);
+                    hcf.setStaffChat(false);
                     admin.sendMessage(Messages.staff_chat_off.language(admin).queue());
                 } else {
                     List<String> argsList = Arrays.stream(args).toList();

@@ -33,7 +33,8 @@ public class SimpleConfigManager {
             }
         }
 
-        SimpleConfig config = new SimpleConfig(this.getConfigContent(filePath), file, this.getCommentsNum(file), plugin);
+        Reader reader = new InputStreamReader(this.getConfigContent(filePath));
+        SimpleConfig config = new SimpleConfig(reader, file, this.getCommentsNum(file), plugin);
         return config;
 
     }
@@ -161,15 +162,68 @@ public class SimpleConfigManager {
             config.append("# +----------------------------------------------------+ #");
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.write(this.prepareConfigString(config.toString()
+            writer.write(this.prepareConfigString(config.toString()/*
                     .replace(",\n  ", this.plugin.getName() + "_COMMA")
-                    .replace("\n    ", this.plugin.getName() + "_SPACE")));
+                    .replace("\n    ", this.plugin.getName() + "_SPACE")*/));
             writer.flush();
             writer.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public StringBuilder setupHeader(File file, String[] header) {// ToDo: Edited
+
+        if(!file.exists()) {
+            return new StringBuilder();
+        }
+
+        try {
+            String currentLine;
+            StringBuilder config = new StringBuilder("");
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            while((currentLine = reader.readLine()) != null) {
+                config.append(currentLine + "\n");
+            }
+
+            reader.close();
+            config.append("# +----------------------------------------------------+ #\n");
+
+            for(String line : header) {
+
+                if(line.length() > 50) {
+                    continue;
+                }
+
+                int lenght = (50 - line.length()) / 2;
+                StringBuilder finalLine = new StringBuilder(line);
+
+                for(int i = 0; i < lenght; i++) {
+                    finalLine.append(" ");
+                    finalLine.reverse();
+                    finalLine.append(" ");
+                    finalLine.reverse();
+                }
+
+                if(line.length() % 2 != 0) {
+                    finalLine.append(" ");
+                }
+
+                config.append("# < " + finalLine.toString() + " > #\n");
+
+            }
+
+            config.append("# +----------------------------------------------------+ #");
+            return config;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new StringBuilder();
 
     }
 
@@ -197,9 +251,9 @@ public class SimpleConfigManager {
             while((currentLine = reader.readLine()) != null) {
 
                 if(currentLine.startsWith("#")) {
-                    addLine = currentLine.replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
+                    /*addLine = currentLine.replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
                     whole.append(addLine + "\n");
-                    commentNum++;
+                    commentNum++;*/
 
                 } else {
                     whole.append(currentLine + "\n");
@@ -277,7 +331,7 @@ public class SimpleConfigManager {
 
             line = line.replace(this.plugin.getName() + "_COMMA", ", ");
             line = line.replace(this.plugin.getName() + "_SPACE", " ");
-            if(line.startsWith(this.getPluginName() + "_COMMENT")) {
+            if(line.contains(this.getPluginName() + "_COMMENT")) {
                 String comment = "#" + line.trim().substring(line.indexOf(":") + 1);
 
                 if(comment.startsWith("# +-")) {
@@ -335,12 +389,20 @@ public class SimpleConfigManager {
      * @param file - Config file
      */
     public void saveConfig(String configString, File file) {
-        String configuration = this.prepareConfigString(configString
+        String configuration = this.prepareConfigString(configString/*
                 .replace(",\n  ", this.plugin.getName() + "_COMMA")
-                .replace("\n    ", this.plugin.getName() + "_SPACE"));
+                .replace("\n    ", this.plugin.getName() + "_SPACE")*/);
 
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            if(file.getName().equalsIgnoreCase("config.yml"))
+                writer.write(setupHeader(file, ConfigManager.configHeader).toString() + "\n\n");
+            else if(file.getName().startsWith("guimessages_"))
+                writer.write(setupHeader(file, ConfigManager.guiHeader).toString() + "\n\n");
+            else if(file.getName().startsWith("messages"))
+                writer.write(setupHeader(file, ConfigManager.messagesHeader).toString() + "\n\n");
+            else
+                writer.write(setupHeader(file, ConfigManager.configHeader).toString() + "\n\n"); // ToDo: Edited
             writer.write(configuration);
             writer.flush();
             writer.close();

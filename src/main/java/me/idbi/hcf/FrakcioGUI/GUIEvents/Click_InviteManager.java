@@ -33,19 +33,19 @@ public class Click_InviteManager implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) return;
         if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
+        if (e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
             e.getWhoClicked().openInventory(MainInventory.mainInv((Player) e.getWhoClicked()));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 
-        if(e.getCurrentItem().isSimilar(IM_Items.invitePlayers())) {
+        if(e.getCurrentItem().isSimilar(IM_Items.invitePlayers(((Player) e.getWhoClicked())))) {
             anvilInvite((Player) e.getWhoClicked());
             GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
 
-        if(e.getCurrentItem().isSimilar(IM_Items.invitedPlayers())) {
+        if(e.getCurrentItem().isSimilar(IM_Items.invitedPlayers(((Player) e.getWhoClicked())))) {
             e.getWhoClicked().openInventory(InviteManagerInventory.invitedPlayers((Player) e.getWhoClicked()));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;

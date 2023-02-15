@@ -3,11 +3,14 @@ package me.idbi.hcf.tools;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Squid;
 
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 
 public class Faction_Rank_Manager {
@@ -59,26 +62,24 @@ public class Faction_Rank_Manager {
 
         return rank;
     }
-    public static boolean RenameRank(Faction faction,String oldName,String newName) {
+    public static boolean rename(Faction faction,String oldName,String newName) {
         Rank rank = faction.FindRankByName(oldName);
         if(oldName.equalsIgnoreCase(newName))
             return false;
-        for(Map.Entry<Player, Rank> entry : faction.player_ranks.entrySet())
-            if(entry.getValue().name.equals(rank.name))
-                playertools.setMetadata(entry.getKey(), "rank", newName);
         rank.name = newName;
         SQL_Connection.dbExecute(con,"UPDATE members SET rank='?' WHERE faction='?' AND rank='?'",newName, String.valueOf(faction.id),oldName);
         rank.saveRank();
         Scoreboards.RefreshAll();
         return true;
     }
-    public static void DeleteRank(Faction faction, String name) {
+    public static void delete(Faction faction, String name) {
         Rank rank = faction.FindRankByName(name);
         for(HCFPlayer hcfPlayer : faction.members) {
             if (hcfPlayer.rank.name.equalsIgnoreCase(rank.name)) {
                 hcfPlayer.setRank(faction.getDefaultRank());
             }
         }
+
         SQL_Connection.dbExecute(con,"UPDATE members SET rank='?' WHERE faction='?' AND rank='?'",
                 faction.getDefaultRank().name,
                 String.valueOf(faction.id),

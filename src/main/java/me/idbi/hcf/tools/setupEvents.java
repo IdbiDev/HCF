@@ -108,6 +108,8 @@ public class setupEvents {
         getServer().getPluginManager().registerEvents(new Click_AllyRequests(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new Click_AllyManageList(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new Click_AllyUnRequest(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_AllyPermissions(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new Click_ManageAlly(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new Rogue(), Main.getPlugin(Main.class));
     }

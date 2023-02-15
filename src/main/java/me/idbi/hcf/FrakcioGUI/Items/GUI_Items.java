@@ -1,24 +1,29 @@
 package me.idbi.hcf.FrakcioGUI.Items;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.CustomFiles.Configs.Config;
+import me.idbi.hcf.CustomFiles.GUIMessages.GUIMessages;
 import me.idbi.hcf.tools.Objects.Faction;
 import me.idbi.hcf.tools.playertools;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class GUI_Items {
 
-    public static ItemStack rankManager() {
+    public static ItemStack rankManager(Player p) {
         ItemStack is = new ItemStack(Material.NETHER_STAR);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§eManage Ranks");
-        im.setLore(Arrays.asList(
-                "§5",
-                "§7Click here to manage ranks!"
-        ));
+
+        im.setDisplayName(GUIMessages.faction_rank_manager.language(p).getName());
+        im.setLore(GUIMessages.faction_rank_manager.language(p).getLore());
         is.setItemMeta(im);
         return is;
     }
@@ -31,46 +36,91 @@ public class GUI_Items {
         return is;
     }
 
-    public static ItemStack playerManager() {
+    public static ItemStack playerManager(Player p) {
         ItemStack is = new ItemStack(Material.BOOK);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§eManage Players");
-        im.setLore(Arrays.asList(
-                "§5",
-                "§7Click here to manage members!"
-        ));
+
+        im.setDisplayName(GUIMessages.faction_member_manager.language(p).getName());
+        im.setLore(GUIMessages.back_button.language(p).getLore());
         is.setItemMeta(im);
         return is;
     }
 
-    public static ItemStack back() {
+    public static ItemStack back(Player p) {
         ItemStack is = new ItemStack(Material.INK_SACK, 1, (byte) 1);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§cBack");
+        im.setDisplayName(GUIMessages.back_button.language(p).getName());
+        im.setLore(GUIMessages.back_button.language(p).getLore());
         is.setItemMeta(im);
         return is;
     }
 
-    public static ItemStack memberHead(String name) {
+    public static ItemStack memberHead(Player invViewer, String name) {
         ItemStack is = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
         SkullMeta im = (SkullMeta) is.getItemMeta();
         im.setOwner(name);
-        im.setDisplayName("§e" + name);
+        im.setDisplayName(GUIMessages.member_head.language(invViewer).setPlayerName(name).getName());
+        im.setLore(GUIMessages.member_head.language(invViewer).setPlayerName(name).getLore());
         is.setItemMeta(im);
         return is;
     }
 
-    public static ItemStack factinoStats(Faction faction) {
+    public static ItemStack factionStats(Player p, Faction faction) {
         ItemStack is = new ItemStack(Material.COMPASS);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§2§o" + faction.name);
+        im.setDisplayName(GUIMessages.faction_stats.language(p).setFaction(faction).getName());
         String homeLocation;
         if(faction.homeLocation != null)
             homeLocation = faction.homeLocation.getBlockX() + ", " + faction.homeLocation.getBlockY() + ", " + faction.homeLocation.getBlockZ();
         else homeLocation = "-";
 
-        im.setLore(Arrays.asList(
-                "§7┌──",
+        String factionStatus = (playertools.isFactionOnline(faction)
+                ? Messages.status_design_online.language(p).queue()
+                : Messages.status_design_offline.language(p).queue());
+        String leaderName = "";
+        try {
+            leaderName = ((Bukkit.getPlayer(faction.leader)) != null
+                    ? Bukkit.getPlayer(UUID.fromString(faction.leader)).getName()
+                    : Bukkit.getOfflinePlayer(UUID.fromString(faction.leader)).getName());
+        } catch (IllegalArgumentException ignore) {
+        }
+
+        im.setLore(GUIMessages.faction_stats.language(p).setupShow(
+                faction.name, factionStatus, leaderName, String.valueOf(faction.balance),
+                String.valueOf(faction.getKills()),
+                String.valueOf(faction.getDeaths()),
+                homeLocation,
+                String.valueOf(faction.DTR),
+                ((faction.DTR == faction.DTR_MAX) ? "-" : playertools.convertLongToTime(faction.DTR_TIMEOUT)),
+                String.valueOf(faction.DTR_MAX),
+                String.valueOf(playertools.getOnlineSize(faction)),
+                String.valueOf(faction.members.size()),
+                (faction.DTR <= 0 ? "true" : "false")
+
+        ).getLore());
+        is.setItemMeta(im);
+        return is;
+    }
+
+    public static ItemStack renameFaction(Player p) {
+        ItemStack is = new ItemStack(Material.NAME_TAG);
+        ItemMeta im = is.getItemMeta();
+
+        im.setDisplayName(GUIMessages.faction_rename.language(p).getName());
+        im.setLore(GUIMessages.faction_rename.language(p).getLore());
+        is.setItemMeta(im);
+        return is;
+    }
+
+    public static ItemStack histories(Player p) {
+        ItemStack is = new ItemStack(Material.PAPER);
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName(GUIMessages.faction_histories.language(p).getName());
+        im.setLore(GUIMessages.faction_histories.language(p).getLore());
+        is.setItemMeta(im);
+        return is;
+    }/*
+                    "§7┌──",
                 "§7│ §aDTR §7/ §aMax DTR: §f" + faction.DTR + " §7/ §f" + faction.DTR_MAX,
                 "§7│ §aDTR Regen: §f" + ((faction.DTR == faction.DTR_MAX) ? "-" : playertools.convertLongToTime(faction.DTR_TIMEOUT)),
                 "§7│ §aBalance: §f$" + faction.balance,
@@ -80,34 +130,5 @@ public class GUI_Items {
                 "§7│ §aKills: §f" + faction.getKills(),
                 "§7│ §aDeaths: §f" + faction.getDeaths(),
                 "§7└──"
-        ));
-        is.setItemMeta(im);
-        return is;
-    }
-
-    public static ItemStack renameFaction() {
-        ItemStack is = new ItemStack(Material.NAME_TAG);
-        ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§eRename Faction");
-
-        im.setLore(Arrays.asList(
-                "§5",
-                "§7Click here to rename your faction!"
-        ));
-        is.setItemMeta(im);
-        return is;
-    }
-
-    public static ItemStack histories() {
-        ItemStack is = new ItemStack(Material.PAPER);
-        ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§eFaction Histories");
-
-        im.setLore(Arrays.asList(
-                "§5",
-                "§7Click here to see the histories!"
-        ));
-        is.setItemMeta(im);
-        return is;
-    }
+        ));*/
 }

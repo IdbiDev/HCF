@@ -130,7 +130,7 @@ public enum Config {
     }
 
     public String asStr() {
-        return ChatColor.translateAlternateColorCodes('&', (String) this.value);
+        return ChatColor.translateAlternateColorCodes('&', this.value.toString());
     }
 
     public boolean asBoolean() {

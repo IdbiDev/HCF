@@ -46,23 +46,19 @@ public class faction implements CommandExecutor, TabCompleter {
                     case "show":
                         //Show faction
                         if (args.length == 1) {
-                            Faction_Show.show(p, playertools.getMetadata(p, "faction"));
+                            Faction_Show.show(p, playertools.getPlayerFaction(p));
                             return false;
                         } else if (args.length == 2) {
                             Faction arg1Faction = playertools.getFactionByName(args[1]);
                             if (Bukkit.getPlayer(args[1]) != null) {
                                 if (args[1] != null) {
-                                    Faction_Show.show(p, args[1]);
+                                    Faction_Show.show(p, playertools.getPlayerFaction(Bukkit.getPlayer(args[1])));
                                     playertools.getPlayerFaction(p).DTR--;
                                     return false;
                                 }
                             }
-                            for (Map.Entry<Integer, Faction> faction : Main.faction_cache.entrySet()) {
-                                if (faction.getValue().name.equalsIgnoreCase(args[1])) {
-                                    Faction_Show.show(p, args[1]);
-                                    return false;
-                                }
-                            }
+
+                            Faction_Show.show(p, Main.nameToFaction.getOrDefault(args[1], null));
                             p.sendMessage(Messages.no_faction_exists.queue());
                             return false;
                         }

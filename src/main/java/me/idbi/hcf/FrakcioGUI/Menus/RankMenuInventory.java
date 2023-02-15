@@ -26,13 +26,14 @@ public class RankMenuInventory {
 
         }
 
+        System.out.println(playertools.sortByPriority(playertools.getPlayerFaction(p)).entrySet());
         for(Map.Entry<Integer, Faction_Rank_Manager.Rank> rank : playertools.sortByPriority(playertools.getPlayerFaction(p)).entrySet()) {
-            inv.addItem(RM_Items.rank(rank.getValue().name));
+            inv.addItem(RM_Items.rank(p, rank.getValue().name));
         }
 
-        inv.setItem(8, RPrio_Items.priorityToggleButton());
-        inv.setItem(45, GUI_Items.back());
-        inv.setItem(53, RM_Items.create());
+        inv.setItem(8, RPrio_Items.priorityToggleButton(p));
+        inv.setItem(45, GUI_Items.back(p));
+        inv.setItem(53, RM_Items.create(p));
 
         return inv;
     }

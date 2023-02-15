@@ -3,12 +3,15 @@ package me.idbi.hcf.events;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.classes.Classes;
 import me.idbi.hcf.classes.subClasses.Bard;
 import me.idbi.hcf.tools.HCF_Claiming;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.Objects.Permissions;
 import me.idbi.hcf.tools.playertools;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -39,7 +42,6 @@ public class onPlayerInteract implements Listener {
         }
         if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
             Block block = e.getClickedBlock();
-            Faction f = playertools.getPlayerFaction(p);
             HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(block.getX(),block.getZ());
             if(claim == null) {
                 return;
@@ -80,13 +82,14 @@ public class onPlayerInteract implements Listener {
             }
         }
         ///Bard
+        HCFPlayer player = HCFPlayer.getPlayer(p);
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null) {
-            if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("bard")) {
+            if (player.playerClass == Classes.BARD) {
                 Bard.OhLetsBreakItDown(e.getPlayer());
             }
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {
-            if (playertools.getMetadata(e.getPlayer(), "class").equalsIgnoreCase("bard")) {
+            if (player.playerClass == Classes.BARD) {
                 Bard.OhLetsBreakItDown(e.getPlayer());
             }
         }

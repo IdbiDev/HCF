@@ -1,11 +1,13 @@
 package me.idbi.hcf.tools;
 
+import com.iwebpp.crypto.TweetNaclFast;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.koth.KOTH;
 import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.Objects.PlayerObject;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
@@ -38,9 +40,9 @@ public class playertools {
     public static void LoadPlayer(Player player) {
 
         // Loading player From SQL
-        HashMap<String, Object> playerMap = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid = '?'", player.getUniqueId().toString());
+        /*HashMap<String, Object> playerMap = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid = '?'", player.getUniqueId().toString());
         if (!playerMap.isEmpty()) {
-            Main.player_cache.put(player, new PlayerObject());
+            Main.player_cache.put(player.getUniqueId(), new PlayerObject());
             setMetadata(player, "factionid", playerMap.get("faction"));
             setMetadata(player, "kills", playerMap.get("kills"));
             setMetadata(player, "deaths", playerMap.get("deaths"));
@@ -68,7 +70,7 @@ public class playertools {
             NameChanger.refresh(player);
         } else {
             // Játékos létrehozása SQL-ben, majd újra betöltjük
-            SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',online=0,money='?'", player.getName(), player.getUniqueId().toString(),Config.default_balance.asStr());
+            SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',online=0,money='?'", player.getName(), player.getUniqueId().toString(),Config.default_balance.asInt() + "");
             JSONObject jsonComp = new JSONObject();
             JSONArray factions = new JSONArray();
             //JSONArray ClassTimes = new JSONArray();
@@ -87,10 +89,10 @@ public class playertools {
             jsonComp.put("FactionHistory", factions);
             jsonComp.put("ClassTimes", classTimes);
             PlayerStatistic m = new PlayerStatistic(jsonComp);
-            m.Save(player);
+            m.save(player);
             //SQL_Connection.dbExecute(con, "INSERT INTO playerstatistics SET uuid='?',StartDate='?',LastLogin='?'", player.getUniqueId().toString(), new Date().toInstant().toString(),new Date().toInstant().toString());
-            LoadPlayer(player);
-        }
+            LoadPlayer(player);*/
+        // }
     }
 
     //OnJoin
@@ -197,19 +199,10 @@ public class playertools {
         return players;
     }
     public static Faction getPlayerFaction(Player p) {
-        int id = Integer.parseInt(getMetadata(p,"factionid"));
-        if (id != 0){
-            return Main.faction_cache.get(id);
-        }
-        return null;
+        return HCFPlayer.getPlayer(p).faction;
     }
     public static Faction getPlayerFaction(OfflinePlayer p) {
-        HashMap<String, Object> playerMap = SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid='?'",p.getUniqueId().toString());
-        int id = (int) playerMap.get("faction");
-        if (id != 0){
-            return Main.faction_cache.get(id);
-        }
-        return null;
+        return HCFPlayer.getPlayer(p.getUniqueId()).faction;
     }
     public static List<Player> getFactionMembersInDistance(Player p, double distance) {
         Faction faction = getPlayerFaction(p);
@@ -224,7 +217,9 @@ public class playertools {
 
     public static boolean isFactionOnline(Faction faction) {
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if (getMetadata(p, "faction").equalsIgnoreCase(faction.name)) {
+            HCFPlayer hcf = HCFPlayer.getPlayer(p);
+            if(hcf.faction == null) continue;
+            if (hcf.faction.name.equalsIgnoreCase(faction.name)) {
                 return true;
             }
         }
@@ -238,7 +233,7 @@ public class playertools {
         }
         return null;
     }
-    public static  ArrayList<Player> getFactionOnlineMembers(Faction faction) {
+    public static ArrayList<Player> getFactionOnlineMembers(Faction faction) {
         ArrayList<Player> players = new ArrayList<Player>();
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (faction.isPlayerInFaction(p)){
@@ -257,28 +252,24 @@ public class playertools {
         }
         return players;
     }
-    public static void RenameFaction(Faction faction,String name){
-        for(Player p : getFactionOnlineMembers(faction)){
-            setMetadata(p,"faction",name);
-        }
-        String oldname = faction.name;
+    public static void RenameFaction(Faction faction, String name){
         faction.name = name;
         Main.faction_cache.put(faction.id,faction);
         Main.nameToFaction.put(faction.name,faction);
-        Main.factionToname.put(faction.id, faction.name);
-        SQL_Connection.dbExecute(con,"UPDATE factions SET name='?' WHERE id='?'",name, String.valueOf(faction.id));
-        SQL_Connection.dbExecute(con,"UPDATE members SET factionname='?' WHERE factionname='?'",name, oldname);
+        for(HCFPlayer player : faction.members){
+            player.setFaction(faction);
+        }
+        //SQL_Connection.dbExecute(con,"UPDATE factions SET name='?' WHERE id='?'", name, String.valueOf(faction.id));
         Scoreboards.RefreshAll();
     }
 
     public static int getPlayerBalance(Player p) {
-        return Integer.parseInt(getMetadata(p, "money"));
+        return HCFPlayer.getPlayer(p).money;
+        // return Integer.parseInt(getMetadata(p, "money"));
     }
 
     public static void setPlayerBalance(Player p, int amount) {
-        setMetadata(p, "money", amount);
-
-
+        HCFPlayer.getPlayer(p).setMoney(amount);
     }
 
     /*public static void setMetadata(Player p, String key, Object data) {
@@ -312,15 +303,15 @@ public class playertools {
         }
     }
     public static Object getRealMetadata(Player p, String key) {
-        if (Main.player_cache.containsKey(p)) {
-            PlayerObject obj = Main.player_cache.get(p);
+        if (Main.player_cache.containsKey(p.getUniqueId())) {
+            PlayerObject obj = Main.player_cache.get(p.getUniqueId());
             return obj.getData(key);
         } else {
             if (Main.debug)
                 Bukkit.getLogger().severe("GET Nem tartalamzza a playert a cache! >> " + p.getDisplayName() + "KEY >> " + key);
             return "0";
         }
-    }
+    }*/
 
     public static void setEntityData(Metadatable entity, String key, Object value) {
         entity.setMetadata(key, new FixedMetadataValue(Main.getPlugin(Main.class), value));
@@ -331,16 +322,16 @@ public class playertools {
     }
 
 
-    public static boolean HasMetaData(Player p, String key) {
-        if (Main.player_cache.containsKey(p)) {
-            PlayerObject obj = Main.player_cache.get(p);
+/*    public static boolean HasMetaData(Player p, String key) {
+        if (Main.player_cache.containsKey(p.getUniqueId())) {
+            PlayerObject obj = Main.player_cache.get(p.getUniqueId());
             return obj.hasData(key);
         } else {
             if (Main.debug)
                 Bukkit.getLogger().severe("§4 Nem tartalamzza a playert a cache! >> " + p.getDisplayName());
             return false;
         }
-    }
+    }*/
 
     public static void cacheFactionClaims() {
         try {
@@ -386,7 +377,8 @@ public class playertools {
             if(f.leader.equalsIgnoreCase(player.getUniqueId().toString())){
                 return true;
             }
-            Faction_Rank_Manager.Rank rank = f.player_ranks.get(player);
+            HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
+            Faction_Rank_Manager.Rank rank = hcfPlayer.rank;
             if(rank.isLeader){
                 return true;
             }
@@ -403,12 +395,10 @@ public class playertools {
 
     public static void setFactionCache() {
         try {
-            Main.factionToname.clear();
             Main.faction_cache.clear();
             PreparedStatement ps = con.prepareStatement("SELECT * FROM factions");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Main.factionToname.put(rs.getInt("ID"), rs.getString("name"));
                 Faction faction = new Faction(rs.getInt("ID"), rs.getString("name"), rs.getString("leader"), rs.getInt("money"));
                 if(isValidJSON(rs.getString("statistics"))){
                     faction.loadFactionHistory(new JSONObject(rs.getString("statistics")));
@@ -418,7 +408,7 @@ public class playertools {
 
                 Main.faction_cache.put(rs.getInt("ID"), faction);
                 Main.nameToFaction.put(rs.getString("name"), faction);
-                faction.memberCount = playertools.countMembers(faction);
+
                 faction.DTR = Double.parseDouble(CalculateDTR(faction));
                 faction.DTR_MAX = Double.parseDouble(CalculateDTR(faction));
 //                if(main_score.getTeam(faction.name) == null)
@@ -541,8 +531,8 @@ public class playertools {
 
 
         double addedDTR = 1.5;
-        for(int i = 1; i <= faction.memberCount; i++) {
-            if(faction.memberCount % 5 == 0) {
+        for(int i = 1; i <= faction.getMemberCount(); i++) {
+            if(faction.getMemberCount() % 5 == 0) {
                 if (Main.MAX_DTR <= addedDTR + 1)
                     break;
                 addedDTR += 1;
@@ -596,8 +586,8 @@ public class playertools {
         int largestID = getFreeFactionId();
         Faction faction = new Faction(largestID, name, "", 0);
 
-        Main.faction_cache.put(id, faction);
-        Main.factionToname.put(id, faction.name);
+        Main.faction_cache.put(largestID, faction);
+
         Main.nameToFaction.put(faction.name, faction);
         SQL_Connection.dbExecute(con, "INSERT INTO factions SET ID='?' name='?',leader='?'", String.valueOf(faction.id), name,leader);
         return largestID;
@@ -662,7 +652,7 @@ public class playertools {
     }
 
     public static TreeMap<Integer, Faction_Rank_Manager.Rank> sortByPriority(Faction faction){
-        HashMap<Integer,Faction_Rank_Manager.Rank> sortedMap = new HashMap<Integer,Faction_Rank_Manager.Rank>();
+        HashMap<Integer,Faction_Rank_Manager.Rank> sortedMap = new HashMap<Integer, Faction_Rank_Manager.Rank>();
         for(Faction_Rank_Manager.Rank rank : faction.ranks){
             sortedMap.put(rank.priority,rank);
         }
@@ -737,7 +727,7 @@ public class playertools {
     }
 
     public static boolean isInStaffDuty(Player p) {
-        return Boolean.parseBoolean(getMetadata(p, "adminDuty"));
+        return HCFPlayer.getPlayer(p).inDuty;
     }
 
     public static void sendStaffChat(Messages message) {
@@ -746,5 +736,9 @@ public class playertools {
                 onlinePlayer.sendMessage(message.language(onlinePlayer).queue());
             }
         }
+    }
+
+    public static String upperFirst(String string) {
+        return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
     }
 }

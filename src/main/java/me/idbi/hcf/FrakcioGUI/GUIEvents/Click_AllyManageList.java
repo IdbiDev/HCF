@@ -14,6 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.util.Map;
+
 public class Click_AllyManageList implements Listener {
 
     @EventHandler
@@ -26,8 +28,8 @@ public class Click_AllyManageList implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) return;
         if(!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        if(e.getCurrentItem().isSimilar(GUI_Items.back())) {
-            e.getWhoClicked().openInventory(Alley_MainInventory.inv());
+        if(e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
+            e.getWhoClicked().openInventory(Alley_MainInventory.inv(((Player) e.getWhoClicked())));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
@@ -40,15 +42,15 @@ public class Click_AllyManageList implements Listener {
         AllyFaction ally = null;
         assert f != null;
 
-        for (AllyFaction allies : f.Allies) {
-            if(allies.getAllyFaction().name.equalsIgnoreCase(name)) {
-                ally = allies;
+        for (Map.Entry<Integer, AllyFaction> allies : f.Allies.entrySet()) {
+            if(allies.getValue().getAllyFaction().name.equalsIgnoreCase(name)) {
+                ally = allies.getValue();
             }
         }
         if(ally == null) return;
 
         // ToDo: Message stb.
-        e.getWhoClicked().openInventory(Ally_ManageAlly.inv(ally.getAllyFaction()));
+        e.getWhoClicked().openInventory(Ally_ManageAlly.inv((Player) e.getWhoClicked(), ally.getAllyFaction()));
 
         GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
     }

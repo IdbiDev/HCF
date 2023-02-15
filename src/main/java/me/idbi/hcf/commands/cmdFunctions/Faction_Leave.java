@@ -45,20 +45,19 @@ public class Faction_Leave {
 
                 Scoreboards.refresh(player);
                 f.refreshDTR();
-                PlayerStatistic stat = Main.playerStatistics.get(player.getUniqueId());
+                PlayerStatistic stat = hcf.playerStatistic;
                 for(FactionHistory statF : stat.factionHistory){
                     if(statF.id == f.id){
                         statF.left = new Date();
-                        statF.cause = "Leaved";
-                        statF.lastRole = f.player_ranks.get(player).name;
+                        statF.cause = "Left";
+                        statF.lastRole = rankForLejjebb;
                         statF.name = f.name;
                     }
                 }
                 f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(player.getName(),"leaved",new Date().getTime()));
-                Main.playerStatistics.put(player.getUniqueId(),stat);
                 NameChanger.refresh(player);
             } else {
-                //Todo: Factin leader is a fucking retarded bc he wanna leave the faction. Use /f disband
+                //Todo: Faction leader is a fucking retarded bc he wanna leave the faction. Use /f disband
                 player.sendMessage(Messages.leader_leaving_faction.language(player).queue());
             }
         } else {

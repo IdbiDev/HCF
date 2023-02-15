@@ -13,6 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.util.Map;
+
 public class Click_AllyUnRequest implements Listener {
 
     @EventHandler
@@ -25,8 +27,8 @@ public class Click_AllyUnRequest implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) return;
         if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
-            e.getWhoClicked().openInventory(Alley_ManageRequests.inv());
+        if (e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
+            e.getWhoClicked().openInventory(Alley_ManageRequests.inv(((Player) e.getWhoClicked())));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
@@ -35,18 +37,20 @@ public class Click_AllyUnRequest implements Listener {
             String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
             Player p = (Player) e.getWhoClicked();
             Faction f = playertools.getPlayerFaction(p);
-            AllyFaction ally = null;
             assert f != null;
 
-            for (AllyFaction allies : f.Allies) {
-                if(allies.getAllyFaction().name.equalsIgnoreCase(name)) {
-                    ally = allies;
-                }
+            Faction ally = null;
+
+            for (Faction invitedAlly : f.allyinvites.getInvitedAllies()) {
+                if(invitedAlly.name.equalsIgnoreCase(name))
+                    ally = invitedAlly;
             }
+
             if(ally == null) return;
 
             // ToDo: Message stb.
-            f.unInviteAlly(ally.getAllyFaction());
+            f.unInviteAlly(ally);
+            p.closeInventory();
             p.sendMessage("Elvileg unrequested!");
         }
     }

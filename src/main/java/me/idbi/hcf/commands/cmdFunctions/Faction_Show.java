@@ -15,18 +15,12 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 public class Faction_Show {
-    public static HashMap<Player, Integer> show(Player p, String factionName) {
-        if (factionName.equalsIgnoreCase("none")) {
+    public static HashMap<Player, Integer> show(Player p, Faction faction) {
+        if (faction == null) {
             p.sendMessage(Messages.no_faction_exists.language(p).queue());
             return null;
         }
         HashMap<Player, Integer> returnPlayers = new HashMap<>();
-
-        Map<String, Faction> asd = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        asd.putAll(Main.nameToFaction);
-
-        // System.out.println("Faction Name: " + factionName);
-        Faction faction = asd.get(factionName);
 
         String factionStatus = (playertools.isFactionOnline(faction)
                 ? Messages.status_design_online.language(p).queue()
@@ -52,12 +46,12 @@ public class Faction_Show {
                         ((faction.DTR == faction.DTR_MAX) ? "-" : playertools.convertLongToTime(faction.DTR_TIMEOUT)),
                         String.valueOf(faction.DTR_MAX),
                         String.valueOf(playertools.getOnlineSize(faction)),
-                        String.valueOf(faction.memberCount),
+                        String.valueOf(faction.getMemberCount()),
                         (faction.DTR <= 0 ? "true" : "false")
 
                 )
-                .setMembers(playertools.getRankPlayers(faction.name),
-                        playertools.getPlayersKills()).queueList()) {
+                .setMembers(playertools.getRankPlayers(faction),
+                        playertools.getFactionKills(faction)).queueList()) {
             p.sendMessage(line);
         }
 

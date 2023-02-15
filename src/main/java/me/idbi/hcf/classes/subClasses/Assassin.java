@@ -1,7 +1,9 @@
 package me.idbi.hcf.classes.subClasses;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.classes.Classes;
 import me.idbi.hcf.classes.HCF_Class;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -58,7 +60,8 @@ public class Assassin implements HCF_Class, Listener {
         for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
             addEffect(p,potionEffectTypeIntegerEntry.getKey(),potionEffectTypeIntegerEntry.getValue());
         }
-        playertools.setMetadata(p, "class", "Assassin");
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
+        hcf.setClass(Classes.ASSASSIN);
     }
 
     @Override
@@ -72,11 +75,13 @@ public class Assassin implements HCF_Class, Listener {
         for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
             p.removePotionEffect(potionEffectTypeIntegerEntry.getKey());
         }
-        playertools.setMetadata(p, "class", "None");
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
+        hcf.setClass(Classes.NONE);
     }
-    private void PlaceBuff(Player p,Boolean state) {
+    private void PlaceBuff(Player p, Boolean state) {
         removeEffects(p);
-        int level = Integer.parseInt(playertools.getMetadata(p,"Assassin_state"));
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
+        int level = hcf.assassinState;
         if(state && level+1 <= 16)
             level++;//-15
         else if(!state && level-1 >= -16)
@@ -119,7 +124,7 @@ public class Assassin implements HCF_Class, Listener {
             addEffect(p, PotionEffectType.SLOW, 1);
             addEffect(p, PotionEffectType.WEAKNESS, 0);
         }
-        playertools.setMetadata(p,"Assassin_state",level);
+        hcf.setAssassinState(level);
         Main.sendCmdMessage(p.getDisplayName() + "level >>" + level);
     }
     @EventHandler(priority = EventPriority.LOWEST)
@@ -127,10 +132,13 @@ public class Assassin implements HCF_Class, Listener {
         if(e.isCancelled()) return;
         if(e.getDamager() instanceof Player damager) {
             if(e.getEntity() instanceof Player victim) {
-                if(playertools.getMetadata(victim, "class").equalsIgnoreCase("Assassin")) {
+                HCFPlayer hcfVictim = HCFPlayer.getPlayer(victim);
+                HCFPlayer hcfDamager = HCFPlayer.getPlayer(damager);
+
+                if(hcfVictim.playerClass == Classes.ASSASSIN) {
                     PlaceBuff(victim, false);
                 }
-                if(playertools.getMetadata(damager, "class").equalsIgnoreCase("Assassin")) {
+                if(hcfDamager.playerClass == Classes.ASSASSIN) {
                     PlaceBuff(damager, true);
                 }
             }

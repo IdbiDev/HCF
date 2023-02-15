@@ -1,5 +1,6 @@
 package me.idbi.hcf.Scoreboard;
 
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.HCF_Claiming;
@@ -36,6 +37,7 @@ public class Scoreboards {
         sortLists();
 
         Faction fac = playertools.getPlayerFaction(p);
+        HCFPlayer player = HCFPlayer.getPlayer(p);
 
         Collections.reverse(fix);
         Collections.reverse(timers);
@@ -57,7 +59,7 @@ public class Scoreboards {
                 continue;
             } else if (line.contains("%stuck_timer%") && HCF_Timer.getStuckTime(p) <= 0.0) {
                 continue;
-            } else if(line.contains("%bard_energy%") && Double.parseDouble(playertools.getMetadata(p, "bardenergy")) <= 0.0) {
+            } else if(line.contains("%bard_energy%") && player.bardEnergy <= 0.0) {
                 continue;
             } else if(line.contains("%eotw%") && Misc_Timers.getTimeOfEOTW() <= 0L) {
                 continue;
@@ -168,13 +170,13 @@ public class Scoreboards {
     private static final DecimalFormat dfSharp = new DecimalFormat("0.0");
 
     public static String replaceVariables(String inputString, Player p) {
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
         return inputString
-                .replace("%money%", playertools.getMetadata(p, "money"))
-                .replace("%faction%", playertools.getMetadata(p, "faction"))
-                .replace("%class%", playertools.getMetadata(p, "class"))
+                .replace("%money%", hcf.money + "")
+                .replace("%faction%", hcf.getFactionName())
+                .replace("%class%", playertools.upperFirst(hcf.playerClass.name()))
                 .replace("%bard_energy%", dfSharp.format(
-                        Double.parseDouble(
-                                playertools.getMetadata(p, "bardenergy")))
+                        hcf.bardEnergy)
                         .replace(",", "."))
 //                        new SimpleDateFormat("s").format(
 //                                new Date((long) (Double.parseDouble(playertools.getMetadata(p, "bardenergy")) * 1000L)))))
@@ -185,9 +187,9 @@ public class Scoreboards {
                 .replace("%ep_cd%", getDouble(HCF_Timer.getEpTime(p)))
                 .replace("%gapple_cd%", getDouble(HCF_Timer.get_Golden_Apple_Time(p)))
                 .replace("%opgapple_cd%", ConvertTime((int) (HCF_Timer.get_OP_Golden_Apple_Time(p) / 1000)))
-                .replace("%eotw%", ConvertTime((int) Misc_Timers.getTimeOfEOTW() /1000))
-                .replace("%sotw%", ConvertTime((int) Misc_Timers.getTimeOfSOTW()/1000))
-                .replace("%location%", HCF_Claiming.sendFactionTerritory(p));
+                .replace("%eotw%", ConvertTime((int) Misc_Timers.getTimeOfEOTW() / 1000))
+                .replace("%sotw%", ConvertTime((int) Misc_Timers.getTimeOfSOTW() / 1000))
+                .replace("%location%", hcf.getLocationFormatted());
     }
 
     public static String getDouble(long value) {

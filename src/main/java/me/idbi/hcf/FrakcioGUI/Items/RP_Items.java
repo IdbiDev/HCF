@@ -1,7 +1,9 @@
 package me.idbi.hcf.FrakcioGUI.Items;
 
+import me.idbi.hcf.CustomFiles.GUIMessages.GUIMessages;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -132,18 +134,20 @@ public class RP_Items {
         return is;
     }
 
-    public static ItemStack save() {
+    public static ItemStack save(Player p) {
         ItemStack is = new ItemStack(Material.INK_SACK, 1, (byte) 10);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§aSave All Changes");
+        im.setDisplayName(GUIMessages.save_button.language(p).getName());
+        im.setLore(GUIMessages.save_button.language(p).getLore());
         is.setItemMeta(im);
         return is;
     }
 
-    public static ItemStack cancel() {
+    public static ItemStack cancel(Player p) {
         ItemStack is = new ItemStack(Material.INK_SACK, 1, (byte) 1);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§cDiscard All Changes");
+        im.setDisplayName(GUIMessages.discard_button.language(p).getName());
+        im.setLore(GUIMessages.discard_button.language(p).getLore());
         is.setItemMeta(im);
         return is;
     }

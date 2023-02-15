@@ -29,8 +29,8 @@ public class Click_InvitedPlayers implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) return;
         if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
-            e.getWhoClicked().openInventory(InviteManagerInventory.inv());
+        if (e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
+            e.getWhoClicked().openInventory(InviteManagerInventory.inv(((Player) e.getWhoClicked())));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }

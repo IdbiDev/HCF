@@ -8,6 +8,7 @@ import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.Objects.Permissions;
 import me.idbi.hcf.tools.brewing;
 import me.idbi.hcf.tools.playertools;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
@@ -26,7 +27,6 @@ public class onBlockBreak implements Listener {
         Block block = e.getBlock();
         int bx = Math.round(block.getX());
         int bz = Math.round(block.getZ());
-        Faction f = playertools.getPlayerFaction(p);
         HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(bx,bz);
         if(claim == null) {
             return;

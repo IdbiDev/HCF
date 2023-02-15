@@ -2,6 +2,7 @@ package me.idbi.hcf.classes;
 
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.classes.subClasses.*;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 
@@ -14,6 +15,8 @@ public class ClassSelector {
 
     public static void addClassToPlayer(Player p){
 
+        HCFPlayer player = HCFPlayer.getPlayer(p);
+        Classes clss = player.playerClass;
         //Assassin class
         /*if(assassin_class.CheckArmor(p)){
             if (!playertools.getMetadata(p, "class").equalsIgnoreCase("Assassin")) {
@@ -23,34 +26,34 @@ public class ClassSelector {
             assassin_class.removeEffects(p);
         }*/
         if(rogue_class.CheckArmor(p)){
-            if (!playertools.getMetadata(p, "class").equalsIgnoreCase("Rogue")) {
+            if (clss != Classes.ROGUE) {
                 rogue_class.setEffect(p);
             }
-        }else if(playertools.getMetadata(p, "class").equalsIgnoreCase("Rogue")){
+        }else if(clss == Classes.ROGUE) {
             rogue_class.removeEffects(p);
         }
         //Archer class
         if(archer_class.CheckArmor(p)){
-            if (!playertools.getMetadata(p, "class").equalsIgnoreCase("Archer")) {
+            if (clss != Classes.ARCHER) {
                 archer_class.setEffect(p);
             }
-        }else if(playertools.getMetadata(p, "class").equalsIgnoreCase("Archer")){
+        }else if(clss == Classes.ARCHER) {
             archer_class.removeEffects(p);
         }
         //Bard class
         if(bard_class.CheckArmor(p)){
-            if (!playertools.getMetadata(p, "class").equalsIgnoreCase("Bard")) {
+            if (clss != Classes.BARD) {
                 bard_class.setEffect(p);
             }
-        }else if(playertools.getMetadata(p, "class").equalsIgnoreCase("Bard")){
+        }else if(clss == Classes.BARD) {
             bard_class.removeEffects(p);
         }
         //Miner class
         if(miner_class.CheckArmor(p)){
-            if (!playertools.getMetadata(p, "class").equalsIgnoreCase("Miner")) {
+            if (clss != Classes.MINER) {
                 miner_class.setEffect(p);
             }
-        }else if(playertools.getMetadata(p, "class").equalsIgnoreCase("Miner")){
+        }else if(clss == Classes.MINER) {
             miner_class.removeEffects(p);
         }
 

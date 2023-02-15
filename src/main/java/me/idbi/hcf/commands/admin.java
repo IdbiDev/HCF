@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.WorldModes.SOTW;
 import me.idbi.hcf.adminsystem.adminMain;
 import me.idbi.hcf.commands.cmdFunctions.Faction_EOTW;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -23,7 +24,8 @@ public class admin implements CommandExecutor, TabCompleter {
                 if (p.hasPermission("factions.admin.admin")) {
                     switch (args[0]) {
                         case "duty":
-                            adminMain.setAdminDuty(p, !Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty")));
+                            HCFPlayer player = HCFPlayer.getPlayer(p);
+                            adminMain.setAdminDuty(p, !player.inDuty);
                             break;
                         case "deposit":
                             try {

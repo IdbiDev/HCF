@@ -24,7 +24,7 @@ import java.util.Map;
 public class PlayerRankManagerInventory {
     public static Connection con = Main.getConnection("cmd.FactionCreate");
     // --------------------- ONLINE PLAYER ---------------------------- //
-    public static Inventory inv(Player p) {
+    public static Inventory inv(Player owner, Player p) {
         Inventory inv = Bukkit.createInventory(null, 6*9, p.getName() + "'s Rank Manager");
 
         for (int i = 0; i < inv.getSize(); i++) {
@@ -61,7 +61,7 @@ public class PlayerRankManagerInventory {
             inv.addItem(rank(Name, false));
         }*/
 
-        Faction faction = playertools.getPlayerFaction(p);
+        HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         for(Map.Entry<Integer, Faction_Rank_Manager.Rank> rank : playertools.sortByPriority(playertools.getPlayerFaction(p)).entrySet()) {
             if(hcfPlayer.rank.name.equalsIgnoreCase(rank.getValue().name)) { // what is this gondolkodom rajta én isxyd?
                 inv.addItem(rank(rank.getValue().name, true));
@@ -70,7 +70,7 @@ public class PlayerRankManagerInventory {
             inv.addItem(rank(rank.getValue().name, false));
         }
 
-        inv.setItem(49, GUI_Items.back());
+        inv.setItem(49, GUI_Items.back(owner));
         inv.setItem(4, activeRank(p));
 
         return inv;
@@ -78,7 +78,7 @@ public class PlayerRankManagerInventory {
 
     // --------------------- OFFLINE PLAYER ---------------------------- //
 
-    public static Inventory inv(OfflinePlayer p) {
+    public static Inventory inv(Player owner, OfflinePlayer p) {
         Inventory inv = Bukkit.createInventory(null, 6*9, p.getName() + "'s Rank Manager");
 
         for (int i = 0; i < inv.getSize(); i++) {
@@ -128,7 +128,7 @@ public class PlayerRankManagerInventory {
             inv.addItem(rank(rank.getValue().name, false));
         }
 
-        inv.setItem(49, GUI_Items.back());
+        inv.setItem(49, GUI_Items.back(owner));
         inv.setItem(4, activeRank(p));
 
         return inv;
@@ -142,7 +142,7 @@ public class PlayerRankManagerInventory {
         Faction faction = playertools.getPlayerFaction(target);
 
         assert faction != null;
-        Faction_Rank_Manager.Rank rank = faction.player_ranks.get(target);
+        Faction_Rank_Manager.Rank rank = faction.getPlayerRank(target);
 
         im.setDisplayName("§7Active Rank: §a§o" + rank.name);
 

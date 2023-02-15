@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ public class SimpleConfig {
     private File file;
     private FileConfiguration config;
 
-    public SimpleConfig(InputStream configStream, File configFile, int comments, JavaPlugin plugin) {
+    public SimpleConfig(Reader configStream, File configFile, int comments, JavaPlugin plugin) {
         this.comments = comments;
         this.manager = new SimpleConfigManager(plugin);
 
@@ -132,8 +133,34 @@ public class SimpleConfig {
     }
 
     public void saveConfig() {
-        String config = this.config.saveToString();
-        manager.saveConfig(config, this.file);
+        String config = this.config.saveToString()
+                .replace(",\n  ", this.manager.getPluginName() + "_COMMA")
+                .replace("\n    ", this.manager.getPluginName() + "_SPACE");
+        String output = "";
+        String line = "";
+        String beforeLine = "";
+        for (String s : config.split("\n")) {
+            if(
+                    s.startsWith("  ")
+                            && (beforeLine.contains(this.manager.getPluginName() + "_COMMENT")/* || s.contains(this.manager.getPluginName() + "_COMMENT")*/)
+                            && !s.contains(":")
+            ) {
+                line += s;
+                beforeLine = line;
+                continue;
+            }
+            beforeLine = s;
+
+            if(!line.equals("") && output.endsWith("\n")) {
+                output = output.substring(0, output.length() - 1) + line.substring(1);
+                output += "\n";
+                line = "";
+            }
+
+            output += s;
+            output += "\n";
+        }
+        manager.saveConfig(output, this.file);
 
     }
 

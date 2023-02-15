@@ -40,13 +40,13 @@ public class Click_RankPriority implements Listener {
 
         if(!(e.getWhoClicked() instanceof Player p)) return;
 
-        if (e.getCurrentItem().isSimilar(RP_Items.cancel())) {
+        if (e.getCurrentItem().isSimilar(RP_Items.cancel(((Player) e.getWhoClicked())))) {
             p.openInventory(MainInventory.mainInv(p));
             GUI_Sound.playSound(p, "back");
             return;
         }
 
-        if(e.getCurrentItem().isSimilar(RPrio_Items.rankManagerToggleButton())) {
+        if(e.getCurrentItem().isSimilar(RPrio_Items.rankManagerToggleButton(((Player) e.getWhoClicked())))) {
             p.openInventory(RankMenuInventory.inv(p));
             GUI_Sound.playSound(p, "back");
             return;
@@ -57,11 +57,11 @@ public class Click_RankPriority implements Listener {
                 return;
 
         if(e.getCurrentItem().getItemMeta().hasEnchants()) {
-            RankPriorityInventory.editableInventoryRemoveEnchant(e.getInventory(), e.getCurrentItem(), e.getSlot());
+            RankPriorityInventory.editableInventoryRemoveEnchant(((Player) e.getWhoClicked()), e.getInventory(), e.getCurrentItem(), e.getSlot());
             return;
         }
 
-        if(e.getCurrentItem().isSimilar(RP_Items.save())) {
+        if(e.getCurrentItem().isSimilar(RP_Items.save(((Player) e.getWhoClicked())))) {
             saveInventory(p, e.getInventory());
             p.sendMessage(Messages.gui_priority_saved.language(p).queue());
             GUI_Sound.playSound(p, "success");
@@ -81,7 +81,7 @@ public class Click_RankPriority implements Listener {
             e.getInventory().setItem(e.getSlot(), selected);
             p.updateInventory();
 
-            RankPriorityInventory.editableInventoryRemoveEnchant(e.getInventory(), selected, e.getSlot());
+            RankPriorityInventory.editableInventoryRemoveEnchant(((Player) e.getWhoClicked()), e.getInventory(), selected, e.getSlot());
 
             GUI_Sound.playSound(p, "success");
 /*            Bukkit.broadcastMessage("Csere successfully!");*/
@@ -95,7 +95,7 @@ public class Click_RankPriority implements Listener {
             return;
         }
 
-        RankPriorityInventory.editableInventoryAddEnchant(e.getInventory(), e.getCurrentItem(), e.getSlot());
+        RankPriorityInventory.editableInventoryAddEnchant(((Player) e.getWhoClicked()), e.getInventory(), e.getCurrentItem(), e.getSlot());
         GUI_Sound.playSound(p, "click");
     }
 

@@ -7,10 +7,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 import static me.idbi.hcf.commands.cmdFunctions.Faction_Create.con;
 
 public class PlayerStatistic {
+    public final static String defaultStats = "{\"totalFactions\":0,\"lastLogin\":0,\"TimePlayed\":0,\"MoneySpend\":0,\"ClassTimes\":{\"Miner\":0,\"Archer\":0,\"Assassin\":0,\"Total\":0,\"Bard\":0},\"MoneyEarned\":0,\"FactionHistory\":[],\"startDate\":0}";
     public long TotalBardClassTime;
     public long TotalAssassinClassTime;
     public long TotalArcherClassTime;
@@ -55,7 +57,7 @@ public class PlayerStatistic {
         TimePlayed = Long.parseLong(String.valueOf(mainJSON.get("TimePlayed")));
     }
 
-    public void Save(Player p){
+    public void save(UUID uuid){
         JSONObject jsonComp = new JSONObject();
         JSONArray factions = new JSONArray();
         //JSONArray ClassTimes = new JSONArray();
@@ -77,6 +79,7 @@ public class PlayerStatistic {
         }
         jsonComp.put("FactionHistory", factions);
         jsonComp.put("ClassTimes", classTimes);
-        SQL_Connection.dbExecute(con,"UPDATE members SET statistics='?' WHERE uuid='?'",jsonComp.toString(),p.getUniqueId().toString());
+
+        SQL_Connection.dbExecute(con,"UPDATE members SET statistics='?' WHERE uuid='?'", jsonComp.toString(), uuid.toString());
     }
 }

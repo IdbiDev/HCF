@@ -3,6 +3,7 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,7 +18,7 @@ public class onPlayerRespawn implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         if (Main.debug)
             System.out.println("Respawning player.. Loading it ");
-        playertools.LoadPlayer(e.getPlayer());
+        playertools.loadOnlinePlayer(e.getPlayer());
         String str = Config.spawn_location.asStr();
         Location spawn = new Location(
                 Bukkit.getWorld(Config.world_name.asStr()),

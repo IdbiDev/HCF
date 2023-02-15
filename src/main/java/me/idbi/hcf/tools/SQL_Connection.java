@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 public class SQL_Connection {
 
+    private static Main m = Main.getPlugin(Main.class);
     // Adatbázis kapcsolat... host port databae user password >> Nem nagy cucc
     public static Connection dbConnect(String host, String port, String database, String username, String password) {
         Connection con = null;

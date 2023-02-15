@@ -73,6 +73,7 @@ public class InteractShopSign implements Listener {
                             int playerBalance = playertools.getPlayerBalance(p);
 
                             Scoreboards.refresh(p);
+                            HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
                             if (remainingSpace < amount && remainingSpace > 0) {
                                 if (isFull(p, new ItemStack(material, remainingSpace, Short))) {
                                     p.sendMessage(Messages.not_enough_slot.language(p).queue());
@@ -84,7 +85,7 @@ public class InteractShopSign implements Listener {
                                 }
 
                                 playertools.setPlayerBalance(p, playerBalance - fertigPreise);
-                                PlayerStatistic stat = Main.playerStatistics.get(p.getUniqueId());
+                                PlayerStatistic stat = hcfPlayer.playerStatistic;
                                 stat.MoneySpend+=fertigPreise;
                                 p.sendMessage(Messages.sign_shop_bought.language(p).setItem(new ItemStack(material, remainingSpace, Short))
                                         .setPrice(fertigPreise)
@@ -106,9 +107,8 @@ public class InteractShopSign implements Listener {
                                         .setAmount(String.valueOf(amount))
                                         .queue());
                                 playertools.setPlayerBalance(p, playerBalance - signPrice);
-                                PlayerStatistic stat = Main.playerStatistics.get(p.getUniqueId());
+                                PlayerStatistic stat = hcfPlayer.playerStatistic;
                                 stat.MoneySpend+=signPrice;
-                                Main.playerStatistics.put(p.getUniqueId(),stat);
                             }
 
                             Scoreboards.refresh(p);
@@ -149,11 +149,12 @@ public class InteractShopSign implements Listener {
                                         .setItem(new ItemStack(material, amount, Short))
                                         .queue()
                                 );
+
+                                HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
                                 Scoreboards.refresh(p);
-                                playertools.setMetadata(p, "money", Integer.parseInt(playertools.getMetadata(p, "money")) + price);
-                                PlayerStatistic stat = Main.playerStatistics.get(p.getUniqueId());
+                                hcfPlayer.addMoney(price);
+                                PlayerStatistic stat = hcfPlayer.playerStatistic;
                                 stat.MoneyEarned+=price;
-                                Main.playerStatistics.put(p.getUniqueId(),stat);
                             } else {
                                 p.sendMessage(Messages.dont_have_item.language(p).queue());
                             }

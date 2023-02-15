@@ -18,15 +18,15 @@ public class MainInventory {
         }
 
         inv.setItem(0, Ally_Items.ally());
-        inv.setItem(11, GUI_Items.rankManager());
-        inv.setItem(13, IM_Items.inviteManager());
-        inv.setItem(15, GUI_Items.playerManager());
-        inv.setItem(35, GUI_Items.renameFaction());
+        inv.setItem(11, GUI_Items.rankManager(p));
+        inv.setItem(13, IM_Items.inviteManager(p));
+        inv.setItem(15, GUI_Items.playerManager(p));
+        inv.setItem(35, GUI_Items.renameFaction(p));
 
         Faction faction = playertools.getPlayerFaction(p);
         assert faction != null;
-        inv.setItem(31, GUI_Items.factinoStats(faction));
-        inv.setItem(27, GUI_Items.histories());
+        inv.setItem(31, GUI_Items.factionStats(p, faction));
+        inv.setItem(27, GUI_Items.histories(p));
         return inv;
     }
 }

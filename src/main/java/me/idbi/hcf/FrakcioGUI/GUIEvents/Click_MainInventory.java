@@ -36,7 +36,7 @@ public class Click_MainInventory implements Listener {
 
         //Player p = (Player) e.getWhoClicked();
 
-         if(e.getCurrentItem().isSimilar(GUI_Items.rankManager())) {
+         if(e.getCurrentItem().isSimilar(GUI_Items.rankManager(((Player) e.getWhoClicked())))) {
             if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_RANKS)){
                 p.sendMessage(Messages.no_permission.language(p).queue());
                 GUI_Sound.playSound(p,"error");
@@ -47,7 +47,7 @@ public class Click_MainInventory implements Listener {
              p.openInventory(RankMenuInventory.inv(p));
         }
 
-        else if(e.getCurrentItem().isSimilar(GUI_Items.playerManager())) {
+        else if(e.getCurrentItem().isSimilar(GUI_Items.playerManager(((Player) e.getWhoClicked())))) {
             if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_PLAYERS)) {
                 p.sendMessage(Messages.no_permission.language(p).queue());
                 GUI_Sound.playSound(p,"error");
@@ -57,17 +57,17 @@ public class Click_MainInventory implements Listener {
              p.openInventory(MemberListInventory.members(p));
         }
 
-        else if(e.getCurrentItem().isSimilar(IM_Items.inviteManager())) {
+        else if(e.getCurrentItem().isSimilar(IM_Items.inviteManager(((Player) e.getWhoClicked())))) {
             if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_INVITE)) {
                 p.sendMessage(Messages.no_permission.language(p).queue());
                 GUI_Sound.playSound(p,"error");
                 return;
             }
              GUI_Sound.playSound(p,"click");
-             p.openInventory(InviteManagerInventory.inv());
+             p.openInventory(InviteManagerInventory.inv(((Player) e.getWhoClicked())));
         }
 
-        else if(e.getCurrentItem().isSimilar(GUI_Items.histories())) {
+        else if(e.getCurrentItem().isSimilar(GUI_Items.histories(((Player) e.getWhoClicked())))) {
             // ToDo: Logs check permission
             //if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_INVITE)) {
              /*   p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
@@ -79,7 +79,7 @@ public class Click_MainInventory implements Listener {
                      1, 1, 1, 1, 1, 1));
         }
 
-        else if(e.getCurrentItem().isSimilar(GUI_Items.renameFaction())) {
+        else if(e.getCurrentItem().isSimilar(GUI_Items.renameFaction(((Player) e.getWhoClicked())))) {
             if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_ALL)){
                 p.sendMessage(Messages.no_permission.language(p).queue());
                 GUI_Sound.playSound(p,"error");
@@ -96,7 +96,7 @@ public class Click_MainInventory implements Listener {
                 return;
             }
             GUI_Sound.playSound(p,"click");
-            p.openInventory(Alley_MainInventory.inv());
+            p.openInventory(Alley_MainInventory.inv(((Player) e.getWhoClicked())));
         }
     }
 

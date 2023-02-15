@@ -1,6 +1,8 @@
 package me.idbi.hcf.classes.subClasses;
 
+import me.idbi.hcf.classes.Classes;
 import me.idbi.hcf.classes.HCF_Class;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -50,7 +52,8 @@ public class Rogue implements HCF_Class, Listener {
         for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
             addEffect(p,potionEffectTypeIntegerEntry.getKey(),potionEffectTypeIntegerEntry.getValue());
         }
-        playertools.setMetadata(p, "class", "Rogue");
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
+        hcf.setClass(Classes.ROGUE);
     }
 
     @Override
@@ -64,14 +67,16 @@ public class Rogue implements HCF_Class, Listener {
         for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
             p.removePotionEffect(potionEffectTypeIntegerEntry.getKey());
         }
-        playertools.setMetadata(p, "class", "None");
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
+        hcf.setClass(Classes.NONE);
     }
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent e) {
         if(e.isCancelled()) return;
         if(e.getDamager() instanceof Player damager) {
             if(e.getEntity() instanceof Player victim) {
-                if(playertools.getMetadata(damager, "class").equalsIgnoreCase("Rogue") && ((Player) e.getDamager()).getItemInHand().getType() == Material.GOLD_SWORD) {
+                HCFPlayer hcf = HCFPlayer.getPlayer(damager);
+                if(hcf.playerClass == Classes.ROGUE && ((Player) e.getDamager()).getItemInHand().getType() == Material.GOLD_SWORD) {
                     Location playerLoc = damager.getLocation();
                     Location targetLoc = victim.getLocation();
                     double pvecy = -Math.sin(Math.toRadians(playerLoc.getPitch()));

@@ -31,7 +31,7 @@ public class DeleteRankConfirm implements Listener {
 
             Faction faction = playertools.getPlayerFaction((Player) e.getWhoClicked());
 
-            Faction_Rank_Manager.DeleteRank(faction, name);
+            Faction_Rank_Manager.delete(faction, name);
             e.getWhoClicked().closeInventory();
             Bukkit.broadcastMessage("Törölve");
             GUI_Sound.playSound((Player) e.getWhoClicked(), "success");

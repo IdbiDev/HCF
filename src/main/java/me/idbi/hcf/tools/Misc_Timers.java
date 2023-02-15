@@ -7,9 +7,11 @@ import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.classes.ClassSelector;
+import me.idbi.hcf.classes.Classes;
 import me.idbi.hcf.classes.subClasses.Bard;
 import me.idbi.hcf.koth.KOTH;
 import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -36,8 +38,8 @@ public class Misc_Timers {
 
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                     ClassSelector.addClassToPlayer(player);
-                    if (!playertools.HasMetaData(player, "class")) continue;
-                    if (playertools.getMetadata(player, "class").equalsIgnoreCase("bard")){
+                    HCFPlayer hcf = HCFPlayer.getPlayer(player);
+                    if(hcf.playerClass == Classes.BARD) {
                         Bard.useSimpleBardEffect(player);
                     }
                     //Shapes.Crossing(new Location(player.getWorld(),10,64,16),new Location(player.getWorld(),-21,64,-5),Effect.HEART,10);
@@ -96,6 +98,7 @@ public class Misc_Timers {
                     } //DTR regen: 0 Minutes 10 Seconds
                     f.DTR_TIMEOUT = val-System.currentTimeMillis();
                 }
+
                 for (Map.Entry<LivingEntity, Long> entry : Main.saved_players.entrySet()) {
                     LivingEntity key = entry.getKey();
                     long val = entry.getValue();
@@ -107,21 +110,23 @@ public class Misc_Timers {
                         Main.saved_players.put(key, val - 1000);
                     }
                 }
-                for(Map.Entry<UUID, PlayerStatistic> entry : Main.playerStatistics.entrySet()){
-                    Player p = Bukkit.getPlayer(entry.getKey());
-                    entry.getValue().TimePlayed += 1000L;
-                    if (!playertools.HasMetaData(p, "class")) continue;
-                    if(playertools.getMetadata(p, "class").equalsIgnoreCase("Assassin")){
-                        entry.getValue().TotalAssassinClassTime += 1000L;
+
+                for(Player onlines : Bukkit.getOnlinePlayers()){
+                    HCFPlayer hcf = HCFPlayer.getPlayer(onlines);
+                    PlayerStatistic stats = hcf.playerStatistic;
+                    stats.TimePlayed += 1000L;
+                    Classes clss = hcf.playerClass;
+                    if(clss == Classes.ASSASSIN){
+                        stats.TotalAssassinClassTime += 1000L;
                     }
-                    if(playertools.getMetadata(p, "class").equalsIgnoreCase("Archer")){
-                        entry.getValue().TotalArcherClassTime += 1000L;
+                    if(clss == Classes.ARCHER){
+                        stats.TotalArcherClassTime += 1000L;
                     }
-                    if(playertools.getMetadata(p, "class").equalsIgnoreCase("Bard")){
-                        entry.getValue().TotalBardClassTime += 1000L;
+                    if(clss == Classes.BARD){
+                        stats.TotalBardClassTime += 1000L;
                     }
-                    if(playertools.getMetadata(p, "class").equalsIgnoreCase("Miner")){
-                        entry.getValue().TotalMinerClassTime += 1000L;
+                    if(clss == Classes.MINER){
+                        stats.TotalMinerClassTime += 1000L;
                     }
                 }
 
@@ -184,11 +189,11 @@ public class Misc_Timers {
                     if(shouldRefresh)
                         Scoreboards.refresh(player);
                     //Class selector
-                    if (!playertools.HasMetaData(player, "class")) continue;
-                    if (!playertools.getMetadata(player, "class").equalsIgnoreCase("bard")) continue;
-                    if (!(Double.parseDouble(playertools.getMetadata(player, "bardenergy")) >= 100D)) {
+                    HCFPlayer hcf = HCFPlayer.getPlayer(player);
+                    if(hcf.playerClass != Classes.BARD) continue;
+                    if (!(hcf.bardEnergy >= 100D)) {
+                        hcf.bardEnergy += 1D;
                         Scoreboards.refresh(player);
-                        playertools.setMetadata(player, "bardenergy", Double.parseDouble(playertools.getMetadata(player, "bardenergy")) + 1D);
                     }
                 }
             }
@@ -386,7 +391,7 @@ public class Misc_Timers {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Main.SaveAll();
+                Main.saveAll();
                 Runtime runtime = Runtime.getRuntime();
                 long totalMemory = runtime.totalMemory();
                 long freeMemory = runtime.freeMemory();

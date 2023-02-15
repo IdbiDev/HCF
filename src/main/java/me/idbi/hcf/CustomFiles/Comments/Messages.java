@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
 import me.idbi.hcf.CustomFiles.MessagesTool;
 import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -97,8 +98,11 @@ public enum Messages {
     //PVP_QUIT_MESSAGE("&a&o%player% leaved "),
 
     // Zones interact You've exited
-    leave_zone("§eYou left §6§o%zone_name%"),
-    entered_zone("§eYou entered §6§o%zone_name%"),
+    leave_zone("&eYou left %zone%"),
+    entered_zone("&eYou entered %zone%"),
+    zone_friendly("&a%zone%"),
+    zone_enemy("&c%zone%"),
+    wilderness("&2Wilderness"),
 
     // Faction messages
     kick_message("&%prefix% a%executor% &ekicked &a%player%&e from the faction!"),
@@ -161,6 +165,8 @@ public enum Messages {
     freeze_player_off("%prefix% &cYou got unfrozen by &4&o%executor%"),
     freeze_executor_on("%prefix% &aYou froze &2&o%player%"),
     freeze_executor_off("%prefix% &cYou unfroze &4&o%player%"),
+    admin_staff_chat("§aStaff Chat"),
+    admin_global_chat("§bGlobal Chat"),
 
     spawn_claim_success("%prefix% &bYou successfully claimed the spawn!"),
 
@@ -561,24 +567,25 @@ public enum Messages {
 
 
     public Messages setDeathWithoutKiller(Player victim) {
-        String victim_kills = playertools.getMetadata(victim,"kills");
+        HCFPlayer player = HCFPlayer.getPlayer(victim);
         playerMessage = playerMessage.replace("%victim%", victim.getName())
-                .replace("%victim_kills%",victim_kills);
+                .replace("%victim_kills%", player.playerStatistic.kills + "");
         return this;
     }
 
     public Messages setVictimWithKills(Player victim, Player killer) {
+        HCFPlayer hcfKiller = HCFPlayer.getPlayer(killer);
+        HCFPlayer hcfVictim = HCFPlayer.getPlayer(victim);
         String weaponName = (killer.getItemInHand().hasItemMeta()) ?
                 (killer.getItemInHand().getItemMeta().hasDisplayName()
                         ? killer.getItemInHand().getItemMeta().getDisplayName()
                         : killer.getItemInHand().getType().name().toLowerCase())
                 : killer.getItemInHand().getType().name().toLowerCase();
-        String killer_kills = playertools.getMetadata(killer,"kills");
-        String victim_kills = playertools.getMetadata(victim,"kills");
+
         playerMessage = playerMessage.replace("%victim%", victim.getName())
                 .replace("%killer%", killer.getName())
-                .replace("%killer_kills%",killer_kills)
-                .replace("%victim_kills%",victim_kills)
+                .replace("%killer_kills%", hcfKiller.getKills() + "")
+                .replace("%victim_kills%", hcfVictim.getKills() + "")
                 .replace("%killer_weapon%", weaponName);
         return this;
     }
@@ -596,7 +603,7 @@ public enum Messages {
     }
 
     public Messages setZone(String zoneName) {
-        playerMessage = playerMessage.replace("%zone_name%", zoneName);
+        playerMessage = playerMessage.replace("%zone%", zoneName);
         return this;
     }
 

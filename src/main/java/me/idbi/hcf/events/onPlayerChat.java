@@ -3,6 +3,7 @@ package me.idbi.hcf.events;
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,7 +14,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class onPlayerChat implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        if(Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "staffchat"))) {
+        HCFPlayer player = HCFPlayer.getPlayer(e.getPlayer());
+        if(player.staffChat) {
             e.setCancelled(true);
 
             if(e.getMessage().split(" ").length == 2)
@@ -28,13 +30,13 @@ public class onPlayerChat implements Listener {
             return;
         }
 
-        if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "factionchat"))) {
-            if(playertools.getMetadata(e.getPlayer(), "factionid").equals("0")) {
+        if (player.factionChat) {
+            if(player.inFaction()) {
                 e.getPlayer().sendMessage(Messages.not_in_faction.queue());
                 return;
             }
             e.setCancelled(true);
-            Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(e.getPlayer(), "factionid")));
+            Faction faction = player.faction;
             if(faction == null){
                 e.getPlayer().sendMessage(Messages.not_in_faction.queue());
                 return;
@@ -43,11 +45,11 @@ public class onPlayerChat implements Listener {
                     .setMessage(e.getMessage())
                     .setPlayer(e.getPlayer())
                     .setFaction(faction)
-                    .replace("%rank%", playertools.getMetadata(e.getPlayer(), "rank")).queue();
+                    .setRank(player.rank.name).queue();
 
             faction.BroadcastFaction(msg);
         } else {
-            if(!playertools.getMetadata(e.getPlayer(), "factionid").equals("0")) {
+            if(player.inFaction()) {
                 Faction faction = playertools.getPlayerFaction(e.getPlayer());
                 String msg = e.getMessage();
                 //e.setCancelled(true);

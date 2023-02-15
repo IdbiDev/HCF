@@ -1,11 +1,13 @@
 package me.idbi.hcf.Scoreboard;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.tools.AdminTools;
 import me.idbi.hcf.tools.HCF_Timer;
 import me.idbi.hcf.tools.Misc_Timers;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,6 +34,8 @@ public class AdminScoreboard {
 
         sortLists();
 
+        HCFPlayer player = HCFPlayer.getPlayer(p);
+
         Collections.reverse(fix);
         Collections.reverse(timers);
 
@@ -52,7 +56,7 @@ public class AdminScoreboard {
                 continue;
             } else if (line.contains("%stuck_timer%") && HCF_Timer.getStuckTime(p) <= 0.0) {
                 continue;
-            } else if(line.contains("%bard_energy%") && Double.parseDouble(playertools.getMetadata(p, "bardenergy")) <= 0.0) {
+            } else if(line.contains("%bard_energy%") && player.bardEnergy <= 0.0) {
                 continue;
             } else if(line.contains("%eotw%") && Misc_Timers.getTimeOfEOTW() <= 0L) {
                 continue;
@@ -158,12 +162,12 @@ public class AdminScoreboard {
 
     private static final DecimalFormat dfSharp = new DecimalFormat("0.0");
     public static String replaceVariablesAdmin(String inputString, Player p) {
+        HCFPlayer player = HCFPlayer.getPlayer(p);
         return PlaceholderAPI.setPlaceholders(p,
                 Scoreboards.replaceVariables(inputString, p)
                 .replace("%invisible%", (AdminTools.InvisibleManager.invisedAdmins.contains(p) ? "§a✔" : "§c✖"))
-                .replace("%chat_mode%", (Boolean.parseBoolean(playertools.getMetadata(p, "staffchat")) ? "§aStaff Chat" : "§bGlobal Chat"))
+                .replace("%chat_mode%", player.staffChat ? Messages.admin_staff_chat.language(p).queue() : Messages.admin_global_chat.language(p).queue())
                 .replace("%online_players%", Bukkit.getOnlinePlayers().size() + "")
-                .replace("%tps%", dfSharp.format(Bukkit.spigot().getTPS()[0]) + ""))
-                ;
+                .replace("%tps%", dfSharp.format(Bukkit.spigot().getTPS()[0]) + ""));
     }
 }

@@ -15,6 +15,7 @@ import me.idbi.hcf.koth.AutoKoth;
 import me.idbi.hcf.koth.KOTH;
 import me.idbi.hcf.tools.*;
 import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.Objects.PlayerObject;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
@@ -73,8 +74,8 @@ public final class Main extends JavaPlugin implements Listener {
 
     public static HashMap<String, KOTH.koth_area> koth_cache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
-    public static HashMap<Integer, String> factionToname = new HashMap<>();
-    public static HashMap<Player, PlayerObject> player_cache = new HashMap<>();
+    public static HashMap<UUID, HCFPlayer> player_cache = new HashMap<>();
+    public static ArrayList<Faction_Rank_Manager.Rank> ranks = new ArrayList<>();
     public static HashMap<Integer, Long> DTR_REGEN = new HashMap<>();
     public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
     public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
@@ -99,7 +100,7 @@ public final class Main extends JavaPlugin implements Listener {
         return con;
     }
 
-    public static void SaveFactions() {
+    public static void saveFactions() {
         for (Map.Entry<Integer, Faction> faction : faction_cache.entrySet()) {
             Faction f = faction.getValue();
             f.saveFactionData();
@@ -107,20 +108,24 @@ public final class Main extends JavaPlugin implements Listener {
         }
     }
 
-    public static void SavePlayers() {
-        for (Map.Entry<Player, PlayerObject> value : player_cache.entrySet()) {
-            PlayerObject p_Obj = value.getValue();
-            Player p = value.getKey();
+    public static void savePlayers() {
+        for (Map.Entry<UUID, HCFPlayer> value : player_cache.entrySet()) {
+            HCFPlayer hcf = value.getValue();
+            hcf.save();
+
+            // ToDo: HCFPlayer edited
+
+            /*Player p = value.getKey();
             if (p == null)
-                continue;
-            SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?',money='?',factionname='?',name='?' WHERE UUID='?'", p_Obj.getData("factionid"), p_Obj.getData("rank"), p_Obj.getData("money"), p_Obj.getData("faction"),ChatColor.stripColor(p.getName()), p.getUniqueId().toString());
+                continue;*/
+            //SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?',money='?',factionname='?',name='?' WHERE UUID='?'", p_Obj.getData("factionid"), p_Obj.getData("rank"), p_Obj.getData("money"), p_Obj.getData("faction"),ChatColor.stripColor(p.getName()), p.getUniqueId().toString());
 
         }
     }
 
-    public static void SaveAll() {
-        SaveFactions();
-        SavePlayers();
+    public static void saveAll() {
+        saveFactions();
+        savePlayers();
     }
 
     @Override
@@ -139,7 +144,6 @@ public final class Main extends JavaPlugin implements Listener {
 //        DiscordFile.getDiscord().options().copyDefaults(true);
 //        DiscordFile.saveDiscord();
 //        saveDefaultConfig();
-
 
         configManager = new ConfigManager(this);
         configManager.setup();
@@ -229,8 +233,9 @@ public final class Main extends JavaPlugin implements Listener {
         playertools.cacheAll();
         new NameChanger(this);
         // Load online players
+
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            playertools.LoadPlayer(player);
+            playertools.loadOnlinePlayer(player);
         }
 
         // Timers
@@ -302,7 +307,9 @@ public final class Main extends JavaPlugin implements Listener {
         if(e.getPlugin().equals(this)) {
             try {
                 for(Player player : Bukkit.getOnlinePlayers()){
-                    playerStatistics.get(player.getUniqueId()).Save(player);
+                    HCFPlayer hcf = HCFPlayer.getPlayer(player);
+                    hcf.saveStats();
+
                     if(!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
                     List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
                     for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
@@ -336,7 +343,8 @@ public final class Main extends JavaPlugin implements Listener {
         //SaveAll();
         try {
             for(Player player : Bukkit.getOnlinePlayers()){
-                playerStatistics.get(player.getUniqueId()).Save(player);
+                HCFPlayer hcf = HCFPlayer.getPlayer(player);
+                hcf.saveStats();
                 if(!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
                 List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
                 for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {

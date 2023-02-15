@@ -26,7 +26,7 @@ public class Faction_DepositBank {
 
         if (args[1].matches("^[0-9]+$")) {
             try {
-                Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+                Faction faction = playertools.getPlayerFaction(p);
                 if (Integer.parseInt(args[1]) <= 0) {
                     p.sendMessage(Messages.faction_bank_not_enough.language(p).queue());
                     return;
@@ -60,7 +60,8 @@ public class Faction_DepositBank {
 
     public Faction_DepositBank depositFaction(Faction faction, Player p, int amount) {
         try {
-            int SQLAmount = Integer.parseInt(playertools.getMetadata(p, "money"));
+            HCFPlayer player = HCFPlayer.getPlayer(p);
+            int SQLAmount = player.money;
             if (amount > SQLAmount) {
                 transaction = false;
                 p.sendMessage(Messages.not_enough_slot.language(p).queue());
@@ -69,7 +70,7 @@ public class Faction_DepositBank {
 
             faction.balance = faction.balance + amount;
 
-            playertools.setMetadata(p, "money", Integer.parseInt(playertools.getMetadata(p, "money")) - amount);
+            player.takeMoney(amount);
 
             transaction = true;
         } catch (Exception ex) {

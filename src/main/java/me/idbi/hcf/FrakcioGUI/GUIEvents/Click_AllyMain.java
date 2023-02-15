@@ -23,14 +23,14 @@ public class Click_AllyMain  implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) return;
         if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
+        if (e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
             e.getWhoClicked().openInventory(MainInventory.mainInv((Player) e.getWhoClicked()));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 
         if (e.getCurrentItem().isSimilar(Ally_Items.manageRequests())) {
-            e.getWhoClicked().openInventory(Alley_ManageRequests.inv());
+            e.getWhoClicked().openInventory(Alley_ManageRequests.inv(((Player) e.getWhoClicked())));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }

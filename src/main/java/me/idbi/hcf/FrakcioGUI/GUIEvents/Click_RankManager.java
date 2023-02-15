@@ -31,7 +31,7 @@ public class Click_RankManager implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) return;
         if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
+        if (e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
             e.getWhoClicked().openInventory(RankMenuInventory.inv((Player) e.getWhoClicked()));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
@@ -42,20 +42,20 @@ public class Click_RankManager implements Listener {
         Faction f = playertools.getPlayerFaction((Player) e.getWhoClicked());
 
 
-        if (e.getCurrentItem().isSimilar(RM_Items.rename())) {
+        if (e.getCurrentItem().isSimilar(RM_Items.rename(((Player) e.getWhoClicked())))) {
             anvilRename((Player) e.getWhoClicked(), rankName);
             GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
 
-        if (e.getCurrentItem().isSimilar(RM_Items.permissionManager())) {
+        if (e.getCurrentItem().isSimilar(RM_Items.permissionManager(((Player) e.getWhoClicked())))) {
             assert f != null;
-            e.getWhoClicked().openInventory(RankPermissionInventory.inv(f.FindRankByName(rankName)));
+            e.getWhoClicked().openInventory(RankPermissionInventory.inv(((Player) e.getWhoClicked()), f.FindRankByName(rankName)));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
 
-        if (e.getCurrentItem().isSimilar(RM_Items.deleteRank())) {
+        if (e.getCurrentItem().isSimilar(RM_Items.deleteRank(((Player) e.getWhoClicked())))) {
             assert f != null;
             Faction_Rank_Manager.Rank rank = f.FindRankByName(rankName);
             if(rank.isLeader) {
@@ -84,7 +84,7 @@ public class Click_RankManager implements Listener {
                         }
                         Faction faction = playertools.getPlayerFaction(p);
                         assert faction != null;
-                        Faction_Rank_Manager.RenameRank(faction,rankName,text);
+                        Faction_Rank_Manager.rename(faction,rankName,text);
                         GUI_Sound.playSound(player,"success");
                         return AnvilGUI.Response.close();
                     } else {

@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import static me.idbi.hcf.tools.playertools.HasMetaData;
-
 public class onPlayerLeft implements Listener {
     private final Connection con = Main.getConnection("events.Quit");
     private final Main m = Main.getPlugin(Main.class);
@@ -38,21 +36,18 @@ public class onPlayerLeft implements Listener {
     public void onPlayerLeft(PlayerQuitEvent e) {
         e.setQuitMessage("");
         // Save deaths,kills money etc
-        if (HasMetaData(e.getPlayer(), "faction")) {
-            SQL_Connection.dbExecute(con, "UPDATE members SET name = '?',money='?',kills='?',deaths='?',online=0 WHERE uuid='?'", e.getPlayer().getName(), playertools.getMetadata(e.getPlayer(), "money"), playertools.getMetadata(e.getPlayer(), "kills"), playertools.getMetadata(e.getPlayer(), "deaths"), e.getPlayer().getUniqueId().toString());
-            SQL_Connection.dbExecute(con, "UPDATE members SET online='?' WHERE uuid='?'", "0", e.getPlayer().getUniqueId().toString());
-            // Koba moment
+        HCFPlayer player = HCFPlayer.getPlayer(e.getPlayer());
+        if (player.inFaction()) {
             Faction f = playertools.getPlayerFaction(e.getPlayer());
             if(f != null){
                 for (Player member : f.getMembers()) {
                     member.sendMessage(Messages.leave_faction_bc.language(member).setPlayer(e.getPlayer()).queue());
                 }
-                f.player_ranks.remove(e.getPlayer());
             }
-
-
             //Main.cacheRanks.remove(e.getPlayer());
         }
+
+        player.save();
 
         BossbarTools.remove(e.getPlayer());
 
@@ -61,16 +56,14 @@ public class onPlayerLeft implements Listener {
             //AdminTools.InvisibleManager.invisedAdmins.remove(e.getPlayer());
         }
 
-        if (Boolean.parseBoolean(playertools.getMetadata(e.getPlayer(), "freeze"))) {
+        if (player.freezeStatus) {
             Bukkit.getBanList(BanList.Type.NAME).addBan(e.getPlayer().getName(),
                             m.getConfig().getString("Freeze.Reason"),
                             new Date(System.currentTimeMillis() + Config.deathban.asInt()),
                             null)
                     .save();
         }
-        Main.player_cache.remove(e.getPlayer());
-        Main.playerStatistics.get(e.getPlayer().getUniqueId()).Save(e.getPlayer());
-        Main.playerStatistics.remove(e.getPlayer().getUniqueId());
+        Main.player_cache.remove(e.getPlayer().getUniqueId());
 
         setCombatLogger(e.getPlayer());
     }

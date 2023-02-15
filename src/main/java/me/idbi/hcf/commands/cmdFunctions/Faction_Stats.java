@@ -25,8 +25,8 @@ public class Faction_Stats {
             }
         }
 
-        for (int i = 1; i < 50; i++) {
+        /*for (int i = 1; i < 50; i++) {
             p.performCommand("f deposit " + i);
-        }
+        }*/
     }
 }

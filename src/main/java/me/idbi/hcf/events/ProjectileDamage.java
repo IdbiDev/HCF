@@ -2,7 +2,10 @@ package me.idbi.hcf.events;
 
 import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.Configs.Config;
+import me.idbi.hcf.classes.Classes;
 import me.idbi.hcf.tools.HCF_Timer;
+import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -32,11 +35,10 @@ public class ProjectileDamage implements Listener {
             if (HCF_Timer.addCombatTimer(damager)) {
                 damager.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.combattag.asStr()));
             }
-            if (damager_faction == 0 && victim_faction == 0) {
-                if (!HCF_Timer.checkArcherTimer(victim) && playertools.getMetadata(damager, "class").equalsIgnoreCase("archer")){
-                    HCF_Timer.addArcherTimer(victim);
-                }
-                return;
+
+            HCFPlayer hcfPlayer = HCFPlayer.getPlayer(damager);
+            if (!HCF_Timer.checkArcherTimer(victim) && hcfPlayer.playerClass == Classes.ARCHER) {
+                HCF_Timer.addArcherTimer(victim);
             }
 
             if (damager_faction == victim_faction) {
@@ -45,10 +47,6 @@ public class ProjectileDamage implements Listener {
                 e.setCancelled(true);
                 return;
             }
-            if (!HCF_Timer.checkArcherTimer(victim) && playertools.getMetadata(damager, "class").equalsIgnoreCase("archer")) {
-                HCF_Timer.addArcherTimer(victim);
-            }
-
         }
     }
 }

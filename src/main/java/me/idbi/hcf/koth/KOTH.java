@@ -41,7 +41,8 @@ public class KOTH implements Listener {
             if(GLOBAL_PLAYER == null){
                 // ha kothba ment ÉS nem foglalja senki
                 if(GLOBAL_AREA.claim.attribute.equals(HCF_Claiming.ClaimAttributes.KOTH) && HCF_Claiming.doOverlap(start,end,point,point)){
-                    if(!playertools.getMetadata(e.getPlayer(),"factionid").equals("0")) {
+                    HCFPlayer hcf = HCFPlayer.getPlayer(p);
+                    if(hcf.inFaction()) {
                         GLOBAL_PLAYER = e.getPlayer();
 
 

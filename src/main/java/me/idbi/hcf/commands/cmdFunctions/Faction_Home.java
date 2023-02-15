@@ -43,12 +43,13 @@ public class Faction_Home implements Listener {
         }};
         HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(p.getLocation().getBlockX(),p.getLocation().getBlockZ());
         if(claim != null) {
-            if (claim.faction == faction.id) {
+            if (claim.faction.id == faction.id) {
                 faction.setHomeLocation(p.getLocation());
 
                 JSONObject object = new JSONObject(map);
 
-                SQL_Connection.dbExecute(con, "UPDATE factions SET home = '?' WHERE ID='?'", object.toString(), String.valueOf(faction.id));
+                // SQL_Connection.dbExecute(con, "UPDATE factions SET home = '?' WHERE ID='?'", object.toString(), String.valueOf(faction.id));
+
                 p.sendMessage(Messages.sethome_message.language(p).queue());
 
                 for (Player member : faction.getMembers()) {

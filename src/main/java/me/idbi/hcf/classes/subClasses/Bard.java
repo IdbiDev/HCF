@@ -6,6 +6,7 @@ import me.idbi.hcf.classes.Classes;
 import me.idbi.hcf.classes.HCF_Class;
 import me.idbi.hcf.particles.Shapes;
 import me.idbi.hcf.tools.HCF_Timer;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -66,8 +67,9 @@ public class Bard implements HCF_Class {
         for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
             addEffect(p,potionEffectTypeIntegerEntry.getKey(),potionEffectTypeIntegerEntry.getValue());
         }
-        playertools.setMetadata(p, "class", "Bard");
-        playertools.setMetadata(p, "bardenergy",0);
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
+        hcf.setClass(Classes.BARD);
+        hcf.setBardEnergy(0D);
     }
 
     @Override
@@ -81,8 +83,9 @@ public class Bard implements HCF_Class {
         for (Map.Entry<PotionEffectType, Integer> potionEffectTypeIntegerEntry : effect.entrySet()) {
             p.removePotionEffect(potionEffectTypeIntegerEntry.getKey());
         }
-        playertools.setMetadata(p, "class", "None");
-        playertools.setMetadata(p, "bardenergy",0);
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
+        hcf.setClass(Classes.NONE);
+        hcf.setBardEnergy(0D);
     }
 
      private static class Bard_Item {
@@ -134,7 +137,8 @@ public class Bard implements HCF_Class {
         if (main != null) {
             item = findBardItem(main);
             if (item != null) {
-                double currentEnergy = Double.parseDouble(playertools.getMetadata(bardplayer, "bardenergy"));
+                HCFPlayer hcf = HCFPlayer.getPlayer(bardplayer);
+                double currentEnergy = hcf.bardEnergy;
                 if ((currentEnergy - item.cost) < 0) {
                     bardplayer.sendMessage(Messages.bard_dont_have_enough_energy.language(bardplayer).setAmount(String.valueOf(item.cost)).queue());
                     return;
@@ -144,7 +148,7 @@ public class Bard implements HCF_Class {
                 }
                 main.setAmount(main.getAmount() - 1);
                 bardplayer.getInventory().setItemInHand(main);
-                playertools.setMetadata(bardplayer, "bardenergy", currentEnergy - item.cost);
+                hcf.setBardEnergy(currentEnergy - item.cost);
                 for (Player p : getFactionMembersInDistance(bardplayer, 15)) {
                     PotionEffectType potion = item.effect;
                     if(!bardplayer.isSneaking())

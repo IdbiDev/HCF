@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.koth.GUI.KOTHInventory;
 import me.idbi.hcf.tools.HCF_Claiming;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.playertools;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,6 +26,7 @@ public class koth implements CommandExecutor, TabCompleter {
         if(sender instanceof Player p){
             if (args.length > 0) {
                 if (p.hasPermission("factions.admin.admin")) {
+                    HCFPlayer player = HCFPlayer.getPlayer(p);
                     switch (args[0]) {
                         case "setreward":
                             if(Main.kothRewardsGUI.contains(p.getUniqueId())) return false;
@@ -43,16 +45,16 @@ public class koth implements CommandExecutor, TabCompleter {
                         case "setcapturezone":
                             try{
                                 if(getKothFromName(args[1]) != 0){
-                                    if(!Boolean.parseBoolean(playertools.getMetadata(p, "kothclaim"))){
+                                    if(player.claimType != ClaimTypes.KOTH){
                                         if(KothPrepare(p)){
-                                            playertools.setMetadata(p, "kothclaim", true);
-                                            playertools.setMetadata(p, "kothid", getKothFromName(args[1]));
+                                            player.setClaimType(ClaimTypes.KOTH);
+                                            player.setKothId(getKothFromName(args[1]));
                                             Main.sendCmdMessage("MeowCapture");
                                         }
                                     }else{
                                         HCF_Claiming.ForceFinishClaim(getKothFromName(args[1]),p,ClaimAttributes.KOTH);
-                                        playertools.setMetadata(p, "kothclaim", false);
-                                        playertools.setMetadata(p, "kothid", 0);
+                                        player.setClaimType(ClaimTypes.NONE);
+                                        player.setKothId(0);
                                         endpositions.remove(getKothFromName(args[1]));
                                         startpositions.remove(getKothFromName(args[1]));
                                         p.getInventory().remove(Material.IRON_HOE);
@@ -69,16 +71,18 @@ public class koth implements CommandExecutor, TabCompleter {
                         case "setnatrualzone":
                             try{
                                 if(getKothFromName(args[1]) != 0){
-                                    if(!Boolean.parseBoolean(playertools.getMetadata(p, "kothclaim"))){
+                                    if(player.claimType != ClaimTypes.KOTH){
                                         if(KothPrepare(p)){
-                                            playertools.setMetadata(p, "kothclaim", true);
-                                            playertools.setMetadata(p, "kothid", getKothFromName(args[1]));
+                                            player.setClaimType(ClaimTypes.KOTH);
+                                            player.setKothId(getKothFromName(args[1]));
                                             Main.sendCmdMessage("MOEW setnatrualzone");
                                         }
                                     }else{
                                         HCF_Claiming.ForceFinishClaim(getKothFromName(args[1]),p,ClaimAttributes.NORMAL);
-                                        playertools.setMetadata(p, "kothclaim", false);
-                                        playertools.setMetadata(p, "kothid", 0);
+
+                                        player.setClaimType(ClaimTypes.NONE);
+                                        player.setKothId(0);
+
                                         endpositions.remove(getKothFromName(args[1]));
                                         startpositions.remove(getKothFromName(args[1]));
                                         p.getInventory().remove(Material.IRON_HOE);

@@ -29,27 +29,27 @@ public class RankPriorityInventory {
                 inv.setItem(i, GUI_Items.blackGlass());
         }
 
-        inv.setItem(8, RPrio_Items.rankManagerToggleButton());
-        inv.setItem(45, RP_Items.cancel());
-        inv.setItem(53, RP_Items.save());
+        inv.setItem(8, RPrio_Items.rankManagerToggleButton(p));
+        inv.setItem(45, RP_Items.cancel(p));
+        inv.setItem(53, RP_Items.save(p));
 
         Faction f = playertools.getPlayerFaction(p);
 
         for(Map.Entry<Integer, Faction_Rank_Manager.Rank> map : playertools.sortByPriority(f).entrySet()) {
-            inv.addItem(RPrio_Items.ranks(map.getValue().name));
+            inv.addItem(RPrio_Items.ranks(p, map.getValue().name));
         }
 
         return inv;
     }
 
-    public static Inventory editableInventoryAddEnchant(Inventory inv, ItemStack is, int slot) {
-        inv.setItem(slot, RPrio_Items.selected(is));
+    public static Inventory editableInventoryAddEnchant(Player p, Inventory inv, ItemStack is, int slot) {
+        inv.setItem(slot, RPrio_Items.selected(p, is));
 
         return inv;
     }
 
-    public static Inventory editableInventoryRemoveEnchant(Inventory inv, ItemStack is, int slot) {
-        inv.setItem(slot, RPrio_Items.ranks(ChatColor.stripColor(is.getItemMeta().getDisplayName())));
+    public static Inventory editableInventoryRemoveEnchant(Player p, Inventory inv, ItemStack is, int slot) {
+        inv.setItem(slot, RPrio_Items.ranks(p, ChatColor.stripColor(is.getItemMeta().getDisplayName())));
 
         return inv;
     }

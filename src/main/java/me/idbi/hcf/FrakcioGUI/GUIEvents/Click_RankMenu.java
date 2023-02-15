@@ -33,19 +33,19 @@ public class Click_RankMenu implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) return;
         if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
+        if (e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
             e.getWhoClicked().openInventory(MainInventory.mainInv((Player) e.getWhoClicked()));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 
-        if (e.getCurrentItem().isSimilar(RPrio_Items.priorityToggleButton())) {
+        if (e.getCurrentItem().isSimilar(RPrio_Items.priorityToggleButton(((Player) e.getWhoClicked())))) {
             e.getWhoClicked().openInventory(RankPriorityInventory.officialInventory(((Player) e.getWhoClicked())));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
         }
 
-        if (e.getCurrentItem().isSimilar(RM_Items.create())) {
+        if (e.getCurrentItem().isSimilar(RM_Items.create(((Player) e.getWhoClicked())))) {
             createRankGUI_Anvil((Player) e.getWhoClicked());
             GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             return;
@@ -55,7 +55,7 @@ public class Click_RankMenu implements Listener {
 
         String rankName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
 
-        e.getWhoClicked().openInventory(RankManagerInventory.inv(rankName));
+        e.getWhoClicked().openInventory(RankManagerInventory.inv(((Player) e.getWhoClicked()), rankName));
         GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
     }
 
@@ -71,9 +71,7 @@ public class Click_RankMenu implements Listener {
                                 return AnvilGUI.Response.text(Messages.gui_bad_word.language(p).queue());
                             }
                         }
-                        Faction faction = playertools.getPlayerFaction(p);
-                        assert faction != null;
-                        Faction_Rank_Manager.CreateRank(faction, text);
+                        Faction_Rank_Manager.create(p, text);
                         p.sendMessage(Messages.gui_rank_created.language(p).queue().replace("%rank%", text));
                         GUI_Sound.playSound(player,"success");
                         return AnvilGUI.Response.close();

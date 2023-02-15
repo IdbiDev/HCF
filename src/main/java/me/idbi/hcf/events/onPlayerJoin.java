@@ -6,6 +6,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.tools.AdminTools;
 import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.tools.Objects.HCFPlayer;
 import me.idbi.hcf.tools.Objects.PlayerStatistic;
 import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
 import me.idbi.hcf.tools.playertools;
@@ -29,8 +30,8 @@ public class onPlayerJoin implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        playertools.LoadPlayer(p);
-
+        playertools.loadOnlinePlayer(p);
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
         if(Main.death_wait_clear.contains(e.getPlayer().getUniqueId())) {
             e.getPlayer().getInventory().clear();
             e.getPlayer().getInventory().setArmorContents(null);

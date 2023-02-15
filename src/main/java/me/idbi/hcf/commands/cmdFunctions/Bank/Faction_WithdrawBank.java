@@ -24,7 +24,7 @@ public class Faction_WithdrawBank {
         }
         if (args[1].matches("^[0-9]+$")) {
             try {
-                Faction faction = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
+                Faction faction = playertools.getPlayerFaction(p);
                 if (Integer.parseInt(args[1]) <= 0) {
                     p.sendMessage(Messages.faction_bank_not_enough.language(p).queue());
                     return;
@@ -63,11 +63,10 @@ public class Faction_WithdrawBank {
     public Faction_WithdrawBank withdrawFaction(Faction faction, Player p, int amount) {
         try {
             int SumSumAmount = faction.balance - amount;
-
+            HCFPlayer player = HCFPlayer.getPlayer(p);
             faction.balance = SumSumAmount;
 
-            int playerMoney = Integer.parseInt(playertools.getMetadata(p, "money"));
-            playertools.setMetadata(p, "money", playerMoney + amount);
+            player.addMoney(amount);
 
             transaction = true;
         } catch (Exception ex) {

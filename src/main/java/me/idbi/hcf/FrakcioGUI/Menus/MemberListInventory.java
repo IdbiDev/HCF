@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MemberListInventory {
@@ -26,13 +27,13 @@ public class MemberListInventory {
         //       név,     uuid
         Faction faction = playertools.getPlayerFaction(p);
         assert faction != null;
-        HashMap<String, String> members = playertools.getFactionMembers(faction.id);
+        ArrayList<String> members = playertools.getFactionMembers(faction.id);
 
-        for(String memberName : members.keySet()) {
-            inv.addItem(GUI_Items.memberHead(memberName));
+        for(String memberName : members) {
+            inv.addItem(GUI_Items.memberHead(p, memberName));
         }
 
-        inv.setItem(31, GUI_Items.back());
+        inv.setItem(31, GUI_Items.back(p));
 
         return inv;
     }

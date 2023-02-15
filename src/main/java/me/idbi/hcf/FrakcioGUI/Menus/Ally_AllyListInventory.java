@@ -9,7 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class Ally_AllyListInventory {
 
@@ -25,20 +25,19 @@ public class Ally_AllyListInventory {
                 inv.setItem(i, GUI_Items.blackGlass());
         }
 
-        //       név,     uuid
         Faction faction = playertools.getPlayerFaction(p);
         assert faction != null;
-        for(AllyFaction ally : faction.Allies) {
-            inv.addItem(Ally_Items.manageAlly(ally));
+        for(Map.Entry<Integer, AllyFaction> ally : faction.Allies.entrySet()) {
+            inv.addItem(Ally_Items.manageAlly(ally.getValue()));
         }
 
-        inv.setItem(31, GUI_Items.back());
+        inv.setItem(31, GUI_Items.back(p));
 
         return inv;
     }
 
     public static Inventory requestList(Player p) {
-        Inventory inv = Bukkit.createInventory(null, 4*9, "§8Manage Requests");
+        Inventory inv = Bukkit.createInventory(null, 4*9, "§8Requests");
 
         for (int i = 0; i < inv.getSize(); i++) {
             if(i <= 8)
@@ -56,7 +55,7 @@ public class Ally_AllyListInventory {
             inv.addItem(Ally_Items.requestedAlly(ally));
         }
 
-        inv.setItem(31, GUI_Items.back());
+        inv.setItem(31, GUI_Items.back(p));
 
         return inv;
     }

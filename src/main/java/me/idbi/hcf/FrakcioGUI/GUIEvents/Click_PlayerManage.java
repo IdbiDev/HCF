@@ -28,13 +28,13 @@ public class Click_PlayerManage implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) return;
         if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        if (e.getCurrentItem().isSimilar(GUI_Items.back())) {
+        if (e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
             e.getWhoClicked().openInventory(MemberListInventory.members((Player) e.getWhoClicked()));
             GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
             return;
         }
 
-        if(e.getCurrentItem().isSimilar(PM_Items.kick())) {
+        if(e.getCurrentItem().isSimilar(PM_Items.kick(((Player) e.getWhoClicked())))) {
             if(!playertools.hasPermission((Player) e.getWhoClicked(), Faction_Rank_Manager.Permissions.MANAGE_KICK)){
                 e.getWhoClicked().sendMessage(Messages.no_permission_in_faction.language(((Player) e.getWhoClicked())).queue());
                 GUI_Sound.playSound((Player) e.getWhoClicked(), "error");
@@ -47,13 +47,13 @@ public class Click_PlayerManage implements Listener {
             return;
         }
 
-        if(e.getCurrentItem().isSimilar(PM_Items.rankManager())) {
+        if(e.getCurrentItem().isSimilar(PM_Items.rankManager(((Player) e.getWhoClicked())))) {
             OfflinePlayer target = Bukkit.getOfflinePlayer(e.getView().getTitle().split(" ")[0]);
             if(target.isOnline()) {
-                e.getWhoClicked().openInventory(PlayerRankManagerInventory.inv(target.getPlayer()));
+                e.getWhoClicked().openInventory(PlayerRankManagerInventory.inv(((Player) e.getWhoClicked()), target.getPlayer()));
                 GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             } else {
-                e.getWhoClicked().openInventory(PlayerRankManagerInventory.inv(target));
+                e.getWhoClicked().openInventory(PlayerRankManagerInventory.inv(((Player) e.getWhoClicked()), target));
                 GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
             }
             return;
