@@ -101,7 +101,7 @@ public enum GUIMessages {
             return ChatColor.translateAlternateColorCodes('&', name);
         }
 
-        String tempMessage = this.tempName;
+        final String tempMessage = this.tempName;
         this.tempName = this.name;
         return ChatColor.translateAlternateColorCodes('&', tempMessage);
     }
@@ -135,7 +135,7 @@ public enum GUIMessages {
         for (String s : this.tempLore.isEmpty() ? this.lore : this.tempLore) {
             tempList.add(ChatColor.translateAlternateColorCodes('&', s));
         }
-        this.tempLore = this.lore;
+        final this.tempLore = this.lore;
         return tempList;
     }
 
