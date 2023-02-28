@@ -6,16 +6,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.Reader;
 import java.util.List;
 import java.util.Set;
 
 public class SimpleConfig {
     private int comments;
-    private SimpleConfigManager manager;
+    private final SimpleConfigManager manager;
 
-    private File file;
+    private final File file;
     private FileConfiguration config;
 
     public SimpleConfig(Reader configStream, File configFile, int comments, JavaPlugin plugin) {
@@ -99,7 +98,7 @@ public class SimpleConfig {
     }
 
     public void set(String path, Object value, String comment) {
-        if(!this.config.contains(path)) {
+        if (!this.config.contains(path)) {
             this.config.set(path + manager.getPluginName() + "_COMMENT_" + comments, " " + comment);
             comments++;
         }
@@ -110,8 +109,8 @@ public class SimpleConfig {
 
     public void set(String path, Object value, String[] comment) {
 
-        for(String comm : comment) {
-            if(!this.config.contains(path)) {
+        for (String comm : comment) {
+            if (!this.config.contains(path)) {
                 this.config.set(path + manager.getPluginName() + "_COMMENT_" + comments, " " + comm);
                 comments++;
             }
@@ -140,7 +139,7 @@ public class SimpleConfig {
         String line = "";
         String beforeLine = "";
         for (String s : config.split("\n")) {
-            if(
+            if (
                     s.startsWith("  ")
                             && (beforeLine.contains(this.manager.getPluginName() + "_COMMENT")/* || s.contains(this.manager.getPluginName() + "_COMMENT")*/)
                             && !s.contains(":")
@@ -151,7 +150,7 @@ public class SimpleConfig {
             }
             beforeLine = s;
 
-            if(!line.equals("") && output.endsWith("\n")) {
+            if (!line.equals("") && output.endsWith("\n")) {
                 output = output.substring(0, output.length() - 1) + line.substring(1);
                 output += "\n";
                 line = "";

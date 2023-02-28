@@ -1,14 +1,14 @@
 package me.idbi.hcf.Scoreboard;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.Configs.Config;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.tools.AdminTools;
-import me.idbi.hcf.tools.HCF_Timer;
-import me.idbi.hcf.tools.Misc_Timers;
-import me.idbi.hcf.tools.Objects.HCFPlayer;
-import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.Tools.AdminTools;
+import me.idbi.hcf.Tools.HCF_Timer;
+import me.idbi.hcf.Tools.MiscTimers;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class AdminScoreboard {
 
     private static final Main m = Main.getPlugin(Main.class);
-
+    private static final DecimalFormat dfSharp = new DecimalFormat("0.0");
 
     public static void refresh(Player p) {
         List<String> fix = sortLists().get(0);
@@ -56,18 +56,18 @@ public class AdminScoreboard {
                 continue;
             } else if (line.contains("%stuck_timer%") && HCF_Timer.getStuckTime(p) <= 0.0) {
                 continue;
-            } else if(line.contains("%bard_energy%") && player.bardEnergy <= 0.0) {
+            } else if (line.contains("%bard_energy%") && player.bardEnergy <= 0.0) {
                 continue;
-            } else if(line.contains("%eotw%") && Misc_Timers.getTimeOfEOTW() <= 0L) {
+            } else if (line.contains("%eotw%") && MiscTimers.getTimeOfEOTW() <= 0L) {
                 continue;
-            } else if(line.contains("%gapple_cd%") && HCF_Timer.get_Golden_Apple_Time(p) <= 0L) {
+            } else if (line.contains("%gapple_cd%") && HCF_Timer.get_Golden_Apple_Time(p) <= 0L) {
                 continue;
-            } else if(line.contains("%opgapple_cd%") && HCF_Timer.get_OP_Golden_Apple_Time(p) <= 0L) {
+            } else if (line.contains("%opgapple_cd%") && HCF_Timer.get_OP_Golden_Apple_Time(p) <= 0L) {
                 continue;
             }
 
             if (line.equals("empty")) {
-                if(scoreNumber == 0) {
+                if (scoreNumber == 0) {
                     continue;
                 }
                 line = line.replace("empty", "");
@@ -77,9 +77,9 @@ public class AdminScoreboard {
                 emptyCalc++;
             }
 
-            if(line.contains("%customtimers%")) {
+            if (line.contains("%customtimers%")) {
                 for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
-                    if(customTimers.getValue().isActive()) {
+                    if (customTimers.getValue().isActive()) {
                         Score score = obj.getScore(line.replace("%customtimers%",
                                 Scoreboards.replaceVariables(customTimers.getValue().getFormatted(), p)));
                         score.setScore(scoreNumber);
@@ -98,7 +98,7 @@ public class AdminScoreboard {
         int emptyCalc2 = 0;
         for (String line : fix) {
             if (line.equals("empty")) {
-                if(scoreNumber == 0) {
+                if (scoreNumber == 0) {
                     continue;
                 }
                 line = line.replace("empty", "");
@@ -119,11 +119,19 @@ public class AdminScoreboard {
 
     public static void RefreshAll() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            if(playertools.isInStaffDuty(p))
+            if (Playertools.isInStaffDuty(p))
                 AdminScoreboard.refresh(p);
             else Scoreboards.refresh(p);
         }
     }
+
+    /*
+      - "&4* &cStaff Panel"
+  - "&f* &7Visibility: &f%invisible%"
+  - "&f* &7Chatmode: &f%chat_mode%"
+  - "&f* &7Players: &f%online_players%"
+  - "&f* &7TPS: &a%tps%"
+     */
 
     public static ArrayList<List<String>> sortLists() {
         List<String> str = Config.admin_scoreboard.asStrList();
@@ -152,22 +160,13 @@ public class AdminScoreboard {
         return returnList;
     }
 
-    /*
-      - "&4* &cStaff Panel"
-  - "&f* &7Visibility: &f%invisible%"
-  - "&f* &7Chatmode: &f%chat_mode%"
-  - "&f* &7Players: &f%online_players%"
-  - "&f* &7TPS: &a%tps%"
-     */
-
-    private static final DecimalFormat dfSharp = new DecimalFormat("0.0");
     public static String replaceVariablesAdmin(String inputString, Player p) {
         HCFPlayer player = HCFPlayer.getPlayer(p);
         return PlaceholderAPI.setPlaceholders(p,
                 Scoreboards.replaceVariables(inputString, p)
-                .replace("%invisible%", (AdminTools.InvisibleManager.invisedAdmins.contains(p) ? "§a✔" : "§c✖"))
-                .replace("%chat_mode%", player.staffChat ? Messages.admin_staff_chat.language(p).queue() : Messages.admin_global_chat.language(p).queue())
-                .replace("%online_players%", Bukkit.getOnlinePlayers().size() + "")
-                .replace("%tps%", dfSharp.format(Bukkit.spigot().getTPS()[0]) + ""));
+                        .replace("%invisible%", (AdminTools.InvisibleManager.invisedAdmins.contains(p) ? "§a✔" : "§c✖"))
+                        .replace("%chat_mode%", player.staffChat ? Messages.admin_staff_chat.language(p).queue() : Messages.admin_global_chat.language(p).queue())
+                        .replace("%online_players%", Bukkit.getOnlinePlayers().size() + "")
+                        .replace("%tps%", dfSharp.format(Bukkit.spigot().getTPS()[0]) + ""));
     }
 }

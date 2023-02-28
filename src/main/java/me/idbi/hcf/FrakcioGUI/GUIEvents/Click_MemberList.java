@@ -21,19 +21,19 @@ public class Click_MemberList implements Listener {
 
         if (e.getCurrentItem() == null) return;
         if (!e.getCurrentItem().hasItemMeta()) return;
-        if(!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
+        if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        if(e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
+        if (e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
             e.getWhoClicked().openInventory(MainInventory.mainInv((Player) e.getWhoClicked()));
-            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
+            GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.BACK);
             return;
         }
 
-        if(e.getCurrentItem().getType() != Material.SKULL_ITEM) return;
+        if (e.getCurrentItem().getType() != Material.SKULL_ITEM) return;
 
         String playerName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
 
         e.getWhoClicked().openInventory(MemberManageInventory.manage(((Player) e.getWhoClicked()), playerName));
-        GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
+        GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.CLICK);
     }
 }

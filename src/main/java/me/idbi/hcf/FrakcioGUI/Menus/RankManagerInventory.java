@@ -9,10 +9,10 @@ import org.bukkit.inventory.Inventory;
 public class RankManagerInventory {
 
     public static Inventory inv(Player p, String rankName) {
-        Inventory inv = Bukkit.createInventory(null, 3*9, rankName + " Rank");
+        Inventory inv = Bukkit.createInventory(null, 3 * 9, rankName + " Rank");
 
         for (int i = 0; i < inv.getSize(); i++)
-                inv.setItem(i, GUI_Items.blackGlass());
+            inv.setItem(i, GUI_Items.blackGlass());
 
         inv.setItem(11, RM_Items.permissionManager(p));
         inv.setItem(13, RM_Items.rename(p));

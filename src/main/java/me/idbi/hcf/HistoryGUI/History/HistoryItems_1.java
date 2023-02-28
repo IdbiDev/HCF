@@ -1,8 +1,8 @@
 package me.idbi.hcf.HistoryGUI.History;
 
 import me.idbi.hcf.HistoryGUI.GUITools;
-import me.idbi.hcf.tools.Objects.Faction;
-import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
+import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
+import me.idbi.hcf.Tools.Objects.Faction;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,7 +20,7 @@ public class HistoryItems_1 {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§6☰ §eJoin / Left History");
 
-        if(f.joinLeftHistory.isEmpty()) {
+        if (f.joinLeftHistory.isEmpty()) {
             im.setLore(Arrays.asList("§5", "§7- §cNo active status changes!"));
             is.setItemMeta(im);
             return is;
@@ -45,7 +45,7 @@ public class HistoryItems_1 {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§6☰ §eBalance History");
 
-        if(f.balanceHistory.isEmpty()) {
+        if (f.balanceHistory.isEmpty()) {
             im.setLore(Arrays.asList("§5", "§7- §cNo active bank changes!"));
             is.setItemMeta(im);
             return is;
@@ -70,7 +70,7 @@ public class HistoryItems_1 {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§2☰ §aKick History");
 
-        if(f.kickHistory.isEmpty()) {
+        if (f.kickHistory.isEmpty()) {
             im.setLore(Arrays.asList("§5", "§7- §cNo active member changes!"));
             is.setItemMeta(im);
             return is;

@@ -1,8 +1,8 @@
 package me.idbi.hcf.FrakcioGUI.KickConfirm;
 
+import me.idbi.hcf.Commands.FactionCommands.FactionKickCommand;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
-import me.idbi.hcf.commands.cmdFunctions.Faction_Kick;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,32 +15,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class KickConfirm implements Listener {
 
-    @EventHandler
-    public void onConfirmCucc(InventoryClickEvent e) {
-        if (!e.getView().getTitle().startsWith("§8Kick ")) return;
-
-        e.setCancelled(true);
-
-        if(e.getCurrentItem() == null) return;
-        if(!e.getCurrentItem().hasItemMeta()) return;
-
-        if(e.getCurrentItem().isSimilar(confirm())) {
-            String name = e.getView().getTitle().substring(7);
-
-            Faction_Kick.kick_faction((Player)e.getWhoClicked(),name);
-            GUI_Sound.playSound((Player) e.getWhoClicked(), "success");
-            e.getWhoClicked().closeInventory();
-            return;
-        }
-
-        if(e.getCurrentItem().isSimilar(cancel())) {
-            e.getWhoClicked().closeInventory();
-            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
-        }
-    }
-
     public static Inventory inv(String name) {
-        Inventory inv = Bukkit.createInventory(null, 3*9, "§8Kick " + name);
+        Inventory inv = Bukkit.createInventory(null, 3 * 9, "§8Kick " + name);
 
         for (int i = 0; i < inv.getSize(); i++) {
             inv.setItem(i, GUI_Items.blackGlass());
@@ -66,5 +42,29 @@ public class KickConfirm implements Listener {
         im.setDisplayName("§cCancel");
         is.setItemMeta(im);
         return is;
+    }
+
+    @EventHandler
+    public void onConfirmCucc(InventoryClickEvent e) {
+        if (!e.getView().getTitle().startsWith("§8Kick ")) return;
+
+        e.setCancelled(true);
+
+        if (e.getCurrentItem() == null) return;
+        if (!e.getCurrentItem().hasItemMeta()) return;
+
+        if (e.getCurrentItem().isSimilar(confirm())) {
+            String name = e.getView().getTitle().substring(7);
+
+            FactionKickCommand.kick((Player) e.getWhoClicked(), name);
+            GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.SUCCESS);
+            e.getWhoClicked().closeInventory();
+            return;
+        }
+
+        if (e.getCurrentItem().isSimilar(cancel())) {
+            e.getWhoClicked().closeInventory();
+            GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.BACK);
+        }
     }
 }

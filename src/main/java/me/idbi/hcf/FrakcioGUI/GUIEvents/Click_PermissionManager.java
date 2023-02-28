@@ -2,10 +2,10 @@ package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.RP_Items;
-import me.idbi.hcf.tools.Faction_Rank_Manager;
-import me.idbi.hcf.tools.Objects.Faction;
-import me.idbi.hcf.tools.factionhistorys.HistoryEntrys;
-import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
+import me.idbi.hcf.Tools.FactionRankManager;
+import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,67 +23,17 @@ import java.util.Map;
 
 public class Click_PermissionManager implements Listener {
 
-    @EventHandler
-    public void onClick(InventoryClickEvent e) {
-        if (!e.getView().getTitle().endsWith(" Permissions") || e.getView().getTitle().endsWith(" §8Ally Permissions")) return;
-
-        e.setCancelled(true);
-
-        if (e.getCurrentItem() == null) return;
-
-        if (!e.getCurrentItem().hasItemMeta()) return;
-        if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
-
-        if (e.getCurrentItem().isSimilar(RP_Items.cancel(((Player) e.getWhoClicked())))) {
-            e.getWhoClicked().closeInventory();
-            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
-            return;
-        }
-
-        if (e.getCurrentItem().isSimilar(RP_Items.save(((Player) e.getWhoClicked())))) {
-            e.getWhoClicked().closeInventory();
-
-            String rankName = ChatColor.stripColor(e.getView().getTitle().split(" ")[0]);
-
-            Faction f = playertools.getPlayerFaction((Player) e.getWhoClicked());
-
-            assert f != null;
-            Faction_Rank_Manager.Rank rank =  f.FindRankByName(rankName);
-
-            for(Map.Entry<Faction_Rank_Manager.Permissions, Boolean> hashMap : getPermissions(e.getInventory()).entrySet()) {
-                rank.setPermission(hashMap.getKey(), hashMap.getValue());
-            }
-            GUI_Sound.playSound((Player) e.getWhoClicked(),"success");
-            Bukkit.broadcastMessage("Saved");
-            f.rankCreateHistory.add(new HistoryEntrys.RankEntry(
-                    rank.name,
-                    ((Player) e.getWhoClicked()).getDisplayName(),
-                    new Date().getTime(),
-                    "modify"
-            ));
-            return;
-        }
-
-        else if(e.getCurrentItem().isSimilar(RP_Items.on())) {
-            e.getInventory().setItem(e.getSlot(), RP_Items.off());
-        }
-
-        else if(e.getCurrentItem().isSimilar(RP_Items.off())) {
-            e.getInventory().setItem(e.getSlot(), RP_Items.on());
-        }
-    }
-
-    public static HashMap<Faction_Rank_Manager.Permissions, Boolean> getPermissions(Inventory inv) {
-        HashMap<Faction_Rank_Manager.Permissions, Boolean> map = new HashMap<>();
+    public static HashMap<FactionRankManager.Permissions, Boolean> getPermissions(Inventory inv) {
+        HashMap<FactionRankManager.Permissions, Boolean> map = new HashMap<>();
 
         int counter = 0;
-        for(ItemStack is : inv.getContents()) {
+        for (ItemStack is : inv.getContents()) {
             counter++;
-            if(is == null) continue;
-            if(!is.hasItemMeta()) continue;
+            if (is == null) continue;
+            if (!is.hasItemMeta()) continue;
 
-            if(is.getType() == Material.STAINED_GLASS_PANE) {
-                if(is.getData().getData() == 14 || is.getData().getData() == 5) {
+            if (is.getType() == Material.STAINED_GLASS_PANE) {
+                if (is.getData().getData() == 14 || is.getData().getData() == 5) {
                     ItemStack mainItem = inv.getItem(counter - 10);
                     if (!mainItem.getItemMeta().hasEnchant(Enchantment.DURABILITY)) continue;
 
@@ -95,17 +45,24 @@ public class Click_PermissionManager implements Listener {
         return map;
     }
 
-    public static Faction_Rank_Manager.Permissions getPermission(int level) {
+    public static FactionRankManager.Permissions getPermission(int level) {
         return switch (level) {
-            case 1 -> Faction_Rank_Manager.Permissions.MANAGE_ALL;
-            case 5 -> Faction_Rank_Manager.Permissions.MANAGE_MONEY;
-            case 3 -> Faction_Rank_Manager.Permissions.MANAGE_INVITE;
-            case 2 -> Faction_Rank_Manager.Permissions.MANAGE_PLAYERS;
-            case 4 -> Faction_Rank_Manager.Permissions.MANAGE_RANKS;
-            case 6 -> Faction_Rank_Manager.Permissions.MANAGE_KICK;
+            case 1 -> FactionRankManager.Permissions.MANAGE_ALL;
+            case 5 -> FactionRankManager.Permissions.MANAGE_MONEY;
+            case 3 -> FactionRankManager.Permissions.MANAGE_INVITE;
+            case 2 -> FactionRankManager.Permissions.MANAGE_PLAYERS;
+            case 4 -> FactionRankManager.Permissions.MANAGE_RANKS;
+            case 6 -> FactionRankManager.Permissions.MANAGE_KICK;
             //default -> Faction_Rank_Manager.Permissions.MANAGE_MONEY;
             default -> throw new IllegalStateException("Unexpected value: " + level);
         };
+    }
+
+    public static boolean getStatus(ItemStack is) {
+        if (is.getType() == Material.STAINED_GLASS_PANE) {
+            return is.getData().getData() == 5;
+        }
+        return false;
     }
     /*
         MANAGE_ALL,      // Include faction manager
@@ -116,12 +73,49 @@ public class Click_PermissionManager implements Listener {
         MANAGE_KICK    // Can rename the faction
      */
 
-    public static boolean getStatus(ItemStack is) {
-        if(is.getType() == Material.STAINED_GLASS_PANE) {
-            if (is.getData().getData() == 5) {
-                return true;
-            }
+    @EventHandler
+    public void onClick(InventoryClickEvent e) {
+        if (!e.getView().getTitle().endsWith(" Permissions") || e.getView().getTitle().endsWith(" §8Ally Permissions"))
+            return;
+
+        e.setCancelled(true);
+
+        if (e.getCurrentItem() == null) return;
+
+        if (!e.getCurrentItem().hasItemMeta()) return;
+        if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
+
+        if (e.getCurrentItem().isSimilar(RP_Items.cancel(((Player) e.getWhoClicked())))) {
+            e.getWhoClicked().closeInventory();
+            GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.BACK);
+            return;
         }
-        return false;
+
+        if (e.getCurrentItem().isSimilar(RP_Items.save(((Player) e.getWhoClicked())))) {
+            e.getWhoClicked().closeInventory();
+
+            String rankName = ChatColor.stripColor(e.getView().getTitle().split(" ")[0]);
+
+            Faction f = Playertools.getPlayerFaction((Player) e.getWhoClicked());
+
+            assert f != null;
+            FactionRankManager.Rank rank = f.FindRankByName(rankName);
+
+            for (Map.Entry<FactionRankManager.Permissions, Boolean> hashMap : getPermissions(e.getInventory()).entrySet()) {
+                rank.setPermission(hashMap.getKey(), hashMap.getValue());
+            }
+            GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.SUCCESS);
+            Bukkit.broadcastMessage("Saved");
+            f.rankCreateHistory.add(new HistoryEntrys.RankEntry(
+                    rank.name,
+                    ((Player) e.getWhoClicked()).getDisplayName(),
+                    new Date().getTime(),
+                    "modify"
+            ));
+        } else if (e.getCurrentItem().isSimilar(RP_Items.on())) {
+            e.getInventory().setItem(e.getSlot(), RP_Items.off());
+        } else if (e.getCurrentItem().isSimilar(RP_Items.off())) {
+            e.getInventory().setItem(e.getSlot(), RP_Items.on());
+        }
     }
 }

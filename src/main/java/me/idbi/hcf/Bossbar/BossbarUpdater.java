@@ -4,7 +4,7 @@ import me.idbi.hcf.Main;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class BossbarUpdater extends BukkitRunnable {
-    private Main bossbar;
+    private final Main bossbar;
 
     public BossbarUpdater(Main bossbar) {
         this.bossbar = bossbar;
@@ -13,6 +13,6 @@ public class BossbarUpdater extends BukkitRunnable {
     public void run() {
         for (Bossbar b : Bossbar.bars.values())
             continue;
-            //b.update();
+        //b.update();
     }
 }

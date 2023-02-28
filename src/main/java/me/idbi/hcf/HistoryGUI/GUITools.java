@@ -1,12 +1,16 @@
 package me.idbi.hcf.HistoryGUI;
 
-import me.idbi.hcf.tools.CenterTools;
+import me.idbi.hcf.Tools.CenterTools;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
 public class GUITools {
+
+    private static final String cube = "■";
+    private static final String arrowLeft = "«";
+    private static final String arrowRight = "»";
 
     public static List<String> setupPageLore(int currentPage, List<String> message, int maxPage) {
         try {
@@ -20,20 +24,20 @@ public class GUITools {
         return message;
     }
 
-    public static String getPageText(String message, int CENTER_PX){
+    public static String getPageText(String message, int CENTER_PX) {
         message = ChatColor.translateAlternateColorCodes('&', message);
 
         int messagePxSize = 0;
         boolean previousCode = false;
         boolean isBold = false;
 
-        for(char c : message.toCharArray()) {
-            if(c == '§') {
+        for (char c : message.toCharArray()) {
+            if (c == '§') {
                 previousCode = true;
                 continue;
-            } else if(previousCode == true) {
+            } else if (previousCode) {
                 previousCode = false;
-                if(c == 'l' || c == 'L') {
+                if (c == 'l' || c == 'L') {
                     isBold = true;
                     continue;
                 } else isBold = false;
@@ -49,31 +53,27 @@ public class GUITools {
         int spaceLength = CenterTools.DefaultFontInfo.SPACE.getLength() + 1;
         int compensated = 0;
         StringBuilder sb = new StringBuilder();
-        while(compensated < toCompensate) {
+        while (compensated < toCompensate) {
             sb.append(" ");
             compensated += spaceLength;
         }
 
-        return sb.toString() + message;
+        return sb + message;
     }
-
-    private static final String cube = "■";
-    private static final String arrowLeft = "«";
-    private static final String arrowRight = "»";
 
     public static String getProgress(int currentPage, int maxPage) {
         String str = "";
 
         for (int i = 1; i <= maxPage; i++) {
-            if(i > 5) break;
-            if(currentPage == i) {
+            if (i > 5) break;
+            if (currentPage == i) {
                 str += "§a" + cube;
                 continue;
             }
             str += "§7" + cube;
         }
 
-        return "§7- §fPage " + currentPage + " §7§l➸ "+ str;
+        return "§7- §fPage " + currentPage + " §7§l➸ " + str;
     }
 
     public static int getCenterPX(String highestLengthString) {
@@ -86,18 +86,18 @@ public class GUITools {
     }
 
     public static int getPage(ItemStack is) {
-        if(is == null) return 1;
-        if(!is.hasItemMeta()) return 1;
-        if(!is.getItemMeta().hasLore()) return 1;
+        if (is == null) return 1;
+        if (!is.hasItemMeta()) return 1;
+        if (!is.getItemMeta().hasLore()) return 1;
 
         String c = is.getItemMeta().getLore().get(is.getItemMeta().getLore().size() - 1).substring(11, 12);
-        if(c.matches("^[0-9]+$")) {
+        if (c.matches("^[0-9]+$")) {
             return Integer.parseInt(c);
         }
         return 1;
     }
 
-    public static enum PageSub {
+    public enum PageSub {
 
         NUM_0(0, 0),
         NUM_1(0, 10),

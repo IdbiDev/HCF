@@ -1,11 +1,10 @@
 package me.idbi.hcf.MessagesEnums.SignShop;
 
-import me.idbi.hcf.CustomFiles.Comments.Messages;
-import me.idbi.hcf.Main;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.tools.Objects.HCFPlayer;
-import me.idbi.hcf.tools.Objects.PlayerStatistic;
-import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Objects.PlayerStatistic;
+import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -70,7 +69,7 @@ public class InteractShopSign implements Listener {
                             int remainingSpace = remainingSpace(p, new ItemStack(material, amount, Short));
                             int signPrice = Integer.parseInt(line3.replace("$", ""));
                             int fertigPreise = (signPrice / amount) * remainingSpace;
-                            int playerBalance = playertools.getPlayerBalance(p);
+                            int playerBalance = Playertools.getPlayerBalance(p);
 
                             Scoreboards.refresh(p);
                             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
@@ -84,9 +83,9 @@ public class InteractShopSign implements Listener {
                                     return;
                                 }
 
-                                playertools.setPlayerBalance(p, playerBalance - fertigPreise);
+                                Playertools.setPlayerBalance(p, playerBalance - fertigPreise);
                                 PlayerStatistic stat = hcfPlayer.playerStatistic;
-                                stat.MoneySpend+=fertigPreise;
+                                stat.MoneySpend += fertigPreise;
                                 p.sendMessage(Messages.sign_shop_bought.language(p).setItem(new ItemStack(material, remainingSpace, Short))
                                         .setPrice(fertigPreise)
                                         .setAmount(String.valueOf(remainingSpace))
@@ -106,9 +105,9 @@ public class InteractShopSign implements Listener {
                                         .setPrice(signPrice)
                                         .setAmount(String.valueOf(amount))
                                         .queue());
-                                playertools.setPlayerBalance(p, playerBalance - signPrice);
+                                Playertools.setPlayerBalance(p, playerBalance - signPrice);
                                 PlayerStatistic stat = hcfPlayer.playerStatistic;
-                                stat.MoneySpend+=signPrice;
+                                stat.MoneySpend += signPrice;
                             }
 
                             Scoreboards.refresh(p);
@@ -154,7 +153,7 @@ public class InteractShopSign implements Listener {
                                 Scoreboards.refresh(p);
                                 hcfPlayer.addMoney(price);
                                 PlayerStatistic stat = hcfPlayer.playerStatistic;
-                                stat.MoneyEarned+=price;
+                                stat.MoneyEarned += price;
                             } else {
                                 p.sendMessage(Messages.dont_have_item.language(p).queue());
                             }

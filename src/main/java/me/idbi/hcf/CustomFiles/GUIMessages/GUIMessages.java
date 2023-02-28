@@ -1,10 +1,9 @@
 package me.idbi.hcf.CustomFiles.GUIMessages;
 
-import me.idbi.hcf.CustomFiles.Comments.Messages;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
 import me.idbi.hcf.CustomFiles.MessagesTool;
-import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.Faction;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -14,11 +13,11 @@ import java.util.List;
 
 public enum GUIMessages {
 
-    back_button("&cBack", Arrays.asList()),
+    back_button("&cBack", List.of()),
     leave_button("&cLeave", Arrays.asList(" ", "&7Click here to close the menu!")),
     save_button("&aSave All Changes", Arrays.asList(" ", "&7Click here to save the changes!")),
     discard_button("&cDiscard All Changes", Arrays.asList(" ", "&7Click here to discard the changes!")),
-    member_head("&e%player_name%", Arrays.asList()),
+    member_head("&e%player_name%", List.of()),
     faction_rename("&eRename Faction", Arrays.asList("&5", "&7Click here to rename your faction!")),
     faction_histories("&eFaction Histories", Arrays.asList("&5", "&7Click here to see the histories!")),
     faction_member_manager("&eManage Players", Arrays.asList("&5", "&7Click here to manage members!")),
@@ -34,7 +33,7 @@ public enum GUIMessages {
     rename_rank("&eRename Rank", Arrays.asList("&5", "&7Click here to rename rank!")),
     rank_permission_manager("&ePermission Manager", Arrays.asList("&5", "&7Click here to manage permissions!")),
     delete_rank("&cDelete Rank", Arrays.asList("&5", "&7Click here to delete rank!")),
-    faction_ranks("&a%rank%", Arrays.asList()),
+    faction_ranks("&a%rank%", List.of()),
     priority_toggle_button("&ePriority Manage", Arrays.asList("&5", "&7Click here to change the order!")),
     rank_manager_toggle_button("&eRank Manager", Arrays.asList("&5", "&7Click here to to go back!")),
     rank_priority_selected("", Arrays.asList("&5", "&aSELECTED!", "&7Click on another rank to swap their order!")),
@@ -66,7 +65,7 @@ public enum GUIMessages {
 
     public GUIMessages language(Player p) {
         String language = MessagesTool.getPlayerLanguage(p);
-        String configMessage = MessagesTool.getGUILanguageMessages(language).getString(this.toString() + ".name");
+        String configMessage = MessagesTool.getGUILanguageMessages(language).getString(this + ".name");
         if (configMessage != null) {
             this.tempName = ChatColor.translateAlternateColorCodes('&', configMessage);
             return this;
@@ -74,9 +73,9 @@ public enum GUIMessages {
             MessagesTool.updateGuiMessageFiles();
 
         List<String> returnList = new ArrayList<>();
-        List<String> configList = MessagesTool.getGUILanguageMessages(language).getStringList(this.toString() + ".lore");
+        List<String> configList = MessagesTool.getGUILanguageMessages(language).getStringList(this + ".lore");
 
-        if(!configList.isEmpty()) {
+        if (!configList.isEmpty()) {
             for (String message : configList) {
                 returnList.add(
                         ChatColor.translateAlternateColorCodes('&', message)
@@ -97,7 +96,7 @@ public enum GUIMessages {
     }
 
     public String getName() {
-        if(this.tempName == null) {
+        if (this.tempName == null) {
             return ChatColor.translateAlternateColorCodes('&', name);
         }
 
@@ -155,8 +154,8 @@ public enum GUIMessages {
                 key = strings[i];
                 continue;
             }
-             s = s.replace(key, strings[i]);
-             key = "";
+            s = s.replace(key, strings[i]);
+            key = "";
         }
 
         return s;
@@ -165,9 +164,9 @@ public enum GUIMessages {
     public void save() {
         SimpleConfig msgs = ConfigManager.getGUIEnglishMessages();
 
-        if(this.toString() == null) {
-            msgs.set(this.toString() + ".name", this.name);
-            msgs.set(this.toString() + ".lore", this.lore);
+        if (this.toString() == null) {
+            msgs.set(this + ".name", this.name);
+            msgs.set(this + ".lore", this.lore);
         }
         ConfigManager.getGUIEnglishMessages().saveConfig();
     }
@@ -178,14 +177,14 @@ public enum GUIMessages {
         if (msgs == null) return;
 
         if (msgs.getString(this.toString()) == null) {
-            msgs.set(this.toString() + ".name", this.name);
-            msgs.set(this.toString() + ".lore", this.lore);
+            msgs.set(this + ".name", this.name);
+            msgs.set(this + ".lore", this.lore);
             save();
             return;
         }
 
-        this.name = msgs.getString(this.toString() + ".name");
-        this.lore = msgs.getStringList(this.toString() + ".lore");
+        this.name = msgs.getString(this + ".name");
+        this.lore = msgs.getStringList(this + ".lore");
     }
 
     public void loadOthers(SimpleConfig config) {
@@ -194,17 +193,16 @@ public enum GUIMessages {
         if (msgs == null) return;
 
         if (msgs.getString(this.toString()) == null) {
-            msgs.set(this.toString() + ".name", this.name);
-            msgs.set(this.toString() + ".lore", this.lore);
+            msgs.set(this + ".name", this.name);
+            msgs.set(this + ".lore", this.lore);
             config.saveConfig();
             return;
         }
 
-        this.name = msgs.getString(this.toString() + ".name");
-        this.lore = msgs.getStringList(this.toString() + ".lore");
+        this.name = msgs.getString(this + ".name");
+        this.lore = msgs.getStringList(this + ".lore");
 
         config.saveConfig();
-        return;
     }
 
     public GUIMessages setupShow(

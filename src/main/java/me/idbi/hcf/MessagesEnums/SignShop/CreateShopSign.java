@@ -1,8 +1,7 @@
 package me.idbi.hcf.MessagesEnums.SignShop;
 
-import me.idbi.hcf.CustomFiles.Comments.Messages;
-import me.idbi.hcf.tools.Objects.HCFPlayer;
-import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -86,7 +85,6 @@ CreateShopSign implements Listener {
 
                 if (!e.getLine(3).startsWith("$") && e.getLine(3).matches("^[0-9]+$")) {
                     e.setLine(3, "$" + e.getLine(3));
-                    return;
                 }
             }
         }

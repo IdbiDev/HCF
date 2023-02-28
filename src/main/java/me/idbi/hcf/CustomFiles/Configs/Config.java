@@ -9,7 +9,7 @@ import java.util.List;
 
 public enum Config {
 
-    default_language("Language", "en", createComment("Sets the deafult language to the players")),
+    default_language("Language", "en", createComment("Sets the default language to the players")),
     host("Database", "na04-sql.pebblehost.com"),
     port("Database", "3306"),
     database("Database", "customer_429941_buildffa"),
@@ -17,8 +17,8 @@ public enum Config {
     password("Database", "N9QPK3U#-fdnXIkDay1h"),
     enderpearl("Cooldowns", 10, createComment("Sets the enderpearl cooldown after thrown.", "Must be in seconds")),
     pvp("Cooldowns", 30, createComment("This will be set if after joining, or respawning.", "Must be in seconds")),
-    combattag("Cooldowns", 30, createComment("This will be set if you are hitted", "Must be in seconds")),
-    archertag("Cooldowns", 30, createComment("This will be set if you are hitted by an archer.", "Must be in seconds")),
+    combattag("Cooldowns", 30, createComment("This will be set if you are hit", "Must be in seconds")),
+    archertag("Cooldowns", 30, createComment("This will be set if you are hit by an archer.", "Must be in seconds")),
     golden_apple("Cooldowns", 30, createComment("This will be set if you eat a normal G apple", "Must be in seconds")),
     enchanted_golden_apple("Cooldowns", 3600, createComment("This will be set if you eat an Enchanted G apple", "Must be in seconds")),
     bard_energy("Cooldowns", 3, createComment("This will be set if you use the bard powerup", "Must be in seconds")),
@@ -32,12 +32,12 @@ public enum Config {
     dtr_regen("Cooldowns", 60, createComment("Must be in seconds")),
 
     world_name("Default values", "world", createComment("Sets the world, where the HCF server are.")),
-    deathban_enabled("Default values", false, createComment("Sets the deathban.", "Only 'true' or 'false' accepted!")),
-    spawn_location("Default values", "0 64 0 0 0", createComment("Sets the world spawnpoint!", "Order: X,Y,Z,Pitch,Yaw (Separation with SPACE instead comma)")),
+    deathban_enabled("Default values", false, createComment("Sets the death-ban.", "Only 'true' or 'false' are accepted!")),
+    spawn_location("Default values", "0 64 0 0 0", createComment("Sets the world spawn-point!", "Order: X,Y,Z,Pitch,Yaw (Separation with SPACE instead comma)")),
     claim_price("Default values", 1.5, createComment("(1$/Block) * Multiplier")),
     enchant_cost("Default values", 20, createComment("Enchantment cost. Constant.")),
     default_balance("Default values", 1000, createComment("On the first join, this will be the player money.")),
-    world_border_size("Default values", 1000, createComment("This sets the worldborder radius.")),
+    world_border_size("Default values", 1000, createComment("This sets the world border radius.")),
     warzone_size("Default values", 500, createComment("This sets the war-zone radius.")),
     max_member("Default values", 7, createComment("Maximum member per faction.")),
     max_allies("Default values", 2, createComment("Maximum allies per faction.")),
@@ -51,22 +51,22 @@ public enum Config {
 
     default_scoreboard_title("Scoreboards", "&6HCF+ &7- &eMap &6#1"),
     default_scoreboard("Scoreboards", Arrays.asList(
-        "&7┌─",
-        "&7│ &eFaction: &6%faction%",
-        "&7│ &eLocation: &6%location%",
-        "&7│ &eMoney: &6$%money%",
-        "&7│ &eClass: &6%class%",
-        "&7└─",
-        "empty",
-        "&7▍ &e%customtimers%",
-        "&7▍ &eEOTW: &6%eotw%",
-        "&7▍ &eSOTW: &6%sotw%",
-        "&7▍ &eGapple: &6%gapple_cd%",
-        "&7▍ &eOP: &6%opgapple_cd%",
-        "&7▍ &eStuck: &6%stuck_timer%",
-        "&7▍ &eSpawn Tag: &6%spawntag%",
-        "&7▍ &ePearl: &6%ep_cd%",
-        "&7▍ &eBard energy: &6%bard_energy%"
+            "&7┌─",
+            "&7│ &eFaction: &6%faction%",
+            "&7│ &eLocation: &6%location%",
+            "&7│ &eMoney: &6$%money%",
+            "&7│ &eClass: &6%class%",
+            "&7└─",
+            "empty",
+            "&7▍ &e%customtimers%",
+            "&7▍ &eEOTW: &6%eotw%",
+            "&7▍ &eSOTW: &6%sotw%",
+            "&7▍ &eGapple: &6%gapple_cd%",
+            "&7▍ &eOP: &6%opgapple_cd%",
+            "&7▍ &eStuck: &6%stuck_timer%",
+            "&7▍ &eSpawn Tag: &6%spawntag%",
+            "&7▍ &ePearl: &6%ep_cd%",
+            "&7▍ &eBard energy: &6%bard_energy%"
     ), createComment("RATATATATATATATATATATATA")),
 
     admin_scoreboard_title("Scoreboards", "&6HCF+ &7- &eAdmin Duty"),
@@ -113,6 +113,14 @@ public enum Config {
         this.comments = comments;
     }
 
+    private static ConfigComments cc() {
+        return ConfigComments.get();
+    }
+
+    private static String[] createComment(String... args) {
+        return args.clone();
+    }
+
     public List<?> asList() {
         return (List<?>) this.value;
     }
@@ -139,7 +147,7 @@ public enum Config {
 
     public String getPath() {
         String output = "";
-        if(this.section != null) {
+        if (this.section != null) {
             output += this.section + ".";
         }
         output += this.toString();
@@ -151,40 +159,33 @@ public enum Config {
 
         if (config == null) return;
 
-        if (config.get((this.section == null ? "" : this.section + ".") + this.toString()) == null) {
-            if(this.section == null) {
+        if (config.get((this.section == null ? "" : this.section + ".") + this) == null) {
+            if (this.section == null) {
                 if (this.comments == null)
                     config.set(this.toString(), this.value);
                 else
                     config.set(this.toString(), this.value, this.comments);
             } else {
                 if (this.comments == null)
-                    config.set(section + "." + this.toString(), this.value);
+                    config.set(section + "." + this, this.value);
                 else
-                    config.set(section + "." + this.toString(), this.value, this.comments);
+                    config.set(section + "." + this, this.value, this.comments);
             }
             save();
             return;
         }
 
-        this.value = config.get((this.section == null ? "" : this.section + ".") + this.toString());
+        this.value = config.get((this.section == null ? "" : this.section + ".") + this);
     }
 
     public void save() {
         SimpleConfig config = ConfigManager.getSimpleConfig();
 
-        if(this.section == null)
+        if (this.section == null)
             config.set(this.toString(), this.value);
         else
-            config.set(section + "." + this.toString(), this.value);
+            config.set(section + "." + this, this.value);
 
         config.saveConfig();
-    }
-
-    private static ConfigComments cc() {
-        return ConfigComments.get();
-    }
-    private static String[] createComment(String... args){
-        return args.clone();
     }
 }

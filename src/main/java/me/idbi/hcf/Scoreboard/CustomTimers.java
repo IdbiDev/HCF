@@ -19,22 +19,37 @@ public class CustomTimers {
         Scoreboards.RefreshAll();
     }
 
-    public long getTime() {
-        return time - System.currentTimeMillis();
+    public static void refreshAll() {
+        for (Map.Entry<String, CustomTimers> customSBTimer : Main.customSBTimers.entrySet()) {
+            if (!customSBTimer.getValue().isActive())
+                customSBTimer.getValue().delete();
+        }
     }
 
-    public boolean isActive() {
-        if(getTime() <= 0) {
-            Main.customSBTimers.remove(this.name);
-            return false;
+    public static boolean isCreated(String name) {
+        for (Map.Entry<String, CustomTimers> customSBTimer : Main.customSBTimers.entrySet()) {
+            if (customSBTimer.getKey().equals(name)) return true;
         }
-        return true;
+
+        return false;
+    }
+
+    public long getTime() {
+        return time - System.currentTimeMillis();
     }
 
     public void setTime(long time) {
         this.time = time;
         Main.customSBTimers.put(this.name, this);
         refreshScoreboards();
+    }
+
+    public boolean isActive() {
+        if (getTime() <= 0) {
+            Main.customSBTimers.remove(this.name);
+            return false;
+        }
+        return true;
     }
 
     public void setText(String text) {
@@ -56,20 +71,5 @@ public class CustomTimers {
     public void refreshScoreboards() {
         Scoreboards.RefreshAll();
         AdminScoreboard.RefreshAll();
-    }
-
-    public static void refreshAll() {
-        for (Map.Entry<String, CustomTimers> customSBTimer : Main.customSBTimers.entrySet()) {
-            if(!customSBTimer.getValue().isActive())
-                customSBTimer.getValue().delete();
-        }
-    }
-
-    public static boolean isCreated(String name) {
-        for (Map.Entry<String, CustomTimers> customSBTimer : Main.customSBTimers.entrySet()) {
-            if(customSBTimer.getKey().equals(name)) return true;
-        }
-
-        return false;
     }
 }

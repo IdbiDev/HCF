@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 public class MemberManageInventory {
 
     public static Inventory manage(Player owner, String name) {
-        Inventory inv = Bukkit.createInventory(null, 3*9, name + " Profile");
+        Inventory inv = Bukkit.createInventory(null, 3 * 9, name + " Profile");
 
         for (int i = 0; i < inv.getSize(); i++)
             inv.setItem(i, GUI_Items.blackGlass());

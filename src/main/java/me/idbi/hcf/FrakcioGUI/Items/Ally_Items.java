@@ -1,7 +1,7 @@
 package me.idbi.hcf.FrakcioGUI.Items;
 
-import me.idbi.hcf.tools.Objects.AllyFaction;
-import me.idbi.hcf.tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.AllyFaction;
+import me.idbi.hcf.Tools.Objects.Faction;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;

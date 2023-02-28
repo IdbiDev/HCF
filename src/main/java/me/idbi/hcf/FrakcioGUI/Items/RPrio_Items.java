@@ -8,8 +8,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
-
 public class RPrio_Items {
 
     public static ItemStack ranks(Player p, String rankName) {

@@ -1,7 +1,7 @@
 package me.idbi.hcf.FrakcioGUI.GUIEvents;
 
 import me.idbi.hcf.AnvilGUI.AnvilItems;
-import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.FrakcioGUI.Items.Ally_Items;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
@@ -12,9 +12,9 @@ import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
 import me.idbi.hcf.HistoryGUI.History.FactionHistoryInventory;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.tools.Faction_Rank_Manager;
-import me.idbi.hcf.tools.Objects.Faction;
-import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.Tools.FactionRankManager;
+import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Playertools;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,97 +23,22 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class Click_MainInventory implements Listener {
 
-    @EventHandler
-    public void onClick(InventoryClickEvent e) {
-        if(!e.getView().getTitle().equalsIgnoreCase("§8Faction Manager")) return;
-
-        e.setCancelled(true);
-
-        if(e.getCurrentItem() == null) return;
-        if(!e.getCurrentItem().hasItemMeta()) return;
-
-        if(!(e.getWhoClicked() instanceof Player p)) return;
-
-        //Player p = (Player) e.getWhoClicked();
-
-         if(e.getCurrentItem().isSimilar(GUI_Items.rankManager(((Player) e.getWhoClicked())))) {
-            if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_RANKS)){
-                p.sendMessage(Messages.no_permission.language(p).queue());
-                GUI_Sound.playSound(p,"error");
-                return;
-
-            }
-             GUI_Sound.playSound(p,"click");
-             p.openInventory(RankMenuInventory.inv(p));
-        }
-
-        else if(e.getCurrentItem().isSimilar(GUI_Items.playerManager(((Player) e.getWhoClicked())))) {
-            if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_PLAYERS)) {
-                p.sendMessage(Messages.no_permission.language(p).queue());
-                GUI_Sound.playSound(p,"error");
-                return;
-            }
-             GUI_Sound.playSound(p,"click");
-             p.openInventory(MemberListInventory.members(p));
-        }
-
-        else if(e.getCurrentItem().isSimilar(IM_Items.inviteManager(((Player) e.getWhoClicked())))) {
-            if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_INVITE)) {
-                p.sendMessage(Messages.no_permission.language(p).queue());
-                GUI_Sound.playSound(p,"error");
-                return;
-            }
-             GUI_Sound.playSound(p,"click");
-             p.openInventory(InviteManagerInventory.inv(((Player) e.getWhoClicked())));
-        }
-
-        else if(e.getCurrentItem().isSimilar(GUI_Items.histories(((Player) e.getWhoClicked())))) {
-            // ToDo: Logs check permission
-            //if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_INVITE)) {
-             /*   p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
-                GUI_Sound.playSound(p,"error");
-                return;
-            }*/
-             GUI_Sound.playSound(p,"click");
-             p.openInventory(FactionHistoryInventory.inv(playertools.getPlayerFaction(p),
-                     1, 1, 1, 1, 1, 1));
-        }
-
-        else if(e.getCurrentItem().isSimilar(GUI_Items.renameFaction(((Player) e.getWhoClicked())))) {
-            if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_ALL)){
-                p.sendMessage(Messages.no_permission.language(p).queue());
-                GUI_Sound.playSound(p,"error");
-                return;
-            }
-            GUI_Sound.playSound(p,"click");
-            renameFaction(p);
-        }
-
-        else if(e.getCurrentItem().isSimilar(Ally_Items.ally())) {
-            if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_ALL)) {
-                p.sendMessage(Messages.no_permission.language(p).queue());
-                GUI_Sound.playSound(p,"error");
-                return;
-            }
-            GUI_Sound.playSound(p,"click");
-            p.openInventory(Alley_MainInventory.inv(((Player) e.getWhoClicked())));
-        }
-    }
+    private static final Main m = Main.getPlugin(Main.class);
 
     public static void renameFaction(Player p) {
         new AnvilGUI.Builder()
                 .onClose(player -> {                                               //called when the inventory is closing
                 })
                 .onComplete((player, text) -> {                                    //called when the inventory output slot is clicked
-                    if(text.matches("^[0-9a-zA-Z]+$")) {
-                        Faction faction = playertools.getPlayerFaction(p);
+                    if (text.matches("^[0-9a-zA-Z]+$")) {
+                        Faction faction = Playertools.getPlayerFaction(p);
                         assert faction != null;
-                        playertools.RenameFaction(faction, text);
+                        Playertools.RenameFaction(faction, text);
                         //p.sendMessage("Renamed!");
-                        GUI_Sound.playSound(p,"success");
+                        GUI_Sound.playSound(p, GUI_Sound.HCFSounds.SUCCESS);
                         return AnvilGUI.Response.close();
                     } else {
-                        GUI_Sound.playSound(p,"error");
+                        GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
                         return AnvilGUI.Response.text(Messages.gui_invalid_type_text.language(p).queue());
 
                     }
@@ -126,5 +51,70 @@ public class Click_MainInventory implements Listener {
                 .open(p);
     }
 
-    private static Main m = Main.getPlugin(Main.class);
+    @EventHandler
+    public void onClick(InventoryClickEvent e) {
+        if (!e.getView().getTitle().equalsIgnoreCase("§8Faction Manager")) return;
+
+        e.setCancelled(true);
+
+        if (e.getCurrentItem() == null) return;
+        if (!e.getCurrentItem().hasItemMeta()) return;
+
+        if (!(e.getWhoClicked() instanceof Player p)) return;
+
+        //Player p = (Player) e.getWhoClicked();
+
+        if (e.getCurrentItem().isSimilar(GUI_Items.rankManager(((Player) e.getWhoClicked())))) {
+            if (!Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_RANKS)) {
+                p.sendMessage(Messages.no_permission.language(p).queue());
+                GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
+                return;
+
+            }
+            GUI_Sound.playSound(p, GUI_Sound.HCFSounds.CLICK);
+            p.openInventory(RankMenuInventory.inv(p));
+        } else if (e.getCurrentItem().isSimilar(GUI_Items.playerManager(((Player) e.getWhoClicked())))) {
+            if (!Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_PLAYERS)) {
+                p.sendMessage(Messages.no_permission.language(p).queue());
+                GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
+                return;
+            }
+            GUI_Sound.playSound(p, GUI_Sound.HCFSounds.CLICK);
+            p.openInventory(MemberListInventory.members(p));
+        } else if (e.getCurrentItem().isSimilar(IM_Items.inviteManager(((Player) e.getWhoClicked())))) {
+            if (!Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_INVITE)) {
+                p.sendMessage(Messages.no_permission.language(p).queue());
+                GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
+                return;
+            }
+            GUI_Sound.playSound(p, GUI_Sound.HCFSounds.CLICK);
+            p.openInventory(InviteManagerInventory.inv(((Player) e.getWhoClicked())));
+        } else if (e.getCurrentItem().isSimilar(GUI_Items.histories(((Player) e.getWhoClicked())))) {
+            // ToDo: Logs check permission
+            //if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_INVITE)) {
+             /*   p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
+                GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
+                return;
+            }*/
+            GUI_Sound.playSound(p, GUI_Sound.HCFSounds.CLICK);
+            p.openInventory(FactionHistoryInventory.inv(Playertools.getPlayerFaction(p),
+                    1, 1, 1, 1, 1, 1));
+        } else if (e.getCurrentItem().isSimilar(GUI_Items.renameFaction(((Player) e.getWhoClicked())))) {
+            if (!Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_ALL)) {
+                p.sendMessage(Messages.no_permission.language(p).queue());
+                GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
+                return;
+            }
+            GUI_Sound.playSound(p, GUI_Sound.HCFSounds.CLICK);
+            renameFaction(p);
+        } else if (e.getCurrentItem().isSimilar(Ally_Items.ally())) {
+            if (!Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_ALL)) {
+                p.sendMessage(Messages.no_permission.language(p).queue());
+                GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
+                return;
+            }
+            GUI_Sound.playSound(p, GUI_Sound.HCFSounds.CLICK);
+            p.openInventory(Alley_MainInventory.inv(((Player) e.getWhoClicked())));
+        }
+    }
 }

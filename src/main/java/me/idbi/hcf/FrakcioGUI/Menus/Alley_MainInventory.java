@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 public class Alley_MainInventory {
 
     public static Inventory inv(Player p) {
-        Inventory inv = Bukkit.createInventory(null, 3*9, "§8Manage Allies");
+        Inventory inv = Bukkit.createInventory(null, 3 * 9, "§8Manage Allies");
 
         for (int i = 0; i < inv.getSize(); i++) {
             inv.setItem(i, GUI_Items.blackGlass());

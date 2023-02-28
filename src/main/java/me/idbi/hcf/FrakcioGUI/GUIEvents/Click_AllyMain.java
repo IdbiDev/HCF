@@ -11,7 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class Click_AllyMain  implements Listener {
+public class Click_AllyMain implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
@@ -25,21 +25,20 @@ public class Click_AllyMain  implements Listener {
 
         if (e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
             e.getWhoClicked().openInventory(MainInventory.mainInv((Player) e.getWhoClicked()));
-            GUI_Sound.playSound((Player) e.getWhoClicked(), "back");
+            GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.BACK);
             return;
         }
 
         if (e.getCurrentItem().isSimilar(Ally_Items.manageRequests())) {
             e.getWhoClicked().openInventory(Alley_ManageRequests.inv(((Player) e.getWhoClicked())));
-            GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
+            GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.CLICK);
             return;
         }
 
         if (e.getCurrentItem().isSimilar(Ally_Items.manageAllies())) {
 
             e.getWhoClicked().openInventory(Ally_AllyListInventory.allyList((Player) e.getWhoClicked()));
-            GUI_Sound.playSound((Player) e.getWhoClicked(), "click");
-            return;
+            GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.CLICK);
         }
     }
 }

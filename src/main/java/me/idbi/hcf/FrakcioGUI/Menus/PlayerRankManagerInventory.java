@@ -2,11 +2,11 @@ package me.idbi.hcf.FrakcioGUI.Menus;
 
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.tools.Faction_Rank_Manager;
-import me.idbi.hcf.tools.Objects.Faction;
-import me.idbi.hcf.tools.Objects.HCFPlayer;
-import me.idbi.hcf.tools.SQL_Connection;
-import me.idbi.hcf.tools.playertools;
+import me.idbi.hcf.Tools.FactionRankManager;
+import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.SQL_Connection;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -23,16 +23,17 @@ import java.util.Map;
 
 public class PlayerRankManagerInventory {
     public static Connection con = Main.getConnection("cmd.FactionCreate");
+
     // --------------------- ONLINE PLAYER ---------------------------- //
     public static Inventory inv(Player owner, Player p) {
-        Inventory inv = Bukkit.createInventory(null, 6*9, p.getName() + "'s Rank Manager");
+        Inventory inv = Bukkit.createInventory(null, 6 * 9, p.getName() + "'s Rank Manager");
 
         for (int i = 0; i < inv.getSize(); i++) {
-            if(i <= 8)
+            if (i <= 8)
                 inv.setItem(i, GUI_Items.blackGlass());
-            else if(i >= 45)
+            else if (i >= 45)
                 inv.setItem(i, GUI_Items.blackGlass());
-            else if(i == 9 || i == 17 || i == 18 || i == 26 || i == 27 || i == 35 || i == 36 || i == 44)
+            else if (i == 9 || i == 17 || i == 18 || i == 26 || i == 27 || i == 35 || i == 36 || i == 44)
                 inv.setItem(i, GUI_Items.blackGlass());
 
         }
@@ -62,8 +63,8 @@ public class PlayerRankManagerInventory {
         }*/
 
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
-        for(Map.Entry<Integer, Faction_Rank_Manager.Rank> rank : playertools.sortByPriority(playertools.getPlayerFaction(p)).entrySet()) {
-            if(hcfPlayer.rank.name.equalsIgnoreCase(rank.getValue().name)) { // what is this gondolkodom rajta én isxyd?
+        for (Map.Entry<Integer, FactionRankManager.Rank> rank : Playertools.sortByPriority(Playertools.getPlayerFaction(p)).entrySet()) {
+            if (hcfPlayer.rank.name.equalsIgnoreCase(rank.getValue().name)) { // what is this gondolkodom rajta én isxyd?
                 inv.addItem(rank(rank.getValue().name, true));
                 continue;
             }
@@ -79,14 +80,14 @@ public class PlayerRankManagerInventory {
     // --------------------- OFFLINE PLAYER ---------------------------- //
 
     public static Inventory inv(Player owner, OfflinePlayer p) {
-        Inventory inv = Bukkit.createInventory(null, 6*9, p.getName() + "'s Rank Manager");
+        Inventory inv = Bukkit.createInventory(null, 6 * 9, p.getName() + "'s Rank Manager");
 
         for (int i = 0; i < inv.getSize(); i++) {
-            if(i <= 8)
+            if (i <= 8)
                 inv.setItem(i, GUI_Items.blackGlass());
-            else if(i >= 45)
+            else if (i >= 45)
                 inv.setItem(i, GUI_Items.blackGlass());
-            else if(i == 9 || i == 17 || i == 18 || i == 26 || i == 27 || i == 35 || i == 36 || i == 44)
+            else if (i == 9 || i == 17 || i == 18 || i == 26 || i == 27 || i == 35 || i == 36 || i == 44)
                 inv.setItem(i, GUI_Items.blackGlass());
 
         }
@@ -116,12 +117,12 @@ public class PlayerRankManagerInventory {
             inv.addItem(rank(Name, false));
         }*/
 
-        Faction faction = playertools.getPlayerFaction(p);
+        Faction faction = Playertools.getPlayerFaction(p);
 
-        HashMap<String,Object> map = SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid='?'",p.getUniqueId().toString());
+        HashMap<String, Object> map = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid='?'", p.getUniqueId().toString());
 
-        for(Map.Entry<Integer, Faction_Rank_Manager.Rank> rank : playertools.sortByPriority(playertools.getPlayerFaction(p)).entrySet()) {
-            if(faction.FindRankByName(map.get("rank").toString()).name.equalsIgnoreCase(rank.getValue().name)) {
+        for (Map.Entry<Integer, FactionRankManager.Rank> rank : Playertools.sortByPriority(Playertools.getPlayerFaction(p)).entrySet()) {
+            if (faction.FindRankByName(map.get("rank").toString()).name.equalsIgnoreCase(rank.getValue().name)) {
                 inv.addItem(rank(rank.getValue().name, true));
                 continue;
             }
@@ -139,10 +140,10 @@ public class PlayerRankManagerInventory {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
 
-        Faction faction = playertools.getPlayerFaction(target);
+        Faction faction = Playertools.getPlayerFaction(target);
 
         assert faction != null;
-        Faction_Rank_Manager.Rank rank = faction.getPlayerRank(target);
+        FactionRankManager.Rank rank = faction.getPlayerRank(target);
 
         im.setDisplayName("§7Active Rank: §a§o" + rank.name);
 
@@ -159,11 +160,11 @@ public class PlayerRankManagerInventory {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
 
-        Faction faction = playertools.getPlayerFaction(target);
+        Faction faction = Playertools.getPlayerFaction(target);
 
-        HashMap<String,Object> map = SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid='?'",target.getUniqueId().toString());
+        HashMap<String, Object> map = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid='?'", target.getUniqueId().toString());
         assert faction != null;
-        Faction_Rank_Manager.Rank rank = faction.FindRankByName(map.get("rank").toString());
+        FactionRankManager.Rank rank = faction.FindRankByName(map.get("rank").toString());
 
         im.setDisplayName("§7Active Rank: §a§o" + rank.name);
 
@@ -180,7 +181,7 @@ public class PlayerRankManagerInventory {
 
         im.setDisplayName("§e" + name);
 
-        if(haveRole) {
+        if (haveRole) {
             im.addEnchant(Enchantment.DURABILITY, 1, true);
             im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }

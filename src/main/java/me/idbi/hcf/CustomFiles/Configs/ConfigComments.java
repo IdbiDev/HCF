@@ -4,6 +4,14 @@ public class ConfigComments {
 
     private static ConfigComments comments;
 
+    public ConfigComments() {
+        comments = this;
+    }
+
+    public static ConfigComments get() {
+        return comments;
+    }
+
     protected String[] getEnderPearlCooldown() {
         return new String[]{"Sets the enderpearl cooldown, the value is must be in seconds!", "Buzi az adbi"};
     }
@@ -14,14 +22,5 @@ public class ConfigComments {
 
     protected String[] getSQLPort() {
         return new String[]{"Általában ez 3306"};
-    }
-
-
-    public ConfigComments() {
-        comments = this;
-    }
-
-    public static ConfigComments get() {
-        return comments;
     }
 }

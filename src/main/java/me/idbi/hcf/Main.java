@@ -4,21 +4,19 @@ package me.idbi.hcf;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import me.idbi.hcf.Bossbar.Bossbar;
-import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.Commands.FactionCommands.FactionHomeCommand;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.KothRewardsFile;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Discord.SetupBot;
+import me.idbi.hcf.Koth.AutoKoth;
+import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Scoreboard.CustomTimers;
-import me.idbi.hcf.commands.cmdFunctions.Faction_Home;
-import me.idbi.hcf.koth.AutoKoth;
-import me.idbi.hcf.koth.KOTH;
-import me.idbi.hcf.tools.*;
-import me.idbi.hcf.tools.Objects.Faction;
-import me.idbi.hcf.tools.Objects.HCFPlayer;
-import me.idbi.hcf.tools.Objects.PlayerObject;
-import me.idbi.hcf.tools.Objects.PlayerStatistic;
-import me.idbi.hcf.tools.factionhistorys.Nametag.NameChanger;
+import me.idbi.hcf.Tools.*;
+import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
+import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -37,7 +35,6 @@ import java.sql.Connection;
 import java.util.*;
 
 import static me.idbi.hcf.HCF_Rules.*;
-
 
 
 public final class Main extends JavaPlugin implements Listener {
@@ -69,29 +66,25 @@ public final class Main extends JavaPlugin implements Listener {
     public static boolean discord_log_loaded = false;
     public static HashMap<String, CustomTimers> customSBTimers;
     public static int DTR_REGEN_TIME;
-    private static ConfigManager configManager;
     public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
-
-    public static HashMap<String, KOTH.koth_area> koth_cache = new HashMap<>();
+    public static HashMap<String, Koth.koth_area> koth_cache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
     public static HashMap<UUID, HCFPlayer> player_cache = new HashMap<>();
-    public static ArrayList<Faction_Rank_Manager.Rank> ranks = new ArrayList<>();
+    public static ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
     public static HashMap<Integer, Long> DTR_REGEN = new HashMap<>();
     public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
     public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
     public static ArrayList<UUID> death_wait_clear = new ArrayList<>();
     public static ArrayList<String> availableLanguages = new ArrayList<>();
-    //public static HashMap<Faction, Scoreboard> teams = new HashMap<>();
-
     public static HashMap<UUID, List<Location>> player_block_changes = new HashMap<>();
-    private static Connection con;
+    //public static HashMap<Faction, Scoreboard> teams = new HashMap<>();
     public static ArrayList<UUID> kothRewardsGUI;
-
     public static HashMap<UUID, String> currentLanguages;
-
     public static List<String> blacklistedRankNames;
     public static ProtocolManager protocolManager;
     public static AutoKoth autoKoth = new AutoKoth();
+    private static ConfigManager configManager;
+    private static Connection con;
 
     // Egyszerű SQL Connection getter
     public static Connection getConnection(String who) {
@@ -128,6 +121,13 @@ public final class Main extends JavaPlugin implements Listener {
         savePlayers();
     }
 
+    public static void sendCmdMessage(String msg) {
+        Bukkit.getServer().getConsoleSender().sendMessage(
+                Messages.prefix_cmd.queue() +
+                        msg
+        );
+    }
+
     @Override
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEnable() {
@@ -140,7 +140,7 @@ public final class Main extends JavaPlugin implements Listener {
         //MessagesFile.setup();
         //DiscordFile.setup();
         // if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", true);
-       // ConfigManager.getManager().setup();
+        // ConfigManager.getManager().setup();
 //        DiscordFile.getDiscord().options().copyDefaults(true);
 //        DiscordFile.saveDiscord();
 //        saveDefaultConfig();
@@ -161,7 +161,7 @@ public final class Main extends JavaPlugin implements Listener {
         DTR_REGEN_TIME = Config.dtr_regen.asInt() * 1000;
         death_time = Config.deathban.asInt() * 1000;
         stuck_duration = Config.stuck_timer.asInt() * 1000;
-        KOTH.GLOBAL_TIME = Config.koth_length.asInt() * 1000;
+        Koth.GLOBAL_TIME = Config.koth_length.asInt() * 1000;
         deathban = Config.deathban_enabled.asBoolean();
         member_starting_money = Config.default_balance.asInt();
         claim_price_multiplier = Config.claim_price.asDouble();
@@ -222,34 +222,35 @@ public final class Main extends JavaPlugin implements Listener {
 
         // setup classes
         SetupBot.setup();
-        setupEvents.SetupEvents();
-        setupCommands.setupCommands();
+        SetupEvents.SetupEvents();
+        SetupCommands.setupCommands();
 
         // playertools
-        playertools.setFactionCache();
-        playertools.cacheFactionClaims();
-        playertools.LoadRanks();
-        playertools.prepareKoths();
-        playertools.cacheAll();
+        Playertools.setFactionCache();
+        Playertools.cacheFactionClaims();
+        Playertools.LoadRanks();
+        Playertools.prepareKoths();
+        player_cache.clear();
+        Playertools.cacheAll();
         new NameChanger(this);
         // Load online players
 
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            playertools.loadOnlinePlayer(player);
+            Playertools.loadOnlinePlayer(player);
         }
 
         // Timers
-        Misc_Timers.CheckArmors();
-        Misc_Timers.DTR_Timer();
-        Misc_Timers.Bard_Energy();
-        Misc_Timers.PotionLimiter();
-        Misc_Timers.AutoSave();
-        Misc_Timers.KOTH_Countdown();
-        Misc_Timers.CleanupFakeWalls();
-        Misc_Timers.ArcherTagEffect();
+        MiscTimers.CheckArmors();
+        MiscTimers.DTR_Timer();
+        MiscTimers.Bard_Energy();
+        MiscTimers.PotionLimiter();
+        MiscTimers.AutoSave();
+        MiscTimers.KOTH_Countdown();
+        MiscTimers.CleanupFakeWalls();
+        MiscTimers.ArcherTagEffect();
 
-        brewing.Async_Cache_BrewingStands();
-        brewing.SpeedBoost();
+        SpeedModifiers.Async_Cache_BrewingStands();
+        SpeedModifiers.SpeedBoost();
 
        /* new Thread(new Runnable() {
 
@@ -280,37 +281,39 @@ public final class Main extends JavaPlugin implements Listener {
 
         //SpawnShield.CalcWall();
 
-        if(Main.debug) {
+        if (Main.debug) {
             sendCmdMessage("§1Finished loading the plugin! (" + (System.currentTimeMillis() - deltatime) + " ms)");
             if (multi != null)
                 sendCmdMessage("§aMultiverse-Core found. Plugin connected to Multiverse-Core\n§aMultiverse-Core version: §a§o" + multi.getDescription().getVersion());
 
         }
-        if(max_members_pro_faction > maxMembersPerFaction){
+        if (max_members_pro_faction > maxMembersPerFaction) {
             Main.sendCmdMessage(ChatColor.DARK_RED + "The maximum value that can be set is 14. A faction per member should not exceed this!");
             Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
             Bukkit.getServer().shutdown();
         }
-        if(Bukkit.getWorld(Config.world_name.asStr()) == null){
+        if (Bukkit.getWorld(Config.world_name.asStr()) == null) {
             Main.sendCmdMessage(ChatColor.DARK_RED + "World not found!");
             Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
             Bukkit.getServer().shutdown();
         }
-        System.out.println("\n"+startMessage+"\n"+startMessage2);
+        System.out.println("\n" + startMessage + "\n" + startMessage2);
         System.out.println(startMessageInfo);
         autoKoth.startAutoKoth();
+
 
     }
 
     @EventHandler
     public void onDisableEvent(PluginDisableEvent e) {
-        if(e.getPlugin().equals(this)) {
+        if (e.getPlugin().equals(this)) {
             try {
-                for(Player player : Bukkit.getOnlinePlayers()){
-                    HCFPlayer hcf = HCFPlayer.getPlayer(player);
-                    hcf.saveStats();
+                for (HCFPlayer hcf : player_cache.values()) {
+                    hcf.save();
+                }
 
-                    if(!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
                     List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
                     for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
                         Location loc = it.next();
@@ -326,26 +329,30 @@ public final class Main extends JavaPlugin implements Listener {
                 }
                 for (Map.Entry<Integer, Faction> integerFactionEntry : faction_cache.entrySet()) {
                     integerFactionEntry.getValue().saveFactionData();
-                    for (Faction_Rank_Manager.Rank rank : integerFactionEntry.getValue().ranks) {
+                    for (FactionRankManager.Rank rank : integerFactionEntry.getValue().ranks) {
                         rank.saveRank();
                     }
                 }
                 con.close();
                 con = null;
 
-            } catch (Exception asked) {}
+            } catch (Exception asked) {
+            }
         }
     }
+
     @Override
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDisable() {
         // Adatbázis kapcsolat leállítása
         //SaveAll();
         try {
-            for(Player player : Bukkit.getOnlinePlayers()){
-                HCFPlayer hcf = HCFPlayer.getPlayer(player);
-                hcf.saveStats();
-                if(!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
+            for (HCFPlayer hcf : player_cache.values()) {
+                hcf.save();
+            }
+
+            for (Player player : getServer().getOnlinePlayers()) {
+                if (!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
                 List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
                 for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
                     Location loc = it.next();
@@ -361,7 +368,7 @@ public final class Main extends JavaPlugin implements Listener {
             }
             for (Map.Entry<Integer, Faction> integerFactionEntry : faction_cache.entrySet()) {
                 integerFactionEntry.getValue().saveFactionData();
-                for (Faction_Rank_Manager.Rank rank : integerFactionEntry.getValue().ranks) {
+                for (FactionRankManager.Rank rank : integerFactionEntry.getValue().ranks) {
                     rank.saveRank();
                 }
             }
@@ -371,13 +378,6 @@ public final class Main extends JavaPlugin implements Listener {
         } catch (Exception ignored) {
         }
 
-    }
-
-    public static void sendCmdMessage(String msg) {
-        Bukkit.getServer().getConsoleSender().sendMessage(
-                Messages.prefix_cmd.queue()+
-                msg
-        );
     }
 
 

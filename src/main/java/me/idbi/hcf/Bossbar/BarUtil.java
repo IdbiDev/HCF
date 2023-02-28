@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BarUtil {
 
-    private static Map<String, EntityEnderDragon> dragons = new ConcurrentHashMap<>();
+    private static final Map<String, EntityEnderDragon> dragons = new ConcurrentHashMap<>();
 
     public static void setBar(Player p, String text, float healthPercent) {
         Location loc = p.getLocation();
@@ -33,11 +33,11 @@ public class BarUtil {
         watcher.a(11, (byte) 1);
         watcher.a(3, (byte) 1);
 
-        try{
+        try {
             Field t = PacketPlayOutSpawnEntityLiving.class.getDeclaredField("l");
             t.setAccessible(true);
             t.set(packet, watcher);
-        } catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -46,7 +46,7 @@ public class BarUtil {
     }
 
     public static void removeBar(Player p) {
-        if(dragons.containsKey(p.getName())) {
+        if (dragons.containsKey(p.getName())) {
             PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(dragons.get(p.getName()).getId());
             dragons.remove(p.getName());
             ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
@@ -54,7 +54,7 @@ public class BarUtil {
     }
 
     public static void teleportBar(Player p) {
-        if(dragons.containsKey(p.getName())) {
+        if (dragons.containsKey(p.getName())) {
             Location loc = p.getLocation();
             PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(dragons.get(p.getName()).getId(),
                     (int) loc.getX() * 32, (int) (loc.getY() - 100) * 32, (int) loc.getZ() * 32,
@@ -72,7 +72,7 @@ public class BarUtil {
     }
 
     public static void updateBar(Player p, String text, float healthPercent) {
-        if(dragons.containsKey(p.getName())) {
+        if (dragons.containsKey(p.getName())) {
             DataWatcher watcher = new DataWatcher(null);
             watcher.a(0, (byte) 0x20);
             if (healthPercent != -1) watcher.a(6, (healthPercent * 200) / 100);
@@ -91,7 +91,7 @@ public class BarUtil {
     public static Set<String> getPlayers() {
         Set<String> set = new HashSet<>();
 
-        for(Map.Entry<String, EntityEnderDragon> entry : dragons.entrySet()) {
+        for (Map.Entry<String, EntityEnderDragon> entry : dragons.entrySet()) {
             set.add(entry.getKey());
         }
 
