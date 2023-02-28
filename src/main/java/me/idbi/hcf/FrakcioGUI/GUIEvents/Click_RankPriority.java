@@ -49,7 +49,8 @@ public class Click_RankPriority implements Listener {
             FactionRankManager.Rank rank = f.FindRankByName(name);
             if (rank == null) continue;
 
-            rank.priority = inv.first(is);
+            rank.setPriority(-9998 + inv.first(is));
+            rank.saveRank();
 
         }
         assert f != null;

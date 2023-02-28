@@ -41,7 +41,7 @@ public class AllyTools {
         Main.sendCmdMessage("Ally added! Requester: " + mainFaction.name + " Receiver: " + allyFaction.name);
         mainFaction.allyinvites.removePlayerFromInvite(allyFaction);
 
-        //For the allay faction!
+        //For the ally faction!
         mainFactionAlly = new AllyFaction(mainFaction.id, mainFaction);
         allyFaction.Allies.put(mainFactionAlly.getFactionId(), mainFactionAlly);
         Main.sendCmdMessage("Ally added! Requester: " + allyFaction.name + " Receiver: " + mainFaction.name);

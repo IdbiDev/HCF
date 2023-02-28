@@ -25,16 +25,15 @@ public class BasicClaim implements Listener {
             e.setCancelled(true);
             p.sendMessage(Messages.claim_pos_end.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
 
-                if (HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
+            if (HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
 
-                    e.getPlayer().sendMessage(Messages.faction_claim_price
-                            .language(p)
-                            .setPrice(HCF_Claiming.calcMoneyOfArea(e.getPlayer()))
-                            .replace("%blocks%", String.valueOf(HCF_Claiming.calcBlocks(e.getPlayer())))
-                            .queue()
-                    );
-                    //e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: $"+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
-                }
+                e.getPlayer().sendMessage(Messages.faction_claim_price
+                        .language(p)
+                        .setPrice(HCF_Claiming.calcMoneyOfArea(e.getPlayer()))
+                        .replace("%blocks%", String.valueOf(HCF_Claiming.calcBlocks(e.getPlayer())))
+                        .queue()
+                );
+                //e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: $"+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
             }
         }
         if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && player.claimType == HCF_Claiming.ClaimTypes.FACTION) {
@@ -44,15 +43,14 @@ public class BasicClaim implements Listener {
             p.sendMessage(Messages.claim_pos_start.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
             if (HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
 
-                    e.getPlayer().sendMessage(Messages.faction_claim_price
-                            .language(p)
-                            .setPrice(HCF_Claiming.calcMoneyOfArea(e.getPlayer()))
-                            .replace("%blocks%", String.valueOf(HCF_Claiming.calcBlocks(e.getPlayer())))
-                            .queue()
-                    );
+                e.getPlayer().sendMessage(Messages.faction_claim_price
+                        .language(p)
+                        .setPrice(HCF_Claiming.calcMoneyOfArea(e.getPlayer()))
+                        .replace("%blocks%", String.valueOf(HCF_Claiming.calcBlocks(e.getPlayer())))
+                        .queue()
+                );
 
-                    //e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: "+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
-                }
+                //e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: "+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
             }
         }
         // Elvetés

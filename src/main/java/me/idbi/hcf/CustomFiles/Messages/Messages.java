@@ -109,7 +109,7 @@ public enum Messages {
     deposit_message("%prefix% &eYou deposited &6&o$%amount% &eto faction bank!"),
     executor_invite_message("&eYou invited &6&o%player% &eto your faction!"),
     invited_invite_message("&eYou invited to &6&o%faction_name% &efaction by &6&o%executor%&e!"),*/
-    leader_leaving_faction("%prefix% &cYou can't leave this faction, because you are the leader! Use &e&l/f disband &r&cinstead!"),
+    leader_leaving_faction("%prefix% &cYou can't leave this faction, because you are the leader! Use &e&l/f disband %faction% &r&cinstead!"),
     not_leader("%prefix% &cYou are not the faction leader!"),
     cant_kick_yourself("%prefix% &cYou can't kick yourself!"),
     cant_kick_leader("%prefix% &cYou can't the faction leader!"),
@@ -120,7 +120,7 @@ public enum Messages {
 
     // Faction home
     sethome_message("%prefix% &aSuccessfully set home of your faction to your location!"),
-    sethome_update_faction("%prefix% &7&l%player% &f&echanged the faction's home location! &g[&6&o%location_x%&e, &6&o%location_y%&e, &6&o%location_z%]"),
+    sethome_update_faction("%prefix% &7&l%player% &f&echanged the faction's home location! &7[&6&o%location_x%&e, &6&o%location_y%&e, &6&o%location_z%&7]"),
     teleport_to_home("&eTeleportation in &6&o%time% seconds&e. &cDo not move!"),
     successfully_teleport("%prefix% &eSuccessfully teleported to your faction's home!"),
     teleport_cancel("%prefix% &cYou moved, teleportation cancelled!"),

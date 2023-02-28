@@ -22,6 +22,7 @@ import static me.idbi.hcf.Main.max_allies_pro_faction;
 import static me.idbi.hcf.Main.max_members_pro_faction;
 
 public class Faction {
+    private static final Connection con = Main.getConnection("Faction");
 
     public int id;
     public String name;
@@ -226,7 +227,10 @@ public class Faction {
 
     public void saveFactionData() {
         String AlliesEntry = AllyTools.getAlliesJson(this);
-        SQL_Connection.dbExecute(con,"UPDATE factions SET name='?',money='?',leader='?',`statistics`='?',Allies='?' WHERE ID='?'", name, String.valueOf(balance),leader,assembleFactionHistory().toString(),AlliesEntry,String.valueOf(id));
+        SQL_Connection.dbExecute(con, "UPDATE factions SET name='?',money='?',leader='?',`statistics`='?', Allies='?' WHERE ID='?'", name, String.valueOf(balance), leader, assembleFactionHistory().toString(), AlliesEntry, String.valueOf(id));
+        for (FactionRankManager.Rank rank : ranks) {
+            rank.saveRank();
+        }
     }
 
     public void invitePlayer(Player p) {
@@ -426,33 +430,13 @@ public class Faction {
             }
         });
         //        //(String) permissionmap.get("Allies")
-        JSONObject obj = new JSONObject((String) permissionmap.get("Allies"));
-        System.out.println(obj);
-        // ID       PermissionMap
-        Map<String, Object> map = JsonUtils.jsonToMap(obj);
 
-        for (Map.Entry<String, Object> hash : map.entrySet()) {
-            if(!hash.getKey().matches("^[0-9]+$")) continue;
-
-            Map<String, Object> jsonPerms = JsonUtils.jsonToMap(new JSONObject(hash.getValue()));
-            Map<Permissions, Boolean> perms = new HashMap<>();
-
-            for (Map.Entry<String, Object> permsJson : jsonPerms.entrySet()) {
-                if(Permissions.getByName(permsJson.getKey()) == null) continue;
-                perms.put(Permissions.getByName(permsJson.getKey()), Boolean.parseBoolean(permsJson.getValue() + ""));
-            }
-
-            int id = Integer.parseInt(hash.getKey());
-            AllyFaction allyFaction = new AllyFaction(id, Main.faction_cache.get(id));
-
-            for (Map.Entry<Permissions, Boolean> permsHash : perms.entrySet()) {
-                allyFaction.setPermission(permsHash.getKey(), permsHash.getValue());
-            }
-            this.Allies.put(id,allyFaction);
-        }
     }
 
-    public boolean HaveAllyPermission(Faction faction, Permissions perm){
+    //Faction: Aki területén történt
+    //THIS: Executor factionje
+    //Permission . Perm
+    public boolean HaveAllyPermission(Faction faction, Permissions perm) {
 
 //        //if(faction == null) return true;
 //        if(faction.claims.isEmpty()) return true;
@@ -483,9 +467,12 @@ public class Faction {
        }*/
         // return false;
     }
-    public boolean isAlly(Faction faction){
-        for(AllyFaction allyFaction : this.Allies.values()) {
-            if(allyFaction.getFactionId() == faction.id){
+
+    public boolean isAlly(Faction faction) {
+        if (faction == null) return false;
+        if (this == null) return false;
+        for (AllyFaction allyFaction : this.Allies.values()) {
+            if (allyFaction.getFactionId() == faction.id) {
                 return true;
             }
         }
@@ -495,6 +482,11 @@ public class Faction {
     public void selfDestruct() {
         Main.faction_cache.remove(this.id);
         Main.nameToFaction.remove(this.name);
+
+        for (AllyFaction value : this.Allies.values()) {
+            value.getAllyFaction().Allies.remove(this.id);
+        }
+
         SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(this.id));
         SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(this.id));
         SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(this.id));

@@ -72,8 +72,9 @@ public class HCFPlayer {
             this.playerStatistic = playerStatistic;
             this.playerStatistic.kills = kills;
             this.playerStatistic.deaths = deaths;
-            Main.player_cache.put(this.uuid, this);
-            System.out.println("HCF Player létrehozva!");
+            System.out.println("HCF Player létrehozva!");/*
+            SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',money='?'",
+                    this.name, this.uuid.toString(), Config.default_balance.asInt() + "");*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -181,6 +182,7 @@ public class HCFPlayer {
 
     public void setLanguage(String newLang) {
         this.language = newLang;
+        Main.currentLanguages.put(this.uuid, newLang);
     }
 
     public void setKothId(int id) {
@@ -212,6 +214,10 @@ public class HCFPlayer {
         this.rank = faction.getDefaultRank();
     }
 
+    public void setFactionWithoutRank(Faction faction) {
+        this.faction = faction;
+    }
+
     public void setStuckLocation(Location loc) {
         this.stuckLocation = loc;
     }
@@ -220,16 +226,36 @@ public class HCFPlayer {
         this.staffChat = chat;
     }
 
+    public void addFaction(Faction f) {
+        this.faction = f;
+        this.rank = f.getDefaultRank();
+        this.faction.members.add(this);
+    }
+
     public void removeFaction() {
         this.faction.members.remove(this);
         this.faction = null;
         this.rank = null;
     }
 
-    public void addFaction(Faction f) {
-        this.faction = f;
-        this.rank = f.getDefaultRank();
-        this.faction.members.add(this);
+    public int getKills() {
+        return this.playerStatistic.kills;
+    }
+
+    public void setKills(int kills) {
+        this.playerStatistic.kills = kills;
+    }
+
+    public int getDeaths() {
+        return this.playerStatistic.deaths;
+    }
+
+    public void setDeaths(int deaths) {
+        this.playerStatistic.deaths = deaths;
+    }
+
+    public boolean inFaction() {
+        return faction != null;
     }
 
     /**
@@ -244,28 +270,22 @@ public class HCFPlayer {
                 return Messages.wilderness.language(offline.getPlayer()).queue();
             }
             boolean friendly = currentArea.faction == faction;
-            if(!friendly) {
-                friendly = currentArea.faction.isAlly(faction);
+            boolean isAlly = false;
+            if (!friendly) {
+                if (faction != null)
+                    isAlly = currentArea.faction.isAlly(faction);
             }
             if (friendly) {
-                return Messages.zone_friendly.language(offline.getPlayer()).setZone(currentArea.faction.name).queue();
+                //return Messages.zone_friendly.language(offline.getPlayer()).setZone(currentArea.faction.name).queue();
+                return Config.teammate_color.asStr() + currentArea.faction.name;
             } else {
-                return Messages.zone_enemy.language(offline.getPlayer()).setZone(currentArea.faction.name).queue();
+                if (isAlly) {
+                    return Config.ally_color.asStr() + currentArea.faction.name;
+                }
+                return Config.enemy_color.asStr() + currentArea.faction.name;
             }
         }
         return null;
-    }
-
-    public int getKills() {
-        return this.playerStatistic.kills;
-    }
-
-    public int getDeaths() {
-        return this.playerStatistic.deaths;
-    }
-
-    public boolean inFaction() {
-        return faction != null;
     }
 
     public void save() {
@@ -273,9 +293,11 @@ public class HCFPlayer {
         if (this.name == null) return;
 
         SQL_Connection.dbExecute(con,
-                "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?', WHERE UUID='?'",
+                "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?' WHERE UUID='?'",
                 this.faction == null ? 0 + "" : this.faction.id + "",
                 this.rank == null ? "None" : this.rank.name,
+                this.playerStatistic.kills + "",
+                this.playerStatistic.deaths + "",
                 this.money + "",
                 this.name,
                 this.language,

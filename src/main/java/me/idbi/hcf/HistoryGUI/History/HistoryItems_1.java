@@ -98,7 +98,11 @@ public class HistoryItems_1 {
         cal.add(Calendar.HOUR, -1);
         Date oneHourBack = cal.getTime();
 
-        return "§7[§6" + format.format(oneHourBack) + "§7] §e" + entry.player + "§7: §6$" + entry.amount;
+        if (entry.amount < 0) {
+            return "§7[§6" + format.format(oneHourBack) + "§7] §e" + entry.player + "§7: [§6-$" + Math.abs(entry.amount) + "§7]";
+        } else {
+            return "§7[§6" + format.format(oneHourBack) + "§7] §e" + entry.player + "§7: [§6+$" + entry.amount + "§7]";
+        }
     }
 
     public static String designKickHistory(HistoryEntrys.KickEntry entry) {

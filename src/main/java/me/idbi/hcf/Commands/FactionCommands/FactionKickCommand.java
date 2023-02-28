@@ -58,4 +58,50 @@ public class FactionKickCommand extends SubCommand {
     public void perform(Player p, String[] args) {
         kick(p, args[1]);
     }
+
+    public static void kick(Player p, String target) {
+        if (Playertools.getPlayerFaction(p) != null) {
+            if (Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_KICK)) {
+                OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(target);
+                //Player targetPlayer_Online;
+                HCFPlayer hcf = HCFPlayer.getPlayer(targetPlayer.getUniqueId());
+                Faction f = Playertools.getPlayerFaction(targetPlayer);
+                if (targetPlayer.getUniqueId() == p.getUniqueId()) {
+                    p.sendMessage(Messages.cant_kick_yourself.language(p).queue());
+                    return;
+                }
+                if (Objects.equals(targetPlayer.getUniqueId().toString(), f.leader)) {
+                    p.sendMessage(Messages.cant_kick_leader.language(p).queue());
+                    return;
+                }
+
+                final String previousRank = hcf.rank.name;
+                hcf.removeFaction();
+
+                f.refreshDTR();
+                for (Player member : f.getMembers()) {
+                    member.sendMessage(Messages.bc_leave_message.language(member).setPlayer(hcf).queue());
+                }
+                SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?' WHERE uuid = '?'", "None", "0", hcf.uuid.toString());
+                PlayerStatistic stat = hcf.playerStatistic;
+                for (FactionHistory statF : stat.factionHistory) {
+                    if (statF.id == f.id) {
+                        statF.left = new Date();
+                        statF.cause = "Kicked";
+                        statF.lastRole = previousRank;
+                        statF.name = f.name;
+                    }
+                }
+                f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(hcf.name, "kicked", new Date().getTime()));
+                Scoreboards.RefreshAll();
+                NameChanger.refresh(p);
+                p.sendMessage(Messages.kick_message.setExecutor(p).replace("%p%", hcf.name).queue());
+            } else {
+                p.sendMessage(Messages.no_permission_in_faction.language(p).queue());
+            }
+        } else {
+            // Nem vagy tagja egy factionnak se
+            p.sendMessage(Messages.not_in_faction.language(p).queue());
+        }
+    }
 }

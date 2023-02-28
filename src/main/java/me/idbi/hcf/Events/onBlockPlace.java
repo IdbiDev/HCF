@@ -70,7 +70,7 @@ public class onBlockPlace implements Listener {
             if (!f.HaveAllyPermission(baszogatottFaction, Permissions.PLACE_BLOCK)) {
                 System.out.println("uwuwuwwuuwuuwuuwuw");
                 e.setCancelled(true);
-                p.sendMessage(Messages.you_cant_do.language(p).replace("%faction%", HCF_Claiming.sendFactionTerretoryByXZ(p, block.getX(), block.getZ())).queue());
+                p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, block.getX(), block.getZ())).queue());
             } else {
                 e.setCancelled(false);
             }

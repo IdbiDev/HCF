@@ -137,6 +137,7 @@ public final class Main extends JavaPlugin implements Listener {
         blacklistedRankNames = new ArrayList<>();
         Bossbar.bars = new HashMap<>();
         currentLanguages = new HashMap<>();
+        FactionHomeCommand.teleportPlayers = new ArrayList<Player>();
         //MessagesFile.setup();
         //DiscordFile.setup();
         // if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", true);
@@ -189,7 +190,6 @@ public final class Main extends JavaPlugin implements Listener {
 
         // Variables
         player_block_changes = new HashMap<>();
-        Faction_Home.teleportPlayers = new ArrayList<>();
         protocolManager = ProtocolLibrary.getProtocolManager();
         //EnchantmentFile.setup();
         AdminTools.InvisibleManager.invisedAdmins = new ArrayList<>();

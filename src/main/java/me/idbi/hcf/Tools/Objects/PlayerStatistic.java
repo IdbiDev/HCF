@@ -5,11 +5,13 @@ import me.idbi.hcf.Tools.SQL_Connection;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
 public class PlayerStatistic {
+    private static final Connection con = Main.getConnection("PlayerStatistics");
     public final static String defaultStats = "{\"totalFactions\":0,\"lastLogin\":0,\"TimePlayed\":0,\"MoneySpend\":0,\"ClassTimes\":{\"Miner\":0,\"Archer\":0,\"Assassin\":0,\"Total\":0,\"Bard\":0},\"MoneyEarned\":0,\"FactionHistory\":[],\"startDate\":0}";
     public long TotalBardClassTime;
     public long TotalAssassinClassTime;
@@ -56,7 +58,7 @@ public class PlayerStatistic {
         TimePlayed = Long.parseLong(String.valueOf(mainJSON.get("TimePlayed")));
     }
 
-    public void save(UUID uuid){
+    public void save(UUID uuid) {
         JSONObject jsonComp = new JSONObject();
         JSONArray factions = new JSONArray();
         //JSONArray ClassTimes = new JSONArray();

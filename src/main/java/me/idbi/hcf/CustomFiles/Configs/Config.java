@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
 import org.bukkit.ChatColor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public enum Config {
     home_teleport("Cooldowns", 10, createComment("This will be set if you teleporting home.", "Must be in seconds")),
     stuck_timer("Cooldowns", 30, createComment("This will be set if you use the command", "Must be in seconds")),
     logout("Cooldowns", 30, createComment("This will be set if you use the command", "Must be in seconds")),
-    koth_length("Cooldowns", 300, createComment("Set the koth event length", "Must be in seconds")),
+    koth_length("Cooldowns", 300, createComment("Set the KoTH event length", "Must be in seconds")),
     sotw_length("Cooldowns", 600, createComment("Set the SOTW event length", "Must be in seconds")),
     eotw_length("Cooldowns", 600, createComment("Set the EOTW event length", "Must be in seconds")),
     dtr_regen("Cooldowns", 60, createComment("Must be in seconds")),
@@ -44,6 +45,23 @@ public enum Config {
     scoreboard_title("Default values", "&6HCF+ &7- &eMap &6#1", createComment("Shows to every player.", "It can contain color codes")),
     max_dtr("Default values", 5.5, createComment("Maximum DTR, that one faction can reach")),
     death_dtr("Default values", 1, createComment("The DTR will be decreased by this number, when a member die.")),
+    claiming_wand_name("Claim", "&6Claiming Wand"),
+    claiming_wand_lore("Claim", Arrays.asList(
+            "&eLeft and right click on the ground",
+            "&f➥ to place the positions.",
+            " ",
+            "&eShift + Right click",
+            "&f➥ Accept the claim.",
+            " ",
+            "&eShift + Left click",
+            "&f➥ Discard the claim."
+    )),
+
+    teammate_color("Colors", "&a"),
+    ally_color("Colors", "&d"),
+    enemy_color("Colors", "&c"),
+    archer_tagged_color("Colors", "&4"),
+    staff_mode_color("Colors", "&b"),
 
     blacklisted_names(Arrays.asList(
             "dick", "tit", "boobs", "b00bs", "bo0bs", "fuck", "gay"
@@ -122,19 +140,27 @@ public enum Config {
     }
 
     public List<?> asList() {
-        return (List<?>) this.value;
+        return ConfigManager.getSimpleConfig().getList(this.getPath());
     }
 
     public List<String> asStrList() {
-        return (List<String>) this.value;
+        return ConfigManager.getSimpleConfig().getStringList(this.getPath());
+    }
+
+    public List<String> asChatColorList() {
+        List<String> cucc = new ArrayList<>();
+        for (String s : asStrList()) {
+            cucc.add(ChatColor.translateAlternateColorCodes('&', s));
+        }
+        return cucc;
     }
 
     public int asInt() {
-        return Integer.parseInt(this.value + "");
+        return ConfigManager.getSimpleConfig().getInt(this.getPath());
     }
 
     public double asDouble() {
-        return Double.parseDouble(this.value + "");
+        return ConfigManager.getSimpleConfig().getDouble(this.getPath());
     }
 
     public String asStr() {

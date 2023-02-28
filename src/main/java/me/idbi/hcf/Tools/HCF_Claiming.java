@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ import java.util.Map;
 import static me.idbi.hcf.Tools.Playertools.getDistanceBetweenPoints2D;
 
 public class HCF_Claiming {
+    private static final Connection con = Main.getConnection("HCF_Claiming");
     public static final HashMap<Integer, Point> startpositions = new HashMap<>();
     public static final HashMap<Integer, Point> endpositions = new HashMap<>();
 
@@ -365,7 +367,7 @@ public class HCF_Claiming {
         for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
                 if (FindPoint_old(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
-                    return Messages.zone_enemy.language(p).setZone(thisFaction.getValue().name).queue();
+                    return Config.enemy_color.asStr() + thisFaction.getValue().name;
                 }
             }
         }
@@ -419,29 +421,10 @@ public class HCF_Claiming {
         return -1;
     }
 
-    public static ItemStack spawnWand() {
-        ItemStack wand = new ItemStack(Material.GOLD_HOE);
-        ItemMeta meta = wand.getItemMeta();
-
-        meta.setDisplayName("§e§oSpawn Claimer");
-
-        List<String> str = new ArrayList<>();
-        str.add("§aUse §o/admin claimspawn claim");
-        str.add("§7to claim the area.");
-        str.add("§cUse §o/admin claimspawn stop");
-        str.add("§7to exit from the claim mode");
-        str.add("§cDo NOT modify the faction with the ID 1");
-
-        meta.setLore(str);
-
-        wand.setItemMeta(meta);
-        return wand;
-    }
-
     public static boolean SpawnPrepare(Player p) {
         if (p.getInventory().firstEmpty() != -1) {
 
-            p.getInventory().setItem(p.getInventory().firstEmpty(), spawnWand());
+            p.getInventory().setItem(p.getInventory().firstEmpty(), HCF_Claiming.Wands.claimWand());
             return true;
         } else {
             p.sendMessage(Messages.not_enough_slot.language(p).queue());
@@ -452,18 +435,7 @@ public class HCF_Claiming {
 
     public static boolean KothPrepare(Player p) {
         if (p.getInventory().firstEmpty() != -1) {
-            ItemStack wand = new ItemStack(Material.IRON_HOE);
-            ItemMeta meta = wand.getItemMeta();
-
-            meta.setDisplayName("§e§oKoth Claimer");
-
-            List<String> str = new ArrayList<>();
-            str.add("§aMeow");
-
-            meta.setLore(str);
-
-            wand.setItemMeta(meta);
-            p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
+            p.getInventory().setItem(p.getInventory().firstEmpty(), HCF_Claiming.Wands.claimWand());
             return true;
         } else {
             p.sendMessage(Messages.not_enough_slot.language(p).queue());
@@ -477,16 +449,16 @@ public class HCF_Claiming {
             ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
             ItemMeta meta = wand.getItemMeta();
 
-            meta.setDisplayName("§e§oCustom Claimer");
-            Faction f = Main.faction_cache.get(factionid);
+            meta.setDisplayName(Config.claiming_wand_name.asStr());
+            // meta.setLore(Config.claiming_wand_name.asChatColorList());
+            /*Faction f = Main.faction_cache.get(factionid);
             List<String> str = new ArrayList<>();
             if(f != null)
                 str.add("§cName: §4"+ f.name);
-            str.add("§cDo NOT modify the faction with the ID 1");
+            str.add("§cDo NOT modify the faction with the ID 1");*/
 
 
-
-            meta.setLore(str);
+            //meta.setLore(str);
 
             wand.setItemMeta(meta);
             p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
@@ -579,5 +551,12 @@ public class HCF_Claiming {
             ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
             ItemMeta meta = wand.getItemMeta();
 
+            meta.setDisplayName(Config.claiming_wand_name.asStr());
+            meta.setLore(Config.claiming_wand_name.asChatColorList());
+
+            wand.setItemMeta(meta);
+            return wand;
+        }
+    }
 
 }

@@ -42,7 +42,26 @@ public class FactionRankManager {
         //rank.saveRank();
         return rank;
     }
-    public static boolean rename(Faction faction,String oldName,String newName) {
+    // public static Rank create(Faction faction, String name) {
+//        for (Faction_Rank_Manager.Rank rank : faction.ranks)
+//            if (rank.name.equalsIgnoreCase(name))
+//                return null;
+//
+//
+//        int id = SQL_Connection.dbSyncExec(con, "INSERT INTO ranks SET name = '?', faction='?'", name, String.valueOf(faction.id));
+//        Rank rank = new Rank(id, name);
+//        faction.ranks.add(rank);
+//
+//        rank.priority = -9999 + faction.ranks.size();
+//        rank.saveRank();
+//
+//        Scoreboards.RefreshAll();
+//        result.complete(rank);
+//
+//        return result;
+//    }
+
+    public static boolean rename(Faction faction, String oldName, String newName) {
         Rank rank = faction.FindRankByName(oldName);
         if (oldName.equalsIgnoreCase(newName))
             return false;
@@ -99,7 +118,16 @@ public class FactionRankManager {
             }
             //loadPermissions();
         }
-        private void loadPermissions() {
+
+        public void setPriority(int priority) {
+            this.priority = priority;
+        }
+
+        public void setLeader() {
+            this.isLeader = true;
+        }
+
+        public void loadPermissions() {
             try {
                 SQL_Async.dbPollAsync(con, "SELECT * FROM ranks WHERE ID='?'", String.valueOf(id)).thenAcceptAsync(permissionmap -> {
                     if ((Boolean) permissionmap.get("ALL_Permission"))
@@ -123,8 +151,8 @@ public class FactionRankManager {
                         isDefault = (Boolean) permissionmap.get("isDefault");
                         priority = -9999;
                     }
-                    if((Boolean) permissionmap.get("isLeader")){
-                        isLeader = (Boolean)  permissionmap.get("isLeader");
+                    if ((Boolean) permissionmap.get("isLeader")) {
+                        isLeader = (Boolean) permissionmap.get("isLeader");
                         priority = 9999;
                     }
                     priority = (int) permissionmap.get("priority");

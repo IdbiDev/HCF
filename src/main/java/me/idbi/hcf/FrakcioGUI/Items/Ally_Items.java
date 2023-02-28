@@ -130,21 +130,21 @@ public class Ally_Items {
         return is;
     }
 
-    public static ItemStack permission_useBlock() {
+    public static ItemStack permission_placeBlock() {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§7Permission: §e§oUse Block");
-        im.addEnchant(Enchantment.DURABILITY, 2, true);
+        im.setDisplayName("§7Permission: §e§oPlace Block");
+        im.addEnchant(Enchantment.DURABILITY, 3, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         is.setItemMeta(im);
         return is;
     }
 
-    public static ItemStack permission_viewItems() {
+    public static ItemStack permission_inventoryAccess() {
         ItemStack is = new ItemStack(Material.PAPER, 1);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§7Permission: §e§oView Items");
-        im.addEnchant(Enchantment.DURABILITY, 3, true);
+        im.setDisplayName("§7Permission: §e§oInventory Access");
+        im.addEnchant(Enchantment.DURABILITY, 5, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         is.setItemMeta(im);
         return is;
@@ -155,6 +155,16 @@ public class Ally_Items {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§7Permission: §e§oBlock Break");
         im.addEnchant(Enchantment.DURABILITY, 4, true);
+        im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        is.setItemMeta(im);
+        return is;
+    }
+
+    public static ItemStack permission_interact() {
+        ItemStack is = new ItemStack(Material.PAPER, 1);
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName("§7Permission: §e§oInteract");
+        im.addEnchant(Enchantment.DURABILITY, 2, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         is.setItemMeta(im);
         return is;

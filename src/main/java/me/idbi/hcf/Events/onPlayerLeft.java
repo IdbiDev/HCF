@@ -62,7 +62,7 @@ public class onPlayerLeft implements Listener {
                             null)
                     .save();
         }
-        Main.player_cache.remove(e.getPlayer().getUniqueId());
+        //////////////////////////////////** KURVAAAAAAAAAAAAA Main.player_cache.remove(e.getPlayer().getUniqueId()); //**
 
         setCombatLogger(e.getPlayer());
     }

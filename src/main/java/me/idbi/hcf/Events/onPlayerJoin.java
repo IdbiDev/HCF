@@ -31,12 +31,12 @@ public class onPlayerJoin implements Listener {
         Player p = e.getPlayer();
         Playertools.loadOnlinePlayer(p);
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        if(Main.death_wait_clear.contains(e.getPlayer().getUniqueId())) {
-            e.getPlayer().getInventory().clear();
-            e.getPlayer().getInventory().setArmorContents(null);
-            e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
-            e.getPlayer().setFoodLevel(20);
-            e.getPlayer().setFallDistance(0);
+        if (Main.death_wait_clear.contains(p.getUniqueId())) {
+            p.getInventory().clear();
+            p.getInventory().setArmorContents(null);
+            p.setHealth(e.getPlayer().getMaxHealth());
+            p.setFoodLevel(20);
+            p.setFallDistance(0);
 
 
             Main.death_wait_clear.remove(e.getPlayer().getUniqueId());

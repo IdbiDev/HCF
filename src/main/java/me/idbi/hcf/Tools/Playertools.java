@@ -212,12 +212,16 @@ public class Playertools {
         }
         return false;
     }
-    public static Faction getFactionByName(String name){
-        for (Map.Entry<Integer, Faction> entry : Main.faction_cache.entrySet())
-        {
-            if(entry.getValue().name.equalsIgnoreCase(name))
-                return entry.getValue();
+
+    public static Faction getFactionByName(String name) {
+        if (Main.nameToFaction.containsKey(name)) {
+            return Main.nameToFaction.get(name);
         }
+        /*for (Map.Entry<Integer, Faction> entry : Main.faction_cache.entrySet()) {
+            if(entry.getValue().name.equalsIgnoreCase(name)) {
+                return entry.getValue();
+            }
+        }*/
         return null;
     }
 
@@ -442,6 +446,9 @@ public class Playertools {
                 claim = new HCF_Claiming.Faction_Claim(spawn.getBlockX() - warzoneSize, spawn.getBlockX() + warzoneSize, spawn.getBlockZ() - warzoneSize, spawn.getBlockZ() + warzoneSize, 2, HCF_Claiming.ClaimAttributes.SPECIAL, spawn.getWorld().getName());
                 f.addClaim(claim);
             }
+
+            // Setup allies!
+
         } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
@@ -648,7 +655,8 @@ public class Playertools {
         for (FactionRankManager.Rank rank : faction.ranks) {
             sortedMap.put(rank.priority, rank);
         }
-        return new TreeMap<Integer, Faction_Rank_Manager.Rank>(sortedMap);
+
+        return new TreeMap<Integer, FactionRankManager.Rank>(sortedMap);
     }
 
     public static boolean isTeammate(Player p, Player p2) {
@@ -669,6 +677,13 @@ public class Playertools {
         // Display the TreeMap which is naturally sorted
         //  hashMap
         return sorted;
+    }
+
+    public static boolean isAlly(Player player1, Player player2) {
+        HCFPlayer hcf1 = HCFPlayer.getPlayer(player1);
+        HCFPlayer hcf2 = HCFPlayer.getPlayer(player2);
+        if (hcf1.faction == null || hcf2.faction == null) return false;
+        return hcf1.faction.isAlly(hcf2.faction);
     }
 
 

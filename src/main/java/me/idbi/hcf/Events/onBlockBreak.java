@@ -1,6 +1,7 @@
 package me.idbi.hcf.Events;
 
-import me.idbi.hcf.CustomFiles.Comments.Messages;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.HCF_Claiming;
 import me.idbi.hcf.Tools.Objects.Faction;
@@ -32,6 +33,7 @@ public class onBlockBreak implements Listener {
         if (claim.faction == null) {
             Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
             Bukkit.getPluginManager().disablePlugin(Main.getPlugin(Main.class));
+            return;
         }
         Faction baszogatottFaction = claim.faction;
 
@@ -47,13 +49,14 @@ public class onBlockBreak implements Listener {
 //        }
         if (hcfPlayer.inDuty) {
             // System.out.println("BUZ");
-           e.setCancelled(false);
-        }else if(HCF_Claiming.checkEnemyClaimAction(bx, bz, baszogatottFaction)) {
+            e.setCancelled(false);
+        } else if (HCF_Claiming.isEnemyClaim(p, claim)) {
             // System.out.println("MAU");
-            Faction f = playertools.getPlayerFaction(p);
-            if(f == null) return;
             e.setCancelled(true);
-            if(!f.HaveAllyPermission(baszogatottFaction, Permissions.BREAKBLOCK)){
+            Faction f = Playertools.getPlayerFaction(p);
+            if (f == null) return;
+            if (!f.HaveAllyPermission(baszogatottFaction, Permissions.BREAK_BLOCK)) {
+
                 // System.out.println("uwuwuwwuuwuuwuuwuw");
                 e.setCancelled(true);
                 p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, bx, bz)).queue());

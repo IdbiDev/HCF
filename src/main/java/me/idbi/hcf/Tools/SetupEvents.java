@@ -50,7 +50,7 @@ public class SetupEvents {
 
         getServer().getPluginManager().registerEvents(new onBowShoot(), Main.getPlugin(Main.class));
 
-        getServer().getPluginManager().registerEvents(new Faction_Home(), Main.getPlugin(Main.class));
+        getServer().getPluginManager().registerEvents(new FactionHomeCommand(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new InteractShopSign(), Main.getPlugin(Main.class));
 

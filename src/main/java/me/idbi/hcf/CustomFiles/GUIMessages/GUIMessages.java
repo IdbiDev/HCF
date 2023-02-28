@@ -102,6 +102,7 @@ public enum GUIMessages {
 
         final String tempMessage = this.tempName;
         this.tempName = this.name;
+        this.tempLore = this.lore;
         return ChatColor.translateAlternateColorCodes('&', tempMessage);
     }
 
@@ -130,11 +131,12 @@ public enum GUIMessages {
     }
 
     public List<String> getLore() {
-        List<String> tempList = new ArrayList<>();
+        final List<String> tempList = new ArrayList<>();
         for (String s : this.tempLore.isEmpty() ? this.lore : this.tempLore) {
             tempList.add(ChatColor.translateAlternateColorCodes('&', s));
         }
-        final this.tempLore = this.lore;
+        this.tempName = this.name;
+        this.tempLore = this.lore;
         return tempList;
     }
 
@@ -220,7 +222,7 @@ public enum GUIMessages {
                     .replace("%faction_deaths%", factionDeaths)
                     .replace("%faction_home%", (factionPos.equals("0, 0") ? "None" : factionPos))
                     .replace("%faction_dtr_max%", dtrMax)
-                    .replace("%faction_dtr_regen", factionDtrRegen)
+                    .replace("%faction_dtr_regen%", factionDtrRegen)
                     .replace("%faction_dtr%", factionDtr)
                     .replace("%faction_member_online%", onlinesMembers)
                     .replace("%faction_member_count%", totalMembers)

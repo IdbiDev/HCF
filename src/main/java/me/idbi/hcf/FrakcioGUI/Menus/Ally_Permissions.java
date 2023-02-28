@@ -19,10 +19,11 @@ public class Ally_Permissions {
             inv.setItem(i, GUI_Items.blackGlass());
         }
 
-        inv.setItem(10, Ally_Items.permission_friendlyFire());
-        inv.setItem(12, Ally_Items.permission_useBlock());
-        inv.setItem(14, Ally_Items.permission_breakBlocks());
-        inv.setItem(16, Ally_Items.permission_viewItems());
+        inv.setItem(9, Ally_Items.permission_friendlyFire());
+        inv.setItem(11, Ally_Items.permission_interact());
+        inv.setItem(13, Ally_Items.permission_placeBlock());
+        inv.setItem(15, Ally_Items.permission_breakBlocks());
+        inv.setItem(17, Ally_Items.permission_inventoryAccess());
 
         ItemStack friendlyFire = ally.hasPermission(Permissions.FRIENDLY_FIRE) ? RP_Items.on() : RP_Items.off();
         ItemStack interact = ally.hasPermission(Permissions.INTERACT) ? RP_Items.on() : RP_Items.off();
@@ -30,10 +31,11 @@ public class Ally_Permissions {
         ItemStack breakBlock = ally.hasPermission(Permissions.BREAK_BLOCK) ? RP_Items.on() : RP_Items.off();
         ItemStack inventoryAccess = ally.hasPermission(Permissions.INVENTORY_ACCESS) ? RP_Items.on() : RP_Items.off();
 
-        inv.setItem(19, friendlyFire);
-        inv.setItem(21, useBlock);
-        inv.setItem(23, breakBlock);
-        inv.setItem(25, viewItems);
+        inv.setItem(18, friendlyFire);
+        inv.setItem(20, interact);
+        inv.setItem(22, placeBlock);
+        inv.setItem(24, breakBlock);
+        inv.setItem(26, inventoryAccess);
 
         inv.setItem(44, RP_Items.save(p));
         inv.setItem(36, RP_Items.cancel(p));

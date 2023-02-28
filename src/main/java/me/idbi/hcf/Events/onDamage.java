@@ -71,6 +71,18 @@ public class onDamage implements Listener {
                     e.setCancelled(true);
                     return;
                 }
+                if (damagerplayer.faction != null && victimplayer.faction != null) {
+                    Faction vicFac = victimplayer.faction;
+                    Faction damFac = damagerplayer.faction;
+                    if (damFac.isAlly(vicFac)) {
+                        if (!vicFac.HaveAllyPermission(damFac, Permissions.FRIENDLY_FIRE) || !damFac.HaveAllyPermission(vicFac, Permissions.FRIENDLY_FIRE)) {
+                            damager.sendMessage(Messages.teammate_damage.language(damager).queue());
+                            e.setCancelled(true);
+                            return;
+                        }
+                    }
+                }
+
                 //Add combatTimer
                 if (HCF_Timer.addCombatTimer(victim)) {
                     victim.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.combattag.asStr()));

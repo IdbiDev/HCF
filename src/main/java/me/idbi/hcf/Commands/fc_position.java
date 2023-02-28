@@ -17,7 +17,12 @@ import java.util.Map;
 
 public class fc_position implements CommandExecutor {
 
-    private static final Connection con = Main.getConnection("me");
+    private static final Connection con = Main.getConnection("fc_position");
+
+    public static String convertLocation(Player p, Location loc) {
+        return Messages.faction_player_position.language(p).setPlayer(p).setCoords(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).queue();
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player p) {
@@ -43,27 +48,5 @@ public class fc_position implements CommandExecutor {
         }
         return false;
     }
-
-    public static String convertLocation(Player p, Location loc) {
-        return Messages.faction_player_position.language(p).setPlayer(p).setCoords(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).queue();
-    }
-
-    public static void lecgo(){
-        for(int i=0;i<=1000;i++){
-            int x = createCustomFaction(i+"meow",UUID.randomUUID().toString());
-
-            for(int r=0;r<=100;r++)
-                SQL_Connection.dbExecute(con,"INSERT INTO ranks SET name='?',faction='?'",r+"rank", String.valueOf(x));
-
-            for(int c=2;c<=100;c++){
-                int lvl = (int) (Math.random() * (9999 - 1 + 1) + 1);
-                SQL_Connection.dbExecute(con,"INSERT INTO claims SET factionid='?'," +
-                        "startX='?'," +
-                        "startZ='?'," +
-                        "endX='?'," +
-                        "endZ='?'," +
-                        "type='normal'", String.valueOf(x), String.valueOf(lvl),String.valueOf(lvl),String.valueOf(lvl),String.valueOf(lvl));
-            }
-        }
-    }
+    // xd xDDDDDDD
 }
