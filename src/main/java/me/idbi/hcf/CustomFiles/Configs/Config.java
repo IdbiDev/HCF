@@ -77,17 +77,17 @@ public enum Config {
             "&7│ &eMoney: &6$%money%",
             "&7│ &eClass: &6%class%",
             "&7└─",
-            "empty",
+            "&7&m----------------------",
             "&7▍ &e%customtimers%",
             "&7▍ &eEOTW: &6%eotw%",
             "&7▍ &eSOTW: &6%sotw%",
             "&7▍ &eGapple: &6%gapple_cd%",
             "&7▍ &eOP: &6%opgapple_cd%",
             "&7▍ &eStuck: &6%stuck_timer%",
-            "&7▍ &eSpawn Tag: &6%spawntag%",
             "&7▍ &ePearl: &6%ep_cd%",
-            "&7▍ &eBard energy: &6%bard_energy%"
-    ), createComment("RATATATATATATATATATATATA")),
+            "&7▍ &eEnergy: &6%bard_energy%",
+            "&7▍ &eSpawn Tag: &6%spawntag%"
+            ), createComment("RATATATATATATATATATATATA")),
 
     StaffDutyScoreboardTitle("Scoreboards", "&6HCF+ &7- &eStaff Duty"),
     StaffScoreboard("Scoreboards", Arrays.asList(

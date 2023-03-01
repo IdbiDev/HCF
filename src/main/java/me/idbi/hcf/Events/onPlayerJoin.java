@@ -3,7 +3,7 @@ package me.idbi.hcf.Events;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.Scoreboard.ScoreboardBuilder;
 import me.idbi.hcf.Tools.AdminTools;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
@@ -29,6 +29,8 @@ public class onPlayerJoin implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        //Main.scoreboardManager.start();
+        p.setScoreboard(ScoreboardBuilder.getOrCreate(p).build());
         Playertools.loadOnlinePlayer(p);
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
 
@@ -76,7 +78,6 @@ public class onPlayerJoin implements Listener {
         // displayTeams.setupPlayer(e.getPlayer());
         // displayTeams.addPlayerToTeam(e.getPlayer());
 
-        Scoreboards.refresh(p);
         NameChanger.refreshAll();
 
         for (Map.Entry<LivingEntity, Long> entity : Main.savedPlayers.entrySet()) {

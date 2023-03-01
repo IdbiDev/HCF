@@ -110,7 +110,7 @@ public class onPlayerInteract implements Listener {
                 Bard.OhLetsBreakItDown(e.getPlayer());
             }
         }
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {
+        else if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {
             if (player.playerClass == Classes.BARD) {
                 Bard.OhLetsBreakItDown(e.getPlayer());
             }

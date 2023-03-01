@@ -64,6 +64,7 @@ public class AdminScoreboard {
 
             if (line.equals("empty")) {
                 if (scoreNumber == 0) {
+                    builder.setLine(scoreNumber + 1, replaceVariablesAdmin(line, p));
                     continue;
                 }
                 line = line.replace("empty", "");
@@ -76,17 +77,15 @@ public class AdminScoreboard {
             if (line.contains("%customtimers%")) {
                 for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
                     if (customTimers.getValue().isActive()) {
-                        Score score = obj.getScore(line.replace("%customtimers%",
+                        builder.setLine(scoreNumber + 1, line.replace("%customtimers%",
                                 Scoreboards.replaceVariables(customTimers.getValue().getFormatted(), p)));
-                        score.setScore(scoreNumber);
                         scoreNumber++;
                     }
                 }
                 continue;
             }
 
-            Score score = obj.getScore(replaceVariablesAdmin(line, p));
-            score.setScore(scoreNumber);
+            builder.setLine(scoreNumber + 1, replaceVariablesAdmin(line, p));
 
             scoreNumber++;
         }
@@ -95,6 +94,7 @@ public class AdminScoreboard {
         for (String line : fix) {
             if (line.equals("empty")) {
                 if (scoreNumber == 0) {
+                    builder.setLine(scoreNumber + 1, replaceVariablesAdmin(line, p));
                     continue;
                 }
                 line = line.replace("empty", "");
@@ -104,13 +104,11 @@ public class AdminScoreboard {
                 emptyCalc2++;
             }
 
-            Score score = obj.getScore(replaceVariablesAdmin(line, p));
-            score.setScore(scoreNumber);
+            builder.setLine(scoreNumber + 1, replaceVariablesAdmin(line, p));
 
             scoreNumber++;
         }
 
-        p.setScoreboard(sb);
     }
 
     public static void RefreshAll() {

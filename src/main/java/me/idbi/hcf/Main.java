@@ -87,6 +87,7 @@ public final class Main extends JavaPlugin implements Listener {
     private static ConfigManager configManager;
     private static Connection con;
 
+
     // Egyszerű SQL Connection getter
     public static Connection getConnection() {
         return con;
@@ -137,6 +138,7 @@ public final class Main extends JavaPlugin implements Listener {
         Bossbar.bars = new HashMap<>();
         currentLanguages = new HashMap<>();
         FactionHomeCommand.teleportPlayers = new ArrayList<Player>();
+
         //MessagesFile.setup();
         //DiscordFile.setup();
         // if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", true);

@@ -30,14 +30,26 @@ public class Scoreboards {
             return;
         }
 
+        ScoreboardBuilder builder = ScoreboardBuilder.getOrCreate(p);
+        builder.setDisplayName(Config.DefaultScoreboardTitle.asStr());
+/*        ScoreboardSign sign = ScoreboardSign.getScoreboard(p);
+        sign.setObjectiveName(Config.ScoreboardTitle.asStr());*/
+        //sign.create();
+
         List<String> fix = sortLists().get(0);
         List<String> timers = sortLists().get(1);
+
+        List<String> tryThis = new ArrayList<>();
+        for (String s : Config.DefaultScoreboard.asStrList()) {
+            tryThis.add(ChatColor.translateAlternateColorCodes('&', s));
+        }
 
         sortLists();
 
         Faction fac = Playertools.getPlayerFaction(p);
         HCFPlayer player = HCFPlayer.getPlayer(p);
 
+        Collections.reverse(tryThis);
         Collections.reverse(fix);
         Collections.reverse(timers);
 
@@ -48,10 +60,12 @@ public class Scoreboards {
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         obj.setDisplayName(Config.DefaultScoreboardTitle.asStr());
 
-        int scoreNumber = 0;
+        int scoreNumber = 1;
 
         int emptyCalcTimer = 0;
-        for (String line : timers) {
+        ArrayList<String> replacedList = new ArrayList<>();
+        HashMap<Integer, String> lines = new HashMap<>();
+/*        for (String line : timers) {
             if (line.contains("%spawntag%") && HCF_Timer.getCombatTime(p) <= 0.0) {
                 continue;
             } else if (line.contains("%ep_cd%") && HCF_Timer.getEpTime(p) <= 0.0) {
@@ -73,9 +87,11 @@ public class Scoreboards {
             }
 
             if (line.equals("empty")) {
-                if (scoreNumber == 0) {
-                    continue;
-                }
+                *//*if (scoreNumber == 0) {
+                    *//**//*builder.setLine(scoreNumber, replaceVariables(line, p));
+                    scoreNumber++;
+                    continue;*//**//*
+                }*//*
                 line = line.replace("empty", "");
                 for (int i = 0; i <= emptyCalcTimer; i++) {
                     line += " ";
@@ -86,51 +102,48 @@ public class Scoreboards {
             if (line.contains("%customtimers%")) {
                 for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
                     if (customTimers.getValue().isActive()) {
-                        Score score = obj.getScore(line.replace("%customtimers%",
+                        *//*Score score = obj.getScore(line.replace("%customtimers%",
                                 replaceVariables(customTimers.getValue().getFormatted(), p)));
-                        score.setScore(scoreNumber);
+                        score.setScore(scoreNumber);*//*
+                        *//*sign.setLine(scoreNumber, line.replace("%customtimers%",
+                                replaceVariables(customTimers.getValue().getFormatted(), p)));*//*
+                        *//*builder.setLine(scoreNumber, line.replace("%customtimers%",
+                                replaceVariables(customTimers.getValue().getFormatted(), p)));*//*
+                        lines.put(scoreNumber, line.replace("%customtimers%",
+                                replaceVariables(customTimers.getValue().getFormatted(), p)));
                         scoreNumber++;
                     }
                 }
                 continue;
             }
 
-            Score score = obj.getScore(replaceVariables(line, p));
-            score.setScore(scoreNumber);
+            //sign.setLine(scoreNumber, replaceVariables(line, p));
+            // Score score = obj.getScore(replaceVariables(line, p));
+            //score.setScore(scoreNumber);
 
+            //builder.setLine(scoreNumber, replaceVariables(line, p));
+            lines.put(scoreNumber, replaceVariables(line, p));
             scoreNumber++;
-        }
+        }*/
 
-        int emptyCalc = 0;
-        for (String line : fix) {
-            if (line.equals("empty")) {
-                if (scoreNumber == 0) {
-                    continue;
+        for (String line : tryThis) {
+            if (line.contains("%customtimers%")) {
+                for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
+                    if (customTimers.getValue().isActive()) {
+                        builder.setLine(scoreNumber, line.replace("%customtimers%", replaceVariables(customTimers.getValue().getFormatted(), p)));
+                        scoreNumber++;
+                    }
                 }
-                line = line.replace("empty", "");
-                for (int i = 0; i <= emptyCalc; i++) {
-                    line += " ";
-                }
-                emptyCalc++;
+                continue;
             }
+            if(isContinue(p, line)) continue;
 
-            Score score = obj.getScore(replaceVariables(line, p));
-            score.setScore(scoreNumber);
-
+            builder.setLine(scoreNumber, replaceVariables(line, p));
             scoreNumber++;
         }
-
-        p.setScoreboard(sb);
-        if (fac == null) {
+        for (int i = scoreNumber; i < Math.max(Config.DefaultScoreboard.asStrList().size(), Config.StaffScoreboard.asStrList().size()); i++) {
+            builder.removeLine(i);
         }
-        //fac.addPrefixPlayer(p);
-        //displayTeams.refreshPlayer(p);
-//        if(!playertools.getMetadata(p, "factionid").equals("0")) {
-//            displayTeams.addPlayerToTeam(p);
-//            return;
-//        }
-//
-//        displayTeams.removePlayerFromTeam(p);
     }
 
     public static void RefreshAll() {
@@ -138,6 +151,30 @@ public class Scoreboards {
             Scoreboards.refresh(p);
             NameChanger.refresh(p);
         }
+    }
+
+    public static boolean isContinue(Player p, String line) {
+        HCFPlayer player = HCFPlayer.getPlayer(p);
+        if (line.contains("%spawntag%") && HCF_Timer.getCombatTime(p) <= 0.0) {
+            return true;
+        } else if (line.contains("%ep_cd%") && HCF_Timer.getEpTime(p) <= 0.0) {
+            return true;
+        } else if (line.contains("%stuck_timer%") && HCF_Timer.getStuckTime(p) <= 0.0) {
+            return true;
+        } else if (line.contains("%bard_energy%") && player.bardEnergy <= 0.0) {
+            return true;
+        } else if (line.contains("%eotw%") && MiscTimers.getTimeOfEOTW() <= 0L) {
+            return true;
+        } else if (line.contains("%sotw%") && MiscTimers.getTimeOfSOTW() <= 0L) {
+            return true;
+        } else if (line.contains("%pvp_timer%") && HCF_Timer.getPvPTimerCoolDownSpawn(p) <= 0L) {
+            return true;
+        } else if (line.contains("%gapple_cd%") && HCF_Timer.get_Golden_Apple_Time(p) <= 0L) {
+            return true;
+        } else if (line.contains("%opgapple_cd%") && HCF_Timer.get_OP_Golden_Apple_Time(p) <= 0L) {
+            return true;
+        }
+        return false;
     }
 
     public static ArrayList<List<String>> sortLists() {

@@ -21,7 +21,7 @@ public class KothClaim implements Listener {
         Player p = e.getPlayer();
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if(e.getItem() == null) return;
-        if (e.getItem().isSimilar(HCF_Claiming.Wands.claimWand())) {
+        if (!e.getItem().isSimilar(HCF_Claiming.Wands.claimWand())) {
             return;
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.claimType == HCF_Claiming.ClaimTypes.KOTH) {

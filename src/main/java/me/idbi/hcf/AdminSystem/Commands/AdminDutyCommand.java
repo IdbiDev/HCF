@@ -3,6 +3,7 @@ package me.idbi.hcf.AdminSystem.Commands;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Scoreboard.AdminScoreboard;
+import me.idbi.hcf.Scoreboard.ScoreboardBuilder;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.AdminTools;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
@@ -52,6 +53,7 @@ public class AdminDutyCommand extends SubCommand {
             NameChanger.refresh(p);
             AdminTools.InvisibleManager.hidePlayer(p);
 
+            ScoreboardBuilder.getOrCreate(p).removeLines();
             AdminScoreboard.refresh(p);
             p.sendMessage(Messages.admin_duty_on.language(p).queue());
         } else {
@@ -61,6 +63,7 @@ public class AdminDutyCommand extends SubCommand {
             NameChanger.refresh(p);
             AdminTools.InvisibleManager.showPlayer(p);
 
+            ScoreboardBuilder.getOrCreate(p).removeLines();
             Scoreboards.refresh(p);
 
             p.sendMessage(Messages.admin_duty_off.language(p).queue());
