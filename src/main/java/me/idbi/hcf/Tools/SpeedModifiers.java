@@ -13,12 +13,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 
+import static me.idbi.hcf.Main.*;
+
 public class SpeedModifiers {
     public static final ArrayList<BrewingStand> brewingStands = new ArrayList<>();
     public static final ArrayList<Furnace> furnaces = new ArrayList<>();
 
     public static void setAllBrewingStands() {
-        World w = Bukkit.getWorld(Config.world_name.asStr());
+        World w = Bukkit.getWorld(Config.WorldName.asStr());
         if (w == null) {
             Main.sendCmdMessage("§cWorld not found! Make sure to select the world name in the config.yml file!\nShutting down..");
             Bukkit.shutdown();
@@ -39,7 +41,7 @@ public class SpeedModifiers {
         }
     }
 
-    public static void Async_Cache_BrewingStands() {
+    public static void asyncCacheBrewingStands() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -48,18 +50,22 @@ public class SpeedModifiers {
         }.runTaskAsynchronously(Main.getPlugin(Main.class));
     }
 
-    public static void SpeedBoost() {
+    public static void speedBoost() {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (BrewingStand stand : brewingStands) {
-                    if (stand.getBrewingTime() - 20 >= 0) {
-                        stand.setBrewingTime((short) stand.getBrewingTime() - 20);
+                if(brewingSpeedMultiplier != 0){
+                    for (BrewingStand stand : brewingStands) {
+                        if (stand.getBrewingTime() - 20 >= 0)
+                            stand.setBrewingTime((short) stand.getBrewingTime() - (10* brewingSpeedMultiplier));
+
                     }
                 }
-                for (Furnace stand : furnaces) {
-                    if (stand.getCookTime() + 20 <= 200) {
-                        stand.setCookTime((short) (stand.getCookTime() + 20));
+                if(cookSpeedMultiplier != 0){
+                    for (Furnace stand : furnaces) {
+                        if (stand.getCookTime() + 20 <= 200)
+                            stand.setCookTime((short) (stand.getCookTime() + (10*cookSpeedMultiplier)));
+
                     }
                 }
             }

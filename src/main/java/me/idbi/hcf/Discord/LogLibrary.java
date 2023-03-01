@@ -1,10 +1,10 @@
 package me.idbi.hcf.Discord;
 
-import club.minnced.discord.webhook.WebhookClientBuilder;
+//import club.minnced.discord.webhook.WebhookClientBuilder;
 
 public class LogLibrary {
 
-    private static final WebhookClientBuilder channel = SetupBot.builder;
+    //private static final WebhookClientBuilder channel = SetupBot.builder;
 
     /*public static void sendKill(Player killer, Player victim) {
         if(channel == null) return;

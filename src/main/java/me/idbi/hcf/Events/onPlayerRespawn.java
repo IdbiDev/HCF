@@ -18,9 +18,9 @@ public class onPlayerRespawn implements Listener {
         if (Main.debug)
             System.out.println("Respawning player.. Loading it ");
         Playertools.loadOnlinePlayer(e.getPlayer());
-        String str = Config.spawn_location.asStr();
+        String str = Config.SpawnLocation.asStr();
         Location spawn = new Location(
-                Bukkit.getWorld(Config.world_name.asStr()),
+                Bukkit.getWorld(Config.WorldName.asStr()),
                 Integer.parseInt(str.split(" ")[0]),
                 Integer.parseInt(str.split(" ")[1]),
                 Integer.parseInt(str.split(" ")[2]),

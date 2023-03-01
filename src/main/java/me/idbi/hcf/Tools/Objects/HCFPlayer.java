@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class HCFPlayer {
 
-    private static final Connection con = Main.getConnection("HCFPlayer");
+    private static final Connection con = Main.getConnection();
 
     public UUID uuid;
     public String name;
@@ -72,7 +72,7 @@ public class HCFPlayer {
             this.playerStatistic = playerStatistic;
             this.playerStatistic.kills = kills;
             this.playerStatistic.deaths = deaths;
-            System.out.println("HCF Player létrehozva!");/*
+            /*
             SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',money='?'",
                     this.name, this.uuid.toString(), Config.default_balance.asInt() + "");*/
         } catch (Exception e) {
@@ -81,8 +81,8 @@ public class HCFPlayer {
     }
 
     public static HCFPlayer getPlayer(Player p) {
-        if (Main.player_cache.containsKey(p.getUniqueId())) {
-            return Main.player_cache.get(p.getUniqueId());
+        if (Main.playerCache.containsKey(p.getUniqueId())) {
+            return Main.playerCache.get(p.getUniqueId());
         } else {
             //todo: SQL?
             Playertools.loadOnlinePlayer(p);
@@ -102,18 +102,18 @@ public class HCFPlayer {
     }
 
     public static HCFPlayer getPlayer(UUID uuid) {
-        if (Main.player_cache.containsKey(uuid)) {
-            return Main.player_cache.get(uuid);
+        if (Main.playerCache.containsKey(uuid)) {
+            return Main.playerCache.get(uuid);
         } else {
             return new HCFPlayer(
                     uuid,
                     0,
                     0,
                     null,
-                    Config.default_balance.asInt(),
+                    Config.DefaultBalance.asInt(),
                     new PlayerStatistic(new JSONObject(PlayerStatistic.defaultStats)),
                     null,
-                    Config.default_language.asStr()
+                    Config.DefaultLanguage.asStr()
             );
         }
 
@@ -125,10 +125,10 @@ public class HCFPlayer {
                 0,
                 0,
                 null,
-                Config.default_balance.asInt(),
+                Config.DefaultBalance.asInt(),
                 new PlayerStatistic(new JSONObject(PlayerStatistic.defaultStats)),
                 null,
-                Config.default_language.asStr()
+                Config.DefaultLanguage.asStr()
         );
     }
 
@@ -277,12 +277,12 @@ public class HCFPlayer {
             }
             if (friendly) {
                 //return Messages.zone_friendly.language(offline.getPlayer()).setZone(currentArea.faction.name).queue();
-                return Config.teammate_color.asStr() + currentArea.faction.name;
+                return Config.TeammateColor.asStr() + currentArea.faction.name;
             } else {
                 if (isAlly) {
-                    return Config.ally_color.asStr() + currentArea.faction.name;
+                    return Config.AllyColor.asStr() + currentArea.faction.name;
                 }
-                return Config.enemy_color.asStr() + currentArea.faction.name;
+                return Config.EnemyColor.asStr() + currentArea.faction.name;
             }
         }
         return null;

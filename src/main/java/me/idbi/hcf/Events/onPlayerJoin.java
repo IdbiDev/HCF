@@ -31,7 +31,8 @@ public class onPlayerJoin implements Listener {
         Player p = e.getPlayer();
         Playertools.loadOnlinePlayer(p);
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        if (Main.death_wait_clear.contains(p.getUniqueId())) {
+
+        if (Main.deathWaitClear.contains(p.getUniqueId())) {
             p.getInventory().clear();
             p.getInventory().setArmorContents(null);
             p.setHealth(e.getPlayer().getMaxHealth());
@@ -39,11 +40,11 @@ public class onPlayerJoin implements Listener {
             p.setFallDistance(0);
 
 
-            Main.death_wait_clear.remove(e.getPlayer().getUniqueId());
-            String str = Config.spawn_location.asStr();
+            Main.deathWaitClear.remove(e.getPlayer().getUniqueId());
+            String str = Config.SpawnLocation.asStr();
 
             Location spawn = new Location(
-                    Bukkit.getWorld(Config.world_name.asStr()),
+                    Bukkit.getWorld(Config.WorldName.asStr()),
                     Integer.parseInt(str.split(" ")[0]),
                     Integer.parseInt(str.split(" ")[1]),
                     Integer.parseInt(str.split(" ")[2]),
@@ -78,13 +79,13 @@ public class onPlayerJoin implements Listener {
         Scoreboards.refresh(p);
         NameChanger.refreshAll();
 
-        for (Map.Entry<LivingEntity, Long> entity : Main.saved_players.entrySet()) {
+        for (Map.Entry<LivingEntity, Long> entity : Main.savedPlayers.entrySet()) {
             if (Bukkit.getPlayer(entity.getKey().getCustomName()) != null) {
                 if (Bukkit.getPlayer(entity.getKey().getCustomName()).isOnline()) {
                     entity.getKey().remove();
 
-                    Main.saved_players.remove(entity.getKey());
-                    Main.saved_items.remove(entity.getKey());
+                    Main.savedPlayers.remove(entity.getKey());
+                    Main.savedItems.remove(entity.getKey());
                 }
             }
         }

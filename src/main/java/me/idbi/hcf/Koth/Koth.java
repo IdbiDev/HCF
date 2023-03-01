@@ -54,7 +54,7 @@ public class Koth implements Listener {
                 if (GLOBAL_AREA.claim.attribute.equals(HCF_Claiming.ClaimAttributes.KOTH) && !HCF_Claiming.doOverlap(start, end, point, point)) {
                     if (GLOBAL_PLAYER == e.getPlayer()) {
                         GLOBAL_PLAYER = null;
-                        GLOBAL_TIME = Config.koth_length.asInt() * 60;
+                        GLOBAL_TIME = Config.KOTHDuration.asInt() * 60;
                         Bukkit.broadcastMessage(Messages.koth_capturing_ended.language(p).setFaction(GLOBAL_AREA.faction).queue());
                     }
                 }
@@ -75,9 +75,9 @@ public class Koth implements Listener {
     public static void startKoth(String f) {
         try {
             stopKoth();
-            Main.sendCmdMessage("KOTH: " + Main.koth_cache.get(f).faction.name);
-            GLOBAL_AREA = Main.koth_cache.get(f);
-            String msg = "§4§n%s§f§4 KOTH STARTED!".replace("%s", Main.koth_cache.get(f).faction.name);
+            Main.sendCmdMessage("KOTH: " + Main.kothCache.get(f).faction.name);
+            GLOBAL_AREA = Main.kothCache.get(f);
+            String msg = "§4§n%s§f§4 KOTH STARTED!".replace("%s", Main.kothCache.get(f).faction.name);
             for (Player p : Bukkit.getOnlinePlayers()) {
                 p.sendTitle(
                         msg,
@@ -92,12 +92,12 @@ public class Koth implements Listener {
     }
 
     public static void StartRandomKoth() {
-        if (Main.koth_cache.isEmpty()) {
+        if (Main.kothCache.isEmpty()) {
             Main.sendCmdMessage("§4 NO KOTH BITCH");
             return;
         }
-        int c = new Random().nextInt(Main.koth_cache.size());
-        List<String> names = new ArrayList<>(Main.koth_cache.keySet());
+        int c = new Random().nextInt(Main.kothCache.size());
+        List<String> names = new ArrayList<>(Main.kothCache.keySet());
         startKoth(names.get((c == 0 && names.size() > 0) ? c : c - 1));
     }
 
@@ -107,7 +107,7 @@ public class Koth implements Listener {
         //TODO: Set the items
         KOTHItemManager.addRewardsToPlayer(GLOBAL_PLAYER);
         GLOBAL_PLAYER = null;
-        GLOBAL_TIME = Config.koth_length.asInt() * 60;
+        GLOBAL_TIME = Config.KOTHDuration.asInt() * 60;
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             BossbarTools.remove(player);

@@ -44,7 +44,7 @@ public class FactionStuckCommand extends SubCommand {
         if (!HCF_Timer.checkStuckTimer(p)) {
             //Todo: somethingwrite
             HCF_Timer.addStuckTimer(p);
-            p.sendMessage(Messages.stuck_started.language(p).setAmount(String.valueOf(Main.stuck_duration)).queue());
+            p.sendMessage(Messages.stuck_started.language(p).setAmount(String.valueOf(Main.stuckDuration)).queue());
             HCFPlayer player = HCFPlayer.getPlayer(p);
             player.setStuckLocation(new Location(
                     p.getWorld(),

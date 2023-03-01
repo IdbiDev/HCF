@@ -56,26 +56,26 @@ public class NameChanger implements Listener {
             if ((!player.getUniqueId().equals(forWhom.getUniqueId()) && player.getWorld().equals(forWhom.getWorld())) || forWhom.canSee(player)) {
                 if (Playertools.isInStaffDuty(player)) {
                     forWhom.hidePlayer(player);
-                    fakeNames.put(player.getUniqueId(), Config.staff_mode_color.asStr() + player.getName());
+                    fakeNames.put(player.getUniqueId(), Config.StaffModeColor.asStr() + player.getName());
                     forWhom.showPlayer(player);
                     continue;
                 }
 
                 if (HCF_Timer.checkArcherTimer(player)) {
                     forWhom.hidePlayer(player);
-                    fakeNames.put(player.getUniqueId(), Config.archer_tagged_color.asStr() + player.getName());
+                    fakeNames.put(player.getUniqueId(), Config.ArcherTagColor.asStr() + player.getName());
                     forWhom.showPlayer(player);
                     return;
                 }
 
                 forWhom.hidePlayer(player);
                 if (Playertools.isTeammate(player, forWhom))
-                    fakeNames.put(player.getUniqueId(), Config.teammate_color.asStr() + player.getName());
+                    fakeNames.put(player.getUniqueId(), Config.TeammateColor.asStr() + player.getName());
                 else {
                     if (Playertools.isAlly(player, forWhom)) {
-                        fakeNames.put(player.getUniqueId(), Config.ally_color.asStr() + player.getName());
+                        fakeNames.put(player.getUniqueId(), Config.AllyColor.asStr() + player.getName());
                     } else {
-                        fakeNames.put(player.getUniqueId(), Config.enemy_color.asStr() + player.getName());
+                        fakeNames.put(player.getUniqueId(), Config.EnemyColor.asStr() + player.getName());
                     }
                 }
 
@@ -104,12 +104,12 @@ public class NameChanger implements Listener {
 
                 forWhom.hidePlayer(player);
                 if (Playertools.isTeammate(player, forWhom))
-                    fakeNames.put(player.getUniqueId(), Config.teammate_color.asStr() + player.getName());
+                    fakeNames.put(player.getUniqueId(), Config.TeammateColor.asStr() + player.getName());
                 else {
                     if (Playertools.isAlly(player, forWhom)) {
-                        fakeNames.put(player.getUniqueId(), Config.ally_color.asStr() + player.getName());
+                        fakeNames.put(player.getUniqueId(), Config.AllyColor.asStr() + player.getName());
                     } else {
-                        fakeNames.put(player.getUniqueId(), Config.enemy_color.asStr() + player.getName());
+                        fakeNames.put(player.getUniqueId(), Config.EnemyColor.asStr() + player.getName());
                     }
                 }
 

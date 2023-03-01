@@ -13,15 +13,15 @@ public class PluginLoad implements Listener {
     public void onServerLoad(PluginEnableEvent event) {
 
         if (event.getPlugin().getName().equalsIgnoreCase("HCFAbilities")) {
-            Main.abilities_loaded = true;
+            Main.abilitiesLoaded = true;
             sendCmdMessage("§aHCF+ Abilities found,loaded.");
         }
         if (event.getPlugin().getName().equalsIgnoreCase("HCFCustomEnchants")) {
-            Main.customenchants_loaded = true;
+            Main.customEnchantsLoaded = true;
             sendCmdMessage("§aHCF+ CustomEnchantments found,loaded.");
         }
         if (event.getPlugin().getName().equalsIgnoreCase("HCFDiscord")) {
-            Main.discord_log_loaded = true;
+            Main.discordLogLoaded = true;
             sendCmdMessage("§aHCF+ DiscordLogs found,loaded.");
         }
 

@@ -20,7 +20,7 @@ import java.sql.Connection;
 import java.util.Date;
 
 public class FactionCreateCommand extends SubCommand {
-    public static Connection con = Main.getConnection("cmd.FactionCreate");
+    public static Connection con = Main.getConnection();
 
     public static boolean isFactionNameTaken(String name) {
         return Main.nameToFaction.containsKey(name);
@@ -74,7 +74,7 @@ public class FactionCreateCommand extends SubCommand {
                 Faction faction = new Faction(x, name, p.getUniqueId().toString(), 0);
                 //
 
-                Main.faction_cache.put(x, faction);
+                Main.factionCache.put(x, faction);
                 Main.nameToFaction.put(faction.name, faction);
 
 

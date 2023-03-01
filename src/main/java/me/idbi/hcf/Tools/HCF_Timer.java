@@ -18,17 +18,17 @@ public class HCF_Timer {
     private static final HashMap<UUID, Long> Archertimers = new HashMap<>();
     private static final HashMap<UUID, Long> eptimers = new HashMap<>();
     // Ms >> Duration
-    private static final int combatTimerDuration = Config.combattag.asInt() * 1000;
+    private static final int combatTimerDuration = Config.CombatTag.asInt() * 1000;
     // Ms >> Duration
-    private static final int ArcherTimerDuration = Config.archertag.asInt() * 1000;
+    private static final int ArcherTimerDuration = Config.ArcherTag.asInt() * 1000;
 
-    private static final int EpTimerDuration = Config.enderpearl.asInt() * 1000;
+    private static final int EpTimerDuration = Config.EnderPearl.asInt() * 1000;
 
-    private static final int StuckTimerDuration = Config.stuck_timer.asInt() * 1000;
-    private static final int Golden_Apple_Cooldown = Config.golden_apple.asInt() * 1000;
-    private static final int OP_Golden_Apple_Cooldown = Config.enchanted_golden_apple.asInt() * 1000;
-    private static final int PvpTimerDuration = Config.pvp.asInt() * 1000;
-    private static final int BardCooldownDuration = Config.bard_energy.asInt() * 1000;
+    private static final int StuckTimerDuration = Config.StuckTimer.asInt() * 1000;
+    private static final int Golden_Apple_Cooldown = Config.GolderApple.asInt() * 1000;
+    private static final int OP_Golden_Apple_Cooldown = Config.EnchantedGoldenApple.asInt() * 1000;
+    private static final int PvpTimerDuration = Config.PvPTimer.asInt() * 1000;
+    private static final int BardCooldownDuration = Config.BardEnergy.asInt() * 1000;
 
     public static boolean addCombatTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá

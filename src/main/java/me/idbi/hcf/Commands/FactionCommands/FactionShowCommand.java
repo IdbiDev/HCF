@@ -62,7 +62,7 @@ public class FactionShowCommand extends SubCommand {
         }
         Location homeLoc;
         if (faction.homeLocation == null)
-            homeLoc = new Location(Bukkit.getWorld(Config.world_name.asStr()), 0, 0, 0, 0, 0);
+            homeLoc = new Location(Bukkit.getWorld(Config.WorldName.asStr()), 0, 0, 0, 0, 0);
         else homeLoc = faction.homeLocation;
 
         for (String line : Messages.faction_show.language(p).setupShow(

@@ -7,11 +7,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 public class HistoryItems_1 {
 
@@ -91,40 +89,34 @@ public class HistoryItems_1 {
     }
 
     public static String designBalanceHistory(HistoryEntrys.BalanceEntry entry) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Calendar cal = Calendar.getInstance();
-
-        cal.setTime(new Date(entry.time));
-        cal.add(Calendar.HOUR, -1);
-        Date oneHourBack = cal.getTime();
+        TimeZone timezone = TimeZone.getTimeZone("Europe/Budapest");
+        Date date = new Date(entry.time);
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        format.setTimeZone(timezone);
 
         if (entry.amount < 0) {
-            return "§7[§6" + format.format(oneHourBack) + "§7] §e" + entry.player + "§7: [§6-$" + Math.abs(entry.amount) + "§7]";
+            return "§7[§6" + format.format(date) + "§7] §e" + entry.player + "§7: [§6-$" + Math.abs(entry.amount) + "§7]";
         } else {
-            return "§7[§6" + format.format(oneHourBack) + "§7] §e" + entry.player + "§7: [§6+$" + entry.amount + "§7]";
+            return "§7[§6" + format.format(date) + "§7] §e" + entry.player + "§7: [§6+$" + entry.amount + "§7]";
         }
     }
 
     public static String designKickHistory(HistoryEntrys.KickEntry entry) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Calendar cal = Calendar.getInstance();
+        TimeZone timezone = TimeZone.getTimeZone("Europe/Budapest");
+        Date date = new Date(entry.time);
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        format.setTimeZone(timezone);
 
-        cal.setTime(new Date(entry.time));
-        cal.add(Calendar.HOUR, -1);
-        Date oneHourBack = cal.getTime();
-
-        return "§7[§a" + format.format(oneHourBack) + "§7] §2" + entry.player + "§7 kicked by §a" + entry.executor + "§7. " + "Reason: §a\"" + entry.reason + "\"";
+        return "§7[§a" + format.format(date) + "§7] §2" + entry.player + "§7 kicked by §a" + entry.executor + "§7. " + "Reason: §a\"" + entry.reason + "\"";
     }
 
     public static String designJoinLeft(HistoryEntrys.JoinLeftEntry entry) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Calendar cal = Calendar.getInstance();
-
-        cal.setTime(new Date(entry.time));
-        cal.add(Calendar.HOUR, -1);
-        Date oneHourBack = cal.getTime();
+        TimeZone timezone = TimeZone.getTimeZone("Europe/Budapest");
+        Date date = new Date(entry.time);
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        format.setTimeZone(timezone);
 
         String status = (entry.isJoined) ? "joined" : "leaved";
-        return "§7[§6" + format.format(oneHourBack) + "§7] §e" + entry.player + "§7 " + status + "§7.";
+        return "§7[§6" + format.format(date) + "§7] §e" + entry.player + "§7 " + status + "§7.";
     }
 }

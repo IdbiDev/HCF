@@ -1,13 +1,13 @@
 package me.idbi.hcf.Discord;
 
-import net.dv8tion.jda.api.EmbedBuilder;
+//import net.dv8tion.jda.api.EmbedBuilder;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.util.Date;
 
 public class Embeds {
-
+/*
     public static EmbedBuilder kill(Player killer, Player victim) {
         return new EmbedBuilder()
                 .setColor(Color.RED)
@@ -127,5 +127,5 @@ public class Embeds {
                 .setTitle("Command execute")
                 .setDescription("**" + executor.getName() + "** executed **" + command + "**")
                 .setTimestamp(new Date().toInstant());
-    }
+    }*/
 }

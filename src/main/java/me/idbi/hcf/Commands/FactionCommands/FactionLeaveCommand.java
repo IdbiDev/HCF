@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.Objects;
 
 public class FactionLeaveCommand extends SubCommand {
-    private static final Connection con = Main.getConnection("command.factions");
+    private static final Connection con = Main.getConnection();
 
     @Override
     public String getName() {

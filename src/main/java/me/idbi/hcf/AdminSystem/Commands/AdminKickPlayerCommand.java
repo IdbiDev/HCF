@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import java.sql.Connection;
 
 public class AdminKickPlayerCommand extends SubCommand {
-    private static final Connection con = Main.getConnection("adminSystem");
+    private static final Connection con = Main.getConnection();
 
     @Override
     public String getName() {

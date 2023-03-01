@@ -23,7 +23,7 @@ public class MessagesTool {
     }
 
     public static String getPlayerLanguage(Player p) {
-        return (Main.currentLanguages.getOrDefault(p.getUniqueId(), Config.default_language.asStr()));
+        return (Main.currentLanguages.getOrDefault(p.getUniqueId(), Config.DefaultLanguage.asStr()));
     }
 
     public static void setPlayerLanguage(Player p, String language) {

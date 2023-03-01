@@ -43,7 +43,7 @@ public class HCF_Rules {
         add(Material.FURNACE);
         add(Material.BURNING_FURNACE);
     }};
-    public final static HashMap<PotionEffectType, Integer> PotionLimits = new HashMap<PotionEffectType, Integer>() {{
+    public final static HashMap<PotionEffectType, Integer> potionLimits = new HashMap<PotionEffectType, Integer>() {{
         put(PotionEffectType.INCREASE_DAMAGE, 2);
         put(PotionEffectType.SPEED, 4);
         put(PotionEffectType.REGENERATION, 2);
@@ -81,16 +81,16 @@ public class HCF_Rules {
     public static final int maxMembersPerFaction = 14; // >> GUI limit
     public static final int maxRanksPerFaction = 28; // >> GUI limit
     public static final int maxAlliesPerFaction = 14; // >> GUI limit
-    public static final String VERSION = "0.1";
-    public static final String AUTHORS = "Idbi & Koba";
-    public static final String DISCORD = "https://discord.gg/aaswGgjJgU";
-    public static final String WEBSITE = "UwU";
+    public static final String version = "0.1";
+    public static final String authors = "Idbi & Koba";
+    public static final String discord = "https://discord.gg/aaswGgjJgU";
+    public static final String website = "UwU";
     public static final String startMessageInfo = "\n" +
             "-------------------------------------------\n" +
-            "HCF Plus | Version" + VERSION + "\n" +
-            ">>Authors: " + AUTHORS + "\n" +
-            ">>Discord: " + DISCORD + "\n" +
-            ">>Website: " + WEBSITE + "\n" +
+            "HCF Plus | Version" + version + "\n" +
+            ">>Authors: " + authors + "\n" +
+            ">>Discord: " + discord + "\n" +
+            ">>Website: " + website + "\n" +
             "-------------------------------------------";
     public static ImmutableSet blockedPearlTypes;
 
@@ -108,10 +108,10 @@ public class HCF_Rules {
         Efficiency
         Silk Touch
      */
-    public static Enchant_Obj randomEnchant() {
+    public static EnchantClass randomEnchant() {
         double a = Math.random();
         int c;//Enchantment
-        Enchant_Obj enchant_obj = null;
+        EnchantClass enchant_obj = null;
         if (a <= 0.1) { // 10%
             //Infinity 1
             //Fire Aspect 2
@@ -119,11 +119,11 @@ public class HCF_Rules {
             //Flame 4
             c = new Random().nextInt(5);
             switch (c) {
-                case 0 -> enchant_obj = new Enchant_Obj(Enchantment.ARROW_INFINITE, 1);
-                case 1 -> enchant_obj = new Enchant_Obj(Enchantment.FIRE_ASPECT, 1);
-                case 2 -> enchant_obj = new Enchant_Obj(Enchantment.SILK_TOUCH, 1);
-                case 3 -> enchant_obj = new Enchant_Obj(Enchantment.ARROW_FIRE, 1);
-                case 4 -> enchant_obj = new Enchant_Obj(Enchantment.getById(100), 1);
+                case 0 -> enchant_obj = new EnchantClass(Enchantment.ARROW_INFINITE, 1);
+                case 1 -> enchant_obj = new EnchantClass(Enchantment.FIRE_ASPECT, 1);
+                case 2 -> enchant_obj = new EnchantClass(Enchantment.SILK_TOUCH, 1);
+                case 3 -> enchant_obj = new EnchantClass(Enchantment.ARROW_FIRE, 1);
+                case 4 -> enchant_obj = new EnchantClass(Enchantment.getById(100), 1);
             }
         } else if (a <= 0.5) {
             //Efficiency
@@ -132,12 +132,12 @@ public class HCF_Rules {
             c = new Random().nextInt(6);
             int lvl = (int) (Math.random() * (2 - 1 + 1) + 1);
             switch (c) {
-                case 0 -> enchant_obj = new Enchant_Obj(Enchantment.DIG_SPEED, lvl);
-                case 1 -> enchant_obj = new Enchant_Obj(Enchantment.ARROW_DAMAGE, lvl);
-                case 2 -> enchant_obj = new Enchant_Obj(Enchantment.KNOCKBACK, lvl);
-                case 3 -> enchant_obj = new Enchant_Obj(Enchantment.ARROW_KNOCKBACK, lvl);
-                case 4 -> enchant_obj = new Enchant_Obj(Enchantment.DURABILITY, lvl);
-                case 5 -> enchant_obj = new Enchant_Obj(Enchantment.getById(100), lvl);
+                case 0 -> enchant_obj = new EnchantClass(Enchantment.DIG_SPEED, lvl);
+                case 1 -> enchant_obj = new EnchantClass(Enchantment.ARROW_DAMAGE, lvl);
+                case 2 -> enchant_obj = new EnchantClass(Enchantment.KNOCKBACK, lvl);
+                case 3 -> enchant_obj = new EnchantClass(Enchantment.ARROW_KNOCKBACK, lvl);
+                case 4 -> enchant_obj = new EnchantClass(Enchantment.DURABILITY, lvl);
+                case 5 -> enchant_obj = new EnchantClass(Enchantment.getById(100), lvl);
             }
         } else {
             //Protection
@@ -147,10 +147,10 @@ public class HCF_Rules {
             //Math.random() * (max - min + 1) + min
             int lvl = (int) (Math.random() * (2 - 1 + 1) + 1);
             switch (c) {
-                case 0 -> enchant_obj = new Enchant_Obj(Enchantment.PROTECTION_ENVIRONMENTAL, lvl);
-                case 1 -> enchant_obj = new Enchant_Obj(Enchantment.DAMAGE_ALL, lvl);
-                case 2 -> enchant_obj = new Enchant_Obj(Enchantment.PROTECTION_FALL, lvl);
-                case 3 -> enchant_obj = new Enchant_Obj(Enchantment.getById(100), lvl);
+                case 0 -> enchant_obj = new EnchantClass(Enchantment.PROTECTION_ENVIRONMENTAL, lvl);
+                case 1 -> enchant_obj = new EnchantClass(Enchantment.DAMAGE_ALL, lvl);
+                case 2 -> enchant_obj = new EnchantClass(Enchantment.PROTECTION_FALL, lvl);
+                case 3 -> enchant_obj = new EnchantClass(Enchantment.getById(100), lvl);
             }
         }
         return enchant_obj;
@@ -166,11 +166,11 @@ public class HCF_Rules {
                         Material.SMOOTH_STAIRS, Material.SPRUCE_WOOD_STAIRS, Material.WOOD_STAIRS});
     }
 
-    public static class Enchant_Obj {
+    public static class EnchantClass {
         private final Enchantment enchantment;
         private final int level;
 
-        Enchant_Obj(Enchantment enc, int level) {
+        EnchantClass(Enchantment enc, int level) {
             this.enchantment = enc;
             this.level = level;
         }

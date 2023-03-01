@@ -29,10 +29,10 @@ public class PlacePVPTag implements Listener {
             }
             //Add combatTimer
             if (HCF_Timer.addCombatTimer(victim)) {
-                victim.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.combattag.asStr()));
+                victim.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.CombatTag.asStr()));
             }
             if (HCF_Timer.addCombatTimer(damager)) {
-                damager.sendMessage(Messages.combat_message.language(damager).queue().replace("%sec%", Config.combattag.asStr()));
+                damager.sendMessage(Messages.combat_message.language(damager).queue().replace("%sec%", Config.CombatTag.asStr()));
             }
             //Damage if ArcherTag
             if (HCF_Timer.checkArcherTimer(victim)) {

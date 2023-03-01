@@ -36,7 +36,7 @@ public class GUI_Sound {
         } else if (state.equals(HCFSounds.LEVEL_UP)) {
             p.playSound(p.getLocation(), Sound.LEVEL_UP, 1f, 1f);
         }
-        System.out.println("PLAYING FUCKING SOUND FUCKING NORMIES: PLAYER: " + p.getName() + " SOUND:::::::::::" + state);
+        //System.out.println("PLAYING FUCKING SOUND FUCKING NORMIES: PLAYER: " + p.getName() + " SOUND:::::::::::" + state);
     }
 
     public enum HCFSounds {

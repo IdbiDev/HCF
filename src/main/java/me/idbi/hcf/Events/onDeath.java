@@ -21,11 +21,11 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static me.idbi.hcf.Main.DTR_REGEN_TIME;
+import static me.idbi.hcf.Main.DTRREGENTIME;
 
 
 public class onDeath implements Listener {
-    private final Connection con = Main.getConnection("events.onDeath");
+    private final Connection con = Main.getConnection();
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
@@ -73,11 +73,9 @@ public class onDeath implements Listener {
 
 
         if (faction != null) {
-            if (!Main.DTR_REGEN.containsKey(faction.id)) {
-                Main.DTR_REGEN.put(faction.id, System.currentTimeMillis() + DTR_REGEN_TIME);
-                if (Main.debug)
-                    System.out.println("Death >> " + faction.name);
-                faction.DTR -= Main.DEATH_DTR;
+            if (!Main.DTRREGEN.containsKey(faction.id)) {
+                Main.DTRREGEN.put(faction.id, System.currentTimeMillis() + DTRREGENTIME);
+                faction.DTR -= Main.deathDTR;
             }
         }
 
@@ -88,8 +86,8 @@ public class onDeath implements Listener {
     @EventHandler
     public void onVillagerDeath(EntityDeathEvent e) {
         if (!(e.getEntity() instanceof Villager)) return;
-        if (Main.saved_players.containsKey(e.getEntity())) {
-            ArrayList<ItemStack> stacks = Main.saved_items.get(e.getEntity());
+        if (Main.savedPlayers.containsKey(e.getEntity())) {
+            ArrayList<ItemStack> stacks = Main.savedItems.get(e.getEntity());
             String uuid = e.getEntity().getMetadata("player.UUID").get(0).asString();
 
             if (e.getEntity().getKiller() != null)
@@ -103,12 +101,12 @@ public class onDeath implements Listener {
             e.setDroppedExp(0);
             e.getDrops().addAll(stacks);
             if (Main.deathban)
-                SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", uuid, String.valueOf(System.currentTimeMillis() + (Main.death_time * 60000L)));
+                SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", uuid, String.valueOf(System.currentTimeMillis() + (Main.deathbanTime * 60000L)));
             else
                 SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", uuid, "0");
 
-            Main.saved_players.remove(e.getEntity());
-            Main.saved_items.remove(e.getEntity());
+            Main.savedPlayers.remove(e.getEntity());
+            Main.savedItems.remove(e.getEntity());
         }
     }
 }

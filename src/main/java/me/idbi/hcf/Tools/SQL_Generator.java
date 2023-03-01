@@ -7,7 +7,7 @@ import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 import java.sql.Connection;
 
 public class SQL_Generator {
-    private static final Connection con = Main.getConnection("SQL_GENERATOR");
+    private static final Connection con = Main.getConnection();
 
     public SQL_Generator() {
         String[] tables = {
@@ -52,7 +52,7 @@ public class SQL_Generator {
                                 PRIMARY KEY (`ID`)
                             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-                        """.replace("%default_language%", Config.default_language.asStr()).replace("%player_statistics%", PlayerStatistic.defaultStats),
+                        """.replace("%default_language%", Config.DefaultLanguage.asStr()).replace("%player_statistics%", PlayerStatistic.defaultStats),
                 """
                      CREATE TABLE IF NOT EXISTS `ranks` (
                       `ID` int(11) NOT NULL AUTO_INCREMENT,

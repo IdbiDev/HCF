@@ -18,14 +18,14 @@ public class SpawnShield {
     public static void CalcWall(Player p) {
         HCF_Claiming.Point player_point = new HCF_Claiming.Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
         Faction player_faction = Playertools.getPlayerFaction(p);
-        for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {
+        for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().claims) {
                 if (!p.getWorld().getName().equalsIgnoreCase(claim.world.getName())) continue;
                 boolean kellfal = false;
                 //true              //    true - > NINCS
                 if ((pvpCooldown(p) && !claim.attribute.equals(HCF_Claiming.ClaimAttributes.PROTECTED))) {
                     kellfal = true;
-                } else if ((Main.SOTW_ENABLED && (claim.attribute.equals(HCF_Claiming.ClaimAttributes.NORMAL) && claim.faction.id != (player_faction != null ? player_faction.id : 0)))) {
+                } else if ((Main.SOTWEnabled && (claim.attribute.equals(HCF_Claiming.ClaimAttributes.NORMAL) && claim.faction.id != (player_faction != null ? player_faction.id : 0)))) {
                     kellfal = true;
                 } else if ((HCF_Timer.getCombatTime(p) != 0 && claim.attribute.equals(HCF_Claiming.ClaimAttributes.PROTECTED))) {
                     kellfal = true;

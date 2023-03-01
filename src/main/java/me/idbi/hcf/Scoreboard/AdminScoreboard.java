@@ -39,12 +39,8 @@ public class AdminScoreboard {
         Collections.reverse(fix);
         Collections.reverse(timers);
 
-        Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-        //ScoreboardManager manager = Bukkit.getScoreboardManager();
-
-        Objective obj = sb.registerNewObjective("dummy", "igen");
-        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        obj.setDisplayName(Config.admin_scoreboard_title.asStr());
+        ScoreboardBuilder builder = ScoreboardBuilder.getOrCreate(p);
+        builder.setDisplayName(Config.StaffDutyScoreboardTitle.asStr());
 
         int scoreNumber = 0;
 
@@ -134,7 +130,7 @@ public class AdminScoreboard {
      */
 
     public static ArrayList<List<String>> sortLists() {
-        List<String> str = Config.admin_scoreboard.asStrList();
+        List<String> str = Config.StaffScoreboard.asStrList();
         List<String> fix = new ArrayList<>();
         List<String> timers = new ArrayList<>();
         for (String line : str) {

@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class onPlayerLeft implements Listener {
-    private final Connection con = Main.getConnection("events.Quit");
+    private final Connection con = Main.getConnection();
     private final Main m = Main.getPlugin(Main.class);
 
     @EventHandler
@@ -58,7 +58,7 @@ public class onPlayerLeft implements Listener {
         if (player.freezeStatus) {
             Bukkit.getBanList(BanList.Type.NAME).addBan(e.getPlayer().getName(),
                             m.getConfig().getString("Freeze.Reason"),
-                            new Date(System.currentTimeMillis() + Config.deathban.asInt()),
+                            new Date(System.currentTimeMillis() + Config.Deathban.asInt()),
                             null)
                     .save();
         }
@@ -81,8 +81,8 @@ public class onPlayerLeft implements Listener {
         entity.setCustomName(p.getDisplayName());
         entity.setCanPickupItems(false);
         entity.setCustomNameVisible(true);
-        Main.saved_items.put(entity, items);
-        Main.saved_players.put(entity, combatTimer);
+        Main.savedItems.put(entity, items);
+        Main.savedPlayers.put(entity, combatTimer);
 
         entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, Integer.MAX_VALUE, false, false));
         entity.setMetadata("player.UUID", new FixedMetadataValue(Main.getPlugin(Main.class), p.getUniqueId().toString()));

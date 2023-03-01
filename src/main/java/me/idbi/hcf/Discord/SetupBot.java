@@ -1,17 +1,17 @@
 package me.idbi.hcf.Discord;
 
-import club.minnced.discord.webhook.WebhookClientBuilder;
+//import club.minnced.discord.webhook.WebhookClientBuilder;
 
 public class SetupBot {
 
-    public static WebhookClientBuilder builder;
+    /*public static WebhookClientBuilder builder;
 
     public static void setup() {
         try {
             /*if (!DiscordFile.getDiscord().getBoolean("bot"))
                 return;
 
-            builder = new WebhookClientBuilder(DiscordFile.getDiscord().getString("webhook_url"));*/
+            builder = new WebhookClientBuilder(DiscordFile.getDiscord().getString("webhook_url"));
             //builder.buildJDA().send(Embeds.kill(Bukkit.getPlayer("kbalu"), Bukkit.getPlayer("adbi20014")).build());
 //
 //            JDA jda = JDABuilder.createDefault(DiscordFile.getDiscord().getString("token"))
@@ -36,5 +36,5 @@ public class SetupBot {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 }

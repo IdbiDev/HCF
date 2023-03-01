@@ -23,7 +23,6 @@ public class AllyTools {
 
             mainJson.put(String.valueOf(ally.getAllyFaction().id), permissions);
         }
-        System.out.println(mainJson);
         return mainJson.toString();
     }
 
@@ -38,13 +37,11 @@ public class AllyTools {
         //For this faction!
         AllyFaction mainFactionAlly = new AllyFaction(allyFaction.id, allyFaction);
         mainFaction.Allies.put(mainFactionAlly.getFactionId(), mainFactionAlly);
-        Main.sendCmdMessage("Ally added! Requester: " + mainFaction.name + " Receiver: " + allyFaction.name);
         mainFaction.allyinvites.removePlayerFromInvite(allyFaction);
 
         //For the ally faction!
         mainFactionAlly = new AllyFaction(mainFaction.id, mainFaction);
         allyFaction.Allies.put(mainFactionAlly.getFactionId(), mainFactionAlly);
-        Main.sendCmdMessage("Ally added! Requester: " + allyFaction.name + " Receiver: " + mainFaction.name);
         allyFaction.allyinvites.removePlayerFromInvite(mainFaction);
 
     }

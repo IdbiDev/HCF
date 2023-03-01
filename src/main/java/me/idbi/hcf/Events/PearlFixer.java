@@ -37,7 +37,7 @@ public class PearlFixer implements Listener {
         }*/
         if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL) && !event.isCancelled() && checkCombatTimer(event.getPlayer())) {
             Location location = event.getTo();
-            for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {
+            for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
                 for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().claims) {
                     if (claim.attribute.equals(HCF_Claiming.ClaimAttributes.PROTECTED)) {
                         HCF_Claiming.Point claimStart = new HCF_Claiming.Point(claim.startX, claim.startZ);

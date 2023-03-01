@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class fc_position implements CommandExecutor {
 
-    private static final Connection con = Main.getConnection("fc_position");
+    private static final Connection con = Main.getConnection();
 
     public static String convertLocation(Player p, Location loc) {
         return Messages.faction_player_position.language(p).setPlayer(p).setCoords(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).queue();
@@ -36,10 +36,10 @@ public class fc_position implements CommandExecutor {
             for (Player member : faction.getMembers()) {
                 member.sendMessage(convertLocation(p, p.getLocation()));
             }
-            for (HCFPlayer hcf : Main.player_cache.values()) {
+            for (HCFPlayer hcf : Main.playerCache.values()) {
                 hcf.save();
             }
-            for (Map.Entry<Integer, Faction> integerFactionEntry : Main.faction_cache.entrySet()) {
+            for (Map.Entry<Integer, Faction> integerFactionEntry : Main.factionCache.entrySet()) {
                 integerFactionEntry.getValue().saveFactionData();
                 for (FactionRankManager.Rank rank : integerFactionEntry.getValue().ranks) {
                     rank.saveRank();

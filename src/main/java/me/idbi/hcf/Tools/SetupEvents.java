@@ -24,7 +24,7 @@ import me.idbi.hcf.MessagesEnums.SignShop.InteractShopSign;
 import static org.bukkit.Bukkit.getServer;
 
 public class SetupEvents {
-    public static void SetupEvents() {
+    public static void setupEvents() {
         //xd
         //getServer().getPluginManager().registerEvents(new Assassin(), Main.getPlugin(Main.class));
 

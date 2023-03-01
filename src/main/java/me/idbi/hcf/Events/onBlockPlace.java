@@ -18,7 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import static me.idbi.hcf.Main.WARZONE_SIZE;
+import static me.idbi.hcf.Main.warzoneSize;
 
 public class onBlockPlace implements Listener {
 
@@ -39,7 +39,7 @@ public class onBlockPlace implements Listener {
 
         if (Playertools.getDistanceBetweenPoints2D(new HCF_Claiming.Point(block.getX(), block.getZ()),
                 new HCF_Claiming.Point(Playertools.getSpawn().getBlockX(),
-                        Playertools.getSpawn().getBlockZ())) == WARZONE_SIZE && !hcf.inDuty) {
+                        Playertools.getSpawn().getBlockZ())) == warzoneSize && !hcf.inDuty) {
 
             p.sendMessage(Messages.warzone_no_permission.language(p).queue());
             e.setCancelled(true);
@@ -68,7 +68,6 @@ public class onBlockPlace implements Listener {
             Faction f = Playertools.getPlayerFaction(p);
             if (f == null) return;
             if (!f.HaveAllyPermission(baszogatottFaction, Permissions.PLACE_BLOCK)) {
-                System.out.println("uwuwuwwuuwuuwuuwuw");
                 e.setCancelled(true);
                 p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, block.getX(), block.getZ())).queue());
             } else {

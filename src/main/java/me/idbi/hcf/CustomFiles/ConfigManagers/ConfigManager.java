@@ -69,11 +69,11 @@ public class ConfigManager {
         config = manager.getNewConfig("config.yml", header);
         this.setupConfig();
 
-        messages = manager.getNewConfig("messages/messages_" + Config.default_language.asStr() + ".yml");
+        messages = manager.getNewConfig("messages/messages_" + Config.DefaultLanguage.asStr() + ".yml");
         enMessages = manager.getNewConfig("messages/messages_en.yml");
         this.setupMessages();
 
-        guiMessages = manager.getNewConfig("gui_messages/guimessages_" + Config.default_language.asStr() + ".yml");
+        guiMessages = manager.getNewConfig("gui_messages/guimessages_" + Config.DefaultLanguage.asStr() + ".yml");
         enGuiMessages = manager.getNewConfig("gui_messages/guimessages_en.yml");
         this.setupGUI();
 

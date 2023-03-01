@@ -18,11 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static me.idbi.hcf.Main.max_allies_pro_faction;
-import static me.idbi.hcf.Main.max_members_pro_faction;
+import static me.idbi.hcf.Main.maxAlliesProFaction;
+import static me.idbi.hcf.Main.maxMembersProFaction;
 
 public class Faction {
-    private static final Connection con = Main.getConnection("Faction");
+    private static final Connection con = Main.getConnection();
 
     public int id;
     public String name;
@@ -234,7 +234,7 @@ public class Faction {
     }
 
     public void invitePlayer(Player p) {
-        if (getMemberCount() + 1 > max_members_pro_faction || invites.getInvitedPlayers().size() + 1 > HCF_Rules.maxInvitesPerFaction) {
+        if (getMemberCount() + 1 > maxMembersProFaction || invites.getInvitedPlayers().size() + 1 > HCF_Rules.maxInvitesPerFaction) {
             p.sendMessage(Messages.max_members_reached.language(p).queue());
             return;
         }
@@ -268,7 +268,7 @@ public class Faction {
     }
 
     public void inviteFactionAlly(Faction ally) {
-        if (Allies.size() + 1 > max_allies_pro_faction || allyinvites.getInvitedAllies().size() + 1 > HCF_Rules.maxAlliesPerFaction) {
+        if (Allies.size() + 1 > maxAlliesProFaction || allyinvites.getInvitedAllies().size() + 1 > HCF_Rules.maxAlliesPerFaction) {
             return;
         }
         allyinvites.inviteFactionToAlly(ally);
@@ -421,7 +421,7 @@ public class Faction {
                 }
 
                 int id = Integer.parseInt(hash.getKey());
-                AllyFaction allyFaction = new AllyFaction(id, Main.faction_cache.get(id));
+                AllyFaction allyFaction = new AllyFaction(id, Main.factionCache.get(id));
 
                 for (Map.Entry<Permissions, Boolean> permsHash : perms.entrySet()) {
                     allyFaction.setPermission(permsHash.getKey(), permsHash.getValue());
@@ -443,14 +443,8 @@ public class Faction {
 //        if(this.Allies.size() == 0) return false;
 //        if(faction.DTR <= 0) return true;
         if (faction == null) return false;
-        System.out.println("Requested Permission: " + perm.name());
-        System.out.println("Requester Faction: " + faction.name);
-        System.out.println("Requester isAlly?: " + faction.isAlly(this));
-        System.out.println("This Faction: " + this.name);
-        System.out.println("This Faction isALly?: " + this.isAlly(faction));
         if (this.isAlly(faction)) {
             if (faction.Allies.get(this.id).hasPermission(perm)) {
-                System.out.println("RETURN TRUE!");
                 return true;
             }
         }
@@ -480,7 +474,7 @@ public class Faction {
     }
 
     public void selfDestruct() {
-        Main.faction_cache.remove(this.id);
+        Main.factionCache.remove(this.id);
         Main.nameToFaction.remove(this.name);
 
         for (AllyFaction value : this.Allies.values()) {

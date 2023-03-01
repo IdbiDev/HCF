@@ -46,7 +46,7 @@ public class Scoreboards {
 
         Objective obj = sb.registerNewObjective("dummy", "igen");
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        obj.setDisplayName(Config.scoreboard_title.asStr());
+        obj.setDisplayName(Config.DefaultScoreboardTitle.asStr());
 
         int scoreNumber = 0;
 
@@ -141,7 +141,7 @@ public class Scoreboards {
     }
 
     public static ArrayList<List<String>> sortLists() {
-        List<String> str = Config.default_scoreboard.asStrList();
+        List<String> str = Config.DefaultScoreboard.asStrList();
         List<String> fix = new ArrayList<>();
         List<String> timers = new ArrayList<>();
         for (String line : str) {

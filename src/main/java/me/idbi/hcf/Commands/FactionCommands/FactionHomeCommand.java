@@ -99,7 +99,7 @@ public class FactionHomeCommand extends SubCommand implements Listener {
     }
     private static void delayer(Player p, Location loc) {
         new BukkitRunnable() {
-            int delay = Config.home_teleport.asInt() * 20;
+            int delay = Config.TeleportHome.asInt() * 20;
 
             @Override
             public void run() {
@@ -129,14 +129,14 @@ public class FactionHomeCommand extends SubCommand implements Listener {
         if (json.size() > 0) {
             Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(json.get("home").toString()));
             Location loc = new Location(
-                    Bukkit.getWorld(Config.world_name.asStr()),
+                    Bukkit.getWorld(Config.WorldName.asStr()),
                     Integer.parseInt(map.get("X").toString()),
                     Integer.parseInt(map.get("Y").toString()),
                     Integer.parseInt(map.get("Z").toString()),
                     Integer.parseInt(map.get("YAW").toString()),
                     Integer.parseInt(map.get("PITCH").toString()));
 
-            p.sendMessage(Messages.teleport_cancel.language(p).queue().replace("%time%", Config.home_teleport.asStr()));
+            p.sendMessage(Messages.teleport_cancel.language(p).queue().replace("%time%", Config.TeleportHome.asStr()));
             teleportPlayers.add(p);
             delayer(p, loc);
         } else {

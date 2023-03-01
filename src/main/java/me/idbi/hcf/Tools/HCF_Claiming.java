@@ -22,7 +22,7 @@ import java.util.Map;
 import static me.idbi.hcf.Tools.Playertools.getDistanceBetweenPoints2D;
 
 public class HCF_Claiming {
-    private static final Connection con = Main.getConnection("HCF_Claiming");
+    private static final Connection con = Main.getConnection();
     public static final HashMap<Integer, Point> startpositions = new HashMap<>();
     public static final HashMap<Integer, Point> endpositions = new HashMap<>();
 
@@ -70,7 +70,7 @@ public class HCF_Claiming {
                 int endZ = Math.max(faction_start.z, faction_end.z);
 
                 //for (Map.Entry<Integer, Faction_Claim> entry : Main.faction_cache.get(faction).claims.entrySet()) {
-                for (Faction f : Main.faction_cache.values()) {
+                for (Faction f : Main.factionCache.values()) {
 
                     //if (f.claims.isEmpty()) continue;
 
@@ -120,7 +120,7 @@ public class HCF_Claiming {
                         p.getWorld().getName()
                 );
                 //HandleSpawn
-                Faction f = Main.faction_cache.get(faction);
+                Faction f = Main.factionCache.get(faction);
                 endpositions.remove(faction);
                 startpositions.remove(faction);
                 HCF_Claiming.Faction_Claim claim;
@@ -157,7 +157,7 @@ public class HCF_Claiming {
                         p.getWorld().getName()
                 );
                 //HandleSpawn
-                Faction f = Main.faction_cache.get(faction);
+                Faction f = Main.factionCache.get(faction);
                 endpositions.remove(faction);
                 startpositions.remove(faction);
                 HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(startX, startZ, endX, endZ, f.id, attribute, p.getWorld().getName());
@@ -331,7 +331,7 @@ public class HCF_Claiming {
 
     /// TODO:     This need some optimization
     public static HCF_Claiming.Faction_Claim getPlayerArea(Player p) {
-        for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {
+        for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
 
                 int x = p.getLocation().getBlockX();
@@ -353,7 +353,7 @@ public class HCF_Claiming {
     }
 
     public static boolean isAreaNeutral(Location loc) {
-        for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {
+        for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
                 if (FindPoint_old(val.startX, val.startZ, val.endX, val.endZ, loc.getBlockX(), loc.getBlockZ())) {
                     return false;
@@ -364,10 +364,10 @@ public class HCF_Claiming {
     }
 
     public static String sendFactionTerretoryByXZ(Player p, int x, int z) {
-        for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {
+        for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
                 if (FindPoint_old(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
-                    return Config.enemy_color.asStr() + thisFaction.getValue().name;
+                    return Config.EnemyColor.asStr() + thisFaction.getValue().name;
                 }
             }
         }
@@ -375,7 +375,7 @@ public class HCF_Claiming {
     }
 
     public static Faction_Claim sendClaimByXZ(int x, int z) {
-        for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {
+        for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
                 Point playerPoint = new Point(x, z);
                 Point claimrc = new Point(val.startX, val.startZ);
@@ -405,7 +405,7 @@ public class HCF_Claiming {
         HCFPlayer player = HCFPlayer.getPlayer(p);
         int faction = player.faction.id;
         if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
-            return (int) (calcBlocks(p) * Main.claim_price_multiplier);
+            return (int) (calcBlocks(p) * Main.claimPriceMultiplier);
         }
         return -1;
     }
@@ -449,7 +449,7 @@ public class HCF_Claiming {
             ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
             ItemMeta meta = wand.getItemMeta();
 
-            meta.setDisplayName(Config.claiming_wand_name.asStr());
+            meta.setDisplayName(Config.ClaimingWandTitle.asStr());
             // meta.setLore(Config.claiming_wand_name.asChatColorList());
             /*Faction f = Main.faction_cache.get(factionid);
             List<String> str = new ArrayList<>();
@@ -536,11 +536,11 @@ public class HCF_Claiming {
             this.endX = endX;
             this.startZ = startZ;
             this.endZ = endZ;
-            this.faction = Main.faction_cache.get(faction);
+            this.faction = Main.factionCache.get(faction);
             this.attribute = attribute;
             this.world = Bukkit.getWorld(world);
             if (this.world == null) {
-                this.world = Bukkit.getWorld(Config.world_name.asStr());
+                this.world = Bukkit.getWorld(Config.WorldName.asStr());
             }
 
         }
@@ -551,8 +551,8 @@ public class HCF_Claiming {
             ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
             ItemMeta meta = wand.getItemMeta();
 
-            meta.setDisplayName(Config.claiming_wand_name.asStr());
-            meta.setLore(Config.claiming_wand_name.asChatColorList());
+            meta.setDisplayName(Config.ClaimingWandTitle.asStr());
+            meta.setLore(Config.ClaimingWandTitle.asChatColorList());
 
             wand.setItemMeta(meta);
             return wand;

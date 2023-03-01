@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 
 public class FactionRankManager {
-    private static final Connection con = Main.getConnection("rankManagerNew");
+    private static final Connection con = Main.getConnection();
 
     public static Rank create(Player player, String name, boolean isLeader, boolean isDefault) {
         Faction faction = Playertools.getPlayerFaction(player);

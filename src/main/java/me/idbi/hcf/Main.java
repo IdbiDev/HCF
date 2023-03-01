@@ -9,7 +9,6 @@ import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.KothRewardsFile;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Discord.SetupBot;
 import me.idbi.hcf.Koth.AutoKoth;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Scoreboard.CustomTimers;
@@ -45,38 +44,40 @@ public final class Main extends JavaPlugin implements Listener {
 
 
     // Beállítások configba
-    public static int world_border_radius;
+    public static int worldBorderRadius;
     public static boolean deathban;
-    public static int death_time;
-    public static double claim_price_multiplier;
+    public static int deathbanTime;
+    public static double claimPriceMultiplier;
+    public static int brewingSpeedMultiplier;
+    public static int cookSpeedMultiplier;
     public static boolean debug;
-    public static int member_starting_money;
-    public static int max_members_pro_faction;
-    public static int max_allies_pro_faction;
-    public static int stuck_duration;
+    public static int memberStartingMoney;
+    public static int maxMembersProFaction;
+    public static int maxAlliesProFaction;
+    public static int stuckDuration;
     public static long EOTWStarted;
-    public static long SOTWSTARTED;
-    public static boolean EOTW_ENABLED;
-    public static boolean SOTW_ENABLED;
-    public static int WARZONE_SIZE;
-    public static double MAX_DTR;
-    public static double DEATH_DTR;
-    public static boolean abilities_loaded = false;
-    public static boolean customenchants_loaded = false;
-    public static boolean discord_log_loaded = false;
+    public static long SOTWStarted;
+    public static boolean EOTWENABLED;
+    public static boolean SOTWEnabled;
+    public static int warzoneSize;
+    public static double maxDTR;
+    public static double deathDTR;
+    public static boolean abilitiesLoaded = false;
+    public static boolean customEnchantsLoaded = false;
+    public static boolean discordLogLoaded = false;
     public static HashMap<String, CustomTimers> customSBTimers;
-    public static int DTR_REGEN_TIME;
-    public static HashMap<Integer, Faction> faction_cache = new HashMap<>();
-    public static HashMap<String, Koth.koth_area> koth_cache = new HashMap<>();
+    public static int DTRREGENTIME;
+    public static HashMap<Integer, Faction> factionCache = new HashMap<>();
+    public static HashMap<String, Koth.koth_area> kothCache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
-    public static HashMap<UUID, HCFPlayer> player_cache = new HashMap<>();
+    public static HashMap<UUID, HCFPlayer> playerCache = new HashMap<>();
     public static ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
-    public static HashMap<Integer, Long> DTR_REGEN = new HashMap<>();
-    public static HashMap<LivingEntity, ArrayList<ItemStack>> saved_items = new HashMap<>();
-    public static HashMap<LivingEntity, Long> saved_players = new HashMap<>();
-    public static ArrayList<UUID> death_wait_clear = new ArrayList<>();
+    public static HashMap<Integer, Long> DTRREGEN = new HashMap<>();
+    public static HashMap<LivingEntity, ArrayList<ItemStack>> savedItems = new HashMap<>();
+    public static HashMap<LivingEntity, Long> savedPlayers = new HashMap<>();
+    public static ArrayList<UUID> deathWaitClear = new ArrayList<>();
     public static ArrayList<String> availableLanguages = new ArrayList<>();
-    public static HashMap<UUID, List<Location>> player_block_changes = new HashMap<>();
+    public static HashMap<UUID, List<Location>> playerBlockChanges = new HashMap<>();
     //public static HashMap<Faction, Scoreboard> teams = new HashMap<>();
     public static ArrayList<UUID> kothRewardsGUI;
     public static HashMap<UUID, String> currentLanguages;
@@ -87,14 +88,12 @@ public final class Main extends JavaPlugin implements Listener {
     private static Connection con;
 
     // Egyszerű SQL Connection getter
-    public static Connection getConnection(String who) {
-        if (Main.debug)
-            System.out.println(who + " >> GetSQLHandler");
+    public static Connection getConnection() {
         return con;
     }
 
     public static void saveFactions() {
-        for (Map.Entry<Integer, Faction> faction : faction_cache.entrySet()) {
+        for (Map.Entry<Integer, Faction> faction : factionCache.entrySet()) {
             Faction f = faction.getValue();
             f.saveFactionData();
             //SQL_Connection.dbExecute(con, "UPDATE factions SET money='?',name='?',Allies='?' WHERE ID = '?'", String.valueOf(f.balance), f.name,AlliesEntry, String.valueOf(f.id));
@@ -102,7 +101,7 @@ public final class Main extends JavaPlugin implements Listener {
     }
 
     public static void savePlayers() {
-        for (Map.Entry<UUID, HCFPlayer> value : player_cache.entrySet()) {
+        for (Map.Entry<UUID, HCFPlayer> value : playerCache.entrySet()) {
             HCFPlayer hcf = value.getValue();
             hcf.save();
 
@@ -150,38 +149,40 @@ public final class Main extends JavaPlugin implements Listener {
         configManager.setup();
 
 
-        blacklistedRankNames = Config.blacklisted_names.asStrList();
+        blacklistedRankNames = Config.BlackListedNames.asStrList();
 
         // Messages
         /*this.manager = new SimpleConfigManager(this);
 
         this.config = manager.getNewConfig("config.yml", new String[]{" ", "Plugin created by Idbi, koba1" , " "});
-        this.messages = manager.getNewConfig("messages/messages_en.yml");*/
+        //this.messages = manager.getNewConfig("messages/messages_en.yml");*/
 
         // Setup variables
-        DTR_REGEN_TIME = Config.dtr_regen.asInt() * 1000;
-        death_time = Config.deathban.asInt() * 1000;
-        stuck_duration = Config.stuck_timer.asInt() * 1000;
-        Koth.GLOBAL_TIME = Config.koth_length.asInt() * 1000;
-        deathban = Config.deathban_enabled.asBoolean();
-        member_starting_money = Config.default_balance.asInt();
-        claim_price_multiplier = Config.claim_price.asDouble();
+        DTRREGENTIME = Config.DTRRegen.asInt() * 1000;
+        deathbanTime = Config.Deathban.asInt() * 1000;
+        stuckDuration = Config.StuckTimer.asInt() * 1000;
+        Koth.GLOBAL_TIME = Config.KOTHDuration.asInt() * 1000;
+        deathban = Config.DeathbanEnable.asBoolean();
+        memberStartingMoney = Config.DefaultBalance.asInt();
+        claimPriceMultiplier = Config.ClaimPriceMultiplier.asDouble();
         debug = false;
-        max_members_pro_faction = Config.max_member.asInt();
-        max_allies_pro_faction = Config.max_allies.asInt();
-        world_border_radius = Config.world_border_size.asInt();
-        WARZONE_SIZE = Config.warzone_size.asInt();
-        MAX_DTR = Config.max_dtr.asDouble();
-        DEATH_DTR = Config.death_dtr.asDouble();
+        maxMembersProFaction = Config.MaxMembers.asInt();
+        maxAlliesProFaction = Config.MaxAllies.asInt();
+        worldBorderRadius = Config.WorldBorderSize.asInt();
+        warzoneSize = Config.WarzoneSize.asInt();
+        maxDTR = Config.MaxDTR.asDouble();
+        cookSpeedMultiplier = Config.CookingSpeedMultiplier.asInt();
+        brewingSpeedMultiplier = Config.BrewingSpeedMultiplier.asInt();
+        deathDTR = Config.DeathDTR.asDouble();
         con = SQL_Connection.dbConnect(
-                Config.host.asStr(),
-                Config.port.asStr(),
-                Config.database.asStr(),
-                Config.username.asStr(),
-                Config.password.asStr());
+                Config.Host.asStr(),
+                Config.Port.asStr(),
+                Config.Database.asStr(),
+                Config.Username.asStr(),
+                Config.Password.asStr());
         Plugin multi = getServer().getPluginManager().getPlugin("Multiverse-Core");
-        EOTW_ENABLED = false;
-        SOTW_ENABLED = false;
+        EOTWENABLED = false;
+        SOTWEnabled = false;
 
         // SQL
         if (con == null)
@@ -189,7 +190,7 @@ public final class Main extends JavaPlugin implements Listener {
         new SQL_Generator();
 
         // Variables
-        player_block_changes = new HashMap<>();
+        playerBlockChanges = new HashMap<>();
         protocolManager = ProtocolLibrary.getProtocolManager();
         //EnchantmentFile.setup();
         AdminTools.InvisibleManager.invisedAdmins = new ArrayList<>();
@@ -221,16 +222,16 @@ public final class Main extends JavaPlugin implements Listener {
         KothRewardsFile.setup();
 
         // setup classes
-        SetupBot.setup();
-        SetupEvents.SetupEvents();
+        //SetupBot.setup();
+        SetupEvents.setupEvents();
         SetupCommands.setupCommands();
 
         // playertools
         Playertools.setFactionCache();
         Playertools.cacheFactionClaims();
-        Playertools.LoadRanks();
+        Playertools.loadRanks();
         Playertools.prepareKoths();
-        player_cache.clear();
+        playerCache.clear();
         Playertools.cacheAll();
         new NameChanger(this);
         // Load online players
@@ -240,17 +241,17 @@ public final class Main extends JavaPlugin implements Listener {
         }
 
         // Timers
-        MiscTimers.CheckArmors();
-        MiscTimers.DTR_Timer();
-        MiscTimers.Bard_Energy();
-        MiscTimers.PotionLimiter();
-        MiscTimers.AutoSave();
-        MiscTimers.KOTH_Countdown();
-        MiscTimers.CleanupFakeWalls();
-        MiscTimers.ArcherTagEffect();
+        MiscTimers.checkArmors();
+        MiscTimers.DTRTimer();
+        MiscTimers.bardEnergy();
+        MiscTimers.potionLimiter();
+        MiscTimers.autoSave();
+        MiscTimers.KOTHCountdown();
+        MiscTimers.cleanupFakeWalls();
+        MiscTimers.archerTagEffect();
 
-        SpeedModifiers.Async_Cache_BrewingStands();
-        SpeedModifiers.SpeedBoost();
+        SpeedModifiers.asyncCacheBrewingStands();
+        SpeedModifiers.speedBoost();
 
        /* new Thread(new Runnable() {
 
@@ -287,12 +288,12 @@ public final class Main extends JavaPlugin implements Listener {
                 sendCmdMessage("§aMultiverse-Core found. Plugin connected to Multiverse-Core\n§aMultiverse-Core version: §a§o" + multi.getDescription().getVersion());
 
         }
-        if (max_members_pro_faction > maxMembersPerFaction) {
+        if (maxMembersProFaction > maxMembersPerFaction) {
             Main.sendCmdMessage(ChatColor.DARK_RED + "The maximum value that can be set is 14. A faction per member should not exceed this!");
             Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
             Bukkit.getServer().shutdown();
         }
-        if (Bukkit.getWorld(Config.world_name.asStr()) == null) {
+        if (Bukkit.getWorld(Config.WorldName.asStr()) == null) {
             Main.sendCmdMessage(ChatColor.DARK_RED + "World not found!");
             Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
             Bukkit.getServer().shutdown();
@@ -308,26 +309,26 @@ public final class Main extends JavaPlugin implements Listener {
     public void onDisableEvent(PluginDisableEvent e) {
         if (e.getPlugin().equals(this)) {
             try {
-                for (HCFPlayer hcf : player_cache.values()) {
+                for (HCFPlayer hcf : playerCache.values()) {
                     hcf.save();
                 }
 
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
-                    List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
+                    if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
+                    List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
                     for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
                         Location loc = it.next();
                         player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                        if (Main.player_block_changes.containsKey(player.getUniqueId())) {
-                            List<Location> l = Main.player_block_changes.get(player.getUniqueId());
+                        if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
+                            List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
                             it.remove();
                             //l.remove(loc);
-                            Main.player_block_changes.put(player.getUniqueId(), l);
+                            Main.playerBlockChanges.put(player.getUniqueId(), l);
                         }
                     }
 
                 }
-                for (Map.Entry<Integer, Faction> integerFactionEntry : faction_cache.entrySet()) {
+                for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
                     integerFactionEntry.getValue().saveFactionData();
                     for (FactionRankManager.Rank rank : integerFactionEntry.getValue().ranks) {
                         rank.saveRank();
@@ -347,26 +348,26 @@ public final class Main extends JavaPlugin implements Listener {
         // Adatbázis kapcsolat leállítása
         //SaveAll();
         try {
-            for (HCFPlayer hcf : player_cache.values()) {
+            for (HCFPlayer hcf : playerCache.values()) {
                 hcf.save();
             }
 
             for (Player player : getServer().getOnlinePlayers()) {
-                if (!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
-                List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
+                if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
+                List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
                 for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
                     Location loc = it.next();
                     player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                    if (Main.player_block_changes.containsKey(player.getUniqueId())) {
-                        List<Location> l = Main.player_block_changes.get(player.getUniqueId());
+                    if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
+                        List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
                         it.remove();
                         //l.remove(loc);
-                        Main.player_block_changes.put(player.getUniqueId(), l);
+                        Main.playerBlockChanges.put(player.getUniqueId(), l);
                     }
                 }
 
             }
-            for (Map.Entry<Integer, Faction> integerFactionEntry : faction_cache.entrySet()) {
+            for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
                 integerFactionEntry.getValue().saveFactionData();
                 for (FactionRankManager.Rank rank : integerFactionEntry.getValue().ranks) {
                     rank.saveRank();

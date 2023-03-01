@@ -9,12 +9,12 @@ import org.bukkit.entity.Player;
 
 public class SOTW {
     public static void EnableSOTW() {
-        World world = Bukkit.getWorld(Config.world_name.asStr());
-        Integer[] coords = Playertools.getInts(Config.spawn_location.asStr().split(" "));
-        int SOTWTime = Config.sotw_length.asInt() * 1000;
+        World world = Bukkit.getWorld(Config.WorldName.asStr());
+        Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
+        int SOTWTime = Config.SOTWDuration.asInt() * 1000;
 
         WorldBorder border = world.getWorldBorder();
-        border.setSize(Config.world_border_size.asInt());
+        border.setSize(Config.WorldBorderSize.asInt());
 
         border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
         /*HCF_Claiming.Faction_Claim spawnClaim = null;
@@ -25,7 +25,7 @@ public class SOTW {
             return;
         }*/
         Main.sendCmdMessage("&1&bSOTW STARTED Successfully!");
-        Main.SOTWSTARTED = System.currentTimeMillis() + SOTWTime;
+        Main.SOTWStarted = System.currentTimeMillis() + SOTWTime;
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.sendTitle(
                     Messages.sotw_start_title.language(p).queue(),
@@ -33,6 +33,6 @@ public class SOTW {
             );
             p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
         }
-        Main.SOTW_ENABLED = true;
+        Main.SOTWEnabled = true;
     }
 }

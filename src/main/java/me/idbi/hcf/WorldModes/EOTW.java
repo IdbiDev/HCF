@@ -13,17 +13,17 @@ import static me.idbi.hcf.Tools.Playertools.getDistanceBetweenPoints2D;
 public class EOTW {
 
     public static void EnableEOTW() {
-        World world = Bukkit.getWorld(Config.world_name.asStr());
-        Integer[] coords = Playertools.getInts(Config.spawn_location.asStr().split(" "));
-        int EOTWTIME = Config.eotw_length.asInt() * 1000;
+        World world = Bukkit.getWorld(Config.WorldName.asStr());
+        Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
+        int EOTWTIME = Config.EOTWDuration.asInt() * 1000;
 
         WorldBorder border = world.getWorldBorder();
-        border.setSize(Config.world_border_size.asInt());
+        border.setSize(Config.WorldBorderSize.asInt());
 
         border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
         HCF_Claiming.Faction_Claim spawnClaim = null;
         try {
-            spawnClaim = Main.faction_cache.get(1).claims.get(0);
+            spawnClaim = Main.factionCache.get(1).claims.get(0);
         } catch (Exception ignored) {
             Main.sendCmdMessage(Messages.cant_start_eotw.queue());
             return;
@@ -46,7 +46,7 @@ public class EOTW {
             );
             p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
         }
-        Main.EOTW_ENABLED = true;
+        Main.EOTWENABLED = true;
 
     }
 }

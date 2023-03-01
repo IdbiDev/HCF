@@ -50,7 +50,7 @@ public class EnchantInventory implements Listener {
         im.setDisplayName(Messages.enchant_confirm_button.queue());
         im.setLore(Arrays.asList(
                 "§5",
-                Messages.confirm_button_lore.queue().replace("%xp_level%", Config.enchant_cost.asStr())
+                Messages.confirm_button_lore.queue().replace("%xp_level%", Config.EnchantCost.asStr())
         ));
         is.setItemMeta(im);
         return is;
@@ -157,10 +157,10 @@ Silk Touch*/
                 }
 
                 ItemStack item = e.getView().getTopInventory().getItem(13);
-                HCF_Rules.Enchant_Obj obj = HCF_Rules.randomEnchant();
+                HCF_Rules.EnchantClass obj = HCF_Rules.randomEnchant();
                 while (!obj.getEnchantment().canEnchantItem(item)) {
                     obj = HCF_Rules.randomEnchant();
-                    System.out.println(obj.getEnchantment());
+                    //System.out.println(obj.getEnchantment());
                 }
                 for (Map.Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
                     item.removeEnchantment(entry.getKey());
@@ -172,7 +172,7 @@ Silk Touch*/
                 } catch (ClassCastException ignored) {
                     item.addEnchantment(obj.getEnchantment(), obj.getLevel());
                 }
-                if (Main.abilities_loaded) {
+                if (Main.abilitiesLoaded) {
                     // item = Utils.updateLore(item);
                 }
                 p.setLevel(p.getLevel() - 20);
@@ -182,7 +182,7 @@ Silk Touch*/
 
                 e.getWhoClicked().closeInventory();
 
-                System.out.println(obj.getEnchantment().getName());
+                //System.out.println(obj.getEnchantment().getName());
             }
         }
     }

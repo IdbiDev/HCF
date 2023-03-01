@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.UUID;
 
 public class PlayerStatistic {
-    private static final Connection con = Main.getConnection("PlayerStatistics");
+    private static final Connection con = Main.getConnection();
     public final static String defaultStats = "{\"totalFactions\":0,\"lastLogin\":0,\"TimePlayed\":0,\"MoneySpend\":0,\"ClassTimes\":{\"Miner\":0,\"Archer\":0,\"Assassin\":0,\"Total\":0,\"Bard\":0},\"MoneyEarned\":0,\"FactionHistory\":[],\"startDate\":0}";
     public long TotalBardClassTime;
     public long TotalAssassinClassTime;

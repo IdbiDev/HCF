@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerRankManagerInventory {
-    public static Connection con = Main.getConnection("cmd.FactionCreate");
+    public static Connection con = Main.getConnection();
 
     // --------------------- ONLINE PLAYER ---------------------------- //
     public static Inventory inv(Player owner, Player p) {

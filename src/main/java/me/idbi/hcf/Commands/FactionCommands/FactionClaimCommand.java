@@ -55,8 +55,8 @@ public class FactionClaimCommand extends SubCommand {
                 ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
                 ItemMeta meta = wand.getItemMeta();
 
-                meta.setDisplayName(Config.claiming_wand_name.asStr());
-                meta.setLore(Config.claiming_wand_lore.asChatColorList());
+                meta.setDisplayName(Config.ClaimingWandTitle.asStr());
+                meta.setLore(Config.ClaimingWandLore.asChatColorList());
 
                 wand.setItemMeta(meta);
                 p.getInventory().setItem(p.getInventory().firstEmpty(), wand);

@@ -18,7 +18,7 @@ import java.sql.Connection;
 import java.util.Date;
 
 public class FactionJoinCommand extends SubCommand {
-    private static final Connection con = Main.getConnection("commands.Faction");
+    private static final Connection con = Main.getConnection();
 
     @Override
     public String getName() {

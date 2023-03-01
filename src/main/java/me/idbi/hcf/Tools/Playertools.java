@@ -31,7 +31,7 @@ import static me.idbi.hcf.Main.ranks;
 
 
 public class Playertools {
-    private static final Connection con = Main.getConnection("Playertools");
+    private static final Connection con = Main.getConnection();
 
 
     public static void LoadPlayer(Player player) {
@@ -95,10 +95,10 @@ public class Playertools {
     //OnJoin
     public static void loadOnlinePlayer(Player player) {
         //SQL_Connection.dbExecute(con, "INSERT IGNORE INTO members SET name='?',uuid='?',money='?'", player.getName(), player.getUniqueId().toString(),Config.default_balance.asInt() + "");
-        if (!Main.player_cache.containsKey(player.getUniqueId())) {
-            SQL_Async.dbExecuteAsync(con, "INSERT INTO members SET name='?',uuid='?',money='?'", player.getName(), player.getUniqueId().toString(), Config.default_balance.asInt() + "");
+        if (!Main.playerCache.containsKey(player.getUniqueId())) {
+            SQL_Async.dbExecuteAsync(con, "INSERT INTO members SET name='?',uuid='?',money='?'", player.getName(), player.getUniqueId().toString(), Config.DefaultBalance.asInt() + "");
             HCFPlayer hcf = HCFPlayer.createPlayer(player);
-            Main.player_cache.put(hcf.uuid, hcf);
+            Main.playerCache.put(hcf.uuid, hcf);
             loadOnlinePlayer(player);
             return;
         }
@@ -115,7 +115,7 @@ public class Playertools {
         HCFPlayer hcf = HCFPlayer.getPlayer(player);
         assert hcf != null;
         hcf.currentArea = HCF_Claiming.getPlayerArea(player);
-        Main.player_cache.put(hcf.uuid, hcf);
+        Main.playerCache.put(hcf.uuid, hcf);
         Scoreboards.refresh(player);
         NameChanger.refresh(player);
     }
@@ -141,13 +141,13 @@ public class Playertools {
                     uuid,
                     rs.getInt("kills"),
                     rs.getInt("deaths"),
-                    Main.faction_cache.get(rs.getInt("faction")),
+                    Main.factionCache.get(rs.getInt("faction")),
                     rs.getInt("money"),
                     new PlayerStatistic(new JSONObject(rs.getString("statistics"))),
                     rs.getString("rank"),
                     rs.getString("language")
             );
-            Main.player_cache.put(hcf.uuid, hcf);
+            Main.playerCache.put(hcf.uuid, hcf);
             if (hcf.inFaction())
                 hcf.faction.members.add(hcf);
         } catch (SQLException e) {
@@ -163,7 +163,7 @@ public class Playertools {
                         uuid,
                         (int) playerMap.get("kills"),
                         (int) playerMap.get("deaths"),
-                        Main.faction_cache.get((int) playerMap.get("faction")),
+                        Main.factionCache.get((int) playerMap.get("faction")),
                         (int) playerMap.get("money"),
                         new PlayerStatistic(new JSONObject(playerMap.get("statistics").toString())),
                         playerMap.get("rank").toString(),
@@ -237,7 +237,7 @@ public class Playertools {
 
     public static ArrayList<String> getFactionMembers(int id) {
         ArrayList<String> players = new ArrayList<>();
-        Faction f = Main.faction_cache.get(id);
+        Faction f = Main.factionCache.get(id);
         assert null != f;
         for (HCFPlayer member : f.members) {
             players.add(member.name);
@@ -247,7 +247,7 @@ public class Playertools {
 
     public static void RenameFaction(Faction faction, String name) {
         faction.name = name;
-        Main.faction_cache.put(faction.id, faction);
+        Main.factionCache.put(faction.id, faction);
         Main.nameToFaction.put(faction.name, faction);
         for (HCFPlayer player : faction.members) {
             player.setFaction(faction);
@@ -338,7 +338,7 @@ public class Playertools {
                     } else if (rs.getString("type").equalsIgnoreCase("koth")) {
                         at = HCF_Claiming.ClaimAttributes.KOTH;
                     }
-                    Faction f = Main.faction_cache.get(rs.getInt("factionid"));
+                    Faction f = Main.factionCache.get(rs.getInt("factionid"));
                     if (f != null) {
                         HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt("startX"), rs.getInt("endX"), rs.getInt("startZ"), rs.getInt("endZ"), rs.getInt("factionid"), at, rs.getString("world"));
                         f.addClaim(claim);
@@ -382,13 +382,13 @@ public class Playertools {
 
     @Deprecated
     public static double getDTR(int faction) {
-        return Main.faction_cache.get(faction).DTR;
+        return Main.factionCache.get(faction).DTR;
     }
 
 
     public static void setFactionCache() {
         try {
-            Main.faction_cache.clear();
+            Main.factionCache.clear();
             PreparedStatement ps = con.prepareStatement("SELECT * FROM factions");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -399,7 +399,7 @@ public class Playertools {
                     faction.loadFactionHistory(faction.assembleFactionHistory());
                 }
 
-                Main.faction_cache.put(rs.getInt("ID"), faction);
+                Main.factionCache.put(rs.getInt("ID"), faction);
                 Main.nameToFaction.put(rs.getString("name"), faction);
 
                 faction.DTR = Double.parseDouble(CalculateDTR(faction));
@@ -418,7 +418,7 @@ public class Playertools {
                     continue;
                 Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(rs.getString("home")));
                 Location loc = new Location(
-                        Bukkit.getWorld(Config.warzone_size.asStr()),
+                        Bukkit.getWorld(Config.WarzoneSize.asStr()),
                         Integer.parseInt(map.get("X").toString()),
                         Integer.parseInt(map.get("Y").toString()),
                         Integer.parseInt(map.get("Z").toString()),
@@ -430,18 +430,18 @@ public class Playertools {
 
             }
             //Check if warzone enabled, and the spawn location is setted
-            if (Config.warzone_size.asInt() != 0 && !Main.faction_cache.get(1).claims.isEmpty()) {
-                String str = Config.spawn_location.asStr();
+            if (Config.WarzoneSize.asInt() != 0 && !Main.factionCache.get(1).claims.isEmpty()) {
+                String str = Config.SpawnLocation.asStr();
                 Location spawn = new Location(
-                        Bukkit.getWorld(Config.world_name.asStr()),
+                        Bukkit.getWorld(Config.WorldName.asStr()),
                         Integer.parseInt(str.split(" ")[0]),
                         Integer.parseInt(str.split(" ")[1]),
                         Integer.parseInt(str.split(" ")[2]),
                         Integer.parseInt(str.split(" ")[3]),
                         Integer.parseInt(str.split(" ")[4])
                 );
-                Faction f = Main.faction_cache.get(2);
-                int warzoneSize = Config.warzone_size.asInt();
+                Faction f = Main.factionCache.get(2);
+                int warzoneSize = Config.WarzoneSize.asInt();
                 HCF_Claiming.Faction_Claim claim;
                 claim = new HCF_Claiming.Faction_Claim(spawn.getBlockX() - warzoneSize, spawn.getBlockX() + warzoneSize, spawn.getBlockZ() - warzoneSize, spawn.getBlockZ() + warzoneSize, 2, HCF_Claiming.ClaimAttributes.SPECIAL, spawn.getWorld().getName());
                 f.addClaim(claim);
@@ -452,7 +452,7 @@ public class Playertools {
         } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
-        for (Map.Entry<Integer, Faction> f : Main.faction_cache.entrySet()) {
+        for (Map.Entry<Integer, Faction> f : Main.factionCache.entrySet()) {
             f.getValue().setupAllies();
         }
     }
@@ -460,7 +460,7 @@ public class Playertools {
 
     public static HashMap<String, String> getFactionKills(Faction faction) {
         HashMap<String, String> returnHashMap = new HashMap<>();
-        for (HCFPlayer p : Main.player_cache.values()) {
+        for (HCFPlayer p : Main.playerCache.values()) {
             if (p.faction == faction)
                 returnHashMap.put(p.name, String.valueOf(p.getKills()));
 
@@ -481,7 +481,7 @@ public class Playertools {
         return returnHashMap;
     }
 
-    public static void LoadRanks() {
+    public static void loadRanks() {
         /*try {
             PreparedStatement rank_ps =  con.prepareStatement("SELECT * FROM ranks");
             ResultSet rank_rs = rank_ps.executeQuery();
@@ -497,7 +497,7 @@ public class Playertools {
             PreparedStatement rank_ps = con.prepareStatement("SELECT * FROM ranks");
             ResultSet rank_rs = rank_ps.executeQuery();
             while (rank_rs.next()) {
-                for (Map.Entry<Integer, Faction> f : Main.faction_cache.entrySet()) {
+                for (Map.Entry<Integer, Faction> f : Main.factionCache.entrySet()) {
                     Integer id = f.getKey();
                     Faction faction = f.getValue();
                     if (id.equals(rank_rs.getInt("faction"))) {
@@ -528,12 +528,12 @@ public class Playertools {
         double addedDTR = 1.5;
         for (int i = 1; i <= faction.getMemberCount(); i++) {
             if (faction.getMemberCount() % 5 == 0) {
-                if (Main.MAX_DTR <= addedDTR + 1)
+                if (Main.maxDTR <= addedDTR + 1)
                     break;
                 addedDTR += 1;
             } else {
                 //5.5 <= 2.0
-                if (Main.MAX_DTR <= addedDTR + 0.5)
+                if (Main.maxDTR <= addedDTR + 0.5)
                     break;
                 addedDTR += 0.5;
             }
@@ -542,9 +542,9 @@ public class Playertools {
     }
 
     public static Location getSpawn() {
-        String[] spawnLocs = Config.spawn_location.asStr().split(" ");
+        String[] spawnLocs = Config.SpawnLocation.asStr().split(" ");
         Integer[] ints = getInts(spawnLocs);
-        return new Location(Bukkit.getWorld(Config.world_name.asStr()), ints[0], ints[1], ints[2], ints[3], ints[4]);
+        return new Location(Bukkit.getWorld(Config.WorldName.asStr()), ints[0], ints[1], ints[2], ints[3], ints[4]);
     }
 
     public static Integer[] getInts(String[] string) {
@@ -558,7 +558,7 @@ public class Playertools {
 
     public static int getFreeFactionId() {
         int largestID = 0;
-        ArrayList<Integer> hashKeys = new ArrayList<>(Main.faction_cache.keySet());
+        ArrayList<Integer> hashKeys = new ArrayList<>(Main.factionCache.keySet());
         for (Integer hashKey : hashKeys) {
             if (hashKey > largestID) {
                 largestID = hashKey;
@@ -583,7 +583,7 @@ public class Playertools {
         int largestID = getFreeFactionId();
         Faction faction = new Faction(largestID, name, "", 0);
 
-        Main.faction_cache.put(largestID, faction);
+        Main.factionCache.put(largestID, faction);
 
         Main.nameToFaction.put(faction.name, faction);
         SQL_Connection.dbExecute(con, "INSERT INTO factions SET ID='?' name='?',leader='?'", String.valueOf(faction.id), name, leader);
@@ -619,20 +619,20 @@ public class Playertools {
     }
 
     public static void placeBlockChange(Player p, Location loc) {
-        if (Main.player_block_changes.containsKey(p.getUniqueId())) {
-            List<Location> l = Main.player_block_changes.get(p.getUniqueId());
+        if (Main.playerBlockChanges.containsKey(p.getUniqueId())) {
+            List<Location> l = Main.playerBlockChanges.get(p.getUniqueId());
             l.add(loc);
-            Main.player_block_changes.put(p.getUniqueId(), l);
+            Main.playerBlockChanges.put(p.getUniqueId(), l);
         } else {
             List<Location> l = new ArrayList<>();
             l.add(loc);
-            Main.player_block_changes.put(p.getUniqueId(), l);
+            Main.playerBlockChanges.put(p.getUniqueId(), l);
         }
     }
 
     public static void prepareKoths() {
-        Main.koth_cache.clear();
-        HashMap<Integer, Faction> hashMap = Main.faction_cache;
+        Main.kothCache.clear();
+        HashMap<Integer, Faction> hashMap = Main.factionCache;
 
         for (Faction faction : hashMap.values()) {
             for (HCF_Claiming.Faction_Claim claim : faction.claims) {
@@ -643,7 +643,7 @@ public class Playertools {
                             new HCF_Claiming.Point(claim.endX, claim.endZ),
                             claim.world
                     );
-                    Main.koth_cache.put(faction.name, temp);
+                    Main.kothCache.put(faction.name, temp);
                     //eci.put(faction.factioname, temp);
                 }
             }

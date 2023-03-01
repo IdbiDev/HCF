@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.Objects;
 
 public class FactionKickCommand extends SubCommand {
-    public static Connection con = Main.getConnection("cmd.FactionCreate");
+    public static Connection con = Main.getConnection();
 
     @Override
     public String getName() {

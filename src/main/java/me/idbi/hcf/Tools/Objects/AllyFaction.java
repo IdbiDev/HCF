@@ -58,7 +58,7 @@ public class AllyFaction {
 }
 
 class AllyCon {
-    protected static final Connection con = Main.getConnection("AllyFaction");
+    protected static final Connection con = Main.getConnection();
 
 }
 /*

@@ -30,7 +30,7 @@ import static me.idbi.hcf.Koth.Koth.stopKoth;
 
 public class MiscTimers {
 
-    public static void CheckArmors() {
+    public static void checkArmors() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -80,17 +80,17 @@ public class MiscTimers {
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }*/
-    public static void DTR_Timer() {
+    public static void DTRTimer() {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (Map.Entry<Integer, Long> entry : Main.DTR_REGEN.entrySet()) {
+                for (Map.Entry<Integer, Long> entry : Main.DTRREGEN.entrySet()) {
                     int key = entry.getKey();
                     long val = entry.getValue();
-                    Faction f = Main.faction_cache.get(key);
+                    Faction f = Main.factionCache.get(key);
                     // 4000+10000 <= 4000
                     if (val <= System.currentTimeMillis()) {
-                        Main.DTR_REGEN.remove(key);
+                        Main.DTRREGEN.remove(key);
                         if (Main.debug)
                             Main.sendCmdMessage("DTR REGEN finished: ");
                         f.DTR = f.DTR_MAX;
@@ -98,15 +98,15 @@ public class MiscTimers {
                     f.DTR_TIMEOUT = val - System.currentTimeMillis();
                 }
 
-                for (Map.Entry<LivingEntity, Long> entry : Main.saved_players.entrySet()) {
+                for (Map.Entry<LivingEntity, Long> entry : Main.savedPlayers.entrySet()) {
                     LivingEntity key = entry.getKey();
                     long val = entry.getValue();
                     if (val <= 0) {
                         key.remove();
-                        Main.saved_players.remove(key);
-                        Main.saved_items.remove(key);
+                        Main.savedPlayers.remove(key);
+                        Main.savedItems.remove(key);
                     } else {
-                        Main.saved_players.put(key, val - 1000);
+                        Main.savedPlayers.put(key, val - 1000);
                     }
                 }
 
@@ -135,7 +135,7 @@ public class MiscTimers {
 
     //LEc see
     //2Tick
-    public static void Bard_Energy() {
+    public static void bardEnergy() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -179,7 +179,7 @@ public class MiscTimers {
                     if (HCF_Timer.getPvPTimerCoolDownSpawn(player) != 0) {
                         shouldRefresh = true;
                     }
-                    if (Main.SOTW_ENABLED || Main.EOTW_ENABLED) {
+                    if (Main.SOTWEnabled || Main.EOTWENABLED) {
                         shouldRefresh = true;
                     }
                     if (HCF_Timer.getPvPTimerCoolDownSpawn(player) == 0 && HCF_Timer.getCombatTime(player) == 0) {
@@ -199,7 +199,7 @@ public class MiscTimers {
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
     }
 
-    public static void KOTH_Countdown() {
+    public static void KOTHCountdown() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -226,16 +226,16 @@ public class MiscTimers {
     }
 
 
-    public static void PotionLimiter() {
+    public static void potionLimiter() {
         new BukkitRunnable() {
             @Override
             public void run() {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                     for (PotionEffect effect : player.getActivePotionEffects()) {
-                        if (HCF_Rules.PotionLimits.containsKey(effect.getType())) {
-                            if (effect.getAmplifier() > HCF_Rules.PotionLimits.get(effect.getType())) {
+                        if (HCF_Rules.potionLimits.containsKey(effect.getType())) {
+                            if (effect.getAmplifier() > HCF_Rules.potionLimits.get(effect.getType())) {
                                 player.removePotionEffect(effect.getType());
-                                player.addPotionEffect(new PotionEffect(effect.getType(), effect.getDuration(), HCF_Rules.PotionLimits.get(effect.getType()), false, false));
+                                player.addPotionEffect(new PotionEffect(effect.getType(), effect.getDuration(), HCF_Rules.potionLimits.get(effect.getType()), false, false));
                             }
                         }
                     }
@@ -244,15 +244,15 @@ public class MiscTimers {
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 1);
     }
 
-    public static void CleanupFakeWalls() {
+    public static void cleanupFakeWalls() {
         new BukkitRunnable() {
             @Override
             public void run() {
 
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                     SpawnShield.CalcWall(player);
-                    if (!Main.player_block_changes.containsKey(player.getUniqueId())) continue;
-                    List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
+                    if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
+                    List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
                     Location cur = null;
                     try {
                         for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
@@ -262,11 +262,11 @@ public class MiscTimers {
                             //System.out.println(player.getLocation().distance(loc));
                             if (player.getLocation().distance(loc) > 12) {
                                 player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                                if (Main.player_block_changes.containsKey(player.getUniqueId())) {
-                                    List<Location> l = Main.player_block_changes.get(player.getUniqueId());
+                                if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
+                                    List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
                                     it.remove();
                                     //l.remove(loc);
-                                    Main.player_block_changes.put(player.getUniqueId(), l);
+                                    Main.playerBlockChanges.put(player.getUniqueId(), l);
                                 }
                             }
                         }
@@ -284,7 +284,7 @@ public class MiscTimers {
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 1);
     }
 
-    public static void ArcherTagEffect() {
+    public static void archerTagEffect() {
         /*
         new BukkitRunnable() {
             @Override
@@ -353,8 +353,8 @@ public class MiscTimers {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (!Main.player_block_changes.containsKey(player.getUniqueId())) return;
-                List<Location> copy = Main.player_block_changes.get(player.getUniqueId());
+                if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) return;
+                List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
                 Location cur = null;
                 try {
                     for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
@@ -362,11 +362,11 @@ public class MiscTimers {
                         Location loc = it.next();
                         //cur = loc;
                         player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                        if (Main.player_block_changes.containsKey(player.getUniqueId())) {
-                            List<Location> l = Main.player_block_changes.get(player.getUniqueId());
+                        if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
+                            List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
                             it.remove();
                             //l.remove(loc);
-                            Main.player_block_changes.put(player.getUniqueId(), l);
+                            Main.playerBlockChanges.put(player.getUniqueId(), l);
                         }
                     }
                 } catch (Exception e) {
@@ -388,10 +388,10 @@ public class MiscTimers {
 
     public static long getTimeOfSOTW() {
         //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
-        return Main.SOTWSTARTED - System.currentTimeMillis();
+        return Main.SOTWStarted - System.currentTimeMillis();
     }
 
-    public static void AutoSave() {
+    public static void autoSave() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -400,7 +400,7 @@ public class MiscTimers {
                 long totalMemory = runtime.totalMemory();
                 long freeMemory = runtime.freeMemory();
 
-                System.out.println("Memory: Used=" + (totalMemory - freeMemory) + " Total=" + totalMemory + " Free=" + freeMemory);
+                //System.out.println("Memory: Used=" + (totalMemory - freeMemory) + " Total=" + totalMemory + " Free=" + freeMemory);
 
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 6000, 6000);

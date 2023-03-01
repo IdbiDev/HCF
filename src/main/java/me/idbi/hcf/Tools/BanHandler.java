@@ -10,16 +10,16 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class BanHandler {
-    private static final Connection con = Main.getConnection("BanHandler");
+    private static final Connection con = Main.getConnection();
 
     public static void banPlayerInHCF(Player player) {
-        SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", player.getUniqueId().toString(), String.valueOf(System.currentTimeMillis() + (Main.death_time * 60000L)));
+        SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", player.getUniqueId().toString(), String.valueOf(System.currentTimeMillis() + (Main.deathbanTime * 60000L)));
         player.kickPlayer(Messages.deathban_kick.queue());
 
     }
 
     public static void banPlayerInHCF(OfflinePlayer player) {
-        SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", player.getUniqueId().toString(), String.valueOf(System.currentTimeMillis() + (Main.death_time * 60000L)));
+        SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'", player.getUniqueId().toString(), String.valueOf(System.currentTimeMillis() + (Main.deathbanTime * 60000L)));
     }
 
     public static boolean isPlayerBannedFromHCF(UUID uuid) {
@@ -27,7 +27,7 @@ public class BanHandler {
         if (!ban.isEmpty()) {
             if (Long.parseLong(String.valueOf(ban.get("time"))) <= System.currentTimeMillis()) {
                 SQL_Connection.dbExecute(con, "DELETE FROM deathbans WHERE uuid='?'", (String) ban.get("uuid"));
-                Main.death_wait_clear.add(uuid);
+                Main.deathWaitClear.add(uuid);
 
                 return false;
             }
