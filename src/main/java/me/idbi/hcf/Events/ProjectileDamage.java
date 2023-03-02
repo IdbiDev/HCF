@@ -1,6 +1,7 @@
 package me.idbi.hcf.Events;
 
 import me.idbi.hcf.Classes.Classes;
+import me.idbi.hcf.Classes.SubClasses.Archer;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.HCF_Timer;
@@ -16,6 +17,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import static me.idbi.hcf.Tools.Playertools.isTeammate;
 
 public class ProjectileDamage implements Listener {
+    Archer archer = new Archer();
     @EventHandler
     public void ProjectileDamage(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Projectile projectile && e.getEntity() instanceof Player victim) {
@@ -37,7 +39,7 @@ public class ProjectileDamage implements Listener {
             }
 
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(damager);
-            if (!HCF_Timer.checkArcherTimer(victim) && hcfPlayer.playerClass == Classes.ARCHER) {
+            if (!HCF_Timer.checkArcherTimer(victim) && hcfPlayer.playerClass == Classes.ARCHER && archer.archerTagEnabled) {
                 HCF_Timer.addArcherTimer(victim);
             }
 

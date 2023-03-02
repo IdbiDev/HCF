@@ -2,6 +2,7 @@ package me.idbi.hcf.Classes.SubClasses;
 
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.HCF_Class;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,7 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Miner implements HCF_Class {
-    public static final int min_y_value = 45;
+    public static final int invisibleLevel = 45;
+    public final boolean minerEnabled = true;
+    public final int maxMinerInFaction = -1;
+    public final boolean invisibleEnable = true;
     private final HashMap<PotionEffectType, Integer> effect = new HashMap<>() {{
         put(PotionEffectType.SPEED, 1);
         put(PotionEffectType.DAMAGE_RESISTANCE, 1);
@@ -57,6 +61,7 @@ public class Miner implements HCF_Class {
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         hcf.setClass(Classes.MINER);
+        Scoreboards.refresh(p);
     }
 
     @Override
@@ -72,5 +77,6 @@ public class Miner implements HCF_Class {
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         hcf.setClass(Classes.NONE);
+        Scoreboards.refresh(p);
     }
 }

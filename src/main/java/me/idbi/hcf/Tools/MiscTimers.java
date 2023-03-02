@@ -29,8 +29,9 @@ import static me.idbi.hcf.Koth.Koth.GLOBAL_TIME;
 import static me.idbi.hcf.Koth.Koth.stopKoth;
 
 public class MiscTimers {
+    Bard bard = new Bard();
+    public void checkArmors() {
 
-    public static void checkArmors() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -39,7 +40,7 @@ public class MiscTimers {
                     ClassSelector.addClassToPlayer(player);
                     HCFPlayer hcf = HCFPlayer.getPlayer(player);
                     if (hcf.playerClass == Classes.BARD) {
-                        Bard.useSimpleBardEffect(player);
+                        bard.useSimpleBardEffect(player);
                     }
                     //Shapes.Crossing(new Location(player.getWorld(),10,64,16),new Location(player.getWorld(),-21,64,-5),Effect.HEART,10);
                 }
@@ -80,7 +81,7 @@ public class MiscTimers {
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }*/
-    public static void DTRTimer() {
+    public void DTRTimer() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -135,7 +136,7 @@ public class MiscTimers {
 
     //LEc see
     //2Tick
-    public static void bardEnergy() {
+    public void bardEnergy() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -199,7 +200,7 @@ public class MiscTimers {
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
     }
 
-    public static void KOTHCountdown() {
+    public void KOTHCountdown() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -226,7 +227,7 @@ public class MiscTimers {
     }
 
 
-    public static void potionLimiter() {
+    public void potionLimiter() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -244,7 +245,7 @@ public class MiscTimers {
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 1);
     }
 
-    public static void cleanupFakeWalls() {
+    public void cleanupFakeWalls() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -284,7 +285,7 @@ public class MiscTimers {
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 1);
     }
 
-    public static void archerTagEffect() {
+    public void archerTagEffect() {
         /*
         new BukkitRunnable() {
             @Override
@@ -348,7 +349,7 @@ public class MiscTimers {
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20L);*/
     }
 
-    public static void DeleteWallsForPlayer(Player player) {
+    public void DeleteWallsForPlayer(Player player) {
 
         new BukkitRunnable() {
             @Override
@@ -380,18 +381,18 @@ public class MiscTimers {
         }.runTaskAsynchronously(Main.getPlugin(Main.class));
     }
 
-    public static long getTimeOfEOTW() {
+    public long getTimeOfEOTW() {
         long current = System.currentTimeMillis();
         //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
         return Main.EOTWStarted - current;
     }
 
-    public static long getTimeOfSOTW() {
+    public long getTimeOfSOTW() {
         //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
         return Main.SOTWStarted - System.currentTimeMillis();
     }
 
-    public static void autoSave() {
+    public void autoSave() {
         new BukkitRunnable() {
             @Override
             public void run() {

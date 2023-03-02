@@ -17,7 +17,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import static me.idbi.hcf.Tools.Playertools.isTeammate;
 
 public class onDamage implements Listener {
-
+    Archer archer = new Archer();
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player damager && e.getEntity() instanceof Player victim) {
@@ -93,7 +93,7 @@ public class onDamage implements Listener {
                 //Damage if ArcherTag
                 if (HCF_Timer.checkArcherTimer(victim)) {
                     double dmg = e.getDamage();
-                    e.setDamage(dmg + (dmg * Archer.ArcherTagDamageAmplifier / 100));
+                    e.setDamage(dmg + (dmg * archer.archerTagDamageAmplifier / 100)); // nem static
                 }
             } catch (NullPointerException ex) {
                 ex.printStackTrace();

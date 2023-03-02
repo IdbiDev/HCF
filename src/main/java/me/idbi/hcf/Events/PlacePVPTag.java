@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import static me.idbi.hcf.Tools.Playertools.isTeammate;
 
 public class PlacePVPTag implements Listener {
-
+Archer archer = new Archer();
     @EventHandler(priority = EventPriority.LOWEST)
     public void PlaceTag(EntityDamageByEntityEvent e) {
         if (e.isCancelled()) return;
@@ -37,7 +37,7 @@ public class PlacePVPTag implements Listener {
             //Damage if ArcherTag
             if (HCF_Timer.checkArcherTimer(victim)) {
                 double dmg = e.getDamage();
-                e.setDamage(dmg + (dmg * Archer.ArcherTagDamageAmplifier / 100));
+                e.setDamage(dmg + (dmg * archer.archerTagDamageAmplifier / 100));
             }
 
         }

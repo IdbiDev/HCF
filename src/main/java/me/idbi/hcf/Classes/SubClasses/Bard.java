@@ -5,6 +5,7 @@ import me.idbi.hcf.Classes.HCF_Class;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Particles.Shapes;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Effect;
@@ -24,8 +25,15 @@ import java.util.Map;
 import static me.idbi.hcf.Tools.Playertools.getFactionMembersInDistance;
 
 public class Bard implements HCF_Class {
-    private static final Main m = Main.getPlugin(Main.class);
-    private static final ArrayList<Bard_Item> bard_items = new ArrayList<>() {{
+    public boolean bardEnabled = true;
+    public boolean boostEnabled = true;
+    public boolean simpleBoostEnabled = true;
+    public int maxBardEnergy = 100;
+    public double bardEnergyMultiplier = 1f;
+    //todo: Effects enable - disable using config
+
+    private final Main m = Main.getPlugin(Main.class);
+    private final ArrayList<Bard_Item> bard_items = new ArrayList<>() {{
         add(new Bard_Item(Material.BLAZE_POWDER, PotionEffectType.INCREASE_DAMAGE, m.getConfig().getInt("strength")));
         add(new Bard_Item(Material.SUGAR, PotionEffectType.SPEED, m.getConfig().getInt("speed")));
         add(new Bard_Item(Material.FEATHER, PotionEffectType.JUMP, m.getConfig().getInt("jump_boost")));
@@ -42,7 +50,7 @@ public class Bard implements HCF_Class {
         put(PotionEffectType.DAMAGE_RESISTANCE, 0);
     }};
 
-    public static void useSimpleBardEffect(Player bardplayer) {
+    public void useSimpleBardEffect(Player bardplayer) {
         //Hotbar loop
         for (int i = 0; i <= 8; i++) {
             //Ha semmi nincs a kezébe, skippeljük
@@ -61,13 +69,13 @@ public class Bard implements HCF_Class {
         }
     }
 
-    private static String getPotionName(String name) {
+    private String getPotionName(String name) {
         name = name.replace("_", " ");
         return name.substring(0, 1).toUpperCase()
                 + name.substring(1).toLowerCase();
     }
 
-    private static Bard_Item findBardItem(ItemStack stack) {
+    private Bard_Item findBardItem(ItemStack stack) {
         for (Bard_Item item : bard_items) {
             if (item.mat.equals(stack.getType())) {
                 return item;
@@ -76,63 +84,66 @@ public class Bard implements HCF_Class {
         return null;
     }
 
-    public static void OhLetsBreakItDown(Player bardplayer) {
-        ItemStack main = bardplayer.getItemInHand();
-        Bard_Item item;
-        if (main != null) {
-            item = findBardItem(main);
-            if (item != null) {
-                HCFPlayer hcf = HCFPlayer.getPlayer(bardplayer);
-                double currentEnergy = hcf.bardEnergy;
-                if ((currentEnergy - item.cost) < 0) {
-                    bardplayer.sendMessage(Messages.bard_dont_have_enough_energy.language(bardplayer).setAmount(String.valueOf(item.cost)).queue());
-                    return;
-                }
-                if (HCF_Timer.getBardTimer(bardplayer) != 0) {
-                    return;
-                }
-                main.setAmount(main.getAmount() - 1);
-                bardplayer.getInventory().setItemInHand(main);
-                hcf.setBardEnergy(currentEnergy - item.cost);
-                for (Player p : getFactionMembersInDistance(bardplayer, 15)) {
-                    PotionEffectType potion = item.effect;
-                    if (!bardplayer.isSneaking())
-                        p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
-                    p.getActivePotionEffects().forEach(potionEffect -> {
-                        if (potionEffect.getType().equals(potion)) {
-                            p.removePotionEffect(potion);
-                            p.addPotionEffect(new PotionEffect(potion, 180, potionEffect.getAmplifier() + 1, false, false));
-                        }
-                    });
-                }
-                HCF_Timer.addBardTimer(bardplayer);
-                new BukkitRunnable() {
-                    private final Location loc = bardplayer.getLocation();
-                    private int counts = 0;
+    public void OhLetsBreakItDown(Player bardplayer) {
+        if (boostEnabled) {
 
-                    @Override
-                    public void run() {
-                        if (bardplayer.isSneaking()) {
-                            cancel();
-                            return;
-                        }
-                        if (counts + 1 > 15)
-                            cancel();
-                        counts++;
-                        for (Player teammate : getFactionMembersInDistance(bardplayer, 15))
-                            Shapes.DrawCircle(teammate, loc, counts, 2, Effect.HAPPY_VILLAGER);
+            ItemStack main = bardplayer.getItemInHand();
+            Bard_Item item;
+            if (main != null) {
+                item = findBardItem(main);
+                if (item != null) {
+                    HCFPlayer hcf = HCFPlayer.getPlayer(bardplayer);
+                    double currentEnergy = hcf.bardEnergy;
+                    if ((currentEnergy - item.cost) < 0) {
+                        bardplayer.sendMessage(Messages.bard_dont_have_enough_energy.language(bardplayer).setAmount(String.valueOf(item.cost)).queue());
+                        return;
                     }
-                }.runTaskTimer(m, 0L, 0L);
+                    if (HCF_Timer.getBardTimer(bardplayer) != 0) {
+                        return;
+                    }
+                    main.setAmount(main.getAmount() - 1);
+                    bardplayer.getInventory().setItemInHand(main);
+                    hcf.setBardEnergy(currentEnergy - item.cost);
+                    for (Player p : getFactionMembersInDistance(bardplayer, 15)) {
+                        PotionEffectType potion = item.effect;
+                        if (!bardplayer.isSneaking())
+                            p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
+                        p.getActivePotionEffects().forEach(potionEffect -> {
+                            if (potionEffect.getType().equals(potion)) {
+                                p.removePotionEffect(potion);
+                                p.addPotionEffect(new PotionEffect(potion, 180, potionEffect.getAmplifier() + 1, false, false));
+                            }
+                        });
+                    }
+                    HCF_Timer.addBardTimer(bardplayer);
+                    new BukkitRunnable() {
+                        private final Location loc = bardplayer.getLocation();
+                        private int counts = 0;
 
-                bardplayer.sendMessage(Messages.bard_used_powerup
-                        .setAmount(String.valueOf(item.cost))
-                        .setBardEffects(
-                                bardplayer,
-                                getPotionName(item.effect.getName()),
-                                String.valueOf(getFactionMembersInDistance(bardplayer, 15).size())
-                        )
-                        .queue()
-                );
+                        @Override
+                        public void run() {
+                            if (bardplayer.isSneaking()) {
+                                cancel();
+                                return;
+                            }
+                            if (counts + 1 > 15)
+                                cancel();
+                            counts++;
+                            for (Player teammate : getFactionMembersInDistance(bardplayer, 15))
+                                Shapes.DrawCircle(teammate, loc, counts, 2, Effect.HAPPY_VILLAGER);
+                        }
+                    }.runTaskTimer(m, 0L, 0L);
+
+                    bardplayer.sendMessage(Messages.bard_used_powerup
+                            .setAmount(String.valueOf(item.cost))
+                            .setBardEffects(
+                                    bardplayer,
+                                    getPotionName(item.effect.getName()),
+                                    String.valueOf(getFactionMembersInDistance(bardplayer, 15).size())
+                            )
+                            .queue()
+                    );
+                }
             }
         }
     }
@@ -165,6 +176,7 @@ public class Bard implements HCF_Class {
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         hcf.setClass(Classes.BARD);
         hcf.setBardEnergy(0D);
+        Scoreboards.refresh(p);
     }
 
     @Override
@@ -181,6 +193,7 @@ public class Bard implements HCF_Class {
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         hcf.setClass(Classes.NONE);
         hcf.setBardEnergy(0D);
+        Scoreboards.refresh(p);
     }
 
     private static class Bard_Item {

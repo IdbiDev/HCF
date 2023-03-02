@@ -25,6 +25,7 @@ import java.util.Map;
 
 public class AdminScoreboard {
 
+    private static final MiscTimers miscTimers = new MiscTimers();
     private static final Main m = Main.getPlugin(Main.class);
     private static final DecimalFormat dfSharp = new DecimalFormat("0.0");
 
@@ -46,6 +47,7 @@ public class AdminScoreboard {
 
         int emptyCalc = 0;
         for (String line : timers) {
+
             if (line.contains("%spawntag%") && HCF_Timer.getCombatTime(p) <= 0.0) {
                 continue;
             } else if (line.contains("%ep_cd%") && HCF_Timer.getEpTime(p) <= 0.0) {
@@ -54,7 +56,7 @@ public class AdminScoreboard {
                 continue;
             } else if (line.contains("%bard_energy%") && player.bardEnergy <= 0.0) {
                 continue;
-            } else if (line.contains("%eotw%") && MiscTimers.getTimeOfEOTW() <= 0L) {
+            } else if (line.contains("%eotw%") && miscTimers.getTimeOfEOTW() <= 0L) {
                 continue;
             } else if (line.contains("%gapple_cd%") && HCF_Timer.get_Golden_Apple_Time(p) <= 0L) {
                 continue;

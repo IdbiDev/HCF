@@ -26,6 +26,7 @@ import static me.idbi.hcf.Classes.SubClasses.Assassin.TeleportBehindPlayer;
 
 
 public class onPlayerInteract implements Listener {
+    Bard bard = new Bard();
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
@@ -107,12 +108,12 @@ public class onPlayerInteract implements Listener {
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null) {
             if (player.playerClass == Classes.BARD) {
-                Bard.OhLetsBreakItDown(e.getPlayer());
+                bard.OhLetsBreakItDown(e.getPlayer());
             }
         }
         else if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {
             if (player.playerClass == Classes.BARD) {
-                Bard.OhLetsBreakItDown(e.getPlayer());
+                bard.OhLetsBreakItDown(e.getPlayer());
             }
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {

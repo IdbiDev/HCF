@@ -2,6 +2,7 @@ package me.idbi.hcf.Classes.SubClasses;
 
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.HCF_Class;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,6 +24,10 @@ public class Rogue implements HCF_Class, Listener {
         put(PotionEffectType.SPEED, 2);
         put(PotionEffectType.DAMAGE_RESISTANCE, 2);
     }};
+    public final double backstabDamageAmplifier = 100f;
+    public final boolean rogueEnabled = true;
+    public final boolean backstabEnabled = true;
+    public final int maxRogueInFaction = -1;
 
     @Override
     public boolean CheckArmor(Player p) {
@@ -54,6 +59,7 @@ public class Rogue implements HCF_Class, Listener {
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         hcf.setClass(Classes.ROGUE);
+        Scoreboards.refresh(p);
     }
 
     @Override
@@ -69,6 +75,7 @@ public class Rogue implements HCF_Class, Listener {
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         hcf.setClass(Classes.NONE);
+        Scoreboards.refresh(p);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

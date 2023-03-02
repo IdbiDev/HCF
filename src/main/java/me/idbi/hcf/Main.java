@@ -86,6 +86,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static AutoKoth autoKoth = new AutoKoth();
     private static ConfigManager configManager;
     private static Connection con;
+    private final MiscTimers miscTimers = new MiscTimers();
 
 
     // Egyszerű SQL Connection getter
@@ -243,14 +244,14 @@ public final class Main extends JavaPlugin implements Listener {
         }
 
         // Timers
-        MiscTimers.checkArmors();
-        MiscTimers.DTRTimer();
-        MiscTimers.bardEnergy();
-        MiscTimers.potionLimiter();
-        MiscTimers.autoSave();
-        MiscTimers.KOTHCountdown();
-        MiscTimers.cleanupFakeWalls();
-        MiscTimers.archerTagEffect();
+        miscTimers.checkArmors();
+        miscTimers.DTRTimer();
+        miscTimers.bardEnergy();
+        miscTimers.potionLimiter();
+        miscTimers.autoSave();
+        miscTimers.KOTHCountdown();
+        miscTimers.cleanupFakeWalls();
+        miscTimers.archerTagEffect();
 
         SpeedModifiers.asyncCacheBrewingStands();
         SpeedModifiers.speedBoost();

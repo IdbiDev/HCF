@@ -72,7 +72,7 @@ public class onPlayerMove implements Listener {
             Scoreboards.refresh(e.getPlayer());
         }
         if (player.playerClass == Classes.MINER) {
-            Miner.setInvisMode(e.getPlayer(), e.getTo().getY() <= Miner.min_y_value);
+            Miner.setInvisMode(e.getPlayer(), e.getTo().getY() <= Miner.invisibleLevel);
         }
         if (player.freezeStatus) {
             e.setCancelled(true);

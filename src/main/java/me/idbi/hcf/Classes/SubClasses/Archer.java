@@ -2,6 +2,7 @@ package me.idbi.hcf.Classes.SubClasses;
 
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.HCF_Class;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,7 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Archer implements HCF_Class {
-    public static final double ArcherTagDamageAmplifier = 100f;
+    public final double archerTagDamageAmplifier = 100f;
+    public final boolean archerClassEnabled = true;
+    public final boolean archerTagEnabled = true;
+    public final int maxArcherInFaction = -1;
+
     public static HashMap<Player, BukkitTask> archerTagEffects = new HashMap<>();
     private final HashMap<PotionEffectType, Integer> effect = new HashMap<>() {{
         put(PotionEffectType.SPEED, 2);
@@ -53,6 +58,7 @@ public class Archer implements HCF_Class {
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         hcf.setClass(Classes.ARCHER);
+        Scoreboards.refresh(p);
     }
 
     @Override
@@ -68,6 +74,7 @@ public class Archer implements HCF_Class {
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         hcf.setClass(Classes.NONE);
+        Scoreboards.refresh(p);
     }
 
 }

@@ -24,38 +24,50 @@ public class ClassSelector {
         }else if(playertools.getMetadata(p, "class").equalsIgnoreCase("Assassin")){
             assassin_class.removeEffects(p);
         }*/
-        if (rogue_class.CheckArmor(p)) {
-            if (clss != Classes.ROGUE) {
-                rogue_class.setEffect(p);
+
+        if(rogue_class.rogueEnabled) {
+            if (rogue_class.CheckArmor(p)) {
+                if (clss != Classes.ROGUE) {
+                    rogue_class.setEffect(p);
+                }
+            } else if (clss == Classes.ROGUE) {
+                rogue_class.removeEffects(p);
             }
-        } else if (clss == Classes.ROGUE) {
-            rogue_class.removeEffects(p);
-        }
-        //Archer class
-        if (archer_class.CheckArmor(p)) {
-            if (clss != Classes.ARCHER) {
-                archer_class.setEffect(p);
-            }
-        } else if (clss == Classes.ARCHER) {
-            archer_class.removeEffects(p);
-        }
-        //Bard class
-        if (bard_class.CheckArmor(p)) {
-            if (clss != Classes.BARD) {
-                bard_class.setEffect(p);
-            }
-        } else if (clss == Classes.BARD) {
-            bard_class.removeEffects(p);
-        }
-        //Miner class
-        if (miner_class.CheckArmor(p)) {
-            if (clss != Classes.MINER) {
-                miner_class.setEffect(p);
-            }
-        } else if (clss == Classes.MINER) {
-            miner_class.removeEffects(p);
         }
 
-        Scoreboards.refresh(p);
+        //Archer class
+        if(archer_class.archerClassEnabled) {
+            if (archer_class.CheckArmor(p)) {
+                if (clss != Classes.ARCHER) {
+                    archer_class.setEffect(p);
+                }
+            } else if (clss == Classes.ARCHER) {
+                archer_class.removeEffects(p);
+            }
+        }
+        //Bard class
+        if(bard_class.bardEnabled){
+            if (bard_class.CheckArmor(p)) {
+                if (clss != Classes.BARD) {
+                    bard_class.setEffect(p);
+                }
+            } else if (clss == Classes.BARD) {
+                bard_class.removeEffects(p);
+            }
+        }
+
+
+        //Miner class
+        if(miner_class.minerEnabled) {
+            if (miner_class.CheckArmor(p)) {
+                if (clss != Classes.MINER) {
+                    miner_class.setEffect(p);
+                }
+            } else if (clss == Classes.MINER) {
+                miner_class.removeEffects(p);
+            }
+        }
+
+
     }
 }
