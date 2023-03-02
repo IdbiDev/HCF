@@ -131,7 +131,8 @@ public class Scoreboards {
             if (line.contains("%customtimers%")) {
                 for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
                     if (customTimers.getValue().isActive()) {
-                        builder.setLine(scoreNumber, line.replace("%customtimers%", replaceVariables(customTimers.getValue().getFormatted(), p)));
+                        //builder.setLine(scoreNumber, line.replace("%customtimers%", replaceVariables(customTimers.getValue().getFormatted(), p)));
+                        replacedList.add(line.replace("%customtimers%", replaceVariables(customTimers.getValue().getFormatted(), p)));
                         scoreNumber++;
                     }
                 }
@@ -139,12 +140,31 @@ public class Scoreboards {
             }
             if(isContinue(p, line)) continue;
 
-            builder.setLine(scoreNumber, replaceVariables(line, p));
+            //builder.setLine(scoreNumber, replaceVariables(line, p));
+            replacedList.add(replaceVariables(line, p));
             scoreNumber++;
         }
         for (int i = scoreNumber; i < Math.max(Config.DefaultScoreboard.asStrList().size(), Config.StaffScoreboard.asStrList().size()); i++) {
-            builder.removeLine(i);
+            //builder.removeLine(i);
         }
+
+        ScoreboardLib lib = ScoreboardLib.start(m, new ScoreboardLib.ScoreboardTextProvider() {
+            @Override
+            public List<String> getScoreboardText() {
+                return replacedList;
+            }
+
+            @Override
+            public String getScoreboardTitle() {
+                return "Title";
+            }
+
+            @Override
+            public String format(Player p, String row) {
+                return row;
+            }
+        }, 20L);
+        lib.addPlayer(p);
     }
 
     public static void RefreshAll() {
