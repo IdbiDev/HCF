@@ -3,10 +3,9 @@ package me.idbi.hcf.Commands.FactionCommands;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.*;
+import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
-import org.bukkit.Bukkit;
+import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -55,70 +54,14 @@ public class FactionHomeCommand extends SubCommand implements Listener {
 
     @Override
     public void perform(Player p, String[] args) {
-        Faction faction = Playertools.getPlayerFaction(p);
-        if (faction == null) {
-            p.sendMessage(Messages.not_in_faction.language(p).queue());
+        if(HCF_Timer.getHomeTime(p) != 0) {
+            p.sendMessage(Messages.already_home_teleporting.language(p).queue());
             return;
         }
-        if (!Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_RANKS)) {
-            p.sendMessage(Messages.no_permission.language(p).queue());
-            return;
-        }
-        HashMap<String, Integer> map = new HashMap<String, Integer>() {{
-            put("X", p.getLocation().getBlockX());
-            put("Y", p.getLocation().getBlockY());
-            put("Z", p.getLocation().getBlockZ());
-            put("YAW", (int) p.getLocation().getYaw());
-            put("PITCH", (int) p.getLocation().getPitch());
-        }};
-        HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
-        if (claim != null) {
-            if (claim.faction.id == faction.id) {
-                faction.setHomeLocation(p.getLocation());
-
-                JSONObject object = new JSONObject(map);
-
-                // SQL_Connection.dbExecute(con, "UPDATE factions SET home = '?' WHERE ID='?'", object.toString(), String.valueOf(faction.id));
-
-                p.sendMessage(Messages.sethome_message.language(p).queue());
-
-                for (Player member : faction.getMembers()) {
-                    member.sendMessage(Messages.sethome_update_faction
-                            .language(member)
-                            .setPlayer(p)
-                            .setCoords(
-                                    p.getLocation().getBlockX(),
-                                    p.getLocation().getBlockY(),
-                                    p.getLocation().getBlockZ())
-                            .queue());
-                }
-            }
-        } else {
-            p.sendMessage(Messages.faction_dont_have_claim.language(p).queue());
-        }
+        teleportToHome(p);
+        addCooldown(p);
     }
-    private static void delayer(Player p, Location loc) {
-        new BukkitRunnable() {
-            int delay = Config.TeleportHome.asInt() * 20;
 
-            @Override
-            public void run() {
-                if (!teleportPlayers.contains(p)) {
-                    p.sendMessage(Messages.teleport_cancel.language(p).queue());
-                    cancel();
-                    return;
-                }
-
-                if (delay <= 0) {
-                    p.sendMessage(Messages.successfully_teleport.language(p).queue());
-                    p.teleport(loc.add(0.5, 0, 0.5));
-                    cancel();
-                    return;
-                }
-                delay -= 2;
-            }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0L, 2L);
-    }
     public static void teleportToHome(Player p) {
         Faction faction = Playertools.getPlayerFaction(p);
         if(faction == null){

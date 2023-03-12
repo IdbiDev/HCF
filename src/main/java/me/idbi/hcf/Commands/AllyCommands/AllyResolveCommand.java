@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class AllyResolveCommand extends SubCommand {
     @Override
     public String getName() {
-        return null;
+        return "resolve";
     }
 
     @Override

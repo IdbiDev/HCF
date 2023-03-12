@@ -2,13 +2,19 @@ package me.idbi.hcf.Tools;
 
 import me.idbi.hcf.Classes.SubClasses.Rogue;
 import me.idbi.hcf.Commands.FactionCommands.FactionHomeCommand;
+import me.idbi.hcf.Commands.FactionCommands.FactionSetHomeCommand;
+import me.idbi.hcf.Commands.FactionCommands.FactionStatsCommand;
+import me.idbi.hcf.Commands.FactionCommands.FactionStuckCommand;
+import me.idbi.hcf.BukkitCommands.UtilCommands.BackCommand;
+import me.idbi.hcf.BukkitCommands.UtilCommands.GodCommand;
+import me.idbi.hcf.Commands.LogoutCommand;
 import me.idbi.hcf.Elevator.ElevatorCreate;
 import me.idbi.hcf.Elevator.ElevatorInteract;
 import me.idbi.hcf.Events.Claim.*;
+import me.idbi.hcf.Events.*;
 import me.idbi.hcf.Events.Enchants.EnchantInventory;
 import me.idbi.hcf.Events.Enchants.TableEvent;
 import me.idbi.hcf.Events.Enchants.TableInteract;
-import me.idbi.hcf.Events.*;
 import me.idbi.hcf.FrakcioGUI.GUIEvents.*;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.DeleteRankConfirm;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
@@ -50,7 +56,8 @@ public class SetupEvents {
 
         getServer().getPluginManager().registerEvents(new onBowShoot(), Main.getPlugin(Main.class));
 
-        getServer().getPluginManager().registerEvents(new FactionHomeCommand(), Main.getPlugin(Main.class));
+        pm.registerEvents(new FactionSetHomeCommand(), Main.getPlugin(Main.class));
+        pm.registerEvents(new FactionHomeCommand(), Main.getPlugin(Main.class));
 
         getServer().getPluginManager().registerEvents(new InteractShopSign(), Main.getPlugin(Main.class));
 

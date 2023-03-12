@@ -1,5 +1,6 @@
 package me.idbi.hcf.HistoryGUI.History;
 
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.HistoryGUI.GUITools;
 import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
 import me.idbi.hcf.Tools.Objects.Faction;
@@ -9,7 +10,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class HistoryItems_1 {
 
@@ -89,7 +93,7 @@ public class HistoryItems_1 {
     }
 
     public static String designBalanceHistory(HistoryEntrys.BalanceEntry entry) {
-        TimeZone timezone = TimeZone.getTimeZone("Europe/Budapest");
+        TimeZone timezone = TimeZone.getTimeZone(Config.Timezone.asStr());
         Date date = new Date(entry.time);
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         format.setTimeZone(timezone);
@@ -102,7 +106,7 @@ public class HistoryItems_1 {
     }
 
     public static String designKickHistory(HistoryEntrys.KickEntry entry) {
-        TimeZone timezone = TimeZone.getTimeZone("Europe/Budapest");
+        TimeZone timezone = TimeZone.getTimeZone(Config.Timezone.asStr());
         Date date = new Date(entry.time);
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         format.setTimeZone(timezone);
@@ -111,7 +115,7 @@ public class HistoryItems_1 {
     }
 
     public static String designJoinLeft(HistoryEntrys.JoinLeftEntry entry) {
-        TimeZone timezone = TimeZone.getTimeZone("Europe/Budapest");
+        TimeZone timezone = TimeZone.getTimeZone(Config.Timezone.asStr());
         Date date = new Date(entry.time);
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         format.setTimeZone(timezone);

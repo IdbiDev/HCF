@@ -46,6 +46,7 @@ public class SQL_Generator {
                               `kills` int(255) NOT NULL DEFAULT 0,
                               `deaths` int(255) NOT NULL DEFAULT 0,
                               `money` int(255) NOT NULL DEFAULT 0,
+                              `lives` int(255) NOT NULL DEFAULT 0,
                               `uuid` text DEFAULT NULL,
                               `language` varchar(255) NOT NULL DEFAULT '%default_language%',
                               `statistics` longtext NOT NULL DEFAULT '%player_statistics%',

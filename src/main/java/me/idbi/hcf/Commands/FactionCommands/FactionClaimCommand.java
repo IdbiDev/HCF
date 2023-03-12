@@ -7,10 +7,9 @@ import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.HCF_Claiming;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.HashMap;
 
 public class FactionClaimCommand extends SubCommand {
     @Override
@@ -35,7 +34,7 @@ public class FactionClaimCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command." + getName();
+        return "factions.commands." + getName();
     }
 
     @Override
@@ -49,6 +48,10 @@ public class FactionClaimCommand extends SubCommand {
         if (Playertools.getPlayerFaction(p) != null) {
             if (!Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_ALL)) {
                 p.sendMessage(Messages.no_permission.language(p).queue());
+                return;
+            }
+            if(Config.MaxClaims.asInt() > hcfPlayer.faction.claims.size()) {
+
                 return;
             }
             if (p.getInventory().firstEmpty() != -1) {

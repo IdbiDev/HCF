@@ -2,6 +2,7 @@ package me.idbi.hcf.Classes.SubClasses;
 
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.HCF_Class;
+import me.idbi.hcf.CustomFiles.Configs.ClassConfig;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Particles.Shapes;
@@ -25,24 +26,27 @@ import java.util.Map;
 import static me.idbi.hcf.Tools.Playertools.getFactionMembersInDistance;
 
 public class Bard implements HCF_Class {
-    public boolean bardEnabled = true;
-    public boolean boostEnabled = true;
-    public boolean simpleBoostEnabled = true;
-    public int maxBardEnergy = 100;
-    public double bardEnergyMultiplier = 1f;
-    //todo: Effects enable - disable using config
-
     private final Main m = Main.getPlugin(Main.class);
-    private final ArrayList<Bard_Item> bard_items = new ArrayList<>() {{
-        add(new Bard_Item(Material.BLAZE_POWDER, PotionEffectType.INCREASE_DAMAGE, m.getConfig().getInt("strength")));
-        add(new Bard_Item(Material.SUGAR, PotionEffectType.SPEED, m.getConfig().getInt("speed")));
-        add(new Bard_Item(Material.FEATHER, PotionEffectType.JUMP, m.getConfig().getInt("jump_boost")));
-        add(new Bard_Item(Material.IRON_INGOT, PotionEffectType.DAMAGE_RESISTANCE, m.getConfig().getInt("resistance")));
-        add(new Bard_Item(Material.MAGMA_CREAM, PotionEffectType.FIRE_RESISTANCE, m.getConfig().getInt("fire_resistance")));
-        add(new Bard_Item(Material.REDSTONE, PotionEffectType.REGENERATION, m.getConfig().getInt("regeneration")));
-        add(new Bard_Item(Material.GHAST_TEAR, PotionEffectType.ABSORPTION, m.getConfig().getInt("absorption")));
-        add(new Bard_Item(Material.GOLD_INGOT, PotionEffectType.FAST_DIGGING, m.getConfig().getInt("haste")));
+    public final boolean bardEnabled = ClassConfig.BardEnabled.asBoolean();
+    public final boolean boostEnabled = ClassConfig.BoostEnabled.asBoolean();
+    public final boolean simpleBoostEnabled = ClassConfig.SimpleBoostEnabled.asBoolean();
+    public final int maxBardEnergy = ClassConfig.MaxBardEnergy.asInt();
+    public final double bardEnergyMultiplier = ClassConfig.BardEnergyMultiplier.asDouble();
+    public final int maxBardInFaction = ClassConfig.MaxBardInFaction.asInt();
+    public final boolean enableNewBard = ClassConfig.UseNewBardSystem.asBoolean();
+    public final boolean enableEffects = ClassConfig.UseEffects.asBoolean();
 
+
+    private final ArrayList<Bard_Item> bard_items = new ArrayList<>() {{
+        //todo: Effects enable - disable using config
+        add(new Bard_Item(Material.BLAZE_POWDER, PotionEffectType.INCREASE_DAMAGE, 2));
+        add(new Bard_Item(Material.SUGAR, PotionEffectType.SPEED, 2));
+        add(new Bard_Item(Material.FEATHER, PotionEffectType.JUMP, 2));
+        add(new Bard_Item(Material.IRON_INGOT, PotionEffectType.DAMAGE_RESISTANCE, 10));
+        add(new Bard_Item(Material.MAGMA_CREAM, PotionEffectType.FIRE_RESISTANCE, 10));
+        add(new Bard_Item(Material.REDSTONE, PotionEffectType.REGENERATION, 10));
+        add(new Bard_Item(Material.GHAST_TEAR, PotionEffectType.ABSORPTION, 2));
+        add(new Bard_Item(Material.GOLD_INGOT, PotionEffectType.FAST_DIGGING, 2));
     }};
     private final HashMap<PotionEffectType, Integer> effect = new HashMap<>() {{
         put(PotionEffectType.SPEED, 0);
@@ -51,20 +55,39 @@ public class Bard implements HCF_Class {
     }};
 
     public void useSimpleBardEffect(Player bardplayer) {
-        //Hotbar loop
-        for (int i = 0; i <= 8; i++) {
-            //Ha semmi nincs a kezébe, skippeljük
-            if (bardplayer.getInventory().getItem(i) == null) continue;
-            //Ha van, és bard item akkor
-            Bard_Item item = findBardItem(bardplayer.getInventory().getItem(i));
-            if (item != null) {
-                //Végig megyünk az összes frakciótárson a közelbe
-                for (Player p : getFactionMembersInDistance(bardplayer, 10)) {
-                    PotionEffectType potion = item.effect;
-                    p.addPotionEffect(new PotionEffect(potion, 180, 0, false, false));
-                    Shapes.DrawCircle(p, bardplayer.getLocation(), 10, 2, Effect.HAPPY_VILLAGER);
+        if(simpleBoostEnabled) {
+            //Hotbar loop
+            if(enableNewBard) {
+                for (int i = 0; i <= 8; i++) {
+                    //Ha semmi nincs a kezébe, skippeljük
+                    if (bardplayer.getInventory().getItem(i) == null) continue;
+                    //Ha van, és bard item akkor
+                    Bard_Item item = findBardItem(bardplayer.getInventory().getItem(i));
+                    if (item != null) {
+                        //Végig megyünk az összes frakciótárson a közelbe
+                        for (Player p : getFactionMembersInDistance(bardplayer, 10)) {
+                            PotionEffectType potion = item.effect;
+                            p.addPotionEffect(new PotionEffect(potion, 180, 0, false, false));
+                            if(enableEffects && !bardplayer.isSneaking())
+                                Shapes.DrawCircle(p, bardplayer.getLocation(), 10, 2, Effect.HAPPY_VILLAGER);
+                        }
+                        //bardplayer.getWorld().playEffect(new Location(bardplayer.getWorld(),bardplayer.getLocation().getBlockX(),bardplayer.getLocation().getBlockY(),bardplayer.getLocation().getBlockZ()), Effect.HAPPY_VILLAGER,Effect.HAPPY_VILLAGER.getId());
+                    }
                 }
-                //bardplayer.getWorld().playEffect(new Location(bardplayer.getWorld(),bardplayer.getLocation().getBlockX(),bardplayer.getLocation().getBlockY(),bardplayer.getLocation().getBlockZ()), Effect.HAPPY_VILLAGER,Effect.HAPPY_VILLAGER.getId());
+            }else {
+                //Ha van, és bard item akkor
+                ItemStack main = bardplayer.getItemInHand();
+                Bard_Item item = findBardItem(main);
+                if (item != null) {
+                    //Végig megyünk az összes frakciótárson a közelbe
+                    for (Player p : getFactionMembersInDistance(bardplayer, 10)) {
+                        PotionEffectType potion = item.effect;
+                        p.addPotionEffect(new PotionEffect(potion, 180, 0, false, false));
+                        if(enableEffects && !bardplayer.isSneaking())
+                            Shapes.DrawCircle(p, bardplayer.getLocation(), 10, 2, Effect.HAPPY_VILLAGER);
+                    }
+                    //bardplayer.getWorld().playEffect(new Location(bardplayer.getWorld(),bardplayer.getLocation().getBlockX(),bardplayer.getLocation().getBlockY(),bardplayer.getLocation().getBlockZ()), Effect.HAPPY_VILLAGER,Effect.HAPPY_VILLAGER.getId());
+                }
             }
         }
     }
@@ -122,7 +145,8 @@ public class Bard implements HCF_Class {
 
                         @Override
                         public void run() {
-                            if (bardplayer.isSneaking()) {
+
+                            if (bardplayer.isSneaking() || !enableEffects) {
                                 cancel();
                                 return;
                             }

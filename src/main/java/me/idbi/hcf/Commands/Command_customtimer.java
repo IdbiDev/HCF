@@ -62,7 +62,7 @@ public class Command_customtimer implements CommandExecutor {
                             p.sendMessage("§e/customtimer create <name> <time>h|m <text_with_underline> §7- Create custom timer");
                             p.sendMessage("§e/customtimer delete <name> §7- Delete custom timer");
                             p.sendMessage("§e/customtimer settext <name> <text> §7- Modify the text to the new text");
-                            p.sendMessage("§e/customtimer settime <name> <time>h|m §7- Sets the time to the new time");
+                            p.sendMessage("§e/customtimer settime <name> <time>h|m §7- Sets the time to the new time"); // Koba a kurva anyád neke KURVA ANYÁDÁÁÁDl jó éjt gevci
                             p.sendMessage("§c/customtimer list §7- Lists the custom timers");
                         }
                     }

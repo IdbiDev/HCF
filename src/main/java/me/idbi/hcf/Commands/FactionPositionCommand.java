@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import java.sql.Connection;
 import java.util.Map;
 
-public class fc_position implements CommandExecutor {
+public class FactionPositionCommand implements CommandExecutor {
 
     private static final Connection con = Main.getConnection();
 

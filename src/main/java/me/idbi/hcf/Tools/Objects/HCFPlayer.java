@@ -4,10 +4,8 @@ import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.FactionRankManager;
-import me.idbi.hcf.Tools.HCF_Claiming;
-import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.Tools.SQL_Connection;
+import me.idbi.hcf.Tools.*;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -15,7 +13,11 @@ import org.bukkit.entity.Player;
 import org.json.JSONObject;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
+
+import static me.idbi.hcf.Tools.HCF_Timer.addPvPTimerCoolDownSpawn;
 
 public class HCFPlayer {
 
@@ -39,6 +41,10 @@ public class HCFPlayer {
     public boolean staffChat;
     public FactionRankManager.Rank rank;
     public PlayerStatistic playerStatistic;
+    public boolean isDeathBanned;
+    public int lives;
+    public long deathTime;
+    public boolean online;
 
     public HCFPlayer(UUID uuid,
                      int deaths,
@@ -47,13 +53,15 @@ public class HCFPlayer {
                      int money,
                      PlayerStatistic playerStatistic,
                      String rankName,
-                     String language
+                     String language,
+                     long deathTime
 
     ) {
         try {
             this.uuid = uuid;
             this.name = Bukkit.getOfflinePlayer(this.uuid).getName();
             this.money = money;
+            Main.getInstance().playerBank.put(uuid, (double) money);
             this.faction = faction;
             if (this.faction != null) {
                 this.rank = this.faction.getRank(rankName);
@@ -72,6 +80,14 @@ public class HCFPlayer {
             this.playerStatistic = playerStatistic;
             this.playerStatistic.kills = kills;
             this.playerStatistic.deaths = deaths;
+            this.online = false;
+            if(deathTime != 0) {
+                this.isDeathBanned = true;
+                this.deathTime = deathTime;
+            }else{
+                this.isDeathBanned = false;
+                this.deathTime = 0;
+            }
             /*
             SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',money='?'",
                     this.name, this.uuid.toString(), Config.default_balance.asInt() + "");*/
@@ -100,6 +116,14 @@ public class HCFPlayer {
 
         return getPlayer(p);
     }
+    public static HCFPlayer getPlayer(String name) {
+        for (HCFPlayer p : Main.playerCache.values()){
+            if(p.name.equalsIgnoreCase(name)){
+                return p;
+            }
+        }
+        return null;
+    }
 
     public static HCFPlayer getPlayer(UUID uuid) {
         if (Main.playerCache.containsKey(uuid)) {
@@ -113,7 +137,7 @@ public class HCFPlayer {
                     Config.DefaultBalance.asInt(),
                     new PlayerStatistic(new JSONObject(PlayerStatistic.defaultStats)),
                     null,
-                    Config.DefaultLanguage.asStr()
+                    Config.DefaultLanguage.asStr(),0
             );
         }
 
@@ -128,7 +152,7 @@ public class HCFPlayer {
                 Config.DefaultBalance.asInt(),
                 new PlayerStatistic(new JSONObject(PlayerStatistic.defaultStats)),
                 null,
-                Config.DefaultLanguage.asStr()
+                Config.DefaultLanguage.asStr(),0
         );
     }
 
@@ -257,7 +281,65 @@ public class HCFPlayer {
     public boolean inFaction() {
         return faction != null;
     }
+    public void setDeathTime(long time) {
+        this.deathTime = time;
+    }
+    public long getDeathTime() {
+        return this.deathTime;
+    }
+    public void setDeathBanned(boolean state) {
+        this.isDeathBanned = state;
+    }
+    public boolean isDeathBanned() {
+        return this.isDeathBanned;
+    }
+    public void setLives(int amount) {
+        this.lives = amount;
+    }
+    public void addLives(int amount) {
+        this.lives += amount;
+    }
+    public int getLives() {
+        return this.lives;
+    }
+    public void banHCFPlayer() {
+        this.isDeathBanned = true;
+        this.deathTime = System.currentTimeMillis() + Main.deathbanTime;
+        if (!Main.deathban) {
+            String str = Config.SpawnLocation.asStr();
+            Location spawn = new Location(
+                    Bukkit.getWorld(Config.WorldName.asStr()),
+                    Integer.parseInt(str.split(" ")[0]),
+                    Integer.parseInt(str.split(" ")[1]),
+                    Integer.parseInt(str.split(" ")[2]),
+                    Integer.parseInt(str.split(" ")[3]),
+                    Integer.parseInt(str.split(" ")[4])
+            );
+            Player p = Bukkit.getPlayer(this.uuid);
+            if(p != null) {
+                p.setHealth(p.getMaxHealth());
+                p.setFoodLevel(20);
+                p.setFallDistance(0);
+                p.getInventory().clear();
+                addPvPTimerCoolDownSpawn(p);
+                this.isDeathBanned = false;
+                this.deathTime = 0L;
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        p.teleport(spawn);
+                    }
+                }.runTaskLater(Main.getPlugin(Main.class), 2L);
+            }
 
+        } else {
+            Player p = Bukkit.getPlayer(this.uuid);
+            if(this.online || p != null) {
+                p.kickPlayer(Messages.deathban_kick.language(p).setFormattedTime((int) ((Main.deathbanTime / 1000))).queue());
+            }
+           BanHandler.banPlayerInHCF(this);
+        }
+    }
     /**
      * Get location with color
      *
@@ -293,7 +375,7 @@ public class HCFPlayer {
         if (this.name == null) return;
 
         SQL_Connection.dbExecute(con,
-                "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?' WHERE UUID='?'",
+                "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?',lives='?' WHERE UUID='?'",
                 this.faction == null ? 0 + "" : this.faction.id + "",
                 this.rank == null ? "None" : this.rank.name,
                 this.playerStatistic.kills + "",
@@ -301,6 +383,7 @@ public class HCFPlayer {
                 this.money + "",
                 this.name,
                 this.language,
+                this.lives+"",
                 this.uuid.toString());
         saveStats();
     }

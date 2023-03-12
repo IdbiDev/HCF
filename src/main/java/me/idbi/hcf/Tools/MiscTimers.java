@@ -177,23 +177,33 @@ public class MiscTimers {
                     if (HCF_Timer.getPvPTimerCoolDownSpawn(player) != 0) {
                         shouldRefresh = true;
                     }
-                    if (HCF_Timer.getPvPTimerCoolDownSpawn(player) != 0) {
+//                    if (HCF_Timer.getPvPTimerCoolDownSpawn(player) != 0) {
+//                        shouldRefresh = true;
+//                    }
+                    if (HCF_Timer.getLogoutTime(player) != 0) {
                         shouldRefresh = true;
+                    }else{
                     }
                     if (Main.SOTWEnabled || Main.EOTWENABLED) {
                         shouldRefresh = true;
                     }
+                    HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
+                    if (hcfPlayer.inDuty) {
+                        AdminScoreboard.refresh(player);
+                    }
+                    if (!(hcfPlayer.bardEnergy >= bard.maxBardEnergy))
+                        shouldRefresh = true;
                     if (HCF_Timer.getPvPTimerCoolDownSpawn(player) == 0 && HCF_Timer.getCombatTime(player) == 0) {
                         DeleteWallsForPlayer(player);
                     }
                     if (shouldRefresh)
                         Scoreboards.refresh(player);
+                        //Scoreboards.refresh(player);
                     //Class selector
-                    HCFPlayer hcf = HCFPlayer.getPlayer(player);
-                    if (hcf.playerClass != Classes.BARD) continue;
-                    if (!(hcf.bardEnergy >= 100D)) {
-                        hcf.bardEnergy += 1D;
-                        Scoreboards.refresh(player);
+                    //HCFPlayer hcf = HCFPlayer.getPlayer(player);
+                    if (hcfPlayer.playerClass != Classes.BARD) continue;
+                    if (!(hcfPlayer.bardEnergy >= bard.maxBardEnergy)) {
+                        hcfPlayer.bardEnergy += 0.1 * bard.bardEnergyMultiplier;
                     }
                 }
             }
@@ -242,7 +252,7 @@ public class MiscTimers {
                     }
                 }
             }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 1);
+        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }
 
     public void cleanupFakeWalls() {
@@ -282,7 +292,7 @@ public class MiscTimers {
                 }
 
             }
-        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 1);
+        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 20);
     }
 
     public void archerTagEffect() {

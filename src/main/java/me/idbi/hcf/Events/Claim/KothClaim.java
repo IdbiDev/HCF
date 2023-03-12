@@ -1,7 +1,6 @@
 package me.idbi.hcf.Events.Claim;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.HCF_Claiming;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Material;

@@ -17,6 +17,8 @@ public class HCF_Timer {
     public static final HashMap<UUID, Long> BardCooldown = new HashMap<>();
     private static final HashMap<UUID, Long> Archertimers = new HashMap<>();
     private static final HashMap<UUID, Long> eptimers = new HashMap<>();
+    private static final HashMap<UUID, Long> logoutTimers = new HashMap<>();
+    private static final HashMap<UUID, Long> homeTimers = new HashMap<>();
     // Ms >> Duration
     private static final int combatTimerDuration = Config.CombatTag.asInt() * 1000;
     // Ms >> Duration
@@ -29,6 +31,8 @@ public class HCF_Timer {
     private static final int OP_Golden_Apple_Cooldown = Config.EnchantedGoldenApple.asInt() * 1000;
     private static final int PvpTimerDuration = Config.PvPTimer.asInt() * 1000;
     private static final int BardCooldownDuration = Config.BardEnergy.asInt() * 1000;
+    private static final int LogoutCooldownDuration = Config.Logout.asInt() * 1000;
+    private static final int HomeCooldownDuration = Config.Logout.asInt() * 1000;
 
     public static boolean addCombatTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
@@ -40,6 +44,98 @@ public class HCF_Timer {
             timers.put(player.getUniqueId(), System.currentTimeMillis() + combatTimerDuration);
             return false;
         }
+    }
+    public static boolean addLogoutTimer(Player player) {
+        // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
+        if (!logoutTimers.containsKey(player.getUniqueId())) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            logoutTimers.put(player.getUniqueId(), System.currentTimeMillis() + LogoutCooldownDuration);
+            return true;
+        } else {
+            logoutTimers.put(player.getUniqueId(), System.currentTimeMillis() + LogoutCooldownDuration);
+            return false;
+        }
+    }
+    public static long getLogoutTime(Player player) {
+        // Ha van rajta CombatTimer
+        if (logoutTimers.containsKey(player.getUniqueId())) {
+            //5600                            5000+500
+            if (System.currentTimeMillis() >= logoutTimers.get(player.getUniqueId())) {
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                logoutTimers.remove(player.getUniqueId());
+                Scoreboards.refresh(player);
+                player.kickPlayer("LOGOUT GECI");
+                return 0;
+            } else {
+                // Ellenkező esetben: Van rajta
+                //     5000 + 500ms      -     5000ms
+                return logoutTimers.get(player.getUniqueId()) - System.currentTimeMillis();
+            }
+        } else {
+            return 0;
+        }
+    }
+    public static boolean addHomeTimer(Player player) {
+        // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
+        if (!homeTimers.containsKey(player.getUniqueId())) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            homeTimers.put(player.getUniqueId(), System.currentTimeMillis() + HomeCooldownDuration);
+            return true;
+        } else {
+            homeTimers.put(player.getUniqueId(), System.currentTimeMillis() + HomeCooldownDuration);
+            return false;
+        }
+    }
+    public static long getHomeTime(Player player) {
+        // Ha van rajta CombatTimer
+        if (homeTimers.containsKey(player.getUniqueId())) {
+            //5600                            5000+500
+            if (System.currentTimeMillis() >= homeTimers.get(player.getUniqueId())) {
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                //homeTimers.remove(player.getUniqueId());
+                Scoreboards.refresh(player);
+                return 0;
+            } else {
+                // Ellenkező esetben: Van rajta
+                //     5000 + 500ms      -     5000ms
+                return homeTimers.get(player.getUniqueId()) - System.currentTimeMillis();
+            }
+        } else {
+            return 0;
+        }
+    }
+    public static boolean removeHomeTimer(Player player) {
+        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        if (homeTimers.containsKey(player.getUniqueId())) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            homeTimers.remove(player.getUniqueId());
+            return true;
+        } else {
+            return true;
+        }
+
+    }
+    public static boolean removeStuckTimer(Player player) {
+        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        if (stuckTimers.containsKey(player.getUniqueId())) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            stuckTimers.remove(player.getUniqueId());
+            return true;
+        } else {
+            return true;
+        }
+
+    }
+    public static boolean removeLogoutTimer(Player player) {
+        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        if (logoutTimers.containsKey(player.getUniqueId())) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            logoutTimers.remove(player.getUniqueId());
+            return true;
+        } else {
+            return true;
+        }
+
     }
 
     public static boolean addStuckTimer(Player player) {

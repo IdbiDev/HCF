@@ -48,7 +48,7 @@ public class FactionCreateCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command." + getName();
+        return "factions.commands." + getName();
     }
 
     @Override

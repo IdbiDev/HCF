@@ -53,8 +53,8 @@ public class PlayerStatistic {
         }
         MoneySpend = Integer.parseInt(String.valueOf(mainJSON.get("MoneySpend")));
         MoneyEarned = Integer.parseInt(String.valueOf(mainJSON.get("MoneyEarned")));
-        startDate = Long.parseLong(String.valueOf(mainJSON.get("startDate")));
-        lastLogin = Long.parseLong(String.valueOf(mainJSON.get("lastLogin")));
+        startDate = Long.parseLong(String.valueOf(mainJSON.get("startDate"))) == 0 ? new Date().getTime() : Long.parseLong(String.valueOf(mainJSON.get("startDate")));
+        lastLogin = Long.parseLong(String.valueOf(mainJSON.get("lastLogin"))) == 0 ? new Date().getTime() : Long.parseLong(String.valueOf(mainJSON.get("lastLogin")));
         TimePlayed = Long.parseLong(String.valueOf(mainJSON.get("TimePlayed")));
     }
 

@@ -13,7 +13,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 
-import static me.idbi.hcf.Main.*;
+import static me.idbi.hcf.Main.brewingSpeedMultiplier;
+import static me.idbi.hcf.Main.cookSpeedMultiplier;
 
 public class SpeedModifiers {
     public static final ArrayList<BrewingStand> brewingStands = new ArrayList<>();

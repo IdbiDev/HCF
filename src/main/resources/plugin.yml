@@ -3,19 +3,22 @@ version: '${project.version}'
 main: me.idbi.hcf.Main
 #api-version: 1.8
 prefix: 'HCF+'
-authors: [ Idbi, kbalu ]
+authors: [ "Idbi", "kbalu" ]
 description: FÜR PLAYERS WO WANNA PLAY some HCF
 softdepend:
   - Multiverse-Core
   - HCF-
+depend:
+  - Vault
   - ProtocolLib
 loadbefore:
   - HCF-
+  - ProtocolLib
 
 commands:
   faction:
     aliases: [ f, factions ]
-    description: All HCF faction commands
+    description: HCF+ Faction Commands
     #usage: /<command> help
   admin:
     aliases: [ a, ad ]
@@ -26,13 +29,22 @@ commands:
     description: Gives your position to your faction!
   koth:
     aliases: [ k, kh, pornhub ]
-    description: HCF Koth commands
+    description: HCF+ Koth commands
     #usage: /<command> help
   setuplogs:
   customtimer:
     aliases: [ ct, customt, ctimer ]
   ally:
     description: HCF+ ally functions
+  revive:
+    description: Revive any dead player! Used with cooldown.
+  logout:
+    description: This will log you out safely.
+  reclaim:
+    description: reclaim lol
+  back:
+  god:
+
 
 permissions:
   factions.reload:
@@ -48,7 +60,11 @@ permissions:
       factions.command.enchantinfo,
       factions.command.enchantbook,
       factions.command.stats,
-      factions.admin.customtimer
+      factions.admin.customtimer,
+      factions.command.revive,
+      factions.commands.resetclaim,
+      factions.commands.back.others,
+      factions.commands.back
     ]
   factions.admin.teleport.bypass:
     default: op
@@ -66,3 +82,13 @@ permissions:
     default: op
   factions.admin.customtimer:
     default: op
+  factions.command.revive:
+    default: op
+  factions.commands.resetclaim:
+    default: op
+  factions.commands.back:
+    default: true
+  factions.commands.back.others:
+    default: true
+  factions.commands.factioncall:
+    default: true

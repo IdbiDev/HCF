@@ -18,7 +18,7 @@ import static me.idbi.hcf.Koth.Koth.*;
 import static me.idbi.hcf.Tools.HCF_Claiming.ClaimTypes;
 import static me.idbi.hcf.Tools.HCF_Claiming.KothPrepare;
 
-public class koth implements CommandExecutor, TabCompleter {
+public class KothCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player p) {

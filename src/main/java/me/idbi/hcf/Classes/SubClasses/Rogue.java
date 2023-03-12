@@ -2,6 +2,7 @@ package me.idbi.hcf.Classes.SubClasses;
 
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.HCF_Class;
+import me.idbi.hcf.CustomFiles.Configs.ClassConfig;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Location;
@@ -24,10 +25,10 @@ public class Rogue implements HCF_Class, Listener {
         put(PotionEffectType.SPEED, 2);
         put(PotionEffectType.DAMAGE_RESISTANCE, 2);
     }};
-    public final double backstabDamageAmplifier = 100f;
-    public final boolean rogueEnabled = true;
-    public final boolean backstabEnabled = true;
-    public final int maxRogueInFaction = -1;
+    public final double backstabDamageAmplifier = ClassConfig.BackstabDamageAmplifier.asDouble();
+    public final boolean rogueEnabled = ClassConfig.RogueEnabled.asBoolean();
+    public final boolean backstabEnabled = ClassConfig.BackstabEnabled.asBoolean();
+    public final int maxRogueInFaction = ClassConfig.MaxRogueInFaction.asInt();
 
     @Override
     public boolean CheckArmor(Player p) {
@@ -81,6 +82,7 @@ public class Rogue implements HCF_Class, Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent e) {
         if (e.isCancelled()) return;
+        if(!backstabEnabled) return;
         if (e.getDamager() instanceof Player damager) {
             if (e.getEntity() instanceof Player victim) {
                 HCFPlayer hcf = HCFPlayer.getPlayer(damager);
@@ -95,7 +97,7 @@ public class Rogue implements HCF_Class, Listener {
                     double tvecz = Math.cos(Math.toRadians(targetLoc.getPitch())) * Math.cos(Math.toRadians(targetLoc.getYaw()));
                     double dot = tvecx * pvecx + tvecy * pvecy + tvecz * pvecz;
                     if (dot > 0.6D) {
-                        e.setDamage(e.getDamage() * 2);
+                        e.setDamage(e.getDamage() + (e.getDamage() * backstabDamageAmplifier / 100));
                         damager.playSound(
                                 damager.getLocation(),
                                 Sound.ITEM_BREAK, 1F, 1F);

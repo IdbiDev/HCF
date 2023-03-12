@@ -49,7 +49,7 @@ public class FactionLeaveCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command." + getName();
+        return "factions.commands." + getName();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class FactionLeaveCommand extends SubCommand {
 
                 SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?' WHERE uuid = '?'", "None", "0", p.getUniqueId().toString());
 
-                p.sendMessage(Messages.leave_message.language(p).queue());
+                p.sendMessage(Messages.player_leaving_faction_message.language(p).queue());
 
                 HCFPlayer hcf = HCFPlayer.getPlayer(p);
                 final String rankForLejjebb = hcf.rank.name;
@@ -74,7 +74,7 @@ public class FactionLeaveCommand extends SubCommand {
                 //f.removePrefixPlayer(p);
 
                 for (Player member : f.getMembers()) {
-                    member.sendMessage(Messages.bc_leave_message.language(member).setPlayer(p).queue());
+                    member.sendMessage(Messages.member_leave_faction.language(member).setPlayer(p).queue());
                 }
 
                 Scoreboards.refresh(p);

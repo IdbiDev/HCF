@@ -1,8 +1,9 @@
 package me.idbi.hcf.Classes;
 
 import me.idbi.hcf.Classes.SubClasses.*;
-import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.entity.Player;
 
 public class ClassSelector {
@@ -16,6 +17,8 @@ public class ClassSelector {
 
         HCFPlayer player = HCFPlayer.getPlayer(p);
         Classes clss = player.playerClass;
+        Faction faction = player.faction;
+
         //Assassin class
         /*if(assassin_class.CheckArmor(p)){
             if (!playertools.getMetadata(p, "class").equalsIgnoreCase("Assassin")) {
@@ -25,49 +28,50 @@ public class ClassSelector {
             assassin_class.removeEffects(p);
         }*/
 
-        if(rogue_class.rogueEnabled) {
-            if (rogue_class.CheckArmor(p)) {
+
+        if (rogue_class.CheckArmor(p)) {
+            if (rogue_class.rogueEnabled && (rogue_class.maxRogueInFaction >= Playertools.getClassesInFaction(faction, Classes.ROGUE).size() + 1 || rogue_class.maxRogueInFaction == -1)) {
                 if (clss != Classes.ROGUE) {
                     rogue_class.setEffect(p);
                 }
-            } else if (clss == Classes.ROGUE) {
-                rogue_class.removeEffects(p);
             }
+        } else if (clss == Classes.ROGUE) {
+            rogue_class.removeEffects(p);
         }
-
         //Archer class
-        if(archer_class.archerClassEnabled) {
-            if (archer_class.CheckArmor(p)) {
+
+        if (archer_class.CheckArmor(p)) {
+            if (archer_class.archerClassEnabled && (archer_class.maxArcherInFaction >= Playertools.getClassesInFaction(faction, Classes.ARCHER).size() + 1 || archer_class.maxArcherInFaction == -1)) {
                 if (clss != Classes.ARCHER) {
                     archer_class.setEffect(p);
                 }
-            } else if (clss == Classes.ARCHER) {
-                archer_class.removeEffects(p);
             }
+        } else if (clss == Classes.ARCHER) {
+            archer_class.removeEffects(p);
         }
         //Bard class
-        if(bard_class.bardEnabled){
-            if (bard_class.CheckArmor(p)) {
+
+        if (bard_class.CheckArmor(p)) {
+            if (bard_class.bardEnabled && ((bard_class.maxBardInFaction >= Playertools.getClassesInFaction(faction, Classes.BARD).size() + 1) || bard_class.maxBardInFaction == -1)) {
                 if (clss != Classes.BARD) {
                     bard_class.setEffect(p);
                 }
-            } else if (clss == Classes.BARD) {
-                bard_class.removeEffects(p);
             }
+        } else if (clss == Classes.BARD) {
+            bard_class.removeEffects(p);
         }
 
 
         //Miner class
-        if(miner_class.minerEnabled) {
-            if (miner_class.CheckArmor(p)) {
+
+        if (miner_class.CheckArmor(p)) {
+            if (miner_class.minerEnabled && ((miner_class.maxMinerInFaction >= Playertools.getClassesInFaction(faction, Classes.MINER).size() + 1) || miner_class.maxMinerInFaction == -1)) {
                 if (clss != Classes.MINER) {
                     miner_class.setEffect(p);
                 }
-            } else if (clss == Classes.MINER) {
-                miner_class.removeEffects(p);
             }
+        } else if (clss == Classes.MINER) {
+            miner_class.removeEffects(p);
         }
-
-
     }
 }

@@ -4,18 +4,26 @@ package me.idbi.hcf;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import me.idbi.hcf.Bossbar.Bossbar;
-import me.idbi.hcf.Commands.FactionCommands.FactionHomeCommand;
+import me.idbi.hcf.BukkitCommands.BukkitCommandManager;
+import me.idbi.hcf.Commands.FactionCommands.FactionSetHomeCommand;
+import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.KothRewardsFile;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.CustomFiles.ReclaimFile;
+import me.idbi.hcf.Economy.HCFEconomy;
+import me.idbi.hcf.Economy.VaultHook;
 import me.idbi.hcf.Koth.AutoKoth;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Scoreboard.CustomTimers;
+import me.idbi.hcf.Scoreboard.FastBoard;
 import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Objects.Lag;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -46,7 +54,7 @@ public final class Main extends JavaPlugin implements Listener {
     // Beállítások configba
     public static int worldBorderRadius;
     public static boolean deathban;
-    public static int deathbanTime;
+    public static long deathbanTime;
     public static double claimPriceMultiplier;
     public static int brewingSpeedMultiplier;
     public static int cookSpeedMultiplier;
@@ -61,7 +69,6 @@ public final class Main extends JavaPlugin implements Listener {
     public static boolean SOTWEnabled;
     public static int warzoneSize;
     public static double maxDTR;
-    public static double deathDTR;
     public static boolean abilitiesLoaded = false;
     public static boolean customEnchantsLoaded = false;
     public static boolean discordLogLoaded = false;
@@ -86,7 +93,13 @@ public final class Main extends JavaPlugin implements Listener {
     public static AutoKoth autoKoth = new AutoKoth();
     private static ConfigManager configManager;
     private static Connection con;
-    private final MiscTimers miscTimers = new MiscTimers();
+    private MiscTimers miscTimers;
+    public static HashMap<UUID, FastBoard> boards;
+
+    public final HashMap<UUID, Double> playerBank = new HashMap<>();
+    public static HCFEconomy economyImplementer;
+    private VaultHook vaultHook;
+    private static Main instance = null;
 
 
     // Egyszerű SQL Connection getter
@@ -132,13 +145,25 @@ public final class Main extends JavaPlugin implements Listener {
     @Override
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEnable() {
+        instance = this;
+        /*if (!setupEconomy() ) {
+            Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }*/
+        economyImplementer = new HCFEconomy();
+        vaultHook = new VaultHook();
+        vaultHook.hook();
+
         long deltatime = System.currentTimeMillis();
         kothRewardsGUI = new ArrayList<>();
         EOTWStarted = System.currentTimeMillis() / 1000;
         blacklistedRankNames = new ArrayList<>();
+        SubCommand.commandCooldowns = new HashMap<>();
         Bossbar.bars = new HashMap<>();
         currentLanguages = new HashMap<>();
-        FactionHomeCommand.teleportPlayers = new ArrayList<Player>();
+        boards = new HashMap<>();
+        FactionSetHomeCommand.teleportPlayers = new ArrayList<Player>();
 
         //MessagesFile.setup();
         //DiscordFile.setup();
@@ -153,6 +178,9 @@ public final class Main extends JavaPlugin implements Listener {
 
 
         blacklistedRankNames = Config.BlackListedNames.asStrList();
+        miscTimers = new MiscTimers();
+
+
 
         // Messages
         /*this.manager = new SimpleConfigManager(this);
@@ -161,8 +189,9 @@ public final class Main extends JavaPlugin implements Listener {
         //this.messages = manager.getNewConfig("messages/messages_en.yml");*/
 
         // Setup variables
+
         DTRREGENTIME = Config.DTRRegen.asInt() * 1000;
-        deathbanTime = Config.Deathban.asInt() * 1000;
+        deathbanTime = Config.Deathban.asInt() * 1000L;
         stuckDuration = Config.StuckTimer.asInt() * 1000;
         Koth.GLOBAL_TIME = Config.KOTHDuration.asInt() * 1000;
         deathban = Config.DeathbanEnable.asBoolean();
@@ -176,7 +205,6 @@ public final class Main extends JavaPlugin implements Listener {
         maxDTR = Config.MaxDTR.asDouble();
         cookSpeedMultiplier = Config.CookingSpeedMultiplier.asInt();
         brewingSpeedMultiplier = Config.BrewingSpeedMultiplier.asInt();
-        deathDTR = Config.DeathDTR.asDouble();
         con = SQL_Connection.dbConnect(
                 Config.Host.asStr(),
                 Config.Port.asStr(),
@@ -223,6 +251,7 @@ public final class Main extends JavaPlugin implements Listener {
 
         // koth
         KothRewardsFile.setup();
+        ReclaimFile.setup();
 
         // setup classes
         //SetupBot.setup();
@@ -240,6 +269,8 @@ public final class Main extends JavaPlugin implements Listener {
         // Load online players
 
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            FastBoard board = new FastBoard(player);
+            Main.boards.put(player.getUniqueId(), board);
             Playertools.loadOnlinePlayer(player);
         }
 
@@ -252,6 +283,7 @@ public final class Main extends JavaPlugin implements Listener {
         miscTimers.KOTHCountdown();
         miscTimers.cleanupFakeWalls();
         miscTimers.archerTagEffect();
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
 
         SpeedModifiers.asyncCacheBrewingStands();
         SpeedModifiers.speedBoost();

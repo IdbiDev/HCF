@@ -309,6 +309,8 @@ public class Faction {
     public void ApplyPlayerRank(OfflinePlayer p, String name) {
         for (FactionRankManager.Rank rank : ranks) {
             if (Objects.equals(rank.name, name)) {
+                HCFPlayer hcf = HCFPlayer.getPlayer(p.getUniqueId());
+                hcf.setRank(rank);
                 SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE uuid='?'", rank.name, p.getUniqueId().toString());
                 break;
             }

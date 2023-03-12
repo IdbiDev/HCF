@@ -39,7 +39,7 @@ public class FactionDisbandCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command." + getName();
+        return "factions.commands." + getName();
     }
 
     @Override

@@ -42,7 +42,7 @@ public class FactionJoinCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command." + getName();
+        return "factions.commands." + getName();
     }
 
     @Override
@@ -64,11 +64,11 @@ public class FactionJoinCommand extends SubCommand {
 
                 //Sikeres belépés
                 HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
-                p.sendMessage(Messages.join_message.language(p).queue());
+                p.sendMessage(Messages.player_joined_faction_message.language(p).queue());
                 hcfPlayer.addFaction(faction);
                 //Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
                 for (Player member : faction.getMembers()) {
-                    member.sendMessage(Messages.bc_join_message.language(member).setPlayer(p).queue());
+                    member.sendMessage(Messages.new_member_join_faction.language(member).setPlayer(p).queue());
                 }
 
                 SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?' WHERE uuid='?'", String.valueOf(faction.id), faction.getDefaultRank().name, p.getUniqueId().toString());

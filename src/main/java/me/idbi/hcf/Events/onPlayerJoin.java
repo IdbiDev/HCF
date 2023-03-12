@@ -18,7 +18,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import static me.idbi.hcf.Tools.HCF_Timer.addPvPTimerCoolDownSpawn;
@@ -30,10 +32,18 @@ public class onPlayerJoin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         //Main.scoreboardManager.start();
-        p.setScoreboard(ScoreboardBuilder.getOrCreate(p).build());
+       //
+        //
+        // p.setScoreboard(ScoreboardBuilder.getOrCreate(p).build());
+
+        FastBoard board = new FastBoard(e.getPlayer());
+        board.updateTitle(Config.DefaultScoreboardTitle.asStr());
+        Main.boards.put(e.getPlayer().getUniqueId(), board);
+
         Playertools.loadOnlinePlayer(p);
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
 
+        Main.getEconomy().createPlayerAccount(e.getPlayer());
         if (Main.deathWaitClear.contains(p.getUniqueId())) {
             p.getInventory().clear();
             p.getInventory().setArmorContents(null);
@@ -58,8 +68,8 @@ public class onPlayerJoin implements Listener {
             addPvPTimerCoolDownSpawn(e.getPlayer());
         }
         e.setJoinMessage("");
-
-        for (Player admins : AdminTools.InvisibleManager.invisedAdmins) {
+        List<Player> list = new ArrayList<>(AdminTools.InvisibleManager.getInvisedAdmins());
+        for (Player admins : list) {
             AdminTools.InvisibleManager.hidePlayer(admins);
         }
 
@@ -68,7 +78,7 @@ public class onPlayerJoin implements Listener {
             Faction f = Playertools.getPlayerFaction(e.getPlayer());
             if (f != null) {
                 for (Player member : f.getMembers()) {
-                    member.sendMessage(Messages.join_faction_bc.language(member).setPlayer(e.getPlayer()).queue());
+                    member.sendMessage(Messages.join_online_player_in_faction.language(member).setPlayer(e.getPlayer()).queue());
                 }
                 //f.addPrefixPlayer(p);
                 //Bukkit.getScoreboardManager().getMainScoreboard().getTeam(f.name).addEntry(p.getName());

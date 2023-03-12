@@ -31,20 +31,18 @@ public enum Config {
     KOTHDuration("Cooldowns", 300, createComment("Set the KoTH event length", "Must be in seconds")),
     SOTWDuration("Cooldowns", 600, createComment("Set the SOTW event length", "Must be in seconds")),
     EOTWDuration("Cooldowns", 600, createComment("Set the EOTW event length", "Must be in seconds")),
-    DTRRegen("Cooldowns", 60, createComment("Must be in seconds")),
+    //DTRRegen("Cooldowns", 60, createComment("Must be in seconds")),
 
     WorldName("Default values", "world", createComment("Sets the world, where the HCF server are.")),
     DeathbanEnable("Default values", false, createComment("Sets the death-ban.", "Only 'true' or 'false' are accepted!")),
     SpawnLocation("Default values", "0 64 0 0 0", createComment("Sets the world spawn-point!", "Order: X,Y,Z,Pitch,Yaw (Separation with SPACE instead comma)")),
-    ClaimPriceMultiplier("Default values", 1.5, createComment("(1$/Block) * Multiplier")),
+
     EnchantCost("Default values", 20, createComment("Enchantment cost. Constant.")),
     DefaultBalance("Default values", 1000, createComment("On the first join, this will be the player money.")),
+    DefaultBalanceFaction("Default values", 0, createComment("Upon creating the first faction, this value will be the starting money in the faction.")),
     WorldBorderSize("Default values", 1000, createComment("This sets the world border radius.")),
     WarzoneSize("Default values", 500, createComment("This sets the war-zone radius.")),
-    MaxMembers("Default values", 7, createComment("Maximum member per faction.")),
-    MaxAllies("Default values", 2, createComment("Maximum allies per faction.")),
-    MaxDTR("Default values", 5.5, createComment("Maximum DTR, that one faction can reach")),
-    DeathDTR("Default values", 1, createComment("The DTR will be decreased by this number, when a member die.")),
+
     BrewingSpeedMultiplier("Default values", 1, createComment("")),
     CookingSpeedMultiplier("Default values", 1, createComment("")),
     ClaimingWandTitle("Claim", "&6Claiming Wand"),
@@ -58,6 +56,33 @@ public enum Config {
             "&eShift + Left click",
             "&f➥ Discard the claim."
     )),
+    DTRPerPlayer("Faction DTR",0.9,createComment("The amount of DTR added by a player")),
+    MaxDTR("Faction DTR",5.5,createComment("The maximum amount of DTR reached by a faction.")),
+    MaxDTRSolo("Faction DTR",1.5,createComment("The maximum amount of DTR reached by a solo faction.")),
+    DTRRegen("Faction DTR", 60, createComment("DTR regeneration.(Must be in seconds)")),
+
+    //DeathDTR("Faction DTR", 1, createComment("The DTR will be decreased by this number, when a member die.")),
+
+
+
+    OverworldDeathDTR("Faction DTR", 1,createComment("The DTR will be decreased by this number, when a member die.")),
+    NetherDeathDTR("Faction DTR", 0.5,createComment("The DTR will be decreased by this number, when a member die.")),
+    EndDeathDTR("Faction DTR", 1,createComment("The DTR will be decreased by this number, when a member die.")),
+
+
+    MaxMember("Faction Settings",5),
+    EnableLeaveFriendly("Faction Settings",false),
+    MaxMembers("Faction Settings", 7, createComment("Maximum member per faction.")),
+    MaxAllies("Faction Settings", 2, createComment("Maximum allies per faction.")),
+
+    MustBeConnected("Faction Claim",true),
+    MaxClaims("Faction Claim",5),
+    MinClaimSize("Faction Claim",4),
+    MaxClaimSize("Faction Claim",100),
+    EnableFlowingToClaim("Faction Claim",false,createComment("This value will let water flow in a claim. (But, it can still flow inside the claim, outside it will stop when it reaches the claim border)")),
+    ClaimPriceMultiplier("Faction Claim", 1.5, createComment("(1$/Block) * Multiplier")),
+    UnClaimPriceMultiplier("Faction Claim", 0.5, createComment("(1$/Block) * Multiplier")),
+    AllowDamageByWilderness("Faction Claim", false, createComment("Allow liquid flow from wilderness to claimed land")),
 
     TeammateColor("Colors", "&a"),
     AllyColor("Colors", "&d"),
@@ -99,6 +124,7 @@ public enum Config {
             "&f* &7TPS: &a%tps%",
             "&7&m----------------------&r",
             "&7▍ &e%customtimers%",
+            "&7▍ &4&lLogout: &c%logout%",
             "&7▍ &eEOTW: &6%eotw%",
             "&7▍ &eSOTW: &6%sotw%",
             "&7▍ &eGapple: &6%gapple_cd%",

@@ -1,5 +1,6 @@
 package me.idbi.hcf.Tools;
 
+import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Koth.Koth;
@@ -27,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static me.idbi.hcf.Main.maxDTR;
 import static me.idbi.hcf.Main.ranks;
 
 
@@ -114,15 +116,27 @@ public class Playertools {
 
         HCFPlayer hcf = HCFPlayer.getPlayer(player);
         assert hcf != null;
-        hcf.currentArea = HCF_Claiming.getPlayerArea(player);
+        hcf.setCurrentArea(HCF_Claiming.getPlayerArea(player));
+        hcf.setOnline(true);
         Main.playerCache.put(hcf.uuid, hcf);
         Scoreboards.refresh(player);
         NameChanger.refresh(player);
     }
+    public static List<HCFPlayer> getClassesInFaction(Faction faction, Classes classes) {
+        List<HCFPlayer> list = new ArrayList<>();
+        if(faction == null)
+            return list;
+        for(HCFPlayer p : faction.members)
+            if(p.playerClass.equals(classes)) // cső meleg
+                list.add(p);
+        return list;
+
+    }
 
     public static void cacheAll() {
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM members");
+            //PreparedStatement ps = con.prepareStatement("SELECT * FROM members");
+            PreparedStatement ps = con.prepareStatement("SELECT members.uuid,members.name,members.faction,members.rank,members.kills,members.deaths,members.money,members.language,members.statistics,members.lives,deathbans.time FROM `members` LEFT JOIN deathbans ON members.uuid = deathbans.uuid;");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -145,8 +159,10 @@ public class Playertools {
                     rs.getInt("money"),
                     new PlayerStatistic(new JSONObject(rs.getString("statistics"))),
                     rs.getString("rank"),
-                    rs.getString("language")
+                    rs.getString("language"),
+                    rs.getLong("time")
             );
+            hcf.setLives(rs.getInt("lives"));
             Main.playerCache.put(hcf.uuid, hcf);
             if (hcf.inFaction())
                 hcf.faction.members.add(hcf);
@@ -167,7 +183,7 @@ public class Playertools {
                         (int) playerMap.get("money"),
                         new PlayerStatistic(new JSONObject(playerMap.get("statistics").toString())),
                         playerMap.get("rank").toString(),
-                        playerMap.get("language").toString()
+                        playerMap.get("language").toString(),0
                 );
             }
         });
@@ -502,6 +518,7 @@ public class Playertools {
                     Faction faction = f.getValue();
                     if (id.equals(rank_rs.getInt("faction"))) {
                         FactionRankManager.Rank rank = new FactionRankManager.Rank(rank_rs.getInt("ID"), rank_rs.getString("name"), rank_rs.getInt("isDefault") == 1, rank_rs.getInt("isLeader") == 1);
+                        rank.setPriority(rank_rs.getInt("priority"));
                         ranks.add(rank);
                         faction.ranks.add(rank);
 
@@ -525,17 +542,15 @@ public class Playertools {
     public static String CalculateDTR(Faction faction) {
 
 
-        double addedDTR = 1.5;
+        double addedDTR = Config.MaxDTRSolo.asDouble();
         for (int i = 1; i <= faction.getMemberCount(); i++) {
-            if (faction.getMemberCount() % 5 == 0) {
-                if (Main.maxDTR <= addedDTR + 1)
-                    break;
-                addedDTR += 1;
-            } else {
-                //5.5 <= 2.0
-                if (Main.maxDTR <= addedDTR + 0.5)
-                    break;
-                addedDTR += 0.5;
+            if(faction.getMemberCount() == 1){
+                break;
+            }else{
+                if( addedDTR + Config.DTRPerPlayer.asDouble() <= maxDTR)
+                    addedDTR += Config.DTRPerPlayer.asDouble();
+                else
+                    addedDTR = maxDTR;
             }
         }
         return String.valueOf(addedDTR);
@@ -607,7 +622,7 @@ public class Playertools {
         HCF_Claiming.Point new_claim_start = new HCF_Claiming.Point(minX - diff, minZ - diff);
         HCF_Claiming.Point new_claim_end = new HCF_Claiming.Point(maxX + diff, maxZ + diff);
 
-        return HCF_Claiming.doOverlap(new_claim_start, new_claim_end, p1, p2);
+        return HCF_Claiming.doOverlap3(new_claim_start, new_claim_end, p1, p2);
     }
 
     public static int getDistanceBetweenPoints2D(HCF_Claiming.Point p1, HCF_Claiming.Point p2) {

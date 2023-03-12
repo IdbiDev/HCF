@@ -14,11 +14,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.awt.*;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static me.idbi.hcf.Tools.Playertools.CheckClaimPlusOne;
 import static me.idbi.hcf.Tools.Playertools.getDistanceBetweenPoints2D;
 
 public class HCF_Claiming {
@@ -69,6 +71,16 @@ public class HCF_Claiming {
                 int endX = Math.max(faction_start.x, faction_end.x);
                 int endZ = Math.max(faction_start.z, faction_end.z);
 
+                HCF_Claiming.Point top_left = new HCF_Claiming.Point(faction_start.x, faction_end.z);
+                HCF_Claiming.Point bottom_right = new HCF_Claiming.Point(faction_end.x, faction_start.z);
+                if(getDistanceBetweenPoints2D(top_left,faction_end) < Config.MinClaimSize.asInt() || getDistanceBetweenPoints2D(faction_start,top_left) < Config.MinClaimSize.asInt() ){
+                    p.sendMessage(Messages.faction_claim_too_small.language(p).setNumber(Config.MinClaimSize.asInt()).queue());
+                    return false;
+                }
+                if(getDistanceBetweenPoints2D(top_left,faction_end) > Config.MaxClaimSize.asInt() || getDistanceBetweenPoints2D(faction_start,top_left) > Config.MaxClaimSize.asInt() ){
+                    p.sendMessage(Messages.faction_claim_too_small.language(p).setNumber(Config.MinClaimSize.asInt()).queue());
+                    return false;
+                }
                 //for (Map.Entry<Integer, Faction_Claim> entry : Main.faction_cache.get(faction).claims.entrySet()) {
                 for (Faction f : Main.factionCache.values()) {
 
@@ -88,17 +100,28 @@ public class HCF_Claiming {
                             p.sendMessage(Messages.faction_claim_overlap.language(p).queue());
                             return false;
                         }
-                        if (calcBlocks(p) < 4) {
-                            p.sendMessage(Messages.faction_claim_too_small.language(p).queue());
-                            return false;
-                        }
-                        if (Playertools.CheckClaimPlusOne(faction_start, faction_end, 1, start_this, end_this)) {
-                            p.sendMessage(Messages.faction_claim_overlap.language(p).queue());
+                        if (CheckClaimPlusOne(faction_start, faction_end, 1, start_this, end_this)) {
+                            p.sendMessage(Messages.faction_claim_overlap_plus_one.language(p).queue());
                             return false;
                         }
 
                     }
                 }
+                Faction f = Main.factionCache.get(faction);
+                boolean validClaim = false;
+
+                if(!f.claims.isEmpty() && Config.MustBeConnected.asBoolean()) {
+                    for(Faction_Claim claim : f.claims) {
+                        if (isClaimConnected(new Faction_Claim(startX,endX,startZ,endZ,1,ClaimAttributes.NORMAL,"UwU"),claim)) {
+                            validClaim = true;
+                        }
+                    }
+                }
+                if(!validClaim && !f.claims.isEmpty() && Config.MustBeConnected.asBoolean()){
+                    p.sendMessage(Messages.faction_claim_not_connected.language(p).queue());
+                    return false;
+                }
+
                 if (Playertools.getPlayerBalance(p) - calcMoneyOfArea(p) >= 0) {
                     HCFPlayer hcf = HCFPlayer.getPlayer(p);
                     hcf.setMoney(hcf.money - calcMoneyOfArea(p));
@@ -120,7 +143,7 @@ public class HCF_Claiming {
                         p.getWorld().getName()
                 );
                 //HandleSpawn
-                Faction f = Main.factionCache.get(faction);
+
                 endpositions.remove(faction);
                 startpositions.remove(faction);
                 HCF_Claiming.Faction_Claim claim;
@@ -241,8 +264,6 @@ public class HCF_Claiming {
         }
         return false;
     }
-
-
     public static boolean megvanakellotavolsag(Point ownClaim1, Point ownClaim2, Point otherClaim1, Point otherClaim2) {
         if ((ownClaim1.x - otherClaim1.x) > 1
                 || (ownClaim1.x - otherClaim1.x) < -1) {
@@ -303,6 +324,18 @@ public class HCF_Claiming {
 //
 //        return false;
 //    }
+
+    public static boolean isClaimConnected(Faction_Claim a,Faction_Claim b) {
+        Point aStart = new Point(a.startX,a.startZ);
+        Point aEnd = new Point(a.endX,a.endZ);
+        Point bStart = new Point(b.startX,b.startZ);
+        Point bEnd = new Point(b.endX,b.endZ);
+        if(!doOverlap(aStart,aEnd,bStart,bEnd)) {
+            return CheckClaimPlusOne(aStart, aEnd, 1, bStart, bEnd);
+        }
+        return false;
+    }
+
     public static boolean isEnemyClaim(Player executePlayer, Faction_Claim actionClaim) {
 
         Faction playerFac = Playertools.getPlayerFaction(executePlayer);
@@ -386,6 +419,39 @@ public class HCF_Claiming {
             }
         }
         return null;
+    }
+    public static boolean isClaimBorder(int x, int z) {
+        for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
+            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
+                Point playerPoint = new Point(x, z);
+
+                int maxX = Math.max(val.startX, val.endX);
+                int minX = Math.min(val.startX, val.endX);
+
+                int maxZ = Math.max(val.startZ, val.endZ);
+                int minZ = Math.min(val.startZ, val.endZ);
+
+                if(x == maxX || x == minX) {
+                    if(z >= minZ && z <= maxZ) {
+                        return true;
+                    }
+                }
+
+                if(z == maxZ || z == minZ) {
+                    if(x >= minX && x <= maxX) {
+                        return true;
+                    }
+                }
+
+                /*Point claimrc = new Point(val.startX, val.startZ);
+                Point claimlc = new Point(val.endX, val.endZ);
+                if (doOverlap3(claimlc, claimrc, playerPoint, playerPoint)) {
+                    System.out.println("Found target");
+                    return true;
+                }*/
+            }
+        }
+        return false;
     }
 
     public static void CreateNewFakeTower(Player p, Location loc) {

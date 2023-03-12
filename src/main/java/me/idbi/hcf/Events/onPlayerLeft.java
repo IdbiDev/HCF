@@ -40,7 +40,7 @@ public class onPlayerLeft implements Listener {
             Faction f = Playertools.getPlayerFaction(e.getPlayer());
             if (f != null) {
                 for (Player member : f.getMembers()) {
-                    member.sendMessage(Messages.leave_faction_bc.language(member).setPlayer(e.getPlayer()).queue());
+                    member.sendMessage(Messages.leave_online_player_in_faction.language(member).setPlayer(e.getPlayer()).queue());
                 }
             }
             //Main.cacheRanks.remove(e.getPlayer());
@@ -70,7 +70,7 @@ public class onPlayerLeft implements Listener {
 
     public void setCombatLogger(Player p) {
         if (!HCF_Timer.timers.containsKey(p.getUniqueId())) {
-            return;
+            HCF_Timer.addCombatTimer(p);
         }
         long combatTimer = HCF_Timer.getCombatTime(p);
         ArrayList<ItemStack> items = new ArrayList<>();

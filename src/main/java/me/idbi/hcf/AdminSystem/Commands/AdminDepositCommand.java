@@ -59,7 +59,7 @@ public class AdminDepositCommand extends SubCommand {
         selectedFaction.balance += amount;
 
         for (Player member : selectedFaction.getMembers()) {
-            member.sendMessage(Messages.faction_admin_deposit_bc.language(member).setExecutor(p).queue());
+            member.sendMessage(Messages.faction_admin_deposit.language(member).setExecutor(p).queue());
         }
     }
 }

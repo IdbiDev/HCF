@@ -25,7 +25,7 @@ public class FactionStatsCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command." + getName();
+        return "factions.commands." + getName();
     }
 
     @Override
@@ -45,7 +45,8 @@ public class FactionStatsCommand extends SubCommand {
         } else if (args.length == 2) {
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
             if (target.isOnline()) {
-                if (p.hasPermission("factions.command.stats")) {
+                if (p.hasPermission("factions.commands.stats")) {
+                    addCooldown(p);
                     p.openInventory(PlayerStatInventory.inv(target.getPlayer()));
                 } else {
                     p.sendMessage(Messages.no_permission.language(p).queue());

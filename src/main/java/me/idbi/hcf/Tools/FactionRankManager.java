@@ -40,6 +40,7 @@ public class FactionRankManager {
                 rank.priority + "",
                 String.valueOf(id));
         //rank.saveRank();
+        System.out.println("Priority for: " + rank.name + " IS: " + rank.priority);
         return rank;
     }
     // public static Rank create(Faction faction, String name) {
@@ -116,7 +117,7 @@ public class FactionRankManager {
             for (Permissions p : Permissions.values()) {
                 class_permissions.put(p, false);
             }
-            //loadPermissions();
+            loadPermissions();
         }
 
         public void setPriority(int priority) {
@@ -174,6 +175,7 @@ public class FactionRankManager {
         }
 
         public void saveRank() {
+            System.out.println("Priority for: " + this.name + " IS: " + priority);
             SQL_Connection.dbExecute(con, "UPDATE ranks SET " +
                             "name = '?'," +
                             "ALL_Permission='?'," +

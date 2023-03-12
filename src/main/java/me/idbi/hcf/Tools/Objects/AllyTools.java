@@ -1,6 +1,5 @@
 package me.idbi.hcf.Tools.Objects;
 
-import me.idbi.hcf.Main;
 import org.json.JSONObject;
 
 import java.util.HashMap;

@@ -46,7 +46,7 @@ public class FactionKickCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command." + getName();
+        return "factions.commands." + getName();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class FactionKickCommand extends SubCommand {
 
                 f.refreshDTR();
                 for (Player member : f.getMembers()) {
-                    member.sendMessage(Messages.bc_leave_message.language(member).setPlayer(hcf).queue());
+                    member.sendMessage(Messages.member_leave_faction.language(member).setPlayer(hcf).queue());
                 }
                 SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?' WHERE uuid = '?'", "None", "0", hcf.uuid.toString());
                 PlayerStatistic stat = hcf.playerStatistic;

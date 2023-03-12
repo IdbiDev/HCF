@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -36,15 +37,16 @@ public class EOTW {
                         new HCF_Claiming.Point(spawnClaim.endX, spawnClaim.endZ)),
                 EOTWTIME);
 
-        Main.EOTWStarted = System.currentTimeMillis() + EOTWTIME;
-
-
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.sendTitle(
                     Messages.eotw_start_title.language(p).queue(),
                     Messages.eotw_start_subtitle.language(p).queue()
             );
             p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
+        }
+        //Todo: EOTW Koth
+        for(Faction f : Main.factionCache){
+
         }
         Main.EOTWENABLED = true;
 

@@ -2,6 +2,7 @@ package me.idbi.hcf.Classes.SubClasses;
 
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.HCF_Class;
+import me.idbi.hcf.CustomFiles.Configs.ClassConfig;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Material;
@@ -9,18 +10,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Archer implements HCF_Class {
-    public final double archerTagDamageAmplifier = 100f;
-    public final boolean archerClassEnabled = true;
-    public final boolean archerTagEnabled = true;
-    public final int maxArcherInFaction = -1;
+    public final double archerTagDamageAmplifier = ClassConfig.ArcherTagDamageAmplifier.asDouble();
+    public final boolean archerClassEnabled = ClassConfig.ArcherEnabled.asBoolean();
+    public final boolean archerTagEnabled = ClassConfig.ArcherTagEnabled.asBoolean();
+    public final int maxArcherInFaction = ClassConfig.MaxArcherInFaction.asInt();
 
-    public static HashMap<Player, BukkitTask> archerTagEffects = new HashMap<>();
     private final HashMap<PotionEffectType, Integer> effect = new HashMap<>() {{
         put(PotionEffectType.SPEED, 2);
         put(PotionEffectType.REGENERATION, 0);

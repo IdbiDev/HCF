@@ -2,6 +2,7 @@ package me.idbi.hcf.Classes.SubClasses;
 
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.HCF_Class;
+import me.idbi.hcf.CustomFiles.Configs.ClassConfig;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Material;
@@ -14,10 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Miner implements HCF_Class {
-    public static final int invisibleLevel = 45;
-    public final boolean minerEnabled = true;
-    public final int maxMinerInFaction = -1;
-    public final boolean invisibleEnable = true;
+    public static final int invisibleLevel = ClassConfig.MinerInvisibleYLevel.asInt();
+    public final boolean minerEnabled = ClassConfig.MinerEnabled.asBoolean();
+    public final int maxMinerInFaction = ClassConfig.MaxMinerInFaction.asInt();
+    public final boolean invisibleEnable = ClassConfig.MinerInvisibleEnabled.asBoolean();
+
     private final HashMap<PotionEffectType, Integer> effect = new HashMap<>() {{
         put(PotionEffectType.SPEED, 1);
         put(PotionEffectType.DAMAGE_RESISTANCE, 1);

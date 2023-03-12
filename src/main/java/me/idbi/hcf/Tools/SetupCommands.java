@@ -12,10 +12,15 @@ public class SetupCommands {
         //m.getCommand("faction").setExecutor(new faction());
         m.getCommand("admin").setExecutor(new AdminCommandManager());
         m.getCommand("ally").setExecutor(new AllyCommandManager());
-        m.getCommand("fc").setExecutor(new fc_position());
-        m.getCommand("koth").setExecutor(new koth());
+        m.getCommand("fc").setExecutor(new FactionPositionCommand());
+        m.getCommand("koth").setExecutor(new KothCommand());
         m.getCommand("setuplogs").setExecutor(new Command_test());
         m.getCommand("customtimer").setExecutor(new Command_customtimer());
+        m.getCommand("revive").setExecutor(new ReviveCommand());
+        m.getCommand("reclaim").setExecutor(new ReclaimCommand());
+        m.getCommand("logout").setExecutor(new LogoutCommand());
 
+
+        CommandRegistry.register(BukkitCommandManager.getCommands());
     }
 }

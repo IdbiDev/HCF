@@ -1,10 +1,6 @@
 package me.idbi.hcf.Discord;
 
 //import net.dv8tion.jda.api.EmbedBuilder;
-import org.bukkit.entity.Player;
-
-import java.awt.*;
-import java.util.Date;
 
 public class Embeds {
 /*
