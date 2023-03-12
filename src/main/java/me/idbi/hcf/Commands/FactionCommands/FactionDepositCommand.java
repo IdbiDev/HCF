@@ -91,6 +91,7 @@ public class FactionDepositCommand extends SubCommand {
                 if (deposit.transactionSuccessfully()) {
                     p.sendMessage(Messages.faction_bank_deposit.language(p).queue().replace("%amount%", arg1 + ""));
                     Scoreboards.refresh(p);
+                    addCooldown(p);
                     if (faction.balanceHistory.size() + 1 > 50) {
                         faction.balanceHistory.remove(faction.balanceHistory.size() - 1);
                     }

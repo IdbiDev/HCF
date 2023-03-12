@@ -36,6 +36,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
@@ -176,6 +178,8 @@ public final class Main extends JavaPlugin implements Listener {
         configManager = new ConfigManager(this);
         configManager.setup();
 
+        new BukkitCommandManager();
+        BukkitCommandManager.setupMaps();
 
         blacklistedRankNames = Config.BlackListedNames.asStrList();
         miscTimers = new MiscTimers();
@@ -340,6 +344,28 @@ public final class Main extends JavaPlugin implements Listener {
 
     }
 
+    public static Main getInstance() {
+        return instance;
+    }
+    private static Economy econ = null;
+
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
+
+
+    public static Economy getEconomy() {
+        return economyImplementer;
+    }
+
     @EventHandler
     public void onDisableEvent(PluginDisableEvent e) {
         if (e.getPlugin().equals(this)) {
@@ -382,6 +408,7 @@ public final class Main extends JavaPlugin implements Listener {
     public void onDisable() {
         // Adatbázis kapcsolat leállítása
         //SaveAll();
+        vaultHook.unhook();
         try {
             for (HCFPlayer hcf : playerCache.values()) {
                 hcf.save();

@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AllyCommandManager implements CommandExecutor {
 
@@ -21,6 +22,10 @@ public class AllyCommandManager implements CommandExecutor {
         subcommands.add(new AllyDeclineCommand());
         subcommands.add(new AllyInviteCommand());
         subcommands.add(new AllyResolveCommand());
+
+        for (SubCommand command : subcommands) {
+            SubCommand.commandCooldowns.put(command, new HashMap<>());
+        }
     }
 
     @Override
@@ -31,9 +36,16 @@ public class AllyCommandManager implements CommandExecutor {
                 if (args.length > 0) {
                     for (int i = 0; i < getSubcommands().size(); i++) {
                         try {
-                            if (getSubcommands().get(i).isCommand(args[0])) {
-                                if (getSubcommands().get(i).hasPermission(p)) {
-                                    getSubcommands().get(i).perform(p, args);
+                            SubCommand cmd = getSubcommands().get(i);
+                            if (cmd.isCommand(args[0])) {
+                                if (cmd.hasPermission(p)) {
+                                    if(!cmd.hasCooldown(p)) {
+                                        cmd.perform(p, args);
+                                    } else {
+                                        long cooldown = SubCommand.commandCooldowns.get(cmd).get(p);
+                                        p.sendMessage(Messages.command_cooldown.language(p)
+                                                .setTime((cooldown / 1000 - System.currentTimeMillis() / 1000) + "").queue());
+                                    }
                                 } else {
                                     p.sendMessage(Messages.no_permission.language(p).queue());
                                 }
@@ -42,6 +54,7 @@ public class AllyCommandManager implements CommandExecutor {
                             p.sendMessage("§cUsage: " + getSubcommands().get(i).getSyntax());
                             p.sendMessage(Messages.missing_argument.language(p).queue());
                         } catch (Exception e) {
+                            e.printStackTrace();
                             p.sendMessage(Messages.error_while_executing.language(p).queue());
                         }
                     }

@@ -9,6 +9,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Scoreboard.AdminScoreboard;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
@@ -21,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +87,8 @@ public class MiscTimers {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (Map.Entry<Integer, Long> entry : Main.DTRREGEN.entrySet()) {
+                HashMap<Integer, Long> dtrRegen = Main.DTRREGEN;
+                for (Map.Entry<Integer, Long> entry : dtrRegen.entrySet()) {
                     int key = entry.getKey();
                     long val = entry.getValue();
                     Faction f = Main.factionCache.get(key);
@@ -99,7 +102,8 @@ public class MiscTimers {
                     f.DTR_TIMEOUT = val - System.currentTimeMillis();
                 }
 
-                for (Map.Entry<LivingEntity, Long> entry : Main.savedPlayers.entrySet()) {
+                HashMap<LivingEntity, Long> savedPlayers = Main.savedPlayers;
+                for (Map.Entry<LivingEntity, Long> entry : savedPlayers.entrySet()) {
                     LivingEntity key = entry.getKey();
                     long val = entry.getValue();
                     if (val <= 0) {
@@ -144,13 +148,25 @@ public class MiscTimers {
 
                     boolean shouldRefresh = false;
                     //Stuck Time
-                    if (HCF_Timer.getStuckTime(player) != 0) {
+                    if (HCF_Timer.expiredNowStuck(player)) {
                         shouldRefresh = true;
                         //Scoreboards.refresh(player);
                         Location loc = HCF_Claiming.ReturnSafeSpot(player.getLocation());
                         if (loc != null) {
                             player.teleport(loc);
                             player.sendMessage(me.idbi.hcf.CustomFiles.Messages.Messages.stuck_finished.queue());
+                        }
+                    }
+                    //Stuck Time
+                    if (HCF_Timer.expiredNowHome(player)) {
+                        shouldRefresh = true;
+                        //Scoreboards.refresh(player);
+                        Faction faction = Playertools.getPlayerFaction(player);
+                        if(faction != null) {
+                            if (faction.homeLocation != null) {
+                                player.teleport(faction.homeLocation);
+                                player.sendMessage(me.idbi.hcf.CustomFiles.Messages.Messages.successfully_home_teleport.queue());
+                            }
                         }
                     }
                     //Combat Time

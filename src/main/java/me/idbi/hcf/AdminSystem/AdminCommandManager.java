@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class AdminCommandManager implements CommandExecutor {
 
-    private final ArrayList<SubCommand> subcommands = new ArrayList<>();
+    private final static ArrayList<SubCommand> subcommands = new ArrayList<>();
 
     public AdminCommandManager() {
         subcommands.add(new AdminChatCommand());
@@ -22,7 +22,10 @@ public class AdminCommandManager implements CommandExecutor {
         subcommands.add(new AdminDutyCommand());
         subcommands.add(new AdminFreezeCommand());
         subcommands.add(new AdminGiveMoneyCommand());
+        subcommands.add(new AdminHelpCommand());
         subcommands.add(new AdminKickPlayerCommand());
+        subcommands.add(new AdminReclaimResetCommand());
+        subcommands.add(new AdminReloadCommand());
         subcommands.add(new AdminSetDTRCommand());
         subcommands.add(new AdminSetFactionLeaderCommand());
         subcommands.add(new AdminSetFactionNameCommand());
@@ -32,6 +35,9 @@ public class AdminCommandManager implements CommandExecutor {
 
         subcommands.add(new AdminVanishCommand());
         subcommands.add(new AdminWithdrawCommand());
+
+        // Ennek itt kell lennie!!!44!!
+        subcommands.add(new AdminItemsCommand());
     }
 
     @Override
@@ -40,19 +46,32 @@ public class AdminCommandManager implements CommandExecutor {
             if (sender instanceof Player p) {
 
                 if (args.length > 0) {
+                    AdminItemsCommand items = new AdminItemsCommand();
+                    if (items.isCommand(args[0])) {
+                        try {
+                            items.perform(sender, args);
+                            return false;
+                        } catch (IndexOutOfBoundsException e) {
+                            sender.sendMessage("§cUsage: " + items.getSyntax());
+                            sender.sendMessage(Messages.missing_argument.queue());
+                        } catch (Exception e) {
+                            sender.sendMessage(Messages.error_while_executing.queue());
+                        }
+                    }
                     for (int i = 0; i < getSubcommands().size(); i++) {
                         try {
-                            if (getSubcommands().get(i).isCommand(args[0])) {
-                                if (getSubcommands().get(i).hasPermission(p)) {
-                                    if (getSubcommands().get(i).getName().equalsIgnoreCase("chat")
-                                            || getSubcommands().get(i).getName().equalsIgnoreCase("duty")) {
-                                        getSubcommands().get(i).perform(p, args);
+                            SubCommand cmd = getSubcommands().get(i);
+                            if (cmd.isCommand(args[0])) {
+                                if (cmd.hasPermission(p)) {
+                                    if (cmd.getName().equalsIgnoreCase("chat")
+                                            || cmd.getName().equalsIgnoreCase("duty")) {
+                                        cmd.perform(p, args);
                                     } else {
                                         if (!Playertools.isInStaffDuty(p)) {
                                             p.sendMessage(Messages.not_in_duty.language(p).queue());
                                             return false;
                                         }
-                                        getSubcommands().get(i).perform(p, args);
+                                        cmd.perform(p, args);
                                     }
                                 } else {
                                     p.sendMessage(Messages.no_permission.language(p).queue());
@@ -66,19 +85,14 @@ public class AdminCommandManager implements CommandExecutor {
                         }
                     }
                 } else if (args.length == 0) {
-                    p.sendMessage("--------------------------------");
-                    for (int i = 0; i < getSubcommands().size(); i++) {
-                        p.sendMessage(getSubcommands().get(i).getSyntax() + " - " + getSubcommands().get(i).getDescription());
-                    }
-                    p.sendMessage("--------------------------------");
+                    AdminDutyCommand.duty(p);
                 }
-
             }
         }
         return true;
     }
 
-    public ArrayList<SubCommand> getSubcommands() {
+    public static ArrayList<SubCommand> getSubcommands() {
         return subcommands;
     }
 }

@@ -3,6 +3,7 @@ package me.idbi.hcf.CustomFiles.Configs;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,10 +51,10 @@ public enum Config {
             "&eLeft and right click on the ground",
             "&f➥ to place the positions.",
             " ",
-            "&eShift + Right click",
+            "&eShift + Right Click",
             "&f➥ Accept the claim.",
             " ",
-            "&eShift + Left click",
+            "&eShift + Left Click",
             "&f➥ Discard the claim."
     )),
     DTRPerPlayer("Faction DTR",0.9,createComment("The amount of DTR added by a player")),
@@ -92,7 +93,33 @@ public enum Config {
 
     BlackListedNames(Arrays.asList(
             "dick", "tit", "boobs", "b00bs", "bo0bs", "fuck", "gay"
-    ), createComment("These words are blocked in names (Faction,rank etc.)", "No case-sensitive and it will be blocked when the word contains one of them!")),
+    ), createComment("These words are blocked in names (Faction, rank etc.)", "No case-sensitive and it will be blocked when the word contains one of them!")),
+
+    StatTrakEnable("StatTrak", true, createComment("Should we enable weapons stattrak?")),
+    StatTrakKillFormat("StatTrak", "&6&lKills&7: &b%kills%", createComment("Stattrak kills counter format")),
+    StatTrakKillString("StatTrak", "&e%player% &fwas slain by &e%killer% &6%date%", createComment("Stattrak kill string")),
+    StatTrakTrackingItems("StatTrak", Arrays.asList(
+            "DIAMOND_SWORD",
+            "IRON_SWORD",
+            "STONE_SWORD",
+            "GOLD_SWORD",
+            "WOOD_SWORD"
+    ), createComment("Stattrak items")),
+
+    CrowbarMaterial("Crowbar", Material.GOLD_HOE.name()),
+    CrowbarName("Crowbar", "&3&lCrowbar"),
+    CrowbarLore("Crowbar", Arrays.asList(
+            "&5Spawners: &a{&c%scount%&a}",
+            "&5Portals: &a{&c%pcount%&a}"
+    )),
+    CrowbarSpawnerUses("Crowbar", 1),
+    CrowbarPortalUses("Crowbar", 6),
+    CrowbarDisabledInWarzone("Crowbar", false),
+
+    SubClaimTitle("SubClaim", "&b[Subclaim]"),
+    SubClaimAllowLowerRank("SubClaim", true, createComment("Allows player which have lower ranks to open chests")),
+
+
 
     DefaultScoreboardTitle("Scoreboards", "&6HCF+ &7- &eMap &6#1"),
     DefaultScoreboard("Scoreboards", Arrays.asList(
@@ -102,8 +129,9 @@ public enum Config {
             "&7│ &eMoney: &6$%money%",
             "&7│ &eClass: &6%class%",
             "&7└─",
-            "&7&m----------------------",
+            "",
             "&7▍ &e%customtimers%",
+            "&7▍ &4&lLogout: &c%logout%",
             "&7▍ &eEOTW: &6%eotw%",
             "&7▍ &eSOTW: &6%sotw%",
             "&7▍ &eGapple: &6%gapple_cd%",
@@ -119,7 +147,7 @@ public enum Config {
             "&7&m----------------------",
             "&4* &cStaff Panel",
             "&f* &7Visible: &f%invisible%",
-            "&f* &7Chatmode: &f%chat_mode%",
+            "&f* &7Chat: &f%chat_mode%",
             "&f* &7Players: &f%online_players%",
             "&f* &7TPS: &a%tps%",
             "&7&m----------------------&r",
@@ -221,9 +249,9 @@ public enum Config {
                     config.set(this.toString(), this.value, this.comments);
             } else {
                 if (this.comments == null)
-                    config.set(section + "." + this, this.value);
+                    config.set(section + "." + this.toString(), this.value);
                 else
-                    config.set(section + "." + this, this.value, this.comments);
+                    config.set(section + "." + this.toString(), this.value, this.comments);
             }
             save();
             return;

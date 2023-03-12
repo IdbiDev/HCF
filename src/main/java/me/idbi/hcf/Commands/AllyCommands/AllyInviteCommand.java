@@ -18,7 +18,7 @@ public class AllyInviteCommand extends SubCommand {
 
     @Override
     public boolean isCommand(String argument) {
-        return false;
+        return argument.equalsIgnoreCase(getName());
     }
 
     @Override
@@ -62,6 +62,7 @@ public class AllyInviteCommand extends SubCommand {
     @Override
     public void perform(Player p, String[] args) {
         invite(p, args[1]);
+        addCooldown(p);
     }
 
     public static void invite(Player p, String name) {

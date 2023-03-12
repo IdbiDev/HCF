@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class FactionKickCommand extends SubCommand {
@@ -52,6 +53,24 @@ public class FactionKickCommand extends SubCommand {
     @Override
     public boolean hasPermission(Player p) {
         return p.hasPermission(getPermission());
+    }
+
+    @Override
+    public boolean hasCooldown(Player p) {
+        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
+        return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
+    }
+
+    @Override
+    public void addCooldown(Player p) {
+        HashMap<Player, Long> hashMap = SubCommand.commandCooldowns.get(this);
+        hashMap.put(p, System.currentTimeMillis() + (getCooldown() * 1000L));
+        SubCommand.commandCooldowns.put(this, hashMap);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 2;
     }
 
     @Override
@@ -92,10 +111,11 @@ public class FactionKickCommand extends SubCommand {
                         statF.name = f.name;
                     }
                 }
+
                 f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(hcf.name, "kicked", new Date().getTime()));
                 Scoreboards.RefreshAll();
                 NameChanger.refresh(p);
-                p.sendMessage(Messages.kick_message.setExecutor(p).replace("%p%", hcf.name).queue());
+                p.sendMessage(Messages.kick_message.language(p).setExecutor(p).setPlayer(hcf).queue());
             } else {
                 p.sendMessage(Messages.no_permission_in_faction.language(p).queue());
             }

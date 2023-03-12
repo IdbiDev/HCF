@@ -7,16 +7,14 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
-import me.idbi.hcf.Tools.Objects.Faction;
-import me.idbi.hcf.Tools.Objects.FactionHistory;
-import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import me.idbi.hcf.Tools.Objects.PlayerStatistic;
+import me.idbi.hcf.Tools.Objects.*;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.SQL_Connection;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class FactionLeaveCommand extends SubCommand {
@@ -51,6 +49,23 @@ public class FactionLeaveCommand extends SubCommand {
     public String getPermission() {
         return "factions.commands." + getName();
     }
+    @Override
+    public boolean hasCooldown(Player p) {
+        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
+        return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
+    }
+
+    @Override
+    public void addCooldown(Player p) {
+        HashMap<Player, Long> hashMap = SubCommand.commandCooldowns.get(this);
+        hashMap.put(p, System.currentTimeMillis() + (getCooldown() * 1000L));
+        SubCommand.commandCooldowns.put(this, hashMap);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 2;
+    }
 
     @Override
     public void perform(Player p, String[] args) {
@@ -77,7 +92,9 @@ public class FactionLeaveCommand extends SubCommand {
                     member.sendMessage(Messages.member_leave_faction.language(member).setPlayer(p).queue());
                 }
 
+                addCooldown(p);
                 Scoreboards.refresh(p);
+                hcf.setChatType(ChatTypes.PUBLIC);
                 f.refreshDTR();
                 PlayerStatistic stat = hcf.playerStatistic;
                 for (FactionHistory statF : stat.factionHistory) {

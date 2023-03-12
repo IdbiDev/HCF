@@ -8,6 +8,8 @@ import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class AllyResolveCommand extends SubCommand {
     @Override
     public String getName() {
@@ -16,7 +18,7 @@ public class AllyResolveCommand extends SubCommand {
 
     @Override
     public boolean isCommand(String argument) {
-        return false;
+        return argument.equalsIgnoreCase(getName());
     }
 
     @Override
@@ -40,6 +42,24 @@ public class AllyResolveCommand extends SubCommand {
     }
 
     @Override
+    public boolean hasCooldown(Player p) {
+        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
+        return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
+    }
+
+    @Override
+    public void addCooldown(Player p) {
+        HashMap<Player, Long> hashMap = SubCommand.commandCooldowns.get(this);
+        hashMap.put(p, System.currentTimeMillis() + (getCooldown() * 1000L));
+        SubCommand.commandCooldowns.put(this, hashMap);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 2;
+    }
+
+    @Override
     public void perform(Player p, String[] args) {
         Faction allyFaction = Playertools.getFactionByName(args[1]);
         Faction playerFaction = Playertools.getPlayerFaction(p);
@@ -49,6 +69,7 @@ public class AllyResolveCommand extends SubCommand {
                     if (playerFaction.isAlly(allyFaction)) {
                         playerFaction.resolveFactionAlly(allyFaction);
                         NameChanger.refreshTeams(p);
+                        addCooldown(p);
                         for (Player member : Playertools.getFactionOnlineMembers(allyFaction)) {
                             NameChanger.refresh(member);
                         }

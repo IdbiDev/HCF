@@ -1,6 +1,7 @@
 package me.idbi.hcf.Scoreboard;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.HCF_Timer;
@@ -29,140 +30,49 @@ public class Scoreboards {
             return;
         }
 
-        ScoreboardBuilder builder = ScoreboardBuilder.getOrCreate(p);
-        builder.setDisplayName(Config.DefaultScoreboardTitle.asStr());
-/*        ScoreboardSign sign = ScoreboardSign.getScoreboard(p);
-        sign.setObjectiveName(Config.ScoreboardTitle.asStr());*/
-        //sign.create();
-
-        List<String> fix = sortLists().get(0);
-        List<String> timers = sortLists().get(1);
-
-        List<String> tryThis = new ArrayList<>();
+        List<String> mainScoreboard = new ArrayList<>();
         for (String s : Config.DefaultScoreboard.asStrList()) {
-            tryThis.add(ChatColor.translateAlternateColorCodes('&', s));
+            mainScoreboard.add(ChatColor.translateAlternateColorCodes('&', s));
         }
 
-        sortLists();
-
-        Faction fac = Playertools.getPlayerFaction(p);
-        HCFPlayer player = HCFPlayer.getPlayer(p);
-
-        Collections.reverse(tryThis);
-        Collections.reverse(fix);
-        Collections.reverse(timers);
-
-        Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-        //ScoreboardManager manager = Bukkit.getScoreboardManager();
-
-        Objective obj = sb.registerNewObjective("dummy", "igen");
-        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        obj.setDisplayName(Config.DefaultScoreboardTitle.asStr());
-
-        int scoreNumber = 1;
-
-        int emptyCalcTimer = 0;
-        ArrayList<String> replacedList = new ArrayList<>();
-        HashMap<Integer, String> lines = new HashMap<>();
-/*        for (String line : timers) {
-            if (line.contains("%spawntag%") && HCF_Timer.getCombatTime(p) <= 0.0) {
-                continue;
-            } else if (line.contains("%ep_cd%") && HCF_Timer.getEpTime(p) <= 0.0) {
-                continue;
-            } else if (line.contains("%stuck_timer%") && HCF_Timer.getStuckTime(p) <= 0.0) {
-                continue;
-            } else if (line.contains("%bard_energy%") && player.bardEnergy <= 0.0) {
-                continue;
-            } else if (line.contains("%eotw%") && MiscTimers.getTimeOfEOTW() <= 0L) {
-                continue;
-            } else if (line.contains("%sotw%") && MiscTimers.getTimeOfSOTW() <= 0L) {
-                continue;
-            } else if (line.contains("%pvp_timer%") && HCF_Timer.getPvPTimerCoolDownSpawn(p) <= 0L) {
-                continue;
-            } else if (line.contains("%gapple_cd%") && HCF_Timer.get_Golden_Apple_Time(p) <= 0L) {
-                continue;
-            } else if (line.contains("%opgapple_cd%") && HCF_Timer.get_OP_Golden_Apple_Time(p) <= 0L) {
-                continue;
-            }
-
-            if (line.equals("empty")) {
-                *//*if (scoreNumber == 0) {
-                    *//**//*builder.setLine(scoreNumber, replaceVariables(line, p));
-                    scoreNumber++;
-                    continue;*//**//*
-                }*//*
-                line = line.replace("empty", "");
-                for (int i = 0; i <= emptyCalcTimer; i++) {
-                    line += " ";
-                }
-                emptyCalcTimer++;
-            }
-
+        List<String> replacedList = new ArrayList<>();
+        for (String line : mainScoreboard) {
             if (line.contains("%customtimers%")) {
                 for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
                     if (customTimers.getValue().isActive()) {
-                        *//*Score score = obj.getScore(line.replace("%customtimers%",
-                                replaceVariables(customTimers.getValue().getFormatted(), p)));
-                        score.setScore(scoreNumber);*//*
-                        *//*sign.setLine(scoreNumber, line.replace("%customtimers%",
-                                replaceVariables(customTimers.getValue().getFormatted(), p)));*//*
-                        *//*builder.setLine(scoreNumber, line.replace("%customtimers%",
-                                replaceVariables(customTimers.getValue().getFormatted(), p)));*//*
-                        lines.put(scoreNumber, line.replace("%customtimers%",
-                                replaceVariables(customTimers.getValue().getFormatted(), p)));
-                        scoreNumber++;
-                    }
-                }
-                continue;
-            }
-
-            //sign.setLine(scoreNumber, replaceVariables(line, p));
-            // Score score = obj.getScore(replaceVariables(line, p));
-            //score.setScore(scoreNumber);
-
-            //builder.setLine(scoreNumber, replaceVariables(line, p));
-            lines.put(scoreNumber, replaceVariables(line, p));
-            scoreNumber++;
-        }*/
-
-        for (String line : tryThis) {
-            if (line.contains("%customtimers%")) {
-                for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
-                    if (customTimers.getValue().isActive()) {
-                        //builder.setLine(scoreNumber, line.replace("%customtimers%", replaceVariables(customTimers.getValue().getFormatted(), p)));
                         replacedList.add(line.replace("%customtimers%", replaceVariables(customTimers.getValue().getFormatted(), p)));
-                        scoreNumber++;
                     }
                 }
                 continue;
             }
             if(isContinue(p, line)) continue;
 
-            //builder.setLine(scoreNumber, replaceVariables(line, p));
             replacedList.add(replaceVariables(line, p));
-            scoreNumber++;
-        }
-        for (int i = scoreNumber; i < Math.max(Config.DefaultScoreboard.asStrList().size(), Config.StaffScoreboard.asStrList().size()); i++) {
-            //builder.removeLine(i);
         }
 
-        ScoreboardLib lib = ScoreboardLib.start(m, new ScoreboardLib.ScoreboardTextProvider() {
-            @Override
-            public List<String> getScoreboardText() {
-                return replacedList;
-            }
+        if(replacedList.get(replacedList.size() - 1).equals("") || replacedList.get(replacedList.size() - 1).equalsIgnoreCase(" ")) {
+            replacedList = replacedList.subList(0, replacedList.size() - 1);
+        }
 
-            @Override
-            public String getScoreboardTitle() {
-                return "Title";
+        ArrayList<String> newReplacedList = new ArrayList<>();
+        for (String s : replacedList) {
+            if(s.length() > 30) {
+                newReplacedList.add(s.substring(0, 30));
+                continue;
             }
+            newReplacedList.add(s);
+        }
 
-            @Override
-            public String format(Player p, String row) {
-                return row;
-            }
-        }, 20L);
-        lib.addPlayer(p);
+        FastBoard board = Main.boards.get(p.getUniqueId());
+        board.updateTitle(Config.DefaultScoreboardTitle.asStr());
+        if(board == null) {
+            FastBoard newBoard = new FastBoard(p);
+            newBoard.updateTitle(Config.DefaultScoreboardTitle.asStr());
+            newBoard.updateLines(newReplacedList);
+            Main.boards.put(p.getUniqueId(), newBoard);
+            return;
+        }
+        board.updateLines(newReplacedList);
     }
 
     public static void RefreshAll() {
@@ -185,6 +95,8 @@ public class Scoreboards {
         } else if (line.contains("%eotw%") && miscTimers.getTimeOfEOTW() <= 0L) {
             return true;
         } else if (line.contains("%sotw%") && miscTimers.getTimeOfSOTW() <= 0L) {
+            return true;
+        } else if (line.contains("%logout%") && HCF_Timer.getLogoutTime(p) <= 0L) {
             return true;
         } else if (line.contains("%pvp_timer%") && HCF_Timer.getPvPTimerCoolDownSpawn(p) <= 0L) {
             return true;
@@ -210,6 +122,7 @@ public class Scoreboards {
                     || line.contains("%opgapple_cd%")
                     || line.contains("%sotw%")
                     || line.contains("%customtimers%")
+                    || line.contains("%logout%")
                     || line.contains("%eotw%")) {
                 timers.add(ChatColor.translateAlternateColorCodes('&', line));
                 continue;
@@ -238,12 +151,13 @@ public class Scoreboards {
                 .replace("%spawntag%", getDouble(HCF_Timer.getCombatTime(p)))
                 .replace("%pvp_timer%", getDouble(HCF_Timer.getPvPTimerCoolDownSpawn(p)))
                 .replace("%stuck_timer%", getDouble(HCF_Timer.getStuckTime(p)))
+                .replace("%logout%", getDouble(HCF_Timer.getLogoutTime(p)))
                 .replace("%ep_cd%", getDouble(HCF_Timer.getEpTime(p)))
                 .replace("%gapple_cd%", getDouble(HCF_Timer.get_Golden_Apple_Time(p)))
                 .replace("%opgapple_cd%", ConvertTime((int) (HCF_Timer.get_OP_Golden_Apple_Time(p) / 1000)))
                 .replace("%eotw%", ConvertTime((int) miscTimers.getTimeOfEOTW() / 1000))
                 .replace("%sotw%", ConvertTime((int) miscTimers.getTimeOfSOTW() / 1000))
-                .replace("%location%", hcf.getLocationFormatted());
+                .replace("%location%", hcf.getLocationFormatted() == null ? Messages.wilderness.language(p).queue() : hcf.getLocationFormatted());
     }
 
     public static String getDouble(long value) {

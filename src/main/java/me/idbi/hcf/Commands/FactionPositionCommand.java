@@ -26,6 +26,10 @@ public class FactionPositionCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player p) {
+            if(p.hasPermission("factions.commands.factioncall")) {
+                p.sendMessage(Messages.no_permission.language(p).queue());
+                return false;
+            }
             if (Playertools.getPlayerFaction(p) == null) {
                 p.sendMessage(Messages.not_in_faction.language(p).queue());
                 return false;

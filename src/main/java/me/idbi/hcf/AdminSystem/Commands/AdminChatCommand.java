@@ -3,12 +3,14 @@ package me.idbi.hcf.AdminSystem.Commands;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Scoreboard.AdminScoreboard;
+import me.idbi.hcf.Tools.Objects.ChatTypes;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class AdminChatCommand extends SubCommand {
@@ -43,6 +45,24 @@ public class AdminChatCommand extends SubCommand {
     }
 
     @Override
+    public boolean hasCooldown(Player p) {
+        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
+        return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
+    }
+
+    @Override
+    public void addCooldown(Player p) {
+        HashMap<Player, Long> hashMap = SubCommand.commandCooldowns.get(this);
+        hashMap.put(p, System.currentTimeMillis() + (getCooldown() * 1000L));
+        SubCommand.commandCooldowns.put(this, hashMap);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 2;
+    }
+
+    @Override
     public void perform(Player p, String[] args) {
         if (!Playertools.isInStaffDuty(p)) {
             p.sendMessage(Messages.not_in_duty.language(p).queue());
@@ -51,12 +71,12 @@ public class AdminChatCommand extends SubCommand {
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("chat")) {
-                if (!player.staffChat) {
-                    player.setStaffChat(true);
-                    p.sendMessage(Messages.staff_chat_on.language(p).queue());
+                if (!player.hasStaffChat()) {
+                    player.setChatType(ChatTypes.STAFF);
+                    p.sendMessage(Messages.chat_channel_changed.language(p).setChat(p).queue());
                 } else {
-                    player.setStaffChat(false);
-                    p.sendMessage(Messages.staff_chat_off.language(p).queue());
+                    player.setChatType(ChatTypes.PUBLIC);
+                    p.sendMessage(Messages.chat_channel_changed.language(p).setChat(p).queue());
                 }
             }
             AdminScoreboard.refresh(p);
@@ -64,11 +84,11 @@ public class AdminChatCommand extends SubCommand {
             if (args[0].equalsIgnoreCase("chat")) {
                 HCFPlayer hcf = HCFPlayer.getPlayer(p);
                 if (args[1].equalsIgnoreCase("on")) {
-                    hcf.setStaffChat(true);
-                    p.sendMessage(Messages.staff_chat_on.language(p).queue());
+                    player.setChatType(ChatTypes.STAFF);
+                    p.sendMessage(Messages.chat_channel_changed.language(p).setChat(p).queue());
                 } else if (args[1].equalsIgnoreCase("off")) {
-                    hcf.setStaffChat(false);
-                    p.sendMessage(Messages.staff_chat_off.language(p).queue());
+                    player.setChatType(ChatTypes.PUBLIC);
+                    p.sendMessage(Messages.chat_channel_changed.language(p).setChat(p).queue());
                 } else {
                     List<String> argsList = Arrays.stream(args).toList();
                     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {

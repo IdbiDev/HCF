@@ -7,6 +7,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.AdminTools;
 import me.idbi.hcf.Tools.MiscTimers;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Objects.Lag;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,45 +25,15 @@ public class AdminScoreboard {
     private static final DecimalFormat dfSharp = new DecimalFormat("0.0");
 
     public static void refresh(Player p) {
-        List<String> fix = sortLists().get(0);
-        List<String> timers = sortLists().get(1);
-
-        sortLists();
-
-        HCFPlayer player = HCFPlayer.getPlayer(p);
-
-        Collections.reverse(fix);
-        Collections.reverse(timers);
-
-        ScoreboardBuilder builder = ScoreboardBuilder.getOrCreate(p);
-        builder.setDisplayName(Config.StaffDutyScoreboardTitle.asStr());
-
-        int scoreNumber = 0;
+        List<String> mainScoreboard = new ArrayList<>();
+        for (String s : Config.StaffScoreboard.asStrList()) {
+            mainScoreboard.add(ChatColor.translateAlternateColorCodes('&', s));
+        }
 
         int emptyCalc = 0;
-        for (String line : timers) {
-
-            if (line.contains("%spawntag%") && HCF_Timer.getCombatTime(p) <= 0.0) {
-                continue;
-            } else if (line.contains("%ep_cd%") && HCF_Timer.getEpTime(p) <= 0.0) {
-                continue;
-            } else if (line.contains("%stuck_timer%") && HCF_Timer.getStuckTime(p) <= 0.0) {
-                continue;
-            } else if (line.contains("%bard_energy%") && player.bardEnergy <= 0.0) {
-                continue;
-            } else if (line.contains("%eotw%") && miscTimers.getTimeOfEOTW() <= 0L) {
-                continue;
-            } else if (line.contains("%gapple_cd%") && HCF_Timer.get_Golden_Apple_Time(p) <= 0L) {
-                continue;
-            } else if (line.contains("%opgapple_cd%") && HCF_Timer.get_OP_Golden_Apple_Time(p) <= 0L) {
-                continue;
-            }
-
+        List<String> replacedList = new ArrayList<>();
+        for (String line : mainScoreboard) {
             if (line.equals("empty")) {
-                if (scoreNumber == 0) {
-                    builder.setLine(scoreNumber + 1, replaceVariablesAdmin(line, p));
-                    continue;
-                }
                 line = line.replace("empty", "");
                 for (int i = 0; i <= emptyCalc; i++) {
                     line += " ";
@@ -73,37 +44,40 @@ public class AdminScoreboard {
             if (line.contains("%customtimers%")) {
                 for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
                     if (customTimers.getValue().isActive()) {
-                        builder.setLine(scoreNumber + 1, line.replace("%customtimers%",
+                        replacedList.add(line.replace("%customtimers%",
                                 Scoreboards.replaceVariables(customTimers.getValue().getFormatted(), p)));
-                        scoreNumber++;
                     }
                 }
                 continue;
             }
+            if (Scoreboards.isContinue(p, line)) continue;
 
-            builder.setLine(scoreNumber + 1, replaceVariablesAdmin(line, p));
-
-            scoreNumber++;
+            replacedList.add(replaceVariablesAdmin(line, p));
         }
 
-        int emptyCalc2 = 0;
-        for (String line : fix) {
-            if (line.equals("empty")) {
-                if (scoreNumber == 0) {
-                    builder.setLine(scoreNumber + 1, replaceVariablesAdmin(line, p));
-                    continue;
-                }
-                line = line.replace("empty", "");
-                for (int i = 0; i <= emptyCalc2; i++) {
-                    line += " ";
-                }
-                emptyCalc2++;
+        if (replacedList.get(replacedList.size() - 1).equalsIgnoreCase("") || replacedList.get(replacedList.size() - 1).equalsIgnoreCase(" ")) {
+            replacedList = replacedList.subList(0, replacedList.size() - 1);
+        }
+
+        ArrayList<String> newReplacedList = new ArrayList<>();
+        for (String s : replacedList) {
+            if (s.length() > 30) {
+                newReplacedList.add(s.substring(0, 30));
+                continue;
             }
-
-            builder.setLine(scoreNumber + 1, replaceVariablesAdmin(line, p));
-
-            scoreNumber++;
+            newReplacedList.add(s);
         }
+
+        FastBoard board = Main.boards.get(p.getUniqueId());
+        board.updateTitle(Config.StaffDutyScoreboardTitle.asStr());
+        if (board == null) {
+            FastBoard newBoard = new FastBoard(p);
+            newBoard.updateTitle(Config.DefaultScoreboardTitle.asStr());
+            newBoard.updateLines(newReplacedList);
+            Main.boards.put(p.getUniqueId(), newBoard);
+            return;
+        }
+        board.updateLines(newReplacedList);
 
     }
 
@@ -155,8 +129,9 @@ public class AdminScoreboard {
         return PlaceholderAPI.setPlaceholders(p,
                 Scoreboards.replaceVariables(inputString, p)
                         .replace("%invisible%", (AdminTools.InvisibleManager.invisedAdmins.contains(p) ? "§a✔" : "§c✖"))
-                        .replace("%chat_mode%", player.staffChat ? Messages.admin_staff_chat.language(p).queue() : Messages.admin_global_chat.language(p).queue())
+                        .replace("%chat_mode%", player.getFormattedChatType())
                         .replace("%online_players%", Bukkit.getOnlinePlayers().size() + "")
-                        .replace("%tps%", dfSharp.format(Bukkit.spigot().getTPS()[0]) + ""));
+                        .replace("%tps%", dfSharp.format(Lag.getTPS()) + ""));
     }
 }
+

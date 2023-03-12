@@ -11,6 +11,7 @@ import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
+import java.util.HashMap;
 
 public class FactionWithdrawCommand extends SubCommand {
     boolean transaction;
@@ -46,6 +47,24 @@ public class FactionWithdrawCommand extends SubCommand {
     }
 
     @Override
+    public boolean hasCooldown(Player p) {
+        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
+        return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
+    }
+
+    @Override
+    public void addCooldown(Player p) {
+        HashMap<Player, Long> hashMap = SubCommand.commandCooldowns.get(this);
+        hashMap.put(p, System.currentTimeMillis() + (getCooldown() * 1000L));
+        SubCommand.commandCooldowns.put(this, hashMap);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 2;
+    }
+
+    @Override
     public void perform(Player p, String[] args) {
         if (!Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_MONEY)) {
             // ToDo: permission handle
@@ -76,6 +95,7 @@ public class FactionWithdrawCommand extends SubCommand {
                                 Integer.parseInt(args[1])
                         );
 
+                addCooldown(p);
                 if (withdraw.transactionSuccessfully()) {
                     p.sendMessage(Messages.faction_bank_withdraw.language(p).queue().replace("%amount%", arg1 + ""));
                     Scoreboards.refresh(p);

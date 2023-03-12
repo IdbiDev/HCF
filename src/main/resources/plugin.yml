@@ -21,7 +21,7 @@ commands:
     description: HCF+ Faction Commands
     #usage: /<command> help
   admin:
-    aliases: [ a, ad ]
+    aliases: [ a, ad, staff, staffmode, smode, staffm ]
     description: HCF admin commands
     #usage: /<command> help
   fc:
@@ -59,6 +59,7 @@ permissions:
       factions.command.removeenchant,
       factions.command.enchantinfo,
       factions.command.enchantbook,
+      factions.commands.factioncall,
       factions.command.stats,
       factions.admin.customtimer,
       factions.command.revive,

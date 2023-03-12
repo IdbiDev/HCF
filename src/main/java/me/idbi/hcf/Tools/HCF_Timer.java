@@ -35,7 +35,7 @@ public class HCF_Timer {
     private static final int HomeCooldownDuration = Config.Logout.asInt() * 1000;
 
     public static boolean addCombatTimer(Player player) {
-        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
         if (!timers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             timers.put(player.getUniqueId(), System.currentTimeMillis() + combatTimerDuration);
@@ -184,6 +184,38 @@ public class HCF_Timer {
         }
     }
 
+    public static boolean expiredNowStuck(Player player) {
+        // Ha van rajta CombatTimer
+        if (stuckTimers.containsKey(player.getUniqueId())) {
+            if (System.currentTimeMillis() >= stuckTimers.get(player.getUniqueId())) {
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                stuckTimers.remove(player.getUniqueId());
+                return true;
+            } else {
+                // Ellenkező esetben: Van rajta
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean expiredNowHome(Player player) {
+        // Ha van rajta CombatTimer
+        if (homeTimers.containsKey(player.getUniqueId())) {
+            if (System.currentTimeMillis() >= homeTimers.get(player.getUniqueId())) {
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                homeTimers.remove(player.getUniqueId());
+                return true;
+            } else {
+                // Ellenkező esetben: Van rajta
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     public static long getCombatTime(Player player) {
         // Ha van rajta CombatTimer
         if (timers.containsKey(player.getUniqueId())) {
@@ -209,7 +241,7 @@ public class HCF_Timer {
             //5600                            5000+500
             if (System.currentTimeMillis() >= stuckTimers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
-                stuckTimers.remove(player.getUniqueId());
+                //stuckTimers.remove(player.getUniqueId());
                 Scoreboards.refresh(player);
                 return 0;
             } else {

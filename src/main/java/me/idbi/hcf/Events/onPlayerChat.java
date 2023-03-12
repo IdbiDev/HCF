@@ -1,6 +1,7 @@
 package me.idbi.hcf.Events;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Tools.Objects.ChatTypes;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
@@ -14,7 +15,8 @@ public class onPlayerChat implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         HCFPlayer player = HCFPlayer.getPlayer(e.getPlayer());
-        if (player.staffChat) {
+        Player p = e.getPlayer();
+        /*if (player.hasStaffChat()) {
             e.setCancelled(true);
 
             if (e.getMessage().split(" ").length == 2)
@@ -27,17 +29,41 @@ public class onPlayerChat implements Listener {
                 }
             }
             return;
-        }
+        }*/
 
-        if (player.factionChat) {
-            if (player.inFaction()) {
-                e.getPlayer().sendMessage(Messages.not_in_faction.queue());
+        player.sendChat(e.getMessage(), player.chatType);
+        e.setCancelled(true);
+       /* if (player.chatType != ChatTypes.PUBLIC) {
+            Messages message = null;
+            switch (player.chatType) {
+                case ALLY -> message = Messages.ally_chat.language(p);
+                case LEADER -> message = Messages.leader_chat.language(p);
+                case FACTION -> message = Messages.faction_chat.language(p);
+                case STAFF -> message = Messages.staff_chat.language(p);
+                case PUBLIC -> message = Messages.chat_prefix_faction.language(p);
+            }
+            faction.BroadcastFaction(message
+                    .setMessage(
+                            String.join(" ", args)
+                                    .replace(args[0] + " ", "")
+                                    .replaceFirst(args[1] + " ", ""))
+                    .setPlayer(p)
+                    .setRank(hcfPlayer.rank.name)
+                    .setFaction(faction.name));
+            if (!player.inFaction()) {
+                e.getPlayer().sendMessage(Messages.not_in_faction.language(e.getPlayer()).queue());
+                e.getPlayer().sendMessage(Messages.faction_chat_toggle_off.language(e.getPlayer()).queue());
+                player.setFactionChat(false);
+                e.setCancelled(true);
                 return;
             }
             e.setCancelled(true);
             Faction faction = player.faction;
             if (faction == null) {
-                e.getPlayer().sendMessage(Messages.not_in_faction.queue());
+                e.getPlayer().sendMessage(Messages.not_in_faction.language(e.getPlayer()).queue());
+                e.getPlayer().sendMessage(Messages.faction_chat_toggle_off.language(e.getPlayer()).queue());
+                player.setFactionChat(false);
+                e.setCancelled(true);
                 return;
             }
             String msg = Messages.faction_chat
@@ -70,8 +96,7 @@ public class onPlayerChat implements Listener {
                 );
 
             }
-
-        }
+*/
 
     }
 }

@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.util.Date;
+import java.util.HashMap;
 
 public class FactionCreateCommand extends SubCommand {
     public static Connection con = Main.getConnection();
@@ -57,9 +58,31 @@ public class FactionCreateCommand extends SubCommand {
     }
 
     @Override
+    public boolean hasCooldown(Player p) {
+        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
+        return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
+    }
+
+    @Override
+    public void addCooldown(Player p) {
+        HashMap<Player, Long> hashMap = SubCommand.commandCooldowns.get(this);
+        hashMap.put(p, System.currentTimeMillis() + (getCooldown() * 1000L));
+        SubCommand.commandCooldowns.put(this, hashMap);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 2;
+    }
+
+    @Override
     public void perform(Player p, String[] args) {
         if (Playertools.getPlayerFaction(p) == null) {
             String name = args[1];
+            if(!Playertools.isValidName(args[1])) {
+                p.sendMessage("Nem valid név!");
+                return;
+            }
             if (!isFactionNameTaken(name)) {
                 for (String blacklisted_word : Main.blacklistedRankNames) {
                     if (name.toLowerCase().contains(blacklisted_word.toLowerCase())) {
@@ -77,6 +100,7 @@ public class FactionCreateCommand extends SubCommand {
                 Main.factionCache.put(x, faction);
                 Main.nameToFaction.put(faction.name, faction);
 
+                addCooldown(p);
 
                 HCFPlayer hcf = HCFPlayer.getPlayer(p);
                 hcf.setFaction(faction);

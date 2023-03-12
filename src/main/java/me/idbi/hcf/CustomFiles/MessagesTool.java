@@ -15,15 +15,28 @@ public class MessagesTool {
     private static final Main m = Main.getPlugin(Main.class);
 
     public static SimpleConfig getLanguageMessages(String language) {
-        return ConfigManager.getSimpleConfigManager().getNewConfig("messages/messages_" + language + ".yml");
+        if(ConfigManager.allMessages.containsKey(language)) {
+            return ConfigManager.allMessages.get(language);
+        } else {
+            return ConfigManager.getMainMessages();
+        }
+       // return ConfigManager.getSimpleConfigManager().getNewConfig("messages/messages_" + language + ".yml");
     }
 
     public static SimpleConfig getGUILanguageMessages(String language) {
-        return ConfigManager.getSimpleConfigManager().getNewConfig("gui_messages/messages_" + language + ".yml");
+        if(ConfigManager.allGuiMessages.containsKey(language)) {
+            return ConfigManager.allGuiMessages.get(language);
+        } else {
+            return ConfigManager.getGUIMessages();
+        }
+        //return ConfigManager.getSimpleConfigManager().getNewConfig("gui_messages/messages_" + language + ".yml");
     }
 
     public static String getPlayerLanguage(Player p) {
-        return (Main.currentLanguages.getOrDefault(p.getUniqueId(), Config.DefaultLanguage.asStr()));
+        if(Main.currentLanguages.containsKey(p.getUniqueId())) {
+            return Main.currentLanguages.get(p.getUniqueId());
+        }
+        return Config.DefaultLanguage.asStr();
     }
 
     public static void setPlayerLanguage(Player p, String language) {
@@ -36,7 +49,7 @@ public class MessagesTool {
         File[] files = new File(m.getDataFolder() + "\\messages").listFiles();
 
         for (File file : files) {
-            if (file.getName().equalsIgnoreCase("messages_en.yml")) continue;
+            //if (file.getName().equalsIgnoreCase("messages_en.yml")) continue;
             if (file.getName().startsWith("messages_") && file.getName().endsWith(".yml")) {
                 String language = file.getName().replace("messages_", "");
                 Main.availableLanguages.add(language.substring(0, language.lastIndexOf(".")));
@@ -44,6 +57,8 @@ public class MessagesTool {
                 for (Messages value : Messages.values()) {
                     value.loadOthers(config);
                 }
+
+                ConfigManager.allMessages.put(language.replace(".yml", ""), config);
             }
         }
     }
@@ -52,7 +67,7 @@ public class MessagesTool {
         File[] files = new File(m.getDataFolder() + "\\gui_messages").listFiles();
 
         for (File file : files) {
-            if (file.getName().equalsIgnoreCase("guimessages_en.yml")) continue;
+            //if (file.getName().equalsIgnoreCase("guimessages_en.yml")) continue;
             if (file.getName().startsWith("guimessages_") && file.getName().endsWith(".yml")) {
                 String language = file.getName().replace("guimessages_", "");
                 Main.availableLanguages.add(language.substring(0, language.lastIndexOf(".")));
@@ -60,6 +75,7 @@ public class MessagesTool {
                 for (GUIMessages value : GUIMessages.values()) {
                     value.loadOthers(config);
                 }
+                ConfigManager.allGuiMessages.put(language.replace(".yml", ""), config);
             }
         }
     }

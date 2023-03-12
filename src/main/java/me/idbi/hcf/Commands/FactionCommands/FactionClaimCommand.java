@@ -43,6 +43,24 @@ public class FactionClaimCommand extends SubCommand {
     }
 
     @Override
+    public boolean hasCooldown(Player p) {
+        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
+        return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
+    }
+
+    @Override
+    public void addCooldown(Player p) {
+        HashMap<Player, Long> hashMap = SubCommand.commandCooldowns.get(this);
+        hashMap.put(p, System.currentTimeMillis() + (getCooldown() * 1000L));
+        SubCommand.commandCooldowns.put(this, hashMap);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 2;
+    }
+
+    @Override
     public void perform(Player p, String[] args) {
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         if (Playertools.getPlayerFaction(p) != null) {
@@ -55,17 +73,11 @@ public class FactionClaimCommand extends SubCommand {
                 return;
             }
             if (p.getInventory().firstEmpty() != -1) {
-                ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
-                ItemMeta meta = wand.getItemMeta();
-
-                meta.setDisplayName(Config.ClaimingWandTitle.asStr());
-                meta.setLore(Config.ClaimingWandLore.asChatColorList());
-
-                wand.setItemMeta(meta);
-                p.getInventory().setItem(p.getInventory().firstEmpty(), wand);
+                p.getInventory().setItem(p.getInventory().firstEmpty(), HCF_Claiming.Wands.claimWand());
 
                 //ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
                 hcfPlayer.setClaimType(HCF_Claiming.ClaimTypes.FACTION);
+                addCooldown(p);
             } else {
                 p.sendMessage(Messages.not_enough_slot.language(p).queue());
             }

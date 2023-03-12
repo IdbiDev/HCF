@@ -1,5 +1,6 @@
 package me.idbi.hcf.CustomFiles.ConfigManagers;
 
+import me.idbi.hcf.CustomFiles.Configs.ClassConfig;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Configs.ConfigComments;
 import me.idbi.hcf.CustomFiles.GUIMessages.GUIMessages;
@@ -10,6 +11,7 @@ import me.idbi.hcf.Main;
 import org.bukkit.Bukkit;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class ConfigManager {
 
@@ -19,9 +21,12 @@ public class ConfigManager {
     private static SimpleConfigManager manager;
     private static SimpleConfig config;
     private static SimpleConfig messages;
+    public static HashMap<String, SimpleConfig> allMessages;
+    public static HashMap<String, SimpleConfig> allGuiMessages;
     private static SimpleConfig enMessages;
     private static SimpleConfig guiMessages;
     private static SimpleConfig enGuiMessages;
+    private static SimpleConfig classes;
     private static ConfigManager instance;
     public Main plugin;
 
@@ -36,6 +41,9 @@ public class ConfigManager {
 
     public static SimpleConfig getMainMessages() {
         return messages;
+    }
+    public static SimpleConfig getClassConfig() {
+        return classes;
     }
 
     public static SimpleConfig getEnglishMessages() {
@@ -59,6 +67,8 @@ public class ConfigManager {
     }
 
     public void setup() {
+        allMessages = new HashMap<>();
+        allGuiMessages = new HashMap<>();
         String[] header = {"This is super simple", "And highly customizable", "new and fresh SimpleConfig!"};
 
         manager = new SimpleConfigManager(this.plugin);
@@ -77,17 +87,22 @@ public class ConfigManager {
         enGuiMessages = manager.getNewConfig("gui_messages/guimessages_en.yml");
         this.setupGUI();
 
+        classes = manager.getNewConfig("classes.yml");
+        this.setupClasses();
+
         File[] files = new File(plugin.getDataFolder() + "\\messages").listFiles();
         File[] guiFiles = new File(plugin.getDataFolder() + "\\gui_messages").listFiles();
 
         for (File file : files) {
             if (file.getName().startsWith("messages_") && file.getName().endsWith(".yml")) {
+                //allMessages.put(file.getName().replace(".yml", ""), manager.getNewConfig("messages/" + file.getName()));
                 Bukkit.getLogger().info("Language " + file.getName() + " successfully loaded!");
             }
         }
 
         for (File file : guiFiles) {
             if (file.getName().startsWith("guimessages_") && file.getName().endsWith(".yml")) {
+                //allGuiMessages.put(file.getName().replace(".yml", ""), manager.getNewConfig("gui_messages/" + file.getName()));
                 Bukkit.getLogger().info("GUI Language " + file.getName() + " successfully loaded!");
             }
         }
@@ -110,6 +125,12 @@ public class ConfigManager {
 
     public void setupGUI() {
         for (GUIMessages msg : GUIMessages.values()) {
+            msg.load();
+        }
+    }
+
+    public void setupClasses() {
+        for (ClassConfig msg : ClassConfig.values()) {
             msg.load();
         }
     }

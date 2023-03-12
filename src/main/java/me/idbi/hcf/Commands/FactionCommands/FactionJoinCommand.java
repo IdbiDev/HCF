@@ -6,16 +6,14 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
-import me.idbi.hcf.Tools.Objects.Faction;
-import me.idbi.hcf.Tools.Objects.FactionHistory;
-import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import me.idbi.hcf.Tools.Objects.PlayerStatistic;
+import me.idbi.hcf.Tools.Objects.*;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.SQL_Connection;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.util.Date;
+import java.util.HashMap;
 
 public class FactionJoinCommand extends SubCommand {
     private static final Connection con = Main.getConnection();
@@ -51,6 +49,24 @@ public class FactionJoinCommand extends SubCommand {
     }
 
     @Override
+    public boolean hasCooldown(Player p) {
+        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
+        return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
+    }
+
+    @Override
+    public void addCooldown(Player p) {
+        HashMap<Player, Long> hashMap = SubCommand.commandCooldowns.get(this);
+        hashMap.put(p, System.currentTimeMillis() + (getCooldown() * 1000L));
+        SubCommand.commandCooldowns.put(this, hashMap);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 2;
+    }
+
+    @Override
     public void perform(Player p, String[] args) {
         if (Playertools.getPlayerFaction(p) == null) {
             Faction faction = Main.nameToFaction.get(args[1]);
@@ -76,7 +92,9 @@ public class FactionJoinCommand extends SubCommand {
                 // displayTeams.addPlayerToTeam(p);
                 //faction.addPrefixPlayer(p);
 
+                addCooldown(p);
                 Scoreboards.refresh(p);
+                hcfPlayer.setChatType(ChatTypes.PUBLIC);
                 faction.refreshDTR();
                 PlayerStatistic stat = hcfPlayer.playerStatistic;
                 stat.factionHistory.add(0, new FactionHistory(new Date().getTime(), 0L, "", faction.name, faction.getDefaultRank().name, faction.id));

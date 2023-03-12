@@ -4,6 +4,7 @@ import me.idbi.hcf.Bossbar.BossbarTools;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Scoreboard.FastBoard;
 import me.idbi.hcf.Tools.AdminTools;
 import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
@@ -35,7 +36,11 @@ public class onPlayerLeft implements Listener {
     public void onPlayerLeft(PlayerQuitEvent e) {
         e.setQuitMessage("");
         // Save deaths,kills money etc
+        FastBoard board = Main.boards.get(e.getPlayer().getUniqueId());
+        if(board != null) board.delete();
+
         HCFPlayer player = HCFPlayer.getPlayer(e.getPlayer());
+        player.setOnline(false);
         if (player.inFaction()) {
             Faction f = Playertools.getPlayerFaction(e.getPlayer());
             if (f != null) {

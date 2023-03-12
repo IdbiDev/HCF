@@ -76,12 +76,12 @@ public class onPlayerMove implements Listener {
         }
         if (player.freezeStatus) {
             e.setCancelled(true);
-        }
+        }/*
         if (HCF_Timer.checkStuckTimer(e.getPlayer())) {
             if (e.getTo().distance(player.stuckLocation) > 4) {
                 HCF_Timer.stuckTimers.remove(e.getPlayer().getUniqueId());
                 e.getPlayer().sendMessage(Messages.stuck_finished.language(p).queue());
             }
-        }
+        }*/
     }
 }

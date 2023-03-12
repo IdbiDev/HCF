@@ -183,7 +183,7 @@ public class HCF_Claiming {
                 Faction f = Main.factionCache.get(faction);
                 endpositions.remove(faction);
                 startpositions.remove(faction);
-                HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(startX, startZ, endX, endZ, f.id, attribute, p.getWorld().getName());
+                HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(startX, endX, startZ, endZ, f.id, attribute, p.getWorld().getName());
                 f.addClaim(claim);
                 Scoreboards.RefreshAll();
 

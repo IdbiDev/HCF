@@ -22,7 +22,6 @@ public class SimpleConfigManager {
      * @return - New SimpleConfig
      */
     public SimpleConfig getNewConfig(String filePath, String[] header) {
-
         File file = this.getConfigFile(filePath);
 
         if (!file.exists()) {

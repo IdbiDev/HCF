@@ -1,5 +1,6 @@
 package me.idbi.hcf.Tools.Objects;
 
+import com.avaje.ebeaninternal.server.core.Message;
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
@@ -10,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -35,10 +37,10 @@ public class HCFPlayer {
     public int assassinState;
     public boolean inDuty;
     public Location stuckLocation;
-    public boolean factionChat;
+    public ChatTypes chatType;
+    public ArrayList<ChatTypes> toggledChatTypes;
     public int kothId;
     public String language;
-    public boolean staffChat;
     public FactionRankManager.Rank rank;
     public PlayerStatistic playerStatistic;
     public boolean isDeathBanned;
@@ -67,14 +69,14 @@ public class HCFPlayer {
                 this.rank = this.faction.getRank(rankName);
             }
             this.bardEnergy = 0D;
-            this.factionChat = false;
-            this.staffChat = false;
+            this.chatType = ChatTypes.PUBLIC;
             this.inDuty = false;
             this.currentArea = null;
             this.stuckLocation = null;
             this.claimType = HCF_Claiming.ClaimTypes.NONE;
             this.freezeStatus = false;
             this.kothId = 0;
+            this.toggledChatTypes = new ArrayList<>();
             this.language = language;
             this.playerClass = Classes.NONE;
             this.playerStatistic = playerStatistic;
@@ -160,8 +162,12 @@ public class HCFPlayer {
         this.inDuty = duty;
     }
 
-    public void setFactionChat(boolean chat) {
-        this.factionChat = chat;
+    public boolean hasStaffChat() {
+        return this.chatType == ChatTypes.STAFF;
+    }
+
+    public void setChatType(ChatTypes chatType) {
+        this.chatType = chatType;
     }
 
     public void setFreezeStatus(boolean state) {
@@ -192,8 +198,33 @@ public class HCFPlayer {
         this.currentArea = newLoc;
     }
 
+    /**
+     *
+     * @param chatTypes
+     * @return New status of chat type. Return true if chat type has been set to enable
+     */
+    public boolean toggleChat(ChatTypes chatTypes) {
+        if(this.toggledChatTypes.contains(chatTypes)) {
+            this.toggledChatTypes.remove(chatTypes);
+            return true;
+        } else {
+            this.toggledChatTypes.add(chatTypes);
+            return false;
+        }
+    }
+
+    public boolean isDisabled(ChatTypes chatTypes) {
+        return this.toggledChatTypes.contains(chatTypes);
+    }
+
     public void setMoney(int money) {
-        this.money = money;
+        Main.getEconomy().withdrawPlayer(Bukkit.getOfflinePlayer(this.uuid), this.money);
+        EconomyResponse r = Main.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(this.uuid), money);
+        this.money = Math.toIntExact(Math.round(r.balance));
+    }
+
+    public void setCurrentArea(HCF_Claiming.Faction_Claim currentArea) {
+        this.currentArea = currentArea;
     }
 
     public void addMoney(int amount) {
@@ -201,7 +232,31 @@ public class HCFPlayer {
             this.money = Integer.MAX_VALUE;
             return;
         }
-        this.money += amount;
+        EconomyResponse r = Main.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(this.uuid), amount);
+        System.out.println("Economy response addMoney: " + r.transactionSuccess() + " Error: " + r.errorMessage);
+        this.money =  Math.toIntExact(Math.round(r.balance));
+    }
+
+    public String getFormattedChatType() {
+        if(Bukkit.getPlayer(this.uuid) == null) return "";
+        Player p = Bukkit.getPlayer(this.uuid);
+        switch (this.chatType) {
+            case ALLY -> {
+                return Messages.ally_chat_channel.language(p).queue();
+            }
+            case LEADER -> {
+                return Messages.leader_chat_channel.language(p).queue();
+            }
+            case STAFF -> {
+                return Messages.staff_chat_channel.language(p).queue();
+            }
+            case FACTION -> {
+                return Messages.faction_chat_channel.language(p).queue();
+            }
+            default -> {
+                return Messages.public_chat_channel.language(p).queue();
+            }
+        }
     }
 
     public void setLanguage(String newLang) {
@@ -226,11 +281,17 @@ public class HCFPlayer {
             this.money = 0;
             return;
         }
-        this.money -= amount;
+
+        EconomyResponse r = Main.getEconomy().withdrawPlayer(Bukkit.getOfflinePlayer(this.uuid), amount);
+        this.money = Math.toIntExact(Math.round(r.balance));
     }
 
     public void setBardEnergy(double energy) {
         this.bardEnergy = energy;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 
     public void setFaction(Faction faction) {
@@ -246,9 +307,6 @@ public class HCFPlayer {
         this.stuckLocation = loc;
     }
 
-    public void setStaffChat(boolean chat) {
-        this.staffChat = chat;
-    }
 
     public void addFaction(Faction f) {
         this.faction = f;
@@ -257,6 +315,7 @@ public class HCFPlayer {
     }
 
     public void removeFaction() {
+        setChatType(ChatTypes.PUBLIC);
         this.faction.members.remove(this);
         this.faction = null;
         this.rank = null;
@@ -368,6 +427,80 @@ public class HCFPlayer {
             }
         }
         return null;
+    }
+
+    public void sendChat(String message, ChatTypes chatTypes) {
+        if(chatTypes == ChatTypes.PUBLIC || message.startsWith("!")) {
+            if(message.equalsIgnoreCase("!")) {
+                message = message.substring(1);
+            }
+            if(this.inFaction()) {
+                for (Player onlines : Bukkit.getOnlinePlayers()) {
+                    onlines.sendMessage(Messages.chat_prefix_faction.language(onlines)
+                            .setFaction(this.faction.name)
+                            .setMessage(message)
+                            .setPlayer(this).queue());
+                }
+            } else {
+                for (Player onlines : Bukkit.getOnlinePlayers()) {
+                    onlines.sendMessage(Messages.chat_prefix_without_faction.language(onlines)
+                            .setMessage(message)
+                            .setPlayer(this).queue());
+                }
+            }
+        }
+        else if(chatTypes == ChatTypes.STAFF) {
+            for (Player onlines : Bukkit.getOnlinePlayers()) {
+                HCFPlayer hcfOnline = HCFPlayer.getPlayer(onlines);
+                if(hcfOnline.isDisabled(ChatTypes.STAFF)) continue;
+                if(onlines.hasPermission("factions.admin")) {
+                    onlines.sendMessage(Messages.staff_chat.language(onlines)
+                            .setMessage(message)
+                            .setPlayer(this).queue());
+                }
+            }
+        }
+        else if(chatTypes == ChatTypes.FACTION) {
+            if(!this.inFaction()) {
+                return;
+            }
+            for (Player member : this.faction.getMembers()) {
+                HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
+                if(hcfMember.isDisabled(ChatTypes.FACTION)) continue;
+                member.sendMessage(Messages.faction_chat.setFaction(this.faction).setPlayer(this).setMessage(message).setRank(this.rank.name).queue());
+            }
+        }
+        else if(chatTypes == ChatTypes.LEADER) {
+            if(!this.inFaction()) {
+                return;
+            }
+            for (Player member : this.faction.getMembers()) {
+                HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
+                if(hcfMember.isDisabled(ChatTypes.LEADER)) continue;
+                if(hcfMember.rank.hasPermission(FactionRankManager.Permissions.MANAGE_ALL) || hcfMember.rank.isLeader) {
+                    member.sendMessage(Messages.leader_chat.setPlayer(this).setMessage(message).queue());
+                }
+            }
+        }
+        else if(chatTypes == ChatTypes.ALLY) {
+            if (!this.inFaction()) {
+                return;
+            }
+            if (!this.faction.Allies.isEmpty()) {
+                for (AllyFaction value : this.faction.Allies.values()) {
+                    for (Player member : value.getAllyFaction().getMembers()) {
+                        HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
+                        if (hcfMember.isDisabled(ChatTypes.ALLY)) continue;
+                        member.sendMessage(Messages.ally_chat.setMessage(message).setFaction(this.faction).setPlayer(this).queue());
+                    }
+                }
+                for (Player member : this.faction.getMembers()) {
+                    HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
+                    if (hcfMember.isDisabled(ChatTypes.ALLY)) continue;
+                    member.sendMessage(Messages.ally_chat.setMessage(message).setFaction(this.faction).setPlayer(this).queue());
+                }
+            }
+        }
     }
 
     public void save() {

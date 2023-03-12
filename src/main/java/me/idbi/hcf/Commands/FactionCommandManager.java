@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FactionCommandManager implements CommandExecutor {
 
@@ -15,6 +16,7 @@ public class FactionCommandManager implements CommandExecutor {
 
     public FactionCommandManager() {
         subcommands.add(new FactionChatCommand());
+        subcommands.add(new FactionChatToggleCommand());
         subcommands.add(new FactionClaimCommand());
         subcommands.add(new FactionCreateCommand());
         subcommands.add(new FactionDepositCommand());
@@ -24,11 +26,17 @@ public class FactionCommandManager implements CommandExecutor {
         subcommands.add(new FactionJoinCommand());
         subcommands.add(new FactionKickCommand());
         subcommands.add(new FactionLeaveCommand());
+        subcommands.add(new FactionManageCommand());
+        subcommands.add(new FactionSetHomeCommand());
         subcommands.add(new FactionStatsCommand());
         subcommands.add(new FactionStuckCommand());
         subcommands.add(new FactionShowCommand());
         subcommands.add(new FactionTransferCommand());
         subcommands.add(new FactionWithdrawCommand());
+
+        for (SubCommand command : subcommands) {
+            SubCommand.commandCooldowns.put(command, new HashMap<>());
+        }
     }
 
     @Override
@@ -39,9 +47,16 @@ public class FactionCommandManager implements CommandExecutor {
                 if (args.length > 0) {
                     for (int i = 0; i < getSubcommands().size(); i++) {
                         try {
-                            if (getSubcommands().get(i).isCommand(args[0])) {
-                                if (getSubcommands().get(i).hasPermission(p)) {
-                                    getSubcommands().get(i).perform(p, args);
+                            SubCommand cmd = getSubcommands().get(i);
+                            if (cmd.isCommand(args[0])) {
+                                if (cmd.hasPermission(p)) {
+                                    if(!cmd.hasCooldown(p)) {
+                                        cmd.perform(p, args);
+                                    } else {
+                                        long cooldown = SubCommand.commandCooldowns.get(cmd).get(p);
+                                        p.sendMessage(Messages.command_cooldown.language(p)
+                                                .setTime((cooldown / 1000 - System.currentTimeMillis() / 1000) + "").queue());
+                                    }
                                 } else {
                                     p.sendMessage(Messages.no_permission.language(p).queue());
                                 }
@@ -50,6 +65,7 @@ public class FactionCommandManager implements CommandExecutor {
                             p.sendMessage("§cUsage: " + getSubcommands().get(i).getSyntax());
                             p.sendMessage(Messages.missing_argument.language(p).queue());
                         } catch (Exception e) {
+                            e.printStackTrace();
                             p.sendMessage(Messages.error_while_executing.language(p).queue());
                         }
                     }

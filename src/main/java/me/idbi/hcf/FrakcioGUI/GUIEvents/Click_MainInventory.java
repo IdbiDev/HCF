@@ -30,7 +30,7 @@ public class Click_MainInventory implements Listener {
                 .onClose(player -> {                                               //called when the inventory is closing
                 })
                 .onComplete((player, text) -> {                                    //called when the inventory output slot is clicked
-                    if (text.matches("^[0-9a-zA-Z]+$")) {
+                    if (Playertools.isValidName(text)) {
                         Faction faction = Playertools.getPlayerFaction(p);
                         assert faction != null;
                         Playertools.RenameFaction(faction, text);

@@ -2,8 +2,12 @@ package me.idbi.hcf.Tools;
 
 
 import me.idbi.hcf.AdminSystem.AdminCommandManager;
+import me.idbi.hcf.BukkitCommands.BukkitCommandManager;
+import me.idbi.hcf.BukkitCommands.CommandRegistry;
+import me.idbi.hcf.BukkitCommands.HCFCommand;
 import me.idbi.hcf.Commands.*;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Reclaim.Commands.ReclaimCommand;
 
 public class SetupCommands {
     public static void setupCommands() {

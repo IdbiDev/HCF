@@ -3,6 +3,7 @@ package me.idbi.hcf.CustomFiles.Messages;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
 import me.idbi.hcf.CustomFiles.MessagesTool;
+import me.idbi.hcf.Tools.Objects.ChatTypes;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import net.md_5.bungee.api.ChatColor;
@@ -141,9 +142,21 @@ public enum Messages {
     not_deathbanned("%prefix% &cThis player is not deathbanned!"),
 
     // Faction chat
-    faction_chat("&7[&e%faction_name%&7] [&e%rank%&7] &6&o%player%&7: &e%message%"),
-    faction_chat_toggle_on("%prefix% &aYou are now in &2&ofaction chat&a!"),
-    faction_chat_toggle_off("%prefix% &cYou are now in &c&oALL chat&c!"),
+    staff_chat("Chat","&8[&eStaffChat&8] &b%player%&7: &e%message%"),
+    faction_chat("Chat","&7[&e%faction_name%&7] [&e%rank%&7] &6&o%player%&7: &e%message%"),
+    ally_chat("Chat","&7[&dAllience&7] &7[&d%faction_name%&7] &5&o%player%&7: &d%message%"),
+    leader_chat("Chat","&7[&aLeader&7] &2&o%player%&7: &a%message%"),
+    toggle_chat_enable("Chat","%prefix% &aYou enabled the &2&o%chat% &achat."),
+    toggle_chat_disable("Chat","%prefix% &cYou disabled the &2&o%chat% &achat."),
+    cant_disable_chat("Chat","%prefix% &cYou can't disable this chat!"),
+/*    faction_chat_toggle_on("%prefix% &aYou are now in &2&ofaction chat&a!"),
+    faction_chat_toggle_off("%prefix% &cYou are now in &c&oALL chat&c!"),*/
+    chat_channel_changed("Chat","%prefix% &aYou are now in &2&o%chat% &achat."),
+    public_chat_channel("Chat","Public"),
+    staff_chat_channel("Chat","Staff"),
+    faction_chat_channel("Chat","Faction"),
+    ally_chat_channel("Chat","Ally"),
+    leader_chat_channel("Chat","Leader"),
 
     // Faction permissions messages // ToDo: valamit kezdeni vele
 //    promote_message("Factions","%prefix% &6&o%executor% &epromoted you to &6&o%rank%&e!"),
@@ -271,10 +284,9 @@ public enum Messages {
     hover_join("chat","&7Click here to join!"),
     hover_accept("chat","&7Click here to accept!"),
 
-    // Staff messages
-    staff_chat("&8[&eStaffChat&8] &b%player%&7: &e%message%"),
-    staff_chat_on("%prefix% &aStaff chat enabled!"),
-    staff_chat_off("%prefix% &cStaff chat disabled!"),
+    // Staff message
+/*    staff_chat_on("%prefix% &aStaff chat enabled!"),
+    staff_chat_off("%prefix% &cStaff chat disabled!"),*/
 
     vanish_enabled("%prefix% &aVanish enabled!"),
     vanish_disable("%prefix% &cVanish disabled!"),
@@ -295,6 +307,16 @@ public enum Messages {
     eotw_start_subtitle("UwU"),
     cant_teleport_to_safezone("Factions","%prefix% &cYou can't teleport to a protected zone while you are in PvP tag"),
     missing_argument("Server","%prefix% &cThis command requires &none or more&f&c argument!"),
+
+    back_successfully("back", "%prefix% &aSuccessfully teleported to the previous position!"),
+    no_last_location("back", "%prefix% &cYou don't have previous position!"),
+    console_no_last_location("back", "%prefix% &cThis player does not have previous position!"),
+    
+    god_enable("godmode", "%prefix% &aGod mode enabled!"),
+    god_disable("godmode", "%prefix% &cGod mode disabled!"),
+    god_enable_other("godmode", "%prefix% &aGod mode enabled for %player%!"),
+    god_disable_other("godmode", "%prefix% &cGod mode disabled for %player%!"),
+
 
     faction_show(Arrays.asList(
             "&8&m        &c %faction_name% &f[%faction_status%&f] &8&m        ",
@@ -455,8 +477,8 @@ public enum Messages {
             if (configMessage != null) {
                 this.playerMessage = ChatColor.translateAlternateColorCodes('&', configMessage.replace("%prefix%", prefix));
                 return this;
-            } else
-                MessagesTool.updateMessageFiles();
+            } else {}
+                //MessagesTool.updateMessageFiles();
         } else {
             List<String> returnList = new ArrayList();
             List<String> configList = MessagesTool.getLanguageMessages(language).getStringList(this.toString());
@@ -469,7 +491,7 @@ public enum Messages {
                 }
                 this.playerListMessages = returnList;
             } else {
-                MessagesTool.updateMessageFiles();
+                //MessagesTool.updateMessageFiles();
                 for (String message : this.listMessages) {
                     returnList.add(
                             ChatColor.translateAlternateColorCodes('&', message.replace("%prefix%", prefix))
@@ -560,6 +582,57 @@ public enum Messages {
 
     public Messages setItem(ItemStack item) {
         playerMessage = playerMessage.replace("%item%", (item.getType().name().charAt(0) + item.getType().name().substring(1).toLowerCase()).replace("_", " "));
+        return this;
+    }
+
+    public Messages setChat(Player p, ChatTypes chatTypes) {
+        String chat;
+        switch (chatTypes) {
+            case ALLY:
+                chat = Messages.ally_chat_channel.language(p).queue();
+                break;
+            case STAFF:
+                chat = Messages.staff_chat_channel.language(p).queue();
+                break;
+            case LEADER:
+                chat = Messages.leader_chat_channel.language(p).queue();
+                break;
+            case FACTION:
+                chat = Messages.faction_chat_channel.language(p).queue();
+                break;
+            default:
+                chat = Messages.public_chat_channel.language(p).queue();
+        }
+        playerMessage = playerMessage.replace("%chat%", chat);
+        return this;
+    }
+
+    /**
+     * Auto setup from hcfPlayer
+     * @param p
+     * @return
+     */
+    public Messages setChat(Player p) {
+        HCFPlayer player = HCFPlayer.getPlayer(p);
+        ChatTypes chatTypes = player.chatType;
+        String chat;
+        switch (chatTypes) {
+            case ALLY:
+                chat = Messages.ally_chat_channel.language(p).queue();
+                break;
+            case STAFF:
+                chat = Messages.staff_chat_channel.language(p).queue();
+                break;
+            case LEADER:
+                chat = Messages.leader_chat_channel.language(p).queue();
+                break;
+            case FACTION:
+                chat = Messages.faction_chat_channel.language(p).queue();
+                break;
+            default:
+                chat = Messages.public_chat_channel.language(p).queue();
+        }
+        playerMessage = playerMessage.replace("%chat%", chat);
         return this;
     }
 

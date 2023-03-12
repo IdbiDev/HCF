@@ -11,6 +11,7 @@ import me.idbi.hcf.FrakcioGUI.Menus.RankManagerInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.RankPriorityInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.FactionRankManager;
+import me.idbi.hcf.Tools.Playertools;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -27,7 +28,7 @@ public class Click_RankMenu implements Listener {
                 .onClose(player -> {                                               //called when the inventory is closing
                 })
                 .onComplete((player, text) -> {                                    //called when the inventory output slot is clicked
-                    if (text.matches("^[0-9a-zA-Z]+$")) {
+                    if (Playertools.isValidName(text)) {
                         for (String blacklisted_word : Main.blacklistedRankNames) {
                             if (text.toLowerCase().contains(blacklisted_word.toLowerCase())) {
                                 GUI_Sound.playSound(player, GUI_Sound.HCFSounds.ERROR);

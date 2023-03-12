@@ -156,6 +156,7 @@ public class Playertools {
                     rs.getInt("kills"),
                     rs.getInt("deaths"),
                     Main.factionCache.get(rs.getInt("faction")),
+                    //Math.toIntExact(Math.round(Main.getEconomy().getBalance(Bukkit.getOfflinePlayer(uuid)))),
                     rs.getInt("money"),
                     new PlayerStatistic(new JSONObject(rs.getString("statistics"))),
                     rs.getString("rank"),
@@ -784,4 +785,9 @@ public class Playertools {
         admin.sendMessage(Messages.faction_claim_decline.language(admin).queue());
         admin.getInventory().remove(HCF_Claiming.Wands.claimWand());
     }
+
+    public static boolean isValidName(String name) {
+        return name.matches("^\\w{3,16}$");
+    }
+
 }

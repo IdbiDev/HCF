@@ -9,6 +9,7 @@ import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.FrakcioGUI.Menus.Alley_MainInventory;
 import me.idbi.hcf.FrakcioGUI.Menus.Ally_AllyListInventory;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Playertools;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,7 +25,7 @@ public class Click_AllyRequests implements Listener {
                 .onClose(player -> {                                               //called when the inventory is closing
                 })
                 .onComplete((player, text) -> {                                    //called when the inventory output slot is clicked
-                    if (text.matches("^[0-9a-zA-Z]+$")) {
+                    if (Playertools.isValidName(text)) {
                         GUI_Sound.playSound(player, GUI_Sound.HCFSounds.SUCCESS);
                         AllyInviteCommand.invite(p, text);
                         return AnvilGUI.Response.close();

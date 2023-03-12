@@ -26,5 +26,9 @@ public class AdminTools {
             }
             invisedAdmins.remove(admin);
         }
+
+        public static List<Player> getInvisedAdmins() {
+            return invisedAdmins;
+        }
     }
 }

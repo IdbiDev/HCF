@@ -6,6 +6,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Objects.StatTrak;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -32,6 +33,21 @@ public class onDeath implements Listener {
         Player damager = e.getEntity().getKiller();
         Player victim = e.getEntity().getPlayer();
         Faction faction = Playertools.getPlayerFaction(victim);
+        HCFPlayer hcfVictim = HCFPlayer.getPlayer(victim);
+        hcfVictim.addDeaths();
+        e.setDeathMessage("");
+        if (faction != null) {
+            if (!Main.DTRREGEN.containsKey(faction.id)) {
+                Main.DTRREGEN.put(faction.id, System.currentTimeMillis() + DTRREGENTIME);
+                if(victim.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
+                    faction.DTR -= Config.OverworldDeathDTR.asDouble();
+                }else if(victim.getWorld().getEnvironment().equals(World.Environment.NETHER)) {
+                    faction.DTR -= Config.NetherDeathDTR.asDouble();
+                }else {
+                    faction.DTR -= Config.EndDeathDTR.asDouble();
+                }
+            }
+        }
         if (damager != null) {
             HCFPlayer hcfDamager = HCFPlayer.getPlayer(damager);
             hcfDamager.addKills();
@@ -39,7 +55,7 @@ public class onDeath implements Listener {
                 player.sendMessage(Messages.kill_message_broadcast.language(player).setVictimWithKills(victim, damager).queue());
             if (faction != null) {
                 for (Player member : faction.getMembers()) {
-                    member.sendMessage(Messages.kill_message_faction.language(member).setDeath(victim, damager).queue());
+                    member.sendMessage(Messages.kill_message_faction.language(member).setDeath(victim, damager).setDTR(faction.DTR).queue());
                 }
             }
             StatTrak.addStatTrak(damager, victim);
