@@ -3,12 +3,16 @@ package me.idbi.hcf.CustomFiles.GUIMessages;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
 import me.idbi.hcf.CustomFiles.MessagesTool;
+import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Tools.Objects.Faction;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public enum GUIMessages {
@@ -37,6 +41,18 @@ public enum GUIMessages {
     priority_toggle_button("&ePriority Manage", Arrays.asList("&5", "&7Click here to change the order!")),
     rank_manager_toggle_button("&eRank Manager", Arrays.asList("&5", "&7Click here to to go back!")),
     rank_priority_selected("", Arrays.asList("&5", "&aSELECTED!", "&7Click on another rank to swap their order!")),
+
+    rollback_information("&e%player% &6#%id%", Arrays.asList(
+            "&5",
+            "&eDate &8» &6%date%",
+            "&eDamage Cause &8» &6%damage_cause%",
+            "&eEXP Level &8» &6%exp_level%",
+            "&eType &8» &6%type%",
+            "&eRolled Back &8» &6%rolled%",
+            "&5",
+            "&aClick here to view!",
+            "&aDROP item to rollback!"
+    )),
 
     faction_stats("&2&o%faction_name%", Arrays.asList(
             "&7┌──",
@@ -124,9 +140,47 @@ public enum GUIMessages {
         return this;
     }
 
+    public GUIMessages setId(int id) {
+        this.tempName = this.tempName.replace("%id%", id + "");
+        this.tempLore = replaceLore("%id%", id + "");
+        return this;
+    }
+
     public GUIMessages setPlayerName(String name) {
         this.tempName = this.tempName.replace("%player_name%", name);
         this.tempLore = replaceLore("%player_name%", name);
+        return this;
+    }
+
+    public GUIMessages setDate(Date name) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date date = new Date();
+        this.tempName = this.tempName.replace("%date%", formatter.format(date));
+        this.tempLore = replaceLore("%date%", formatter.format(date));
+        return this;
+    }
+
+    public GUIMessages setEXPLevel(String level) {
+        this.tempName = this.tempName.replace("%exp_level%", level);
+        this.tempLore = replaceLore("%exp_level%", level);
+        return this;
+    }
+
+    public GUIMessages setRolled(boolean rolledBack) {
+        this.tempName = this.tempName.replace("%rolled%", rolledBack + "");
+        this.tempLore = replaceLore("%rolled%", rolledBack + "");
+        return this;
+    }
+
+    public GUIMessages setLogType(Rollback.RollbackLogType logType) {
+        this.tempName = this.tempName.replace("%type%", logType.name());
+        this.tempLore = replaceLore("%type%", logType.name());
+        return this;
+    }
+
+    public GUIMessages setDamageCause(EntityDamageEvent.DamageCause damageCause) {
+        this.tempName = this.tempName.replace("%damage_cause%", damageCause.name());
+        this.tempLore = replaceLore("%damage_cause%", damageCause.name());
         return this;
     }
 

@@ -4,6 +4,7 @@ import com.avaje.ebeaninternal.server.core.Message;
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.*;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -11,13 +12,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.JSONObject;
 
+import java.sql.Array;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.UUID;
+import java.util.*;
 
 import static me.idbi.hcf.Tools.HCF_Timer.addPvPTimerCoolDownSpawn;
 
@@ -47,6 +48,7 @@ public class HCFPlayer {
     public int lives;
     public long deathTime;
     public boolean online;
+    public TreeMap<Integer, Rollback> rollbacks;
 
     public HCFPlayer(UUID uuid,
                      int deaths,
@@ -90,6 +92,7 @@ public class HCFPlayer {
                 this.isDeathBanned = false;
                 this.deathTime = 0;
             }
+            this.rollbacks = new TreeMap<>();
             /*
             SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',money='?'",
                     this.name, this.uuid.toString(), Config.default_balance.asInt() + "");*/
@@ -307,7 +310,6 @@ public class HCFPlayer {
         this.stuckLocation = loc;
     }
 
-
     public void addFaction(Faction f) {
         this.faction = f;
         this.rank = f.getDefaultRank();
@@ -335,6 +337,21 @@ public class HCFPlayer {
 
     public void setDeaths(int deaths) {
         this.playerStatistic.deaths = deaths;
+    }
+
+    public TreeMap<Integer, Rollback> getRollbacks() {
+        return rollbacks;
+    }
+    public Rollback createRollback(Player p, EntityDamageEvent.DamageCause damageCause, Rollback.RollbackLogType logType) {
+        Date date = new Date();
+        int id = this.rollbacks.size();
+        Rollback rollback = new Rollback(id, p, damageCause, logType, date);
+        this.rollbacks.put(id, rollback);
+        return rollback;
+    }
+
+    public Rollback getRollback(int id) {
+        return this.rollbacks.get(id);
     }
 
     public boolean inFaction() {

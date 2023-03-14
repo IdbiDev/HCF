@@ -42,8 +42,7 @@ commands:
     description: This will log you out safely.
   reclaim:
     description: reclaim lol
-  back:
-  god:
+  rollback:
 
 
 permissions:

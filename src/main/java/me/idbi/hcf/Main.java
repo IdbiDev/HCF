@@ -34,6 +34,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -92,6 +93,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static HashMap<UUID, String> currentLanguages;
     public static List<String> blacklistedRankNames;
     public static ProtocolManager protocolManager;
+    public static HashMap<UUID, Inventory> inventoryRollbacks;
     public static AutoKoth autoKoth = new AutoKoth();
     private static ConfigManager configManager;
     private static Connection con;
@@ -164,6 +166,7 @@ public final class Main extends JavaPlugin implements Listener {
         SubCommand.commandCooldowns = new HashMap<>();
         Bossbar.bars = new HashMap<>();
         currentLanguages = new HashMap<>();
+        inventoryRollbacks = new HashMap<>();
         boards = new HashMap<>();
         FactionSetHomeCommand.teleportPlayers = new ArrayList<Player>();
 

@@ -45,7 +45,7 @@ public class EOTW {
             p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
         }
         //Todo: EOTW Koth
-        for(Faction f : Main.factionCache){
+        for(Faction f : Main.factionCache.values()){ // meleg vagy :'(
 
         }
         Main.EOTWENABLED = true;

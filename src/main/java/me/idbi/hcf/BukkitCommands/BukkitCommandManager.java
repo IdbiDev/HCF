@@ -2,6 +2,7 @@ package me.idbi.hcf.BukkitCommands;
 
 import me.idbi.hcf.BukkitCommands.UtilCommands.BackCommand;
 import me.idbi.hcf.BukkitCommands.UtilCommands.GodCommand;
+import me.idbi.hcf.Commands.SingleCommands.RollbackCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,8 +21,7 @@ public class BukkitCommandManager {
     private static List<HCFCommand> cmds = new ArrayList<HCFCommand>();
 
     public BukkitCommandManager() {
-        cmds.add(new BackCommand());
-        cmds.add(new GodCommand());
+        cmds.add(new RollbackCommand());
     }
 
     public static List<HCFCommand> getCommands() {
