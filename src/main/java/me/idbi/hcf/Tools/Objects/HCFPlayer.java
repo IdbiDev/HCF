@@ -524,4 +524,12 @@ public class HCFPlayer {
     public void saveStats() {
         this.playerStatistic.save(this.uuid);
     }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public FactionRankManager.Rank getRank() {
+        return this.rank;
+    }
 }

@@ -20,6 +20,8 @@ import me.idbi.hcf.FrakcioGUI.KickConfirm.DeleteRankConfirm;
 import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
 import me.idbi.hcf.HistoryGUI.Events.HistoryEvent;
 import me.idbi.hcf.HistoryGUI.Events.Stats_Inventory;
+import me.idbi.hcf.InventoryRollback.GUI.RollbackGUIEvent.RollbackInventoryClick;
+import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Koth.GUI.KOTHCloseEvent;
 import me.idbi.hcf.Koth.GUI.KOTHInvClickEvent;
 import me.idbi.hcf.Koth.Koth;
@@ -136,8 +138,7 @@ public class SetupEvents {
         pm.registerEvents(new BlockToBlockListener(), Main.getPlugin(Main.class));
 
         // Command events
-        pm.registerEvents(new BackCommand(), Main.getPlugin(Main.class));
-        pm.registerEvents(new GodCommand(), Main.getPlugin(Main.class));
+        pm.registerEvents(new RollbackInventoryClick(), Main.getPlugin(Main.class));
 
     }
 }
