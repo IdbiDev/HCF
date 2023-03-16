@@ -645,27 +645,6 @@ public class Playertools {
             Main.playerBlockChanges.put(p.getUniqueId(), l);
         }
     }
-
-    public static void prepareKoths() {
-        Main.kothCache.clear();
-        HashMap<Integer, Faction> hashMap = Main.factionCache;
-
-        for (Faction faction : hashMap.values()) {
-            for (HCF_Claiming.Faction_Claim claim : faction.claims) {
-                if (claim.attribute.equals(HCF_Claiming.ClaimAttributes.KOTH)) {
-                    Koth.koth_area temp = new Koth.koth_area(
-                            faction,
-                            new HCF_Claiming.Point(claim.startX, claim.startZ),
-                            new HCF_Claiming.Point(claim.endX, claim.endZ),
-                            claim.world
-                    );
-                    Main.kothCache.put(faction.name, temp);
-                    //eci.put(faction.factioname, temp);
-                }
-            }
-        }
-    }
-
     public static TreeMap<Integer, FactionRankManager.Rank> sortByPriority(Faction faction) {
         HashMap<Integer, FactionRankManager.Rank> sortedMap = new HashMap<Integer, FactionRankManager.Rank>();
         for (FactionRankManager.Rank rank : faction.ranks) {

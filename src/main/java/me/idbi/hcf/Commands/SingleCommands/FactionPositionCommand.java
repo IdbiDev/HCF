@@ -1,4 +1,4 @@
-package me.idbi.hcf.Commands;
+package me.idbi.hcf.Commands.SingleCommands;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
@@ -37,7 +37,7 @@ public class FactionPositionCommand implements CommandExecutor {
             Faction faction = Playertools.getPlayerFaction(p);
             //faction.BroadcastFaction("&2"+p.getName()+" >> &o" +  convertLocation(p,p.getLocation()));
 
-            for (Player member : faction.getMembers()) {
+            for (Player member : faction.getOnlineMembers()) {
                 member.sendMessage(convertLocation(p, p.getLocation()));
             }
             for (HCFPlayer hcf : Main.playerCache.values()) {
@@ -45,7 +45,7 @@ public class FactionPositionCommand implements CommandExecutor {
             }
             for (Map.Entry<Integer, Faction> integerFactionEntry : Main.factionCache.entrySet()) {
                 integerFactionEntry.getValue().saveFactionData();
-                for (FactionRankManager.Rank rank : integerFactionEntry.getValue().ranks) {
+                for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
                     rank.saveRank();
                 }
             }

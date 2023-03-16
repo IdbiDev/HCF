@@ -108,7 +108,7 @@ public class KothCommand implements CommandExecutor, TabCompleter {
                         case "start":
                             try {
                                 if (getKothFromName(args[1]) != 0) {
-                                    startKoth(args[1]);
+                                    startKoth(p,args[1]);
                                     //Todo: koth started @everyone
                                 } else {
                                     p.sendMessage(Messages.koth_invalid_name.language(p).queue());

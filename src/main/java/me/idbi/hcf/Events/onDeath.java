@@ -37,8 +37,7 @@ public class onDeath implements Listener {
         hcfVictim.addDeaths();
         e.setDeathMessage("");
         if (faction != null) {
-            if (!Main.DTRREGEN.containsKey(faction.id)) {
-                Main.DTRREGEN.put(faction.id, System.currentTimeMillis() + DTRREGENTIME);
+                Main.DTRREGEN.put(faction.getId(), System.currentTimeMillis() + DTRREGENTIME);
                 if(victim.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
                     faction.DTR -= Config.OverworldDeathDTR.asDouble();
                 }else if(victim.getWorld().getEnvironment().equals(World.Environment.NETHER)) {
@@ -46,7 +45,6 @@ public class onDeath implements Listener {
                 }else {
                     faction.DTR -= Config.EndDeathDTR.asDouble();
                 }
-            }
         }
         if (damager != null) {
             HCFPlayer hcfDamager = HCFPlayer.getPlayer(damager);

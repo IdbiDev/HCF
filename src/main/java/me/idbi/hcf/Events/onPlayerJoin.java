@@ -6,6 +6,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.FastBoard;
 import me.idbi.hcf.Tools.AdminTools;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
+import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
@@ -65,7 +66,11 @@ public class onPlayerJoin implements Listener {
             );
             e.getPlayer().teleport(spawn);
             //pvpTimer
-            addPvPTimerCoolDownSpawn(e.getPlayer());
+            if(!Main.SOTWEnabled)
+                addPvPTimerCoolDownSpawn(e.getPlayer());
+        }
+        if(Main.SOTWEnabled) {
+            HCF_Timer.addSOTWTimer(p,Main.SOTWStarted - System.currentTimeMillis());
         }
         e.setJoinMessage("");
         List<Player> list = new ArrayList<>(AdminTools.InvisibleManager.getInvisedAdmins());

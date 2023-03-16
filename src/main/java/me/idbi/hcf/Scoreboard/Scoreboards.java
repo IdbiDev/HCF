@@ -92,9 +92,9 @@ public class Scoreboards {
             return true;
         } else if (line.contains("%bard_energy%") && player.bardEnergy <= 0.0) {
             return true;
-        } else if (line.contains("%eotw%") && miscTimers.getTimeOfEOTW() <= 0L) {
+        } else if (line.contains("%eotw%") && HCF_Timer.getEOTWTimer(p) <= 0L) {
             return true;
-        } else if (line.contains("%sotw%") && miscTimers.getTimeOfSOTW() <= 0L) {
+        } else if (line.contains("%sotw%") && HCF_Timer.getSOTWTime(p) <= 0L) {
             return true;
         } else if (line.contains("%logout%") && HCF_Timer.getLogoutTime(p) <= 0L) {
             return true;
@@ -121,9 +121,10 @@ public class Scoreboards {
                     || line.contains("%pvp_timer%")
                     || line.contains("%opgapple_cd%")
                     || line.contains("%sotw%")
+                    || line.contains("%eotw%")
                     || line.contains("%customtimers%")
-                    || line.contains("%logout%")
-                    || line.contains("%eotw%")) {
+                    || line.contains("%logout%"))
+                    {
                 timers.add(ChatColor.translateAlternateColorCodes('&', line));
                 continue;
             }
@@ -155,8 +156,8 @@ public class Scoreboards {
                 .replace("%ep_cd%", getDouble(HCF_Timer.getEpTime(p)))
                 .replace("%gapple_cd%", getDouble(HCF_Timer.get_Golden_Apple_Time(p)))
                 .replace("%opgapple_cd%", ConvertTime((int) (HCF_Timer.get_OP_Golden_Apple_Time(p) / 1000)))
-                .replace("%eotw%", ConvertTime((int) miscTimers.getTimeOfEOTW() / 1000))
-                .replace("%sotw%", ConvertTime((int) miscTimers.getTimeOfSOTW() / 1000))
+                .replace("%eotw%", ConvertTime((int) HCF_Timer.getEOTWTimer(p) / 1000))
+                .replace("%sotw%", ConvertTime((int) HCF_Timer.getSOTWTime(p) / 1000))
                 .replace("%location%", hcf.getLocationFormatted() == null ? Messages.wilderness.language(p).queue() : hcf.getLocationFormatted());
     }
 

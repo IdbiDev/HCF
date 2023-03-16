@@ -2,6 +2,7 @@ package me.idbi.hcf.Events;
 
 import me.idbi.hcf.Classes.SubClasses.Archer;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.HCF_Claiming;
 import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
@@ -13,7 +14,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class onDamage implements Listener {
     Archer archer = new Archer();
-    @EventHandler(priority = EventPriority.HIGHEST)
+
+    @EventHandler(priority = EventPriority.HIGH)
     public void onDamage(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player damager && e.getEntity() instanceof Player victim) {
             // Check Friendly Fire
@@ -85,8 +87,13 @@ public class onDamage implements Listener {
             } catch (NullPointerException ex) {
                 ex.printStackTrace();
             }
-
         }
-
+    }
+    @EventHandler
+    public void onDmg(EntityDamageEvent e) {
+        if(e.getEntity() instanceof Player player) {
+            if(HCF_Timer.getSOTWTime(player) != 0)
+                e.setCancelled(true);
+        }
     }
 }

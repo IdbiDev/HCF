@@ -25,7 +25,7 @@ public class SpawnShield {
                 //true              //    true - > NINCS
                 if ((pvpCooldown(p) && !claim.attribute.equals(HCF_Claiming.ClaimAttributes.PROTECTED))) {
                     kellfal = true;
-                } else if ((Main.SOTWEnabled && (claim.attribute.equals(HCF_Claiming.ClaimAttributes.NORMAL) && claim.faction.id != (player_faction != null ? player_faction.id : 0)))) {
+                } else if (((claim.attribute.equals(HCF_Claiming.ClaimAttributes.NORMAL) && claim.faction.id != (player_faction != null ? player_faction.id : 0)))) {
                     kellfal = true;
                 } else if ((HCF_Timer.getCombatTime(p) != 0 && claim.attribute.equals(HCF_Claiming.ClaimAttributes.PROTECTED))) {
                     kellfal = true;

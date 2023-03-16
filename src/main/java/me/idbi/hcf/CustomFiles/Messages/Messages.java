@@ -238,6 +238,7 @@ public enum Messages {
 
     cant_damage_while_pvptimer("%prefix% &cYou can't attack while you have a PvP timer on you!"),
     cant_damage_while_pvptimer_victim("%prefix% &cThis player has a PvP timer!"),
+    cant_damage_while_sotw_timer_active("%prefix% &cThis player has an active SOTW timer!"),
     stuck_started("Factions","%prefix% &aStuck timer started! You are getting teleported to a safe zone in &o&e%amount%&r&a seconds! Don't move!"),
     stuck_finished("Factions","%prefix%  &bYou successfully teleported to a safe zone!"),
     stuck_interrupted("Factions","%prefix% &cYou interrupted the stuck timer!"),
@@ -246,7 +247,8 @@ public enum Messages {
     claim_pos_end("Claims","%prefix% &bClaim end position: &a&n%loc%"),
 
     // KOTH SOTW EOTW
-    enable_eotw("%prefix% &aEOTW started!"),
+    enable_eotw("EOTW","%prefix% &aEOTW started!"),
+    eotw_already_started("EOTW","%prefix%EOTW already started!"),
 
     // koth
     updated_koth_rewards("koth","%prefix% &aSuccessfully saved rewards!"),
@@ -257,6 +259,9 @@ public enum Messages {
     koth_capturing_started("koth","%prefix% &aSomeone started to occupy the &6&o%faction_name%&a KOTH!"),
     koth_capturing_ended("koth","%prefix% &aThe occupation of KOTH &6&o%faction_name%&a was interrupted!"),
     koth_capture_timer("koth","%prefix% &aSomeone is capturing &6&o%faction_name%&a (%format_time%)"),
+    koth_start_title("koth","&a&lKOTH &r&aStarted!"),
+    koth_start_subtitle("koth","&6&o%faction_name%"),
+    koth_failed_not_valid_claim("koth","%prefix% &cThis faction does not have a valid KOTH claim!"),
 
     warzone_no_permission("Factions","%prefix% &eYou can't do this in the Warzone!"),
 
@@ -479,6 +484,41 @@ public enum Messages {
                 return this;
             } else {}
                 //MessagesTool.updateMessageFiles();
+        } else {
+            List<String> returnList = new ArrayList();
+            List<String> configList = MessagesTool.getLanguageMessages(language).getStringList(this.toString());
+
+            if (!configList.isEmpty()) {
+                for (String message : configList) {
+                    returnList.add(
+                            ChatColor.translateAlternateColorCodes('&', message.replace("%prefix%", prefix))
+                    );
+                }
+                this.playerListMessages = returnList;
+            } else {
+                //MessagesTool.updateMessageFiles();
+                for (String message : this.listMessages) {
+                    returnList.add(
+                            ChatColor.translateAlternateColorCodes('&', message.replace("%prefix%", prefix))
+                    );
+                }
+                this.playerListMessages = returnList;
+            }
+            return this;
+        }
+        this.playerMessage = ChatColor.translateAlternateColorCodes('&', this.message.replace("%prefix%", this.thisPrefix));
+        return this;
+    }
+    public Messages language(HCFPlayer hcfPlayer) {
+        String language = MessagesTool.getPlayerLanguage(hcfPlayer);
+        String prefix = MessagesTool.getLanguageMessages(language).getString("prefix");
+        if (this.isString()) {
+            String configMessage = MessagesTool.getLanguageMessages(language).getString(this.toString());
+            if (configMessage != null) {
+                this.playerMessage = ChatColor.translateAlternateColorCodes('&', configMessage.replace("%prefix%", prefix));
+                return this;
+            } else {}
+            //MessagesTool.updateMessageFiles();
         } else {
             List<String> returnList = new ArrayList();
             List<String> configList = MessagesTool.getLanguageMessages(language).getStringList(this.toString());

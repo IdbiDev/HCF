@@ -23,11 +23,9 @@ import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Lag;
+import me.idbi.hcf.WorldModes.SOTW;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -78,7 +76,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static HashMap<String, CustomTimers> customSBTimers;
     public static int DTRREGENTIME;
     public static HashMap<Integer, Faction> factionCache = new HashMap<>();
-    public static HashMap<String, Koth.koth_area> kothCache = new HashMap<>();
+    public static HashMap<String, HCF_Claiming.Faction_Claim> kothCache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
     public static HashMap<UUID, HCFPlayer> playerCache = new HashMap<>();
     public static ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
@@ -269,7 +267,6 @@ public final class Main extends JavaPlugin implements Listener {
         Playertools.setFactionCache();
         Playertools.cacheFactionClaims();
         Playertools.loadRanks();
-        Playertools.prepareKoths();
         playerCache.clear();
         Playertools.cacheAll();
         new NameChanger(this);
@@ -295,31 +292,6 @@ public final class Main extends JavaPlugin implements Listener {
         SpeedModifiers.asyncCacheBrewingStands();
         SpeedModifiers.speedBoost();
 
-       /* new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                while(true) {
-                    for(String s : BarUtil.getPlayers()) {
-                        Player o = Bukkit.getPlayer(s);
-                        if(o != null) BarUtil.teleportBar(o);
-                    }
-
-                    try {
-                        Thread.sleep(1000); // 1000 = 1 sec
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-        }).start();*/
-
-        // (new BossbarUpdater(this)).runTaskTimer((Plugin)this, 0L, 20L);
-
-        /*
-        DISPLAYNAME THINGS!
-         */
         //displayTeams.setupAllTeams();
 
         //SpawnShield.CalcWall();
@@ -342,8 +314,17 @@ public final class Main extends JavaPlugin implements Listener {
         }
         System.out.println("\n" + startMessage + "\n" + startMessage2);
         System.out.println(startMessageInfo);
-        autoKoth.startAutoKoth();
+        World world = Bukkit.getWorld(Config.WorldName.asStr());
+        Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
+        WorldBorder border = world.getWorldBorder();
+        border.setSize(Config.WorldBorderSize.asInt());
 
+        border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+        autoKoth.startAutoKoth();
+        SOTW.EnableSOTW();
+        /*HCF_Claiming.Faction_Claim spawnClaim = null;
+        autoKoth.startAutoKoth();
+        SOTW.EnableSOTW();*/
 
     }
 

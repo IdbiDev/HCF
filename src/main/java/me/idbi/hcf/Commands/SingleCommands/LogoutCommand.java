@@ -1,4 +1,4 @@
-package me.idbi.hcf.Commands;
+package me.idbi.hcf.Commands.SingleCommands;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;

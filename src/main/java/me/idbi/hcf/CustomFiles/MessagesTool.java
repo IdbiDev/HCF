@@ -6,6 +6,7 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.GUIMessages.GUIMessages;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -35,6 +36,12 @@ public class MessagesTool {
     public static String getPlayerLanguage(Player p) {
         if(Main.currentLanguages.containsKey(p.getUniqueId())) {
             return Main.currentLanguages.get(p.getUniqueId());
+        }
+        return Config.DefaultLanguage.asStr();
+    }
+    public static String getPlayerLanguage(HCFPlayer hcfPlayer) {
+        if(Main.currentLanguages.containsKey(hcfPlayer.getUUID())) {
+            return Main.currentLanguages.get(hcfPlayer.getUUID());
         }
         return Config.DefaultLanguage.asStr();
     }

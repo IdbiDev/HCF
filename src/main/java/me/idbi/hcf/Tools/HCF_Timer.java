@@ -19,6 +19,8 @@ public class HCF_Timer {
     private static final HashMap<UUID, Long> eptimers = new HashMap<>();
     private static final HashMap<UUID, Long> logoutTimers = new HashMap<>();
     private static final HashMap<UUID, Long> homeTimers = new HashMap<>();
+    private static final HashMap<UUID, Long> SOTWTimers = new HashMap<>();
+    private static final HashMap<UUID, Long> EOTWTimers = new HashMap<>();
     // Ms >> Duration
     private static final int combatTimerDuration = Config.CombatTag.asInt() * 1000;
     // Ms >> Duration
@@ -33,6 +35,7 @@ public class HCF_Timer {
     private static final int BardCooldownDuration = Config.BardEnergy.asInt() * 1000;
     private static final int LogoutCooldownDuration = Config.Logout.asInt() * 1000;
     private static final int HomeCooldownDuration = Config.Logout.asInt() * 1000;
+    private static final int EOTWDuration = Config.EOTWDuration.asInt() * 1000;
 
     public static boolean addCombatTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
@@ -54,6 +57,64 @@ public class HCF_Timer {
         } else {
             logoutTimers.put(player.getUniqueId(), System.currentTimeMillis() + LogoutCooldownDuration);
             return false;
+        }
+    }
+    public static boolean addSOTWTimer(Player player,long time) {
+        // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
+        if (!SOTWTimers.containsKey(player.getUniqueId())) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            SOTWTimers.put(player.getUniqueId(), System.currentTimeMillis() + time);
+            return true;
+        } else {
+            SOTWTimers.put(player.getUniqueId(), System.currentTimeMillis() + time);
+            return false;
+        }
+    }
+    public static long getSOTWTime(Player player) {
+        // Ha van rajta CombatTimer
+        if (SOTWTimers.containsKey(player.getUniqueId())) {
+            //5600                            5000+500
+            if (System.currentTimeMillis() >= SOTWTimers.get(player.getUniqueId())) {
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                SOTWTimers.remove(player.getUniqueId());
+                Scoreboards.refresh(player);
+                return 0;
+            } else {
+                // Ellenkező esetben: Van rajta
+                //     5000 + 500ms      -     5000ms
+                return SOTWTimers.get(player.getUniqueId()) - System.currentTimeMillis();
+            }
+        } else {
+            return 0;
+        }
+    }
+    public static boolean addEOTWTimer(Player player) {
+        // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
+        if (!EOTWTimers.containsKey(player.getUniqueId())) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            EOTWTimers.put(player.getUniqueId(), System.currentTimeMillis() + EOTWDuration);
+            return true;
+        } else {
+            EOTWTimers.put(player.getUniqueId(), System.currentTimeMillis() + EOTWDuration);
+            return false;
+        }
+    }
+    public static long getEOTWTimer(Player player) {
+        // Ha van rajta CombatTimer
+        if (EOTWTimers.containsKey(player.getUniqueId())) {
+            //5600                            5000+500
+            if (System.currentTimeMillis() >= EOTWTimers.get(player.getUniqueId())) {
+                // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
+                EOTWTimers.remove(player.getUniqueId());
+                Scoreboards.refresh(player);
+                return 0;
+            } else {
+                // Ellenkező esetben: Van rajta
+                //     5000 + 500ms      -     5000ms
+                return EOTWTimers.get(player.getUniqueId()) - System.currentTimeMillis();
+            }
+        } else {
+            return 0;
         }
     }
     public static long getLogoutTime(Player player) {

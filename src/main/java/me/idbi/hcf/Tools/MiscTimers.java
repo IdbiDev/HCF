@@ -198,9 +198,8 @@ public class MiscTimers {
 //                    }
                     if (HCF_Timer.getLogoutTime(player) != 0) {
                         shouldRefresh = true;
-                    }else{
                     }
-                    if (Main.SOTWEnabled || Main.EOTWENABLED) {
+                    if (HCF_Timer.getSOTWTime(player) != 0 || HCF_Timer.getEOTWTimer(player) != 0) {
                         shouldRefresh = true;
                     }
                     HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
@@ -407,16 +406,16 @@ public class MiscTimers {
         }.runTaskAsynchronously(Main.getPlugin(Main.class));
     }
 
-    public long getTimeOfEOTW() {
-        long current = System.currentTimeMillis();
-        //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
-        return Main.EOTWStarted - current;
-    }
-
-    public long getTimeOfSOTW() {
-        //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
-        return Main.SOTWStarted - System.currentTimeMillis();
-    }
+//    public long getTimeOfEOTW() {
+//        long current = System.currentTimeMillis();
+//        //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
+//        return Main.EOTWStarted - current;
+//    }
+//
+//    public long getTimeOfSOTW() {
+//        //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
+//        return Main.SOTWStarted - System.currentTimeMillis();
+//    }
 
     public void autoSave() {
         new BukkitRunnable() {
