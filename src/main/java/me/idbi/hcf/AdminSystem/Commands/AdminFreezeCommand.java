@@ -65,16 +65,16 @@ public class AdminFreezeCommand extends SubCommand {
         }
         Player target = Bukkit.getPlayer(args[1]);
         HCFPlayer player = HCFPlayer.getPlayer(p);
-        boolean state = player.freezeStatus;
+        boolean state = player.isFreezed();
         // Freeze
         if (!state) {
             p.sendMessage(Messages.freeze_executor_on.language(p).setPlayer(p).queue());
-            target.sendMessage(Messages.freeze_player_off.language(p).setExecutor(p).queue());
+            target.sendMessage(Messages.freeze_player_on.language(p).setExecutor(p).queue());
         } else {
             //UnFreeze
             p.sendMessage(Messages.freeze_executor_off.language(p).setPlayer(p).queue());
             target.sendMessage(Messages.freeze_player_off.language(p).setExecutor(p).queue());
         }
-        player.setFreezeStatus(!player.freezeStatus);
+        player.setFreezeStatus(!player.isFreezed());
     }
 }

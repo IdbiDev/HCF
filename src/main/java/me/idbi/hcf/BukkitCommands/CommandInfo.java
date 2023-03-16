@@ -12,7 +12,6 @@ public @interface CommandInfo {
     String name();
     String description();
     String permission() default ""; //If not specified anyone can use this command
-    String adminPermission() default "";
     String syntax() default ""; //A description of what arguments this command takes
 
 }

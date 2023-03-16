@@ -92,7 +92,7 @@ public class FactionInviteCommand extends SubCommand {
                         //Invite kiírása a faction számára
                         //Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
 
-                        for (Player member : faction.getMembers()) {
+                        for (Player member : faction.getOnlineMembers()) {
                             member.sendMessage(Messages.faction_invite_broadcast.language(member).setExecutor(p).setPlayer(target).queue());
                         }
 

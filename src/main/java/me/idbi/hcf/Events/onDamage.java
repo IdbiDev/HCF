@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 public class onDamage implements Listener {
     Archer archer = new Archer();
@@ -22,14 +23,14 @@ public class onDamage implements Listener {
             HCFPlayer damagerplayer = HCFPlayer.getPlayer(damager);
             HCFPlayer victimplayer = HCFPlayer.getPlayer(victim);
 
-            if (victimplayer.inDuty) {
+            if (victimplayer.isInDuty()) {
                 damager.sendMessage(Messages.cant_damage_admin.language(damager).queue());
                 e.setCancelled(true);
             }
             //String c = ChatColor.stripColor(HCF_Claiming.sendFactionTerritory(victim));
             try {
-                HCF_Claiming.Faction_Claim claim = victimplayer.currentArea;
-                HCF_Claiming.Faction_Claim damagerClaim = damagerplayer.currentArea;
+                HCF_Claiming.Faction_Claim claim = victimplayer.getCurrentArea();
+                HCF_Claiming.Faction_Claim damagerClaim = damagerplayer.getCurrentArea();
                 if (claim != null && damagerClaim != null) {
                     if (claim.attribute == HCF_Claiming.ClaimAttributes.PROTECTED || damagerClaim.attribute == HCF_Claiming.ClaimAttributes.PROTECTED) {
                         e.setCancelled(true);

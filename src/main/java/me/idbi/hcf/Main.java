@@ -3,6 +3,8 @@ package me.idbi.hcf;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.keenant.tabbed.Tabbed;
+import lombok.Getter;
 import me.idbi.hcf.Bossbar.Bossbar;
 import me.idbi.hcf.BukkitCommands.BukkitCommandManager;
 import me.idbi.hcf.Commands.FactionCommands.FactionSetHomeCommand;
@@ -12,12 +14,15 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.KothRewardsFile;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.CustomFiles.ReclaimFile;
+import me.idbi.hcf.CustomFiles.TabFile;
 import me.idbi.hcf.Economy.HCFEconomy;
 import me.idbi.hcf.Economy.VaultHook;
 import me.idbi.hcf.Koth.AutoKoth;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.Scoreboard.FastBoard;
+import me.idbi.hcf.TabManager.TabAPIv2.TabAPI;
+import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
@@ -102,6 +107,10 @@ public final class Main extends JavaPlugin implements Listener {
     public static HCFEconomy economyImplementer;
     private VaultHook vaultHook;
     private static Main instance = null;
+    @Getter private Tabbed tabbed;
+    @Getter
+    private TabManager tabManager;
+    @Getter private TabAPI tabAPI;
 
 
     // Egyszerű SQL Connection getter
@@ -148,6 +157,7 @@ public final class Main extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEnable() {
         instance = this;
+        tabbed = new Tabbed(this);
         /*if (!setupEconomy() ) {
             Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
@@ -232,31 +242,13 @@ public final class Main extends JavaPlugin implements Listener {
         AdminTools.InvisibleManager.invisedAdmins = new ArrayList<>();
         customSBTimers = new HashMap<>();
 
-        // Config
-        ArrayList<String> scoreboardList = new ArrayList<String>() {{
-            add("&7┌─");
-            add("&7│ &eFaction: &6%faction%");
-            add("&7│ &eLocation: &6%location%");
-            add("&7│ &eMoney: &6$%money%");
-            add("&7│ &eClass: &6%class%");
-            add("&7└─");
-            add("empty");
-            add("&7▍ &eStuck: &6%stuck_timer%");
-            add("&7▍ &eSpawn Tag: &6%spawntag%");
-            add("&7▍ &ePVP Tag: &6%pvp_timer%");
-            add("&7▍ &eSOTW Tag: &6%sotw%");
-            add("&7▍ &eEOTW Tag: &6%eotw%");
-            add("&7▍ &ePearl: &6%ep_cd%");
-            add("&7▍ &eBard energy: &6%bard_energy%");
-        }};
-
-        /*getConfig().options().copyDefaults(true);
-        saveDefaultConfig();
-        saveConfig();*/
-
         // koth
         KothRewardsFile.setup();
         ReclaimFile.setup();
+        TabFile.setup();
+        this.tabManager = new TabManager(this);
+        this.tabAPI = new TabAPI();
+        tabAPI.setup();
 
         // setup classes
         //SetupBot.setup();
@@ -331,6 +323,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static Main getInstance() {
         return instance;
     }
+
     private static Economy econ = null;
 
     private boolean setupEconomy() {
@@ -375,7 +368,7 @@ public final class Main extends JavaPlugin implements Listener {
                 }
                 for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
                     integerFactionEntry.getValue().saveFactionData();
-                    for (FactionRankManager.Rank rank : integerFactionEntry.getValue().ranks) {
+                    for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
                         rank.saveRank();
                     }
                 }
@@ -415,7 +408,7 @@ public final class Main extends JavaPlugin implements Listener {
             }
             for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
                 integerFactionEntry.getValue().saveFactionData();
-                for (FactionRankManager.Rank rank : integerFactionEntry.getValue().ranks) {
+                for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
                     rank.saveRank();
                 }
             }

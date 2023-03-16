@@ -43,7 +43,7 @@ public class onPlayerMove implements Listener {
         }
 
         HCF_Claiming.Faction_Claim c = HCF_Claiming.getPlayerArea(e.getPlayer());
-        if (player.currentArea != c) {
+        if (player.getCurrentArea() != c) {
 
             String wilderness = Messages.wilderness.language(p).queue();
             Messages leaveZone = Messages.leave_zone.language(p);
@@ -71,10 +71,10 @@ public class onPlayerMove implements Listener {
             }
             Scoreboards.refresh(e.getPlayer());
         }
-        if (player.playerClass == Classes.MINER) {
+        if (player.getPlayerClass() == Classes.MINER) {
             Miner.setInvisMode(e.getPlayer(), e.getTo().getY() <= Miner.invisibleLevel);
         }
-        if (player.freezeStatus) {
+        if (player.isFreezed()) {
             e.setCancelled(true);
         }/*
         if (HCF_Timer.checkStuckTimer(e.getPlayer())) {

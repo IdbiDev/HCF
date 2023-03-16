@@ -52,7 +52,7 @@ public class Click_InviteManager implements Listener {
                                             Messages.invited_by.language(target).setExecutor(p).setFaction(faction).queue(),
                                             Messages.hover_join.language(target).queue());
 
-                                    for (Player member : faction.getMembers()) {
+                                    for (Player member : faction.getOnlineMembers()) {
                                         member.sendMessage(Messages.faction_invite_broadcast.language(member).setExecutor(p).setPlayer(target).queue());
                                     }
 

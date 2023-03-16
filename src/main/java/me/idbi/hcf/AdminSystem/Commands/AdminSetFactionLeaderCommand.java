@@ -78,7 +78,7 @@ public class AdminSetFactionLeaderCommand extends SubCommand {
         //Todo: Broadcast the change
         Faction f = Main.nameToFaction.get(args[1]);
 
-        for (Player member : f.getMembers()) {
+        for (Player member : f.getOnlineMembers()) {
             member.sendMessage(Messages.set_faction_leader_by_admin.language(member).setPlayer(Bukkit.getPlayer(args[2])).setExecutor(p).queue());
         }
 

@@ -65,7 +65,7 @@ public class Click_RankPriority implements Listener {
         Faction f = Playertools.getPlayerFaction(p);
 
         assert f != null;
-        return !(f.FindRankByName(name).isDefault || f.FindRankByName(name).isLeader);
+        return !(f.FindRankByName(name).isDefault() || f.FindRankByName(name).isLeader());
     }
 
     public static int getSelectedSlot(Inventory inv) {

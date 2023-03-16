@@ -44,7 +44,7 @@ public class onPlayerLeft implements Listener {
         if (player.inFaction()) {
             Faction f = Playertools.getPlayerFaction(e.getPlayer());
             if (f != null) {
-                for (Player member : f.getMembers()) {
+                for (Player member : f.getOnlineMembers()) {
                     member.sendMessage(Messages.leave_online_player_in_faction.language(member).setPlayer(e.getPlayer()).queue());
                 }
             }
@@ -60,7 +60,7 @@ public class onPlayerLeft implements Listener {
             //AdminTools.InvisibleManager.invisedAdmins.remove(e.getPlayer());
         }
 
-        if (player.freezeStatus) {
+        if (player.isFreezed()) {
             Bukkit.getBanList(BanList.Type.NAME).addBan(e.getPlayer().getName(),
                             m.getConfig().getString("Freeze.Reason"),
                             new Date(System.currentTimeMillis() + Config.Deathban.asInt()),

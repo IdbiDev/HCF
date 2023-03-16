@@ -27,7 +27,7 @@ public class SubClaimSignListener implements Listener {
         if(!e.getLine(2).isBlank() || !e.getLine(3).isBlank()) return;
 
         HCFPlayer player = HCFPlayer.getPlayer(e.getPlayer());
-        Faction faction = player.faction;
+        Faction faction = player.getFaction();
         if(faction == null) return;
         String configValue = ChatColor.stripColor(Config.SubClaimTitle.asStr());
         if (line0 != null) {
@@ -60,14 +60,14 @@ public class SubClaimSignListener implements Listener {
                 e.setLine(0, Config.SubClaimTitle.asStr());
                 if(line1 != null && !line1.isBlank()) {
                     FactionRankManager.Rank signRank = faction.getRank(line1);
-                    if(signRank.priority <= player.rank.priority) {
-                        e.setLine(1, signRank.name);
+                    if(signRank.getPriority() <= player.getRank().getPriority()) {
+                        e.setLine(1, signRank.getName());
                     } else {
                         e.getPlayer().sendMessage(Messages.subclaim_lower_rank.language(e.getPlayer()).queue());
                         e.setCancelled(true);
                     }
                 } else {
-                    e.setLine(1, player.rank.name);
+                    e.setLine(1, player.getRank().getName());
                 }
             }
         }

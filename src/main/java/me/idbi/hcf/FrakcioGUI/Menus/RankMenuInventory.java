@@ -27,7 +27,7 @@ public class RankMenuInventory {
         }
 
         for (Map.Entry<Integer, FactionRankManager.Rank> rank : Playertools.sortByPriority(Playertools.getPlayerFaction(p)).entrySet()) {
-            inv.addItem(RM_Items.rank(p, rank.getValue().name));
+            inv.addItem(RM_Items.rank(p, rank.getValue().getName()));
         }
 
         inv.setItem(8, RPrio_Items.priorityToggleButton(p));

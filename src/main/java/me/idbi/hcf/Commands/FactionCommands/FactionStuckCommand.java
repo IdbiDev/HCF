@@ -81,8 +81,8 @@ public class FactionStuckCommand extends SubCommand implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(e.getPlayer());
-        if(hcfPlayer.stuckLocation == null) return;
-        Location originalLocation = hcfPlayer.stuckLocation;
+        if(hcfPlayer.getStuckLocation() == null) return;
+        Location originalLocation = hcfPlayer.getStuckLocation();
         if(originalLocation.distance(e.getPlayer().getLocation()) > 4) {
             if (HCF_Timer.getStuckTime(e.getPlayer()) != 0) {
                 HCF_Timer.removeStuckTimer(e.getPlayer());

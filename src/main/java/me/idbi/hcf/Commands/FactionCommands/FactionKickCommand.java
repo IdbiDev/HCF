@@ -89,20 +89,20 @@ public class FactionKickCommand extends SubCommand {
                     p.sendMessage(Messages.cant_kick_yourself.language(p).queue());
                     return;
                 }
-                if (Objects.equals(targetPlayer.getUniqueId().toString(), f.leader)) {
+                if (Objects.equals(targetPlayer.getUniqueId().toString(), f.getLeader())) {
                     p.sendMessage(Messages.cant_kick_leader.language(p).queue());
                     return;
                 }
 
-                final String previousRank = hcf.rank.name;
+                final String previousRank = hcf.getRank().getName();
                 hcf.removeFaction();
 
                 f.refreshDTR();
-                for (Player member : f.getMembers()) {
+                for (Player member : f.getOnlineMembers()) {
                     member.sendMessage(Messages.member_leave_faction.language(member).setPlayer(hcf).queue());
                 }
-                SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?' WHERE uuid = '?'", "None", "0", hcf.uuid.toString());
-                PlayerStatistic stat = hcf.playerStatistic;
+                SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?' WHERE uuid = '?'", "None", "0", hcf.getUUID().toString());
+                PlayerStatistic stat = hcf.getPlayerStatistic();
                 for (FactionHistory statF : stat.factionHistory) {
                     if (statF.id == f.id) {
                         statF.left = new Date();
@@ -112,7 +112,7 @@ public class FactionKickCommand extends SubCommand {
                     }
                 }
 
-                f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(hcf.name, "kicked", new Date().getTime()));
+                f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(hcf.getName(), "kicked", new Date().getTime()));
                 Scoreboards.RefreshAll();
                 NameChanger.refresh(p);
                 p.sendMessage(Messages.kick_message.language(p).setExecutor(p).setPlayer(hcf).queue());

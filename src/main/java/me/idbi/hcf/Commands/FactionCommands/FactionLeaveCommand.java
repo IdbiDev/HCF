@@ -80,7 +80,7 @@ public class FactionLeaveCommand extends SubCommand {
                 p.sendMessage(Messages.player_leaving_faction_message.language(p).queue());
 
                 HCFPlayer hcf = HCFPlayer.getPlayer(p);
-                final String rankForLejjebb = hcf.rank.name;
+                final String rankForLejjebb = hcf.getRank().getName();
 
                 hcf.removeFaction();
 
@@ -88,7 +88,7 @@ public class FactionLeaveCommand extends SubCommand {
 //                displayTeams.addToNonFaction(p);
                 //f.removePrefixPlayer(p);
 
-                for (Player member : f.getMembers()) {
+                for (Player member : f.getOnlineMembers()) {
                     member.sendMessage(Messages.member_leave_faction.language(member).setPlayer(p).queue());
                 }
 
@@ -96,7 +96,7 @@ public class FactionLeaveCommand extends SubCommand {
                 Scoreboards.refresh(p);
                 hcf.setChatType(ChatTypes.PUBLIC);
                 f.refreshDTR();
-                PlayerStatistic stat = hcf.playerStatistic;
+                PlayerStatistic stat = hcf.getPlayerStatistic();
                 for (FactionHistory statF : stat.factionHistory) {
                     if (statF.id == f.id) {
                         statF.left = new Date();

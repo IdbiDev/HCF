@@ -58,7 +58,7 @@ public class onPlayerInteract implements Listener {
 //
             Faction f = Playertools.getPlayerFaction(p);
             HCFPlayer hcf = HCFPlayer.getPlayer(p);
-            if (hcf.inDuty) {
+            if (hcf.isInDuty()) {
                 e.setCancelled(false);
                 return;
             }
@@ -107,12 +107,12 @@ public class onPlayerInteract implements Listener {
         ///Bard
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null) {
-            if (player.playerClass == Classes.BARD) {
+            if (player.getPlayerClass() == Classes.BARD) {
                 bard.OhLetsBreakItDown(e.getPlayer());
             }
         }
         else if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {
-            if (player.playerClass == Classes.BARD) {
+            if (player.getPlayerClass() == Classes.BARD) {
                 bard.OhLetsBreakItDown(e.getPlayer());
             }
         }

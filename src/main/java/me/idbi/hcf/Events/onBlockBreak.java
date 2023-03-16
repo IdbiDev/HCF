@@ -47,7 +47,7 @@ public class onBlockBreak implements Listener {
 //            e.setCancelled(true);
 //            return;
 //        }
-        if (hcfPlayer.inDuty) {
+        if (hcfPlayer.isInDuty()) {
             // System.out.println("BUZ");
             e.setCancelled(false);
         } else if (HCF_Claiming.isEnemyClaim(p, claim)) {

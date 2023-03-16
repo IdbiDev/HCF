@@ -82,7 +82,7 @@ public class AdminGiveMoneyCommand extends SubCommand {
         player.sendMessage(Messages.give_money.language(p).setExecutor(p).setAmount(String.valueOf(amount)).queue());
         Scoreboards.refresh(player);
 
-        PlayerStatistic stat = hcf.playerStatistic;
+        PlayerStatistic stat = hcf.getPlayerStatistic();
         stat.MoneyEarned += amount;
     }
 }

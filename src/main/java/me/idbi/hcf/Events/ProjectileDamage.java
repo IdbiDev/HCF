@@ -39,9 +39,9 @@ public class ProjectileDamage implements Listener {
                 e.setCancelled(true);
                 return;
             }
-            if (damagerplayer.faction != null && victimplayer.faction != null) {
-                Faction vicFac = victimplayer.faction;
-                Faction damFac = damagerplayer.faction;
+            if (damagerplayer.getFaction() != null && victimplayer.getFaction() != null) {
+                Faction vicFac = victimplayer.getFaction();
+                Faction damFac = damagerplayer.getFaction();
                 if (damFac.isAlly(vicFac)) {
                     if (!vicFac.HaveAllyPermission(damFac, Permissions.FRIENDLY_FIRE) || !damFac.HaveAllyPermission(vicFac, Permissions.FRIENDLY_FIRE)) {
                         damager.sendMessage(Messages.teammate_damage.language(damager).queue());
@@ -65,7 +65,7 @@ public class ProjectileDamage implements Listener {
             }
 
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(damager);
-            if (!HCF_Timer.checkArcherTimer(victim) && hcfPlayer.playerClass == Classes.ARCHER && archer.archerTagEnabled) {
+            if (!HCF_Timer.checkArcherTimer(victim) && hcfPlayer.getPlayerClass() == Classes.ARCHER && archer.archerTagEnabled) {
                 HCF_Timer.addArcherTimer(victim);
             }
         }

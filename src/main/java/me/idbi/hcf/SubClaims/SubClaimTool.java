@@ -17,12 +17,12 @@ public class SubClaimTool {
 
     public static boolean hasAccess(Player p, String rankName) {
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
-        if(hcfPlayer.faction == null) return false;
-        if(hcfPlayer.rank == null) return false;
+        if(hcfPlayer.getFaction() == null) return false;
+        if(hcfPlayer.getRank() == null) return false;
 
-        FactionRankManager.Rank signRank = hcfPlayer.faction.getRank(rankName);
-        if(signRank.priority <= hcfPlayer.rank.priority) {
-            System.out.println("Van jogod! " + signRank.name + " " + hcfPlayer.rank.name);
+        FactionRankManager.Rank signRank = hcfPlayer.getFaction().getRank(rankName);
+        if(signRank.getPriority() <= hcfPlayer.getRank().getPriority()) {
+            System.out.println("Van jogod! " + signRank.getName() + " " + hcfPlayer.getRank().getName());
             return true;
         }
 

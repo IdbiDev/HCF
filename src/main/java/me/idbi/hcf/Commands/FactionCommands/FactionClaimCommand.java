@@ -68,7 +68,7 @@ public class FactionClaimCommand extends SubCommand {
                 p.sendMessage(Messages.no_permission.language(p).queue());
                 return;
             }
-            if(Config.MaxClaims.asInt() > hcfPlayer.faction.claims.size()) {
+            if(Config.MaxClaims.asInt() > hcfPlayer.getFaction().getClaims().size()) {
 
                 return;
             }

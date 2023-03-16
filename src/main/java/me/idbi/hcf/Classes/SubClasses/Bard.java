@@ -116,7 +116,7 @@ public class Bard implements HCF_Class {
                 item = findBardItem(main);
                 if (item != null) {
                     HCFPlayer hcf = HCFPlayer.getPlayer(bardplayer);
-                    double currentEnergy = hcf.bardEnergy;
+                    double currentEnergy = hcf.getBardEnergy();
                     if ((currentEnergy - item.cost) < 0) {
                         bardplayer.sendMessage(Messages.bard_dont_have_enough_energy.language(bardplayer).setAmount(String.valueOf(item.cost)).queue());
                         return;

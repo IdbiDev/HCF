@@ -16,8 +16,8 @@ public class ClassSelector {
     public static void addClassToPlayer(Player p) {
 
         HCFPlayer player = HCFPlayer.getPlayer(p);
-        Classes clss = player.playerClass;
-        Faction faction = player.faction;
+        Classes clss = player.getPlayerClass();
+        Faction faction = player.getFaction();
 
         //Assassin class
         /*if(assassin_class.CheckArmor(p)){

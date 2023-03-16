@@ -41,7 +41,7 @@ public class MiscTimers {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                     ClassSelector.addClassToPlayer(player);
                     HCFPlayer hcf = HCFPlayer.getPlayer(player);
-                    if (hcf.playerClass == Classes.BARD) {
+                    if (hcf.getPlayerClass() == Classes.BARD) {
                         bard.useSimpleBardEffect(player);
                     }
                     //Shapes.Crossing(new Location(player.getWorld(),10,64,16),new Location(player.getWorld(),-21,64,-5),Effect.HEART,10);
@@ -117,9 +117,9 @@ public class MiscTimers {
 
                 for (Player onlines : Bukkit.getOnlinePlayers()) {
                     HCFPlayer hcf = HCFPlayer.getPlayer(onlines);
-                    PlayerStatistic stats = hcf.playerStatistic;
+                    PlayerStatistic stats = hcf.getPlayerStatistic();
                     stats.TimePlayed += 1000L;
-                    Classes clss = hcf.playerClass;
+                    Classes clss = hcf.getPlayerClass();
                     if (clss == Classes.ASSASSIN) {
                         stats.TotalAssassinClassTime += 1000L;
                     }
@@ -203,10 +203,10 @@ public class MiscTimers {
                         shouldRefresh = true;
                     }
                     HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
-                    if (hcfPlayer.inDuty) {
+                    if (hcfPlayer.isInDuty()) {
                         AdminScoreboard.refresh(player);
                     }
-                    if (!(hcfPlayer.bardEnergy >= bard.maxBardEnergy))
+                    if (!(hcfPlayer.getBardEnergy() >= bard.maxBardEnergy))
                         shouldRefresh = true;
                     if (HCF_Timer.getPvPTimerCoolDownSpawn(player) == 0 && HCF_Timer.getCombatTime(player) == 0) {
                         DeleteWallsForPlayer(player);
@@ -216,9 +216,9 @@ public class MiscTimers {
                         //Scoreboards.refresh(player);
                     //Class selector
                     //HCFPlayer hcf = HCFPlayer.getPlayer(player);
-                    if (hcfPlayer.playerClass != Classes.BARD) continue;
-                    if (!(hcfPlayer.bardEnergy >= bard.maxBardEnergy)) {
-                        hcfPlayer.bardEnergy += 0.1 * bard.bardEnergyMultiplier;
+                    if (hcfPlayer.getPlayerClass() != Classes.BARD) continue;
+                    if (!(hcfPlayer.getBardEnergy() >= bard.maxBardEnergy)) {
+                        hcfPlayer.addBardEnergy(0.1 * bard.bardEnergyMultiplier);
                     }
                 }
             }

@@ -1,25 +1,14 @@
 package me.idbi.hcf.Commands.FactionCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
-import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.Objects.Faction;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-
-import static me.idbi.hcf.Commands.FactionCommands.FactionCreateCommand.con;
 
 public class FactionSetHomeCommand extends SubCommand implements Listener {
     public static ArrayList<Player> teleportPlayers = new ArrayList<>();
@@ -97,7 +86,7 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
 
                 p.sendMessage(Messages.sethome_message.language(p).queue());
 
-                for (Player member : faction.getMembers()) {
+                for (Player member : faction.getOnlineMembers()) {
                     member.sendMessage(Messages.sethome_update_faction
                             .language(member)
                             .setPlayer(p)

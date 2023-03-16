@@ -23,31 +23,31 @@ public class ProtectedClaim implements Listener {
         if (!e.getItem().isSimilar(HCF_Claiming.Wands.claimWand())) {
             return;
         }
-        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.claimType == HCF_Claiming.ClaimTypes.PROTECTED) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.PROTECTED) {
             p.sendMessage(Messages.claim_pos_end.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
-            HCF_Claiming.setEndPosition(player.kothId, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+            HCF_Claiming.setEndPosition(player.getKothId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             e.setCancelled(true);
         }
-        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && player.claimType == HCF_Claiming.ClaimTypes.PROTECTED) {
+        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.PROTECTED) {
             p.sendMessage(Messages.claim_pos_start.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
             e.setCancelled(true);
-            HCF_Claiming.setStartPosition(player.kothId, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+            HCF_Claiming.setStartPosition(player.getKothId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
         }
         // Elvetés
-        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking() && e.getItem() != null && player.claimType == HCF_Claiming.ClaimTypes.PROTECTED) {
+        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking() && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.PROTECTED) {
             player.setClaimType(HCF_Claiming.ClaimTypes.NONE);
             player.setKothId(0);
-            endpositions.remove(player.kothId);
-            startpositions.remove(player.kothId);
+            endpositions.remove(player.getKothId());
+            startpositions.remove(player.getKothId());
             p.getInventory().remove(Material.IRON_HOE);
         }
         // Elfogadás
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking() && player.claimType == HCF_Claiming.ClaimTypes.PROTECTED) {
-            HCF_Claiming.ForceFinishClaim(player.kothId, p, HCF_Claiming.ClaimAttributes.PROTECTED);
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking() && player.getClaimType() == HCF_Claiming.ClaimTypes.PROTECTED) {
+            HCF_Claiming.ForceFinishClaim(player.getKothId(), p, HCF_Claiming.ClaimAttributes.PROTECTED);
             player.setClaimType(HCF_Claiming.ClaimTypes.NONE);
             player.setKothId(0);
-            endpositions.remove(player.kothId);
-            startpositions.remove(player.kothId);
+            endpositions.remove(player.getKothId());
+            startpositions.remove(player.getKothId());
             p.getInventory().remove(Material.IRON_HOE);
 //                if (HCF_Claiming.FinishClaiming(player.faction.id, e.getPlayer(), HCF_Claiming.ClaimAttributes.NORMAL)) {
 //                    e.getPlayer().sendMessage(Messages.faction_claim_accept.language(p).queue());

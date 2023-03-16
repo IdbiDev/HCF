@@ -107,7 +107,7 @@ public class Click_PermissionManager implements Listener {
             GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.SUCCESS);
             Bukkit.broadcastMessage("Saved");
             f.rankCreateHistory.add(new HistoryEntrys.RankEntry(
-                    rank.name,
+                    rank.getName(),
                     ((Player) e.getWhoClicked()).getDisplayName(),
                     new Date().getTime(),
                     "modify"

@@ -19,9 +19,9 @@ public class BasicClaim implements Listener {
         if (!e.getItem().isSimilar(HCF_Claiming.Wands.claimWand())) {
             return;
         }
-        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.claimType == HCF_Claiming.ClaimTypes.FACTION) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.FACTION) {
 
-            HCF_Claiming.setEndPosition(player.faction.id, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+            HCF_Claiming.setEndPosition(player.getFaction().getId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             e.setCancelled(true);
             p.sendMessage(Messages.claim_pos_end.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
 
@@ -36,10 +36,10 @@ public class BasicClaim implements Listener {
                 //e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: $"+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
             }
         }
-        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && player.claimType == HCF_Claiming.ClaimTypes.FACTION) {
+        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.FACTION) {
 
             e.setCancelled(true);
-            HCF_Claiming.setStartPosition(player.faction.id, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+            HCF_Claiming.setStartPosition(player.getFaction().getId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             p.sendMessage(Messages.claim_pos_start.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
             if (HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
 
@@ -54,14 +54,14 @@ public class BasicClaim implements Listener {
             }
         }
         // Elvetés
-        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking() && e.getItem() != null && player.claimType == HCF_Claiming.ClaimTypes.FACTION) {
-            HCF_Claiming.removeClaiming(player.faction.id);
+        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking() && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.FACTION) {
+            HCF_Claiming.removeClaiming(player.getFaction().getId());
             e.getPlayer().getInventory().remove(e.getItem());
             e.getPlayer().sendMessage(Messages.faction_claim_decline.language(p).queue());
         }
         // Elfogadás
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking() && player.claimType == HCF_Claiming.ClaimTypes.FACTION) {
-            if (HCF_Claiming.FinishClaiming(player.faction.id, e.getPlayer(), HCF_Claiming.ClaimAttributes.NORMAL)) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking() && player.getClaimType() == HCF_Claiming.ClaimTypes.FACTION) {
+            if (HCF_Claiming.FinishClaiming(player.getFaction().getId(), e.getPlayer(), HCF_Claiming.ClaimAttributes.NORMAL)) {
                 e.getPlayer().sendMessage(Messages.faction_claim_accept.language(p).queue());
                 e.getPlayer().getInventory().remove(e.getItem());
             } else {

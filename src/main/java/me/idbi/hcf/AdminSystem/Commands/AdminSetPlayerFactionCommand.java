@@ -81,7 +81,7 @@ public class AdminSetPlayerFactionCommand extends SubCommand {
 
         player.setFaction(selectedFaction);
 
-        SQL_Connection.dbExecute(con, "UPDATE members SET faction='?' WHERE uuid='?'", String.valueOf(selectedFaction.id), target.getUniqueId().toString());
+        SQL_Connection.dbExecute(con, "UPDATE members SET faction='?' WHERE uuid='?'", String.valueOf(selectedFaction.getId()), target.getUniqueId().toString());
 
         //Sikeres belépés
         target.sendMessage(Messages.player_joined_faction_message.language(target).queue());
@@ -89,7 +89,7 @@ public class AdminSetPlayerFactionCommand extends SubCommand {
         //Faction -> xy belépett
         Faction f = Main.nameToFaction.get(args[2]);
 
-        for (Player member : f.getMembers()) {
+        for (Player member : f.getOnlineMembers()) {
             member.sendMessage(Messages.new_member_join_faction.language(member).setPlayer(target).queue());
 
         }

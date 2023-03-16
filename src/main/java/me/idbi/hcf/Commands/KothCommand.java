@@ -43,7 +43,7 @@ public class KothCommand implements CommandExecutor, TabCompleter {
                         case "setcapturezone":
                             try {
                                 if (getKothFromName(args[1]) != 0) {
-                                    if (player.claimType != ClaimTypes.KOTH) {
+                                    if (player.getClaimType() != ClaimTypes.KOTH) {
                                         if (KothPrepare(p)) {
                                             player.setClaimType(ClaimTypes.KOTH);
                                             player.setKothId(getKothFromName(args[1]));
@@ -59,7 +59,7 @@ public class KothCommand implements CommandExecutor, TabCompleter {
                         case "setnatrualzone":
                             try {
                                 if (getKothFromName(args[1]) != 0) {
-                                    if (player.claimType != ClaimTypes.SPECIAL) {
+                                    if (player.getClaimType() != ClaimTypes.SPECIAL) {
                                         if (KothPrepare(p)) {
                                             player.setClaimType(ClaimTypes.SPECIAL);
                                             player.setKothId(getKothFromName(args[1]));

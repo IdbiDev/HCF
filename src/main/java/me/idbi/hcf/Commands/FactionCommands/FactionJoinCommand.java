@@ -83,11 +83,11 @@ public class FactionJoinCommand extends SubCommand {
                 p.sendMessage(Messages.player_joined_faction_message.language(p).queue());
                 hcfPlayer.addFaction(faction);
                 //Faction f = Main.faction_cache.get(Integer.parseInt(playertools.getMetadata(p, "factionid")));
-                for (Player member : faction.getMembers()) {
+                for (Player member : faction.getOnlineMembers()) {
                     member.sendMessage(Messages.new_member_join_faction.language(member).setPlayer(p).queue());
                 }
 
-                SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?' WHERE uuid='?'", String.valueOf(faction.id), faction.getDefaultRank().name, p.getUniqueId().toString());
+                SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?' WHERE uuid='?'", String.valueOf(faction.getId()), faction.getDefaultRank().getName(), p.getUniqueId().toString());
 
                 // displayTeams.addPlayerToTeam(p);
                 //faction.addPrefixPlayer(p);
@@ -96,8 +96,8 @@ public class FactionJoinCommand extends SubCommand {
                 Scoreboards.refresh(p);
                 hcfPlayer.setChatType(ChatTypes.PUBLIC);
                 faction.refreshDTR();
-                PlayerStatistic stat = hcfPlayer.playerStatistic;
-                stat.factionHistory.add(0, new FactionHistory(new Date().getTime(), 0L, "", faction.name, faction.getDefaultRank().name, faction.id));
+                PlayerStatistic stat = hcfPlayer.getPlayerStatistic();
+                stat.factionHistory.add(0, new FactionHistory(new Date().getTime(), 0L, "", faction.name, faction.getDefaultRank().getName(), faction.getId()));
                 faction.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(p.getName(), "invited", new Date().getTime()));
                 //NameChanger.refresh(p);
 

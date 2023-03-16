@@ -86,7 +86,7 @@ public class Rogue implements HCF_Class, Listener {
         if (e.getDamager() instanceof Player damager) {
             if (e.getEntity() instanceof Player victim) {
                 HCFPlayer hcf = HCFPlayer.getPlayer(damager);
-                if (hcf.playerClass == Classes.ROGUE && ((Player) e.getDamager()).getItemInHand().getType() == Material.GOLD_SWORD) {
+                if (hcf.getPlayerClass() == Classes.ROGUE && ((Player) e.getDamager()).getItemInHand().getType() == Material.GOLD_SWORD) {
                     Location playerLoc = damager.getLocation();
                     Location targetLoc = victim.getLocation();
                     double pvecy = -Math.sin(Math.toRadians(playerLoc.getPitch()));

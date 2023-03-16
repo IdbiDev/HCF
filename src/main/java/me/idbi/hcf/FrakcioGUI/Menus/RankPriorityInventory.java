@@ -36,7 +36,7 @@ public class RankPriorityInventory {
         Faction f = Playertools.getPlayerFaction(p);
 
         for (Map.Entry<Integer, FactionRankManager.Rank> map : Playertools.sortByPriority(f).entrySet()) {
-            inv.addItem(RPrio_Items.ranks(p, map.getValue().name));
+            inv.addItem(RPrio_Items.ranks(p, map.getValue().getName()));
         }
 
         return inv;

@@ -1,18 +1,13 @@
 package me.idbi.hcf.BukkitCommands;
 
-import me.idbi.hcf.BukkitCommands.UtilCommands.BackCommand;
-import me.idbi.hcf.BukkitCommands.UtilCommands.GodCommand;
 import me.idbi.hcf.Commands.SingleCommands.RollbackCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import me.idbi.hcf.BukkitCommands.HCFCommand;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,8 +24,6 @@ public class BukkitCommandManager {
     }
 
     public static void setupMaps() {
-        BackCommand.hashMap = new HashMap<>();
-        GodCommand.hashMap = new ArrayList<>();
     }
 
     public static boolean findTarget(CommandSender executor, String targetName) {

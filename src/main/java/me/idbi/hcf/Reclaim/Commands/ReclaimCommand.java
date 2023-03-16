@@ -41,7 +41,7 @@ public class ReclaimCommand implements Listener, CommandExecutor {
         hcfPlayer.addLives(ReclaimConfig.getLives(p));
         List<String> commands = ReclaimConfig.getCommands(p);
         p.sendMessage("Kaptál életet: " + ReclaimConfig.getLives(p));
-        p.sendMessage("Új életeid száma: " + hcfPlayer.lives);
+        p.sendMessage("Új életeid száma: " + hcfPlayer.getLives());
 
         for (String cmd : commands) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%" , p.getName()));

@@ -46,7 +46,7 @@ CreateShopSign implements Listener {
         if (line0 != null) {
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(e.getPlayer());
             if (line0.equalsIgnoreCase("[buy]")) {
-                if (!hcfPlayer.inDuty) {
+                if (!hcfPlayer.isInDuty()) {
                     e.getPlayer().sendMessage(Messages.no_permission.language(e.getPlayer()).queue());
                     return;
                 }
@@ -69,7 +69,7 @@ CreateShopSign implements Listener {
                 e.setLine(0, "§a[Buy]");
             }
             if (line0.equalsIgnoreCase("[sell]")) {
-                if (!hcfPlayer.inDuty) {
+                if (!hcfPlayer.isInDuty()) {
                     e.getPlayer().sendMessage(Messages.no_permission.language(e.getPlayer()).queue());
                     return;
                 }

@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
         name = "rollback",
         description = "Open rollback menu",
         permission = "factions.commands.admin.rollback",
-        adminPermission = "factions.commands.admin.rollback",
         syntax = "/rollback <player>")
 public class RollbackCommand  extends HCFCommand {
 

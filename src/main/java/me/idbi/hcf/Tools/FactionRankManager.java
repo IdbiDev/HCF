@@ -1,5 +1,7 @@
 package me.idbi.hcf.Tools;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Objects.Faction;
@@ -16,31 +18,31 @@ public class FactionRankManager {
     public static Rank create(Player player, String name, boolean isLeader, boolean isDefault) {
         Faction faction = Playertools.getPlayerFaction(player);
         assert faction != null;
-        for (FactionRankManager.Rank rank : faction.ranks)
-            if (rank.name.equalsIgnoreCase(name))
+        for (FactionRankManager.Rank rank : faction.getRanks())
+            if (rank.getName().equalsIgnoreCase(name))
                 return null;
 
         int id = Playertools.getFreeRankId();
         Rank rank = new Rank(id, name, isDefault, isLeader);
 
         if (isLeader)
-            rank.priority = 9999;
+            rank.setPriority(9999);
         else if (isDefault)
-            rank.priority = -9999;
+            rank.setPriority(-9999);
         else
-            rank.priority = -9999 + faction.ranks.size();
+            rank.setPriority(-9999 + faction.getRanks().size());
 
         Main.ranks.add(rank);
-        faction.ranks.add(rank);
+        faction.addRank(rank);
         Scoreboards.RefreshAll();
         SQL_Connection.dbExecute(con, "INSERT INTO ranks SET name = '?', faction='?', isDefault='?',isLeader='?',priority='?', ID='?'",
-                name, String.valueOf(faction.id),
-                (rank.isDefault) ? "1" : "0",
-                (rank.isLeader) ? "1" : "0",
-                rank.priority + "",
+                name, String.valueOf(faction.getId()),
+                (rank.isDefault()) ? "1" : "0",
+                (rank.isLeader()) ? "1" : "0",
+                rank.getPriority() + "",
                 String.valueOf(id));
         //rank.saveRank();
-        System.out.println("Priority for: " + rank.name + " IS: " + rank.priority);
+        System.out.println("Priority for: " + rank.getName() + " IS: " + rank.getPriority());
         return rank;
     }
     // public static Rank create(Faction faction, String name) {
@@ -66,8 +68,8 @@ public class FactionRankManager {
         Rank rank = faction.FindRankByName(oldName);
         if (oldName.equalsIgnoreCase(newName))
             return false;
-        rank.name = newName;
-        SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE faction='?' AND rank='?'", newName, String.valueOf(faction.id), oldName);
+        rank.setName(newName);
+        SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE faction='?' AND rank='?'", newName, String.valueOf(faction.getId()), oldName);
         rank.saveRank();
         Scoreboards.RefreshAll();
         return true;
@@ -75,19 +77,20 @@ public class FactionRankManager {
 
     public static void delete(Faction faction, String name) {
         Rank rank = faction.FindRankByName(name);
-        for (HCFPlayer hcfPlayer : faction.members) {
-            if (hcfPlayer.rank.name.equalsIgnoreCase(rank.name)) {
+        for (Player player : faction.getOnlineMembers()) {
+            HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
+            if (hcfPlayer.getRank().getName().equalsIgnoreCase(rank.getName())) {
                 hcfPlayer.setRank(faction.getDefaultRank());
             }
         }
 
         SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE faction='?' AND rank='?'",
-                faction.getDefaultRank().name,
-                String.valueOf(faction.id),
+                faction.getDefaultRank().getName(),
+                String.valueOf(faction.getId()),
                 name
         );
         SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE ID = '?'", String.valueOf(rank.id));
-        faction.ranks.remove(rank);
+        faction.removeRank(rank);
         Main.ranks.remove(rank);
         Scoreboards.RefreshAll();
     }
@@ -102,12 +105,12 @@ public class FactionRankManager {
     }
 
     public static class Rank {
-        public final int id;
-        public String name;
-        public boolean isDefault;
-        public boolean isLeader;
-        public int priority;
-        public HashMap<Permissions, Boolean> class_permissions = new HashMap<>();
+        @Getter private final int id;
+        @Getter @Setter private String name;
+        @Getter @Setter private boolean isDefault;
+        @Getter @Setter private boolean isLeader;
+        @Getter @Setter private int priority;
+        private HashMap<Permissions, Boolean> class_permissions = new HashMap<>();
 
         Rank(int id, String name, boolean isDefault, boolean isLeader) {
             this.name = name;
@@ -120,12 +123,8 @@ public class FactionRankManager {
             loadPermissions();
         }
 
-        public void setPriority(int priority) {
-            this.priority = priority;
-        }
-
-        public void setLeader() {
-            this.isLeader = true;
+        public HashMap<Permissions, Boolean> getClassPermissions() {
+            return this.class_permissions;
         }
 
         public void loadPermissions() {
@@ -175,7 +174,7 @@ public class FactionRankManager {
         }
 
         public void saveRank() {
-            System.out.println("Priority for: " + this.name + " IS: " + priority);
+            //System.out.println("Priority for: " + this.name + " IS: " + priority);
             SQL_Connection.dbExecute(con, "UPDATE ranks SET " +
                             "name = '?'," +
                             "ALL_Permission='?'," +

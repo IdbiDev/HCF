@@ -129,8 +129,8 @@ public class FactionCreateCommand extends SubCommand {
                 faction.members.add(hcf);
                 faction.refreshDTR();
                 GUI_Sound.playSound(p, GUI_Sound.HCFSounds.SUCCESS);
-                PlayerStatistic stat = hcf.playerStatistic;
-                stat.factionHistory.add(0, new FactionHistory(new Date().getTime(), 0L, "", faction.name, "Leader", faction.id));
+                PlayerStatistic stat = hcf.getPlayerStatistic();
+                stat.factionHistory.add(0, new FactionHistory(new Date().getTime(), 0L, "", faction.getName(), "Leader", faction.getId()));
 
                 //HashMap<String, Object> factionMap = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID='?'", String.valueOf(faction.id));
 

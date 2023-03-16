@@ -1,4 +1,4 @@
-package me.idbi.hcf.Commands;
+package me.idbi.hcf.Commands.SingleCommands;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
@@ -22,10 +22,10 @@ public class ReviveCommand implements CommandExecutor {
                     HCFPlayer targetPlayer = HCFPlayer.getPlayer(args[0]);
                     if (targetPlayer != null) {
                         if (targetPlayer.isDeathBanned()) {
-                            Main.deathWaitClear.add(targetPlayer.uuid);
+                            Main.deathWaitClear.add(targetPlayer.getUUID());
                             targetPlayer.setDeathBanned(false);
                             targetPlayer.setDeathTime(0);
-                            SQL_Connection.dbExecute(con, "DELETE FROM deathbans WHERE uuid='?'", targetPlayer.uuid.toString());
+                            SQL_Connection.dbExecute(con, "DELETE FROM deathbans WHERE uuid='?'", targetPlayer.getUUID().toString());
                             //Todo: cooldown
 
                         } else {

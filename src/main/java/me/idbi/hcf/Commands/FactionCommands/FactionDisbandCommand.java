@@ -87,9 +87,9 @@ public class FactionDisbandCommand extends SubCommand {
 //        displayTeams.removePlayerFromTeam(p);
 //        displayTeams.removeTeam(selectedFaction);
         for (HCFPlayer player : selectedFaction.members) {
-            Player bukkitPlayer = Bukkit.getPlayer(player.uuid);
+            Player bukkitPlayer = Bukkit.getPlayer(player.getUUID());
 
-            final String rankName = player.rank.name;
+            final String rankName = player.getRank().getName();
 
             //player.removeFaction();
             player.setFactionWithoutRank(null);
@@ -101,7 +101,7 @@ public class FactionDisbandCommand extends SubCommand {
             }
 
 
-            PlayerStatistic stat = player.playerStatistic;
+            PlayerStatistic stat = player.getPlayerStatistic();
             for (FactionHistory f : stat.factionHistory) {
                 if (f.id == selectedFaction.id) {
                     f.left = new Date();

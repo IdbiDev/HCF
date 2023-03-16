@@ -61,7 +61,7 @@ public class AdminSpawnPlaceCommand extends SubCommand {
     @Override
     public void perform(Player p, String[] args) {
         HCFPlayer player = HCFPlayer.getPlayer(p);
-        if (!player.claimType.equals(HCF_Claiming.ClaimTypes.SPAWN)) {
+        if (!player.getClaimType().equals(HCF_Claiming.ClaimTypes.SPAWN)) {
             for (String lines : Messages.claim_info_admin.queueList()) {
 
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', lines));

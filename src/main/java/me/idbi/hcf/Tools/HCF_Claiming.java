@@ -1,5 +1,7 @@
 package me.idbi.hcf.Tools;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
@@ -124,7 +126,7 @@ public class HCF_Claiming {
 
                 if (Playertools.getPlayerBalance(p) - calcMoneyOfArea(p) >= 0) {
                     HCFPlayer hcf = HCFPlayer.getPlayer(p);
-                    hcf.setMoney(hcf.money - calcMoneyOfArea(p));
+                    hcf.setMoney(hcf.getMoney() - calcMoneyOfArea(p));
                 } else {
                     if (attribute.equals(ClaimAttributes.NORMAL)) {
                         p.sendMessage(Messages.not_enough_money.language(p).queue());
@@ -344,7 +346,7 @@ public class HCF_Claiming {
             return true;
         }
 
-        return playerFac.id != actionFaction.id;
+        return playerFac.getId() != actionFaction.getId();
     }
 
     //Old find point FUCKED UP IDK MIEZ
@@ -469,7 +471,7 @@ public class HCF_Claiming {
 
     public static int calcMoneyOfArea(Player p) {
         HCFPlayer player = HCFPlayer.getPlayer(p);
-        int faction = player.faction.id;
+        int faction = player.getFaction().getId();
         if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
             return (int) (calcBlocks(p) * Main.claimPriceMultiplier);
         }
@@ -478,7 +480,7 @@ public class HCF_Claiming {
 
     public static int calcBlocks(Player p) {
         HCFPlayer player = HCFPlayer.getPlayer(p);
-        int faction = player.faction.id;
+        int faction = player.getFaction().getId();
         if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
             Point start = startpositions.get(faction);
             Point end = endpositions.get(faction);
@@ -588,14 +590,14 @@ public class HCF_Claiming {
     }
 
     public static class Faction_Claim {
-        public World world;
-        public int startX;
-        public int endX;
-        public int startZ;
-        public int endZ;
-        public Faction faction;
+        @Getter @Setter public World world;
+        @Getter @Setter public int startX;
+        @Getter @Setter public int endX;
+        @Getter @Setter public int startZ;
+        @Getter @Setter public int endZ;
+        @Getter @Setter public Faction faction;
         //Attributes: Protected, KOTH, normal,Special
-        public ClaimAttributes attribute;
+        @Getter @Setter public ClaimAttributes attribute;
 
         public Faction_Claim(int startX, int endX, int startZ, int endZ, int faction, ClaimAttributes attribute, String world) {
             this.startX = startX;

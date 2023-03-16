@@ -66,6 +66,7 @@ public class AdminReloadCommand extends SubCommand {
 
     @Override
     public void perform(Player p, String[] args) {
+        Main.getInstance().getTabManager().reload();
         ConfigManager.getConfigManager().setup();
         Scoreboards.RefreshAll();
     }

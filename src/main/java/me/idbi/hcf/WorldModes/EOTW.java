@@ -16,7 +16,7 @@ import static me.idbi.hcf.Tools.Playertools.getDistanceBetweenPoints2D;
 
 public class EOTW {
 
-    public static void EnableEOTW() {
+    public static void enableEOTW() {
         World world = Bukkit.getWorld(Config.WorldName.asStr());
         Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
         int EOTWTIME = Config.EOTWDuration.asInt() * 1000;

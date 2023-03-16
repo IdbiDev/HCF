@@ -23,7 +23,7 @@ public class KothClaim implements Listener {
         if (!e.getItem().isSimilar(HCF_Claiming.Wands.claimWand())) {
             return;
         }
-        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.claimType == HCF_Claiming.ClaimTypes.KOTH) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.KOTH) {
             p.sendMessage(Messages.claim_pos_end.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
             HCF_Claiming.setEndPosition(player.getKothId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             e.setCancelled(true);

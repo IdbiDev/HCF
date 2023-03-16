@@ -75,7 +75,7 @@ public class FactionDepositCommand extends SubCommand {
         if (args[1].matches("^[0-9]+$") || args[1].equalsIgnoreCase("all")) {
             try {
                 HCFPlayer hcf = HCFPlayer.getPlayer(p);
-                int arg1 = args[1].matches("^[0-9]+$") ? Integer.parseInt(args[1]) : hcf.money;
+                int arg1 = args[1].matches("^[0-9]+$") ? Integer.parseInt(args[1]) : hcf.getMoney();
                 Faction faction = Playertools.getPlayerFaction(p);
                 if (arg1 <= 0) {
                     p.sendMessage(Messages.faction_bank_not_enough.language(p).queue());
@@ -112,7 +112,7 @@ public class FactionDepositCommand extends SubCommand {
     public FactionDepositCommand depositFaction(Faction faction, Player p, int amount) {
         try {
             HCFPlayer player = HCFPlayer.getPlayer(p);
-            int SQLAmount = player.money;
+            int SQLAmount = player.getMoney();
             if (amount > SQLAmount) {
                 transaction = false;
                 p.sendMessage(Messages.not_enough_slot.language(p).queue());

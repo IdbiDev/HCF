@@ -72,7 +72,7 @@ public class AdminSetFactionNameCommand extends SubCommand {
         selectedFaction.name = args[2];
         //Todo: Broadcast the change
 
-        for (Player member : selectedFaction.getMembers()) {
+        for (Player member : selectedFaction.getOnlineMembers()) {
             member.sendMessage(Messages.set_faction_name.language(member).setExecutor(p).setFaction(args[2]).queue());
         }
 

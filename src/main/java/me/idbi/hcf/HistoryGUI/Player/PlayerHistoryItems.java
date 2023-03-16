@@ -28,7 +28,7 @@ public class PlayerHistoryItems {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§6☰ §eStatistics");
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
-        PlayerStatistic stats = hcfPlayer.playerStatistic;
+        PlayerStatistic stats = hcfPlayer.getPlayerStatistic();
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         im.setLore(Arrays.asList(
@@ -60,7 +60,7 @@ public class PlayerHistoryItems {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§2☰ §aClass Statistics");
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
-        PlayerStatistic stats = hcfPlayer.playerStatistic;
+        PlayerStatistic stats = hcfPlayer.getPlayerStatistic();
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
 
         long total = 0L;

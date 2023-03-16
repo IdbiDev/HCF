@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 public class RankPermissionInventory {
 
     public static Inventory inv(Player p, FactionRankManager.Rank rank) {
-        Inventory inv = Bukkit.createInventory(null, 5 * 9, rank.name + " Permissions");
+        Inventory inv = Bukkit.createInventory(null, 5 * 9, rank.getName() + " Permissions");
 
         for (int i = 0; i < inv.getSize(); i++) {
             inv.setItem(i, GUI_Items.blackGlass());
@@ -24,12 +24,12 @@ public class RankPermissionInventory {
         inv.setItem(31, RP_Items.manageRanks());
         inv.setItem(33, RP_Items.withdraw());
 
-        ItemStack ALL = rank.class_permissions.get(FactionRankManager.Permissions.MANAGE_ALL) ? RP_Items.on() : RP_Items.off();
-        ItemStack kick = rank.class_permissions.get(FactionRankManager.Permissions.MANAGE_KICK) ? RP_Items.on() : RP_Items.off();
-        ItemStack basic = rank.class_permissions.get(FactionRankManager.Permissions.MANAGE_PLAYERS) ? RP_Items.on() : RP_Items.off();
-        ItemStack invite = rank.class_permissions.get(FactionRankManager.Permissions.MANAGE_INVITE) ? RP_Items.on() : RP_Items.off();
-        ItemStack sethome = rank.class_permissions.get(FactionRankManager.Permissions.MANAGE_RANKS) ? RP_Items.on() : RP_Items.off();
-        ItemStack withdraw = rank.class_permissions.get(FactionRankManager.Permissions.MANAGE_MONEY) ? RP_Items.on() : RP_Items.off();
+        ItemStack ALL = rank.getClassPermissions().get(FactionRankManager.Permissions.MANAGE_ALL) ? RP_Items.on() : RP_Items.off();
+        ItemStack kick = rank.getClassPermissions().get(FactionRankManager.Permissions.MANAGE_KICK) ? RP_Items.on() : RP_Items.off();
+        ItemStack basic = rank.getClassPermissions().get(FactionRankManager.Permissions.MANAGE_PLAYERS) ? RP_Items.on() : RP_Items.off();
+        ItemStack invite = rank.getClassPermissions().get(FactionRankManager.Permissions.MANAGE_INVITE) ? RP_Items.on() : RP_Items.off();
+        ItemStack sethome = rank.getClassPermissions().get(FactionRankManager.Permissions.MANAGE_RANKS) ? RP_Items.on() : RP_Items.off();
+        ItemStack withdraw = rank.getClassPermissions().get(FactionRankManager.Permissions.MANAGE_MONEY) ? RP_Items.on() : RP_Items.off();
 
         inv.setItem(11, ALL);
         inv.setItem(13, kick);

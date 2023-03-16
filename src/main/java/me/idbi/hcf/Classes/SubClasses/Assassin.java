@@ -135,7 +135,7 @@ public class Assassin implements HCF_Class, Listener {
     private void PlaceBuff(Player p, Boolean state) {
         removeEffects(p);
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        int level = hcf.assassinState;
+        int level = hcf.getAssassinState();
         if (state && level + 1 <= 16)
             level++;//-15
         else if (!state && level - 1 >= -16)
@@ -190,10 +190,10 @@ public class Assassin implements HCF_Class, Listener {
                 HCFPlayer hcfVictim = HCFPlayer.getPlayer(victim);
                 HCFPlayer hcfDamager = HCFPlayer.getPlayer(damager);
 
-                if (hcfVictim.playerClass == Classes.ASSASSIN) {
+                if (hcfVictim.getPlayerClass() == Classes.ASSASSIN) {
                     PlaceBuff(victim, false);
                 }
-                if (hcfDamager.playerClass == Classes.ASSASSIN) {
+                if (hcfDamager.getPlayerClass() == Classes.ASSASSIN) {
                     PlaceBuff(damager, true);
                 }
             }

@@ -50,7 +50,7 @@ public class Click_PlayerRankManager implements Listener {
                 assert f != null;
                 FactionRankManager.Rank rank = f.FindRankByName(rankName);
                 if (rank != null)
-                    if (rank.isLeader)
+                    if (rank.isLeader())
                         return;
 
                 if (offline.isOnline())

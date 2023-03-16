@@ -654,7 +654,7 @@ public enum Messages {
      */
     public Messages setChat(Player p) {
         HCFPlayer player = HCFPlayer.getPlayer(p);
-        ChatTypes chatTypes = player.chatType;
+        ChatTypes chatTypes = player.getChatType();
         String chat;
         switch (chatTypes) {
             case ALLY:
@@ -707,7 +707,7 @@ public enum Messages {
     public Messages setDeathWithoutKiller(Player victim) {
         HCFPlayer player = HCFPlayer.getPlayer(victim);
         playerMessage = playerMessage.replace("%victim%", victim.getName())
-                .replace("%victim_kills%", player.playerStatistic.kills + "");
+                .replace("%victim_kills%", player.getPlayerStatistic().kills + "");
         return this;
     }
 
@@ -838,8 +838,8 @@ public enum Messages {
 
     public Messages setPlayer(HCFPlayer p) {
         if (this.isString())
-            this.playerMessage = this.playerMessage.replaceAll("%player%", p.name);
-        else replaceList("%player%", p.name);
+            this.playerMessage = this.playerMessage.replaceAll("%player%", p.getName());
+        else replaceList("%player%", p.getName());
         return this;
     }
 

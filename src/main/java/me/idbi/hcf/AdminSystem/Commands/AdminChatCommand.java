@@ -21,7 +21,7 @@ public class AdminChatCommand extends SubCommand {
 
     @Override
     public boolean isCommand(String argument) {
-        return argument.equalsIgnoreCase(getName());
+        return argument.equalsIgnoreCase(getName()) || argument.equalsIgnoreCase("c");
     }
 
     @Override

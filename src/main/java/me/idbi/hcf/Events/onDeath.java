@@ -52,7 +52,7 @@ public class onDeath implements Listener {
             for (Player player : Bukkit.getOnlinePlayers())
                 player.sendMessage(Messages.kill_message_broadcast.language(player).setVictimWithKills(victim, damager).queue());
             if (faction != null) {
-                for (Player member : faction.getMembers()) {
+                for (Player member : faction.getOnlineMembers()) {
                     member.sendMessage(Messages.kill_message_faction.language(member).setDeath(victim, damager).setDTR(faction.DTR).queue());
                 }
             }

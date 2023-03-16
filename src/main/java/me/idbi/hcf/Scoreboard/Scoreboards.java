@@ -3,6 +3,7 @@ package me.idbi.hcf.Scoreboard;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.MiscTimers;
@@ -25,6 +26,7 @@ public class Scoreboards {
     private static final DecimalFormat dfSharp = new DecimalFormat("0.0");
 
     public static void refresh(Player p) {
+        TabManager.getManager().refresh(p);
         if (Playertools.isInStaffDuty(p)) {
             AdminScoreboard.refresh(p);
             return;
@@ -90,7 +92,7 @@ public class Scoreboards {
             return true;
         } else if (line.contains("%stuck_timer%") && HCF_Timer.getStuckTime(p) <= 0.0) {
             return true;
-        } else if (line.contains("%bard_energy%") && player.bardEnergy <= 0.0) {
+        } else if (line.contains("%bard_energy%") && player.getBardEnergy() <= 0.0) {
             return true;
         } else if (line.contains("%eotw%") && HCF_Timer.getEOTWTimer(p) <= 0L) {
             return true;
@@ -140,11 +142,11 @@ public class Scoreboards {
     public static String replaceVariables(String inputString, Player p) {
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         return inputString
-                .replace("%money%", hcf.money + "")
+                .replace("%money%", hcf.getMoney() + "")
                 .replace("%faction%", hcf.getFactionName())
-                .replace("%class%", Playertools.upperFirst(hcf.playerClass.name()))
+                .replace("%class%", Playertools.upperFirst(hcf.getPlayerClass().name()))
                 .replace("%bard_energy%", dfSharp.format(
-                                hcf.bardEnergy)
+                                hcf.getBardEnergy())
                         .replace(",", "."))
 //                        new SimpleDateFormat("s").format(
 //                                new Date((long) (Double.parseDouble(playertools.getMetadata(p, "bardenergy")) * 1000L)))))

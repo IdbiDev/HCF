@@ -68,7 +68,7 @@ public class AdminDutyCommand extends SubCommand {
 
     public static void duty(Player p) {
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        boolean state = !hcf.inDuty;
+        boolean state = !hcf.isInDuty();
         if (state) {
             p.setGameMode(GameMode.CREATIVE);
             hcf.setDuty(true);

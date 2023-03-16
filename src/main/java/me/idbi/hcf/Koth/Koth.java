@@ -166,7 +166,7 @@ public class Koth implements Listener {
     public static int getKothFromName(String name) {
         Faction k = Main.nameToFaction.get(name);
         if (k != null) {
-            return k.id;
+            return k.getId();
         }
         return 0;
     }

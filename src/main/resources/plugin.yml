@@ -11,6 +11,7 @@ softdepend:
 depend:
   - Vault
   - ProtocolLib
+  - TabAPI
 loadbefore:
   - HCF-
   - ProtocolLib
@@ -63,8 +64,7 @@ permissions:
       factions.admin.customtimer,
       factions.command.revive,
       factions.commands.resetclaim,
-      factions.commands.back.others,
-      factions.commands.back
+      factions.commands.admin.rollback
     ]
   factions.admin.teleport.bypass:
     default: op
@@ -92,3 +92,5 @@ permissions:
     default: true
   factions.commands.factioncall:
     default: true
+  factions.commands.admin.rollbacK:
+    default: op

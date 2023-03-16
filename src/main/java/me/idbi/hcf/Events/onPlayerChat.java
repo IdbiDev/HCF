@@ -31,7 +31,7 @@ public class onPlayerChat implements Listener {
             return;
         }*/
 
-        player.sendChat(e.getMessage(), player.chatType);
+        player.sendChat(e.getMessage(), player.getChatType());
         e.setCancelled(true);
        /* if (player.chatType != ChatTypes.PUBLIC) {
             Messages message = null;

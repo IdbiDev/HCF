@@ -12,7 +12,7 @@ public class BanHandler {
     private static final Connection con = Main.getConnection();
 
     public static void banPlayerInHCF(HCFPlayer p) {
-        SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'",p.uuid.toString(), String.valueOf(System.currentTimeMillis() + (Main.deathbanTime)));
+        SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'",p.getUUID().toString(), String.valueOf(System.currentTimeMillis() + (Main.deathbanTime)));
         p.setDeathBanned(true);
         p.setDeathTime(System.currentTimeMillis() + (Main.deathbanTime));
 
@@ -44,6 +44,6 @@ public class BanHandler {
 
     public static int getBanRemainingTime(UUID uuid) {
         HCFPlayer p = HCFPlayer.getPlayer(uuid);
-        return Math.toIntExact((((p.deathTime - System.currentTimeMillis()) / 1000)));
+        return Math.toIntExact((((p.getDeathTime() - System.currentTimeMillis()) / 1000)));
     }
 }

@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.FastBoard;
+import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.AdminTools;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.HCF_Timer;
@@ -37,6 +38,8 @@ public class onPlayerJoin implements Listener {
         //
         // p.setScoreboard(ScoreboardBuilder.getOrCreate(p).build());
 
+        //TabManager.test(e.getPlayer());
+        TabManager.getManager().refresh(e.getPlayer());
         FastBoard board = new FastBoard(e.getPlayer());
         board.updateTitle(Config.DefaultScoreboardTitle.asStr());
         Main.boards.put(e.getPlayer().getUniqueId(), board);
@@ -82,7 +85,7 @@ public class onPlayerJoin implements Listener {
         if (hcf.inFaction()) { // írjad csöves
             Faction f = Playertools.getPlayerFaction(e.getPlayer());
             if (f != null) {
-                for (Player member : f.getMembers()) {
+                for (Player member : f.getOnlineMembers()) {
                     member.sendMessage(Messages.join_online_player_in_faction.language(member).setPlayer(e.getPlayer()).queue());
                 }
                 //f.addPrefixPlayer(p);
@@ -105,7 +108,7 @@ public class onPlayerJoin implements Listener {
                 }
             }
         }
-        PlayerStatistic statistic = hcf.playerStatistic;
+        PlayerStatistic statistic = hcf.getPlayerStatistic();
         p.sendMessage("Started:" + new Date(statistic.startDate));
         p.sendMessage("Last Login:" + new Date(statistic.lastLogin));
         p.sendMessage("Time Played" + (statistic.TimePlayed / 1000) / 60);

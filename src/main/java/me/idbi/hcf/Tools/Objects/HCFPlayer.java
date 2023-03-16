@@ -1,6 +1,8 @@
 package me.idbi.hcf.Tools.Objects;
 
-import com.avaje.ebeaninternal.server.core.Message;
+import com.keenant.tabbed.tablist.TableTabList;
+import lombok.Getter;
+import lombok.Setter;
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
@@ -16,7 +18,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.JSONObject;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.util.*;
 
@@ -26,29 +27,30 @@ public class HCFPlayer {
 
     private static final Connection con = Main.getConnection();
 
-    public UUID uuid;
-    public String name;
-    public HCF_Claiming.ClaimTypes claimType;
-    public Faction faction;
-    public int money;
-    public Classes playerClass;
-    public boolean freezeStatus;
-    public double bardEnergy;
-    public HCF_Claiming.Faction_Claim currentArea;
-    public int assassinState;
-    public boolean inDuty;
-    public Location stuckLocation;
-    public ChatTypes chatType;
-    public ArrayList<ChatTypes> toggledChatTypes;
-    public int kothId;
-    public String language;
-    public FactionRankManager.Rank rank;
-    public PlayerStatistic playerStatistic;
-    public boolean isDeathBanned;
-    public int lives;
-    public long deathTime;
-    public boolean online;
-    public TreeMap<Integer, Rollback> rollbacks;
+    private UUID uuid;
+    @Getter private String name;
+    private HCF_Claiming.ClaimTypes claimType;
+    private Faction faction;
+    private int money;
+    private Classes playerClass;
+    private boolean freezeStatus;
+    private double bardEnergy;
+    private HCF_Claiming.Faction_Claim currentArea;
+    private int assassinState;
+    private boolean inDuty;
+    @Getter @Setter private Location stuckLocation;
+    private ChatTypes chatType;
+    private ArrayList<ChatTypes> toggledChatTypes;
+    private int kothId;
+    private String language;
+    private FactionRankManager.Rank rank;
+    private PlayerStatistic playerStatistic;
+    private boolean isDeathBanned;
+    private int lives;
+    private long deathTime;
+    private boolean online;
+    private TreeMap<Integer, Rollback> rollbacks;
+    private TableTabList tabList;
 
     public HCFPlayer(UUID uuid,
                      int deaths,
@@ -121,6 +123,7 @@ public class HCFPlayer {
 
         return getPlayer(p);
     }
+
     public static HCFPlayer getPlayer(String name) {
         for (HCFPlayer p : Main.playerCache.values()){
             if(p.name.equalsIgnoreCase(name)){
@@ -161,6 +164,22 @@ public class HCFPlayer {
         );
     }
 
+    public void setTabList(TableTabList tabList) {
+        this.tabList = tabList;
+    }
+
+    public TableTabList getTabList() {
+        return this.tabList;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isInDuty() {
+        return this.inDuty;
+    }
+
     public void setDuty(boolean duty) {
         this.inDuty = duty;
     }
@@ -193,8 +212,24 @@ public class HCFPlayer {
         this.playerStatistic.deaths++;
     }
 
+    public void addBardEnergy(double energy) {
+        this.bardEnergy += energy;
+    }
+
+    public int getMoney() {
+        return this.money;
+    }
+
     public void setClaimType(HCF_Claiming.ClaimTypes type) {
         this.claimType = type;
+    }
+
+    public Classes getPlayerClass() {
+        return this.playerClass;
+    }
+
+    public HCF_Claiming.ClaimTypes getClaimType() {
+        return this.claimType;
     }
 
     public void setLocation(HCF_Claiming.Faction_Claim newLoc) {
@@ -224,6 +259,10 @@ public class HCFPlayer {
         Main.getEconomy().withdrawPlayer(Bukkit.getOfflinePlayer(this.uuid), this.money);
         EconomyResponse r = Main.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(this.uuid), money);
         this.money = Math.toIntExact(Math.round(r.balance));
+    }
+
+    public boolean isFreezed() {
+        return this.freezeStatus;
     }
 
     public void setCurrentArea(HCF_Claiming.Faction_Claim currentArea) {
@@ -275,6 +314,10 @@ public class HCFPlayer {
         this.assassinState = state;
     }
 
+    public Faction getFaction() {
+        return this.faction;
+    }
+
     public String getFactionName() {
         return this.faction == null ? "None" : this.faction.name;
     }
@@ -304,10 +347,6 @@ public class HCFPlayer {
 
     public void setFactionWithoutRank(Faction faction) {
         this.faction = faction;
-    }
-
-    public void setStuckLocation(Location loc) {
-        this.stuckLocation = loc;
     }
 
     public void addFaction(Faction f) {
@@ -481,20 +520,20 @@ public class HCFPlayer {
             if(!this.inFaction()) {
                 return;
             }
-            for (Player member : this.faction.getMembers()) {
+            for (Player member : this.faction.getOnlineMembers()) {
                 HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
                 if(hcfMember.isDisabled(ChatTypes.FACTION)) continue;
-                member.sendMessage(Messages.faction_chat.setFaction(this.faction).setPlayer(this).setMessage(message).setRank(this.rank.name).queue());
+                member.sendMessage(Messages.faction_chat.setFaction(this.faction).setPlayer(this).setMessage(message).setRank(this.faction.getName()).queue());
             }
         }
         else if(chatTypes == ChatTypes.LEADER) {
             if(!this.inFaction()) {
                 return;
             }
-            for (Player member : this.faction.getMembers()) {
+            for (Player member : this.faction.getOnlineMembers()) {
                 HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
                 if(hcfMember.isDisabled(ChatTypes.LEADER)) continue;
-                if(hcfMember.rank.hasPermission(FactionRankManager.Permissions.MANAGE_ALL) || hcfMember.rank.isLeader) {
+                if(hcfMember.getRank().hasPermission(FactionRankManager.Permissions.MANAGE_ALL) || hcfMember.getRank().isLeader()) {
                     member.sendMessage(Messages.leader_chat.setPlayer(this).setMessage(message).queue());
                 }
             }
@@ -505,13 +544,13 @@ public class HCFPlayer {
             }
             if (!this.faction.Allies.isEmpty()) {
                 for (AllyFaction value : this.faction.Allies.values()) {
-                    for (Player member : value.getAllyFaction().getMembers()) {
+                    for (Player member : value.getAllyFaction().getOnlineMembers()) {
                         HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
                         if (hcfMember.isDisabled(ChatTypes.ALLY)) continue;
                         member.sendMessage(Messages.ally_chat.setMessage(message).setFaction(this.faction).setPlayer(this).queue());
                     }
                 }
-                for (Player member : this.faction.getMembers()) {
+                for (Player member : this.faction.getOnlineMembers()) {
                     HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
                     if (hcfMember.isDisabled(ChatTypes.ALLY)) continue;
                     member.sendMessage(Messages.ally_chat.setMessage(message).setFaction(this.faction).setPlayer(this).queue());
@@ -526,8 +565,8 @@ public class HCFPlayer {
 
         SQL_Connection.dbExecute(con,
                 "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?',lives='?' WHERE UUID='?'",
-                this.faction == null ? 0 + "" : this.faction.id + "",
-                this.rank == null ? "None" : this.rank.name,
+                this.faction == null ? 0 + "" : this.faction.getId() + "",
+                this.rank == null ? "None" : this.rank.getName(),
                 this.playerStatistic.kills + "",
                 this.playerStatistic.deaths + "",
                 this.money + "",
@@ -542,11 +581,60 @@ public class HCFPlayer {
         this.playerStatistic.save(this.uuid);
     }
 
-    public String getName() {
-        return this.name;
-    }
-
     public FactionRankManager.Rank getRank() {
         return this.rank;
     }
+
+    public UUID getUUID() {
+        return this.uuid;
+    }
+
+    public void setUUID(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public double getBardEnergy() {
+        return bardEnergy;
+    }
+
+    public HCF_Claiming.Faction_Claim getCurrentArea() {
+        return currentArea;
+    }
+
+    public int getAssassinState() {
+        return assassinState;
+    }
+
+    public ChatTypes getChatType() {
+        return chatType;
+    }
+
+    /**
+     *
+     * @return list of disabled chat types
+     */
+    public ArrayList<ChatTypes> getToggledChatTypes() {
+        return toggledChatTypes;
+    }
+
+    public int getKothId() {
+        return kothId;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public PlayerStatistic getPlayerStatistic() {
+        return playerStatistic;
+    }
+
+    public void setPlayerStatistic(PlayerStatistic playerStatistic) {
+        this.playerStatistic = playerStatistic;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
 }

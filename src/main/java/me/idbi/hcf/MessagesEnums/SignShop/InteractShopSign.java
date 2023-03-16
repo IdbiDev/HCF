@@ -84,7 +84,7 @@ public class InteractShopSign implements Listener {
                                 }
 
                                 Playertools.setPlayerBalance(p, playerBalance - fertigPreise);
-                                PlayerStatistic stat = hcfPlayer.playerStatistic;
+                                PlayerStatistic stat = hcfPlayer.getPlayerStatistic();
                                 stat.MoneySpend += fertigPreise;
                                 p.sendMessage(Messages.sign_shop_bought.language(p).setItem(new ItemStack(material, remainingSpace, Short))
                                         .setPrice(fertigPreise)
@@ -106,7 +106,7 @@ public class InteractShopSign implements Listener {
                                         .setAmount(String.valueOf(amount))
                                         .queue());
                                 Playertools.setPlayerBalance(p, playerBalance - signPrice);
-                                PlayerStatistic stat = hcfPlayer.playerStatistic;
+                                PlayerStatistic stat = hcfPlayer.getPlayerStatistic();
                                 stat.MoneySpend += signPrice;
                             }
 
@@ -152,7 +152,7 @@ public class InteractShopSign implements Listener {
                                 HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
                                 Scoreboards.refresh(p);
                                 hcfPlayer.addMoney(price);
-                                PlayerStatistic stat = hcfPlayer.playerStatistic;
+                                PlayerStatistic stat = hcfPlayer.getPlayerStatistic();
                                 stat.MoneyEarned += price;
                             } else {
                                 p.sendMessage(Messages.dont_have_item.language(p).queue());

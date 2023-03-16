@@ -23,8 +23,7 @@ public class PlayerRollbackItems {
             "&aRIGHT + CLICK here to rollback!"
      */
     public static ItemStack getPlayerRollbackInfo(Player owner, Rollback rollback) {
-
-        ItemStack is = IItemBuilder.create(rollback.isRolled() ? Material.WOOL : Material.STICK, 1,(short) 0, (byte) (rollback.isRolled() ? 5 : 0))
+        ItemStack is = IItemBuilder.create(rollback.isRolled() ? Material.INK_SACK : Material.STICK, 1,(short) 0, (byte) (rollback.isRolled() ? 10 : 0))
                 .setName(GUIMessages.rollback_information.language(owner).setPlayerName(rollback.getHCFPlayer().getName()).setId(rollback.getId()).getName())
                 .setLore(GUIMessages.rollback_information.language(owner).setPlayerName(rollback.getHCFPlayer().getName()).setId(rollback.getId())
                         .setDate(rollback.getDate())
@@ -39,7 +38,7 @@ public class PlayerRollbackItems {
     }
 
     public static ItemStack getPlayerRollbackInfoActive(Player owner, Rollback rollback) {
-        ItemStack is = IItemBuilder.create(rollback.isRolled() ? Material.WOOL : Material.BLAZE_ROD, 1,(short) 0, (byte) (rollback.isRolled() ? 5 : 0))
+        ItemStack is = IItemBuilder.create(rollback.isRolled() ? Material.INK_SACK : Material.BLAZE_ROD, 1,(short) 0, (byte) (rollback.isRolled() ? 10 : 0))
                 .setName(GUIMessages.rollback_information.language(owner).setPlayerName(rollback.getHCFPlayer().getName()).setId(rollback.getId()).getName())
                 .setLore(GUIMessages.rollback_information.language(owner).setPlayerName(rollback.getHCFPlayer().getName()).setId(rollback.getId())
                         .setDate(rollback.getDate())

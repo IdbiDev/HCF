@@ -39,7 +39,7 @@ public class onBlockPlace implements Listener {
 
         if (Playertools.getDistanceBetweenPoints2D(new HCF_Claiming.Point(block.getX(), block.getZ()),
                 new HCF_Claiming.Point(Playertools.getSpawn().getBlockX(),
-                        Playertools.getSpawn().getBlockZ())) == warzoneSize && !hcf.inDuty) {
+                        Playertools.getSpawn().getBlockZ())) == warzoneSize && !hcf.isInDuty()) {
 
             p.sendMessage(Messages.warzone_no_permission.language(p).queue());
             e.setCancelled(true);
@@ -59,7 +59,7 @@ public class onBlockPlace implements Listener {
 //            }
 //
 //        }
-        if (hcf.inDuty) {
+        if (hcf.isInDuty()) {
             // System.out.println("BUZ");
             e.setCancelled(false);
         } else if (HCF_Claiming.isEnemyClaim(p, claim)) {

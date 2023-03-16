@@ -38,37 +38,14 @@ public class PlayerRankManagerInventory {
 
         }
 
-/*        List<String> namesGecim = new ArrayList<>();
-        ArrayList<Faction_Rank_Manager.Rank> list = Objects.requireNonNull(playertools.getPlayerFaction(p)).ranks;
-
-        for(Faction_Rank_Manager.Rank rank : list)
-            namesGecim.add(rank.name);
-
-        Collections.sort(namesGecim, new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                return s1.compareToIgnoreCase(s2);
-            }
-        });
-
-        Faction faction = playertools.getPlayerFaction(p);
-        assert faction != null;
-        for (String name : namesGecim) {
-            String Name = ChatColor.stripColor(name);
-            if(faction.player_ranks.get(p).name.equalsIgnoreCase(Name)) {
-                inv.addItem(rank(Name, true));
-                continue;
-            }
-            inv.addItem(rank(Name, false));
-        }*/
 
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         for (Map.Entry<Integer, FactionRankManager.Rank> rank : Playertools.sortByPriority(Playertools.getPlayerFaction(p)).entrySet()) {
-            if (hcfPlayer.rank.name.equalsIgnoreCase(rank.getValue().name)) { // what is this gondolkodom rajta én isxyd?
-                inv.addItem(rank(rank.getValue().name, true));
+            if (hcfPlayer.getRank().getName().equalsIgnoreCase(rank.getValue().getName())) { // what is this gondolkodom rajta én isxyd?
+                inv.addItem(rank(rank.getValue().getName(), true));
                 continue;
             }
-            inv.addItem(rank(rank.getValue().name, false));
+            inv.addItem(rank(rank.getValue().getName(), false));
         }
 
         inv.setItem(49, GUI_Items.back(owner));
@@ -92,41 +69,16 @@ public class PlayerRankManagerInventory {
 
         }
 
-/*        List<String> namesGecim = new ArrayList<>();
-        ArrayList<Faction_Rank_Manager.Rank> list = Objects.requireNonNull(playertools.getPlayerFaction(p)).ranks;
-
-        for(Faction_Rank_Manager.Rank rank : list)
-            namesGecim.add(rank.name);
-
-        Collections.sort(namesGecim, new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                return s1.compareToIgnoreCase(s2);
-            }
-        });
-
-        Faction faction = playertools.getPlayerFaction(p);
-        HashMap<String,Object> map = SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid='?'",p.getUniqueId().toString());
-        for (String name : namesGecim) {
-            String Name = ChatColor.stripColor(name);
-            assert faction != null;
-            if(faction.FindRankByName(map.get("rank").toString()).name.equalsIgnoreCase(Name)) {
-                inv.addItem(rank(Name, true));
-                continue;
-            }
-            inv.addItem(rank(Name, false));
-        }*/
-
         Faction faction = Playertools.getPlayerFaction(p);
 
         HashMap<String, Object> map = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid='?'", p.getUniqueId().toString());
 
         for (Map.Entry<Integer, FactionRankManager.Rank> rank : Playertools.sortByPriority(Playertools.getPlayerFaction(p)).entrySet()) {
-            if (faction.FindRankByName(map.get("rank").toString()).name.equalsIgnoreCase(rank.getValue().name)) {
-                inv.addItem(rank(rank.getValue().name, true));
+            if (faction.FindRankByName(map.get("rank").toString()).getName().equalsIgnoreCase(rank.getValue().getName())) {
+                inv.addItem(rank(rank.getValue().getName(), true));
                 continue;
             }
-            inv.addItem(rank(rank.getValue().name, false));
+            inv.addItem(rank(rank.getValue().getName(), false));
         }
 
         inv.setItem(49, GUI_Items.back(owner));
@@ -145,7 +97,7 @@ public class PlayerRankManagerInventory {
         assert faction != null;
         FactionRankManager.Rank rank = faction.getPlayerRank(target);
 
-        im.setDisplayName("§7Active Rank: §a§o" + rank.name);
+        im.setDisplayName("§7Active Rank: §a§o" + rank.getName());
 
         im.addEnchant(Enchantment.DURABILITY, 1, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -166,7 +118,7 @@ public class PlayerRankManagerInventory {
         assert faction != null;
         FactionRankManager.Rank rank = faction.FindRankByName(map.get("rank").toString());
 
-        im.setDisplayName("§7Active Rank: §a§o" + rank.name);
+        im.setDisplayName("§7Active Rank: §a§o" + rank.getName());
 
         im.addEnchant(Enchantment.DURABILITY, 1, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
