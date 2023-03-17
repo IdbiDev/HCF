@@ -3,9 +3,9 @@ package me.idbi.hcf.Commands.FactionCommands;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -65,7 +65,7 @@ public class FactionHomeCommand extends SubCommand implements Listener {
 
     @Override
     public void perform(Player p, String[] args) {
-        if(HCF_Timer.getHomeTime(p) != 0) {
+        if(Timers.HOME.has(p)) {
             p.sendMessage(Messages.already_home_teleporting.language(p).queue());
             return;
         }
@@ -84,7 +84,7 @@ public class FactionHomeCommand extends SubCommand implements Listener {
         if(loc != null) {
             p.sendMessage(Messages.teleport_to_home.language(p).setTime(Config.TeleportHome.asStr()).queue());
             //p.sendMessage(Messages.teleport_cancel.language(p).queue().replace("%time%", Config.TeleportHome.asStr()));
-            HCF_Timer.addHomeTimer(p);
+            Timers.HOME.add(p);
         } else {
             p.sendMessage(Messages.doesnt_home.language(p).queue());
         }
@@ -95,8 +95,8 @@ public class FactionHomeCommand extends SubCommand implements Listener {
         if (e.getFrom().getBlockX() != e.getTo().getBlockX()
                 || e.getFrom().getBlockY() != e.getTo().getBlockY()
                 || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
-            if (HCF_Timer.getHomeTime(e.getPlayer()) != 0) {
-                HCF_Timer.removeHomeTimer(e.getPlayer());
+            if (Timers.HOME.has(e.getPlayer())) {
+                Timers.HOME.remove(e.getPlayer());
                 e.getPlayer().sendMessage(Messages.teleport_cancel.language(e.getPlayer()).queue());
             }
         }

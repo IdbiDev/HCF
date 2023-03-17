@@ -3,8 +3,8 @@ package me.idbi.hcf.Events;
 import me.idbi.hcf.Classes.SubClasses.Archer;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.HCF_Claiming;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -49,12 +49,12 @@ public class EntDamageByEnt implements Listener {
                         return;
                     }
                 }
-                if(HCF_Timer.getLogoutTime(victim) != 0) {
-                    HCF_Timer.removeLogoutTimer(victim);
+                if(Timers.LOGOUT.has(victimplayer)) {
+                    Timers.LOGOUT.remove(victimplayer);
                     victim.sendMessage(Messages.logout_timer_interrupted.language(victim).queue());
                 }
-                if(HCF_Timer.getStuckTime(victim) != 0) {
-                    HCF_Timer.removeLogoutTimer(victim);
+                if(Timers.STUCK.has(victimplayer)) {
+                    Timers.STUCK.remove(victimplayer);
                     victim.sendMessage(Messages.stuck_interrupted.language(victim).queue());
                 }
                 /*if (damagerClaim != null) {
@@ -92,7 +92,7 @@ public class EntDamageByEnt implements Listener {
     @EventHandler
     public void onDmg(EntityDamageEvent e) {
         if(e.getEntity() instanceof Player player) {
-            if(HCF_Timer.getSOTWTime(player) != 0)
+            if(Timers.SOTW.has(player))
                 e.setCancelled(true);
         }
     }

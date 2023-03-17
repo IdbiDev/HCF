@@ -13,7 +13,7 @@ import static me.idbi.hcf.Tools.Playertools.getDistanceBetweenPoints2D;
 
 public class SpawnShield {
     public static boolean pvpCooldown(Player p) {
-        return HCF_Timer.getPvPTimerCoolDownSpawn(p) != 0;
+        return Timers.PVP_TIMER.has(p);
     }
 
     public static void CalcWall(Player p) {
@@ -28,7 +28,7 @@ public class SpawnShield {
                     kellfal = true;
                 } else if (Main.SOTWEnabled && ((claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.NORMAL) && claim.getFaction().getId() != (player_faction != null ? player_faction.getId() : 0)))) {
                     kellfal = true;
-                } else if ((HCF_Timer.getCombatTime(p) != 0 && claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.PROTECTED))) {
+                } else if ((Timers.COMBAT.has(p) && claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.PROTECTED))) {
                     kellfal = true;
                 }
                 if (!kellfal)

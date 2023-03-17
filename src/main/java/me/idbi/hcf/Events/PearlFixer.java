@@ -5,6 +5,7 @@ import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.HCF_Claiming;
 import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,8 +18,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.Map;
-
-import static me.idbi.hcf.Tools.HCF_Timer.checkCombatTimer;
 
 public class PearlFixer implements Listener {
     //ESKÜ NEM LOPOTT [Source: PearlFixer.java]
@@ -35,7 +34,7 @@ public class PearlFixer implements Listener {
             location.setZ(location.getBlockZ() + 0.5D);
             event.setTo(location);
         }*/
-        if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL) && !event.isCancelled() && checkCombatTimer(event.getPlayer())) {
+        if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL) && !event.isCancelled() && Timers.COMBAT.has(event.getPlayer())) {
             Location location = event.getTo();
             for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
                 for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().getClaims()) {

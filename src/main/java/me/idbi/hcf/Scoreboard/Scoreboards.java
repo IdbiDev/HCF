@@ -5,7 +5,6 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.MiscTimers;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
@@ -16,7 +15,10 @@ import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class Scoreboards {
     private static final Main m = Main.getPlugin(Main.class);
@@ -84,25 +86,25 @@ public class Scoreboards {
 
     public static boolean isContinue(Player p, String line) {
         HCFPlayer player = HCFPlayer.getPlayer(p);
-        if (line.contains("%spawntag%") && HCF_Timer.getCombatTime(p) <= 0.0) {
+        if (line.contains("%spawntag%") && !Timers.COMBAT.has(p)) {
             return true;
-        } else if (line.contains("%ep_cd%") && HCF_Timer.getEpTime(p) <= 0.0) {
+        } else if (line.contains("%ep_cd%") && !Timers.ENDER_PEARL.has(p)) {
             return true;
-        } else if (line.contains("%stuck_timer%") && HCF_Timer.getStuckTime(p) <= 0.0) {
+        } else if (line.contains("%stuck_timer%") && !Timers.STUCK.has(p)) {
             return true;
         } else if (line.contains("%bard_energy%") && player.getBardEnergy() <= 0.0) {
             return true;
-        } else if (line.contains("%eotw%") && HCF_Timer.getEOTWTimer(p) <= 0L) {
+        } else if (line.contains("%eotw%") && !Timers.EOTW.has(p)) {
             return true;
-        } else if (line.contains("%sotw%") && HCF_Timer.getSOTWTime(p) <= 0L) {
+        } else if (line.contains("%sotw%") && !Timers.SOTW.has(p)) {
             return true;
-        } else if (line.contains("%logout%") && HCF_Timer.getLogoutTime(p) <= 0L) {
+        } else if (line.contains("%logout%") && !Timers.LOGOUT.has(p)) {
             return true;
-        } else if (line.contains("%pvp_timer%") && HCF_Timer.getPvPTimerCoolDownSpawn(p) <= 0L) {
+        } else if (line.contains("%pvp_timer%") && !Timers.PVP_TIMER.has(p)) {
             return true;
-        } else if (line.contains("%gapple_cd%") && HCF_Timer.get_Golden_Apple_Time(p) <= 0L) {
+        } else if (line.contains("%gapple_cd%") && !Timers.GOLDEN_APPLE.has(p)) {
             return true;
-        } else if (line.contains("%opgapple_cd%") && HCF_Timer.get_OP_Golden_Apple_Time(p) <= 0L) {
+        } else if (line.contains("%opgapple_cd%") && !Timers.ENCHANTED_GOLDEN_APPLE.has(p)) {
             return true;
         }
         return false;

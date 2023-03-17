@@ -2,12 +2,10 @@ package me.idbi.hcf.WorldModes;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.HCF_Claiming;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -34,7 +32,7 @@ public class SOTW implements Gamemode {
             );
             p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
             //Set SOTW Timer
-            HCF_Timer.addSOTWTimer(p,SOTWTime);
+            Timers.SOTW.add(p, SOTWTime);
         }
         Main.SOTWEnabled = true;
         //SOTW end routine
@@ -64,7 +62,7 @@ public class SOTW implements Gamemode {
                 f.refreshDTR();
             }
             for(Player p : Bukkit.getOnlinePlayers()) {
-                HCF_Timer.removeSOTWTimer(p);
+                Timers.SOTW.remove(p);
             }
             task.cancel();
             task = null;

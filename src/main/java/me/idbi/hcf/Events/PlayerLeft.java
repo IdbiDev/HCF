@@ -7,10 +7,10 @@ import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.FastBoard;
 import me.idbi.hcf.Tools.AdminTools;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
@@ -77,10 +77,10 @@ public class PlayerLeft implements Listener {
 
 
     public void setCombatLogger(Player p) {
-        if (HCF_Timer.getCombatTime(p) == 0) {
-            HCF_Timer.addCombatTimer(p);
+        if (Timers.COMBAT.has(p)) {
+            Timers.COMBAT.add(p);
         }
-        long combatTimer = HCF_Timer.getCombatTime(p);
+        long combatTimer = Timers.COMBAT.get(p);
         ArrayList<ItemStack> items = new ArrayList<>();
         items.addAll(Arrays.asList(p.getInventory().getContents()));
         items.addAll(Arrays.asList(p.getInventory().getArmorContents()));

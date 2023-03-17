@@ -41,7 +41,7 @@ public enum Timers {
         hcfPlayer.addTimer(this, this.time + System.currentTimeMillis());
     }
     public void add(HCFPlayer hcfPlayer, long time) {
-        hcfPlayer.addTimer(this, time + System.currentTimeMillis());
+        hcfPlayer.addTimer(this, time);
     }
 
     public boolean canAdd(HCFPlayer hcfPlayer) {

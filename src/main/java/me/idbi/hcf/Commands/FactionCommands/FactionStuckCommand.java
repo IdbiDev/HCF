@@ -3,8 +3,8 @@ package me.idbi.hcf.Commands.FactionCommands;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -64,9 +64,9 @@ public class FactionStuckCommand extends SubCommand implements Listener {
 
     @Override
     public void perform(Player p, String[] args) {
-        if (!HCF_Timer.checkStuckTimer(p)) {
+        if (!Timers.STUCK.has(p)) {
             //Todo: somethingwrite
-            HCF_Timer.addStuckTimer(p);
+            Timers.STUCK.add(p);
             p.sendMessage(Messages.stuck_started.language(p).setAmount(String.valueOf(Main.stuckDuration)).queue());
             HCFPlayer player = HCFPlayer.getPlayer(p);
             addCooldown(p);
@@ -84,8 +84,8 @@ public class FactionStuckCommand extends SubCommand implements Listener {
         if(hcfPlayer.getStuckLocation() == null) return;
         Location originalLocation = hcfPlayer.getStuckLocation();
         if(originalLocation.distance(e.getPlayer().getLocation()) > 4) {
-            if (HCF_Timer.getStuckTime(e.getPlayer()) != 0) {
-                HCF_Timer.removeStuckTimer(e.getPlayer());
+            if (Timers.STUCK.has(e.getPlayer())) {
+                Timers.STUCK.remove(e.getPlayer());
                 e.getPlayer().sendMessage(Messages.stuck_interrupted.language(e.getPlayer()).queue());
             }
         }

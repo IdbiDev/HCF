@@ -4,11 +4,11 @@ import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.SubClasses.Archer;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Permissions;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -29,12 +29,12 @@ public class ProjectileDamage implements Listener {
             HCFPlayer damagerplayer = HCFPlayer.getPlayer(damager);
             /*int damager_faction = Integer.parseInt(playertools.getMetadata(damager, "factionid"));
             int victim_faction = Integer.parseInt(playertools.getMetadata(victim, "factionid"));*/
-            if (HCF_Timer.getPvPTimerCoolDownSpawn(victim) != 0) {
+            if (Timers.PVP_TIMER.has(victimplayer)) {
                 damager.sendMessage(Messages.cant_damage_while_pvptimer_victim.language(damager).queue());
                 e.setCancelled(true);
                 return;
             }
-            if (HCF_Timer.getPvPTimerCoolDownSpawn(damager) != 0) {
+            if (Timers.PVP_TIMER.has(damagerplayer)) {
                 damager.sendMessage(Messages.cant_damage_while_pvptimer.language(damager).queue());
                 e.setCancelled(true);
                 return;
@@ -57,16 +57,20 @@ public class ProjectileDamage implements Listener {
             }
             //Add combatTimer
 
-            if (HCF_Timer.addCombatTimer(victim)) {
+
+            if (!Timers.COMBAT.has(victimplayer)) {
                 victim.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.CombatTag.asStr()));
             }
-            if (HCF_Timer.addCombatTimer(damager)) {
+            if (!Timers.COMBAT.has(damagerplayer)) {
                 damager.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.CombatTag.asStr()));
             }
 
+            Timers.COMBAT.add(victimplayer);
+            Timers.COMBAT.add(damagerplayer);
+
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(damager);
-            if (!HCF_Timer.checkArcherTimer(victim) && hcfPlayer.getPlayerClass() == Classes.ARCHER && archer.archerTagEnabled) {
-                HCF_Timer.addArcherTimer(victim);
+            if (!Timers.ARCHER.has(victimplayer) && hcfPlayer.getPlayerClass() == Classes.ARCHER && archer.archerTagEnabled) {
+                Timers.ARCHER.add(victimplayer);
             }
         }
     }

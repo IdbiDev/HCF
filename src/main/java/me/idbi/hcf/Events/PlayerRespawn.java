@@ -4,13 +4,13 @@ package me.idbi.hcf.Events;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import static me.idbi.hcf.Tools.HCF_Timer.addPvPTimerCoolDownSpawn;
 
 public class PlayerRespawn implements Listener {
     @EventHandler
@@ -33,6 +33,6 @@ public class PlayerRespawn implements Listener {
         e.getPlayer().setFallDistance(0);
         e.getPlayer().setFireTicks(0);
         // Bukkit.broadcastMessage("Shut up nigger");
-        addPvPTimerCoolDownSpawn(e.getPlayer());
+        Timers.PVP_TIMER.add(e.getPlayer());
     }
 }

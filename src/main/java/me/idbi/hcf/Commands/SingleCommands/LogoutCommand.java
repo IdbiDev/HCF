@@ -1,10 +1,6 @@
 package me.idbi.hcf.Commands.SingleCommands;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.HCF_Timer;
-import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import me.idbi.hcf.Tools.SQL_Connection;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,11 +19,11 @@ public class LogoutCommand implements CommandExecutor, Listener {
             if (p.hasPermission("factions.commands.logout")) {
                 if (Timers.LOGOUT.has(p)) {
                     //Todo: Already logging out
-                    HCF_Timer.removeLogoutTimer(p);
+                    //HCF_Timer.removeLogoutTimer(p);
                     p.sendMessage(Messages.logout_timer_already_started.language(p).queue());
 
                 } else {
-                    HCF_Timer.addLogoutTimer(p);
+                    Timers.LOGOUT.add(p);
                     p.sendMessage(Messages.logout_timer_started.language(p).queue());
                 }
             } else {

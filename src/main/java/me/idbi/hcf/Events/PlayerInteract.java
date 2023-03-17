@@ -6,11 +6,11 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.HCF_Claiming;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Permissions;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -34,10 +34,10 @@ public class PlayerInteract implements Listener {
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (e.getItem() != null) {
                 if (e.getItem().getType().equals(Material.ENDER_PEARL)) {
-                    if (HCF_Timer.checkEpTimer(p))
+                    if (Timers.ENDER_PEARL.has(p))
                         e.setCancelled(true);
                     else
-                        HCF_Timer.addEpTimer(p);
+                        Timers.ENDER_PEARL.add(p);
                 }
             }
         }
@@ -97,10 +97,10 @@ public class PlayerInteract implements Listener {
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             if (e.getItem() != null) {
                 if (e.getItem().getType().equals(Material.ENDER_PEARL)) {
-                    if (HCF_Timer.checkEpTimer(p))
+                    if (Timers.ENDER_PEARL.has(p))
                         e.setCancelled(true);
                     else
-                        HCF_Timer.addEpTimer(p);
+                        Timers.ENDER_PEARL.add(p);
                 }
             }
         }

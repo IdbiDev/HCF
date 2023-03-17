@@ -3,10 +3,10 @@ package me.idbi.hcf.Events;
 import me.idbi.hcf.Classes.SubClasses.Archer;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Permissions;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,12 +25,12 @@ Archer archer = new Archer();
             HCFPlayer damagerplayer = HCFPlayer.getPlayer(damager);
             /*int damager_faction = Integer.parseInt(playertools.getMetadata(damager, "factionid"));
             int victim_faction = Integer.parseInt(playertools.getMetadata(victim, "factionid"));*/
-            if (HCF_Timer.getPvPTimerCoolDownSpawn(victim) != 0 || HCF_Timer.getPvPTimerCoolDownSpawn(damager) != 0) {
+            if (Timers.PVP_TIMER.has(victimplayer) || Timers.PVP_TIMER.has(damagerplayer)) {
                 damager.sendMessage(Messages.cant_damage_while_pvptimer_victim.language(damager).queue());
                 e.setCancelled(true);
                 return;
             }
-            if (HCF_Timer.getSOTWTime(damager) != 0 || HCF_Timer.getSOTWTime(victim) != 0 ) {
+            if (Timers.SOTW.has(damagerplayer) || Timers.SOTW.has(victimplayer) ) {
                 damager.sendMessage(Messages.cant_damage_while_sotw_timer_active.language(damager).queue());
                 e.setCancelled(true);
                 return;
@@ -52,14 +52,16 @@ Archer archer = new Archer();
                 return;
             }
             //Add combatTimer
-            if (HCF_Timer.addCombatTimer(victim)) {
+            if (!Timers.COMBAT.has(victimplayer)) {
                 victim.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.CombatTag.asStr()));
             }
-            if (HCF_Timer.addCombatTimer(damager)) {
+            if (!Timers.COMBAT.has(damagerplayer)) {
                 damager.sendMessage(Messages.combat_message.language(damager).queue().replace("%sec%", Config.CombatTag.asStr()));
             }
+            Timers.COMBAT.add(victimplayer);
+            Timers.COMBAT.add(damagerplayer);
             //Damage if ArcherTag
-            if (HCF_Timer.checkArcherTimer(victim)) {
+            if (Timers.ARCHER.has(victimplayer)) {
                 double dmg = e.getDamage();
                 e.setDamage(dmg + (dmg * archer.archerTagDamageAmplifier / 100));
             }

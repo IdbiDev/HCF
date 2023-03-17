@@ -167,36 +167,36 @@ public class MiscTimers {
                         }
                     }
                     //Combat Time
-                    if (HCF_Timer.getCombatTime(player) != 0) {
+                    if (Timers.COMBAT.has(player)) {
                         shouldRefresh = true;
                     }
                     //Scoreboards.refresh(player);
                     //Ep time
-                    if (HCF_Timer.getEpTime(player) != 0) {
+                    if (Timers.ENDER_PEARL.has(player)) {
                         shouldRefresh = true;
                         //Scoreboards.refresh(player);
                     }
                     //Golden Apple
-                    if (HCF_Timer.get_Golden_Apple_Time(player) != 0) {
+                    if (Timers.GOLDEN_APPLE.has(player)) {
                         shouldRefresh = true;
                         //Scoreboards.refresh(player);
                     }
                     //OP Golden Apple
-                    if (HCF_Timer.get_OP_Golden_Apple_Time(player) != 0) {
+                    if (Timers.ENCHANTED_GOLDEN_APPLE.has(player)) {
                         shouldRefresh = true;
                         //Scoreboards.refresh(player);
                     }
                     //PvPTimer
-                    if (HCF_Timer.getPvPTimerCoolDownSpawn(player) != 0) {
+                    if (Timers.PVP_TIMER.has(player)) {
                         shouldRefresh = true;
                     }
 //                    if (HCF_Timer.getPvPTimerCoolDownSpawn(player) != 0) {
 //                        shouldRefresh = true;
 //                    }
-                    if (HCF_Timer.getLogoutTime(player) != 0) {
+                    if (Timers.LOGOUT.has(player)) {
                         shouldRefresh = true;
                     }
-                    if (HCF_Timer.getSOTWTime(player) != 0 || HCF_Timer.getEOTWTimer(player) != 0) {
+                    if (Timers.SOTW.has(player) || Timers.EOTW.has(player)) {
                         shouldRefresh = true;
                     }
                     HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
@@ -205,7 +205,7 @@ public class MiscTimers {
                     }
                     if (!(hcfPlayer.getBardEnergy() >= bard.maxBardEnergy))
                         shouldRefresh = true;
-                    if (HCF_Timer.getPvPTimerCoolDownSpawn(player) == 0 && HCF_Timer.getCombatTime(player) == 0) {
+                    if (!Timers.PVP_TIMER.has(player) && !Timers.COMBAT.has(player)) {
                         //DeleteWallsForPlayer(player);
                     }
                     if (shouldRefresh)

@@ -1,7 +1,7 @@
 package me.idbi.hcf.Events;
 
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,16 +18,17 @@ public class ConsumeItem implements Listener {
                 && e.getItem().getType() == Material.GOLDEN_APPLE
                 && !player.isInDuty()) {
 
-            if (HCF_Timer.get_Golden_Apple_Time(e.getPlayer()) != 0) {
-                HCF_Timer.add_Golden_Apple_Time(e.getPlayer());
+            if (!Timers.GOLDEN_APPLE.has(player)) {
+                Timers.GOLDEN_APPLE.add(player);
             } else e.setCancelled(true);
         } else if (e.getItem().getData().getData() == (byte) 1
                 && e.getItem().getType() == Material.GOLDEN_APPLE
                 && !player.isInDuty()) {
 
-            if (HCF_Timer.get_OP_Golden_Apple_Time(e.getPlayer()) != 0) {
-                HCF_Timer.add_OP_Golden_Apple_Time(e.getPlayer());
-            } else e.setCancelled(true);
+            if (!Timers.ENCHANTED_GOLDEN_APPLE.has(player)) {
+                Timers.ENCHANTED_GOLDEN_APPLE.add(player);
+            } else
+                e.setCancelled(true);
         }
     }
 }

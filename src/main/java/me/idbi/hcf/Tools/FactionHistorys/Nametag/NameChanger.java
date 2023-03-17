@@ -10,9 +10,9 @@ import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.AdminTools;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -61,7 +61,7 @@ public class NameChanger implements Listener {
                     continue;
                 }
 
-                if (HCF_Timer.checkArcherTimer(player)) {
+                if (Timers.ARCHER.has(player)) {
                     forWhom.hidePlayer(player);
                     fakeNames.put(player.getUniqueId(), Config.ArcherTagColor.asStr() + player.getName());
                     forWhom.showPlayer(player);

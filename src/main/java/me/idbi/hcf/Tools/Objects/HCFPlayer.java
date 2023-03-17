@@ -23,8 +23,6 @@ import org.json.JSONObject;
 import java.sql.Connection;
 import java.util.*;
 
-import static me.idbi.hcf.Tools.HCF_Timer.addPvPTimerCoolDownSpawn;
-
 public class HCFPlayer {
 
     private static final Connection con = Main.getConnection();
@@ -365,7 +363,7 @@ public class HCFPlayer {
                 p.setFoodLevel(20);
                 p.setFallDistance(0);
                 p.getInventory().clear();
-                addPvPTimerCoolDownSpawn(p);
+                Timers.PVP_TIMER.add(p);
                 this.isDeathBanned = false;
                 this.deathTime = 0L;
                 new BukkitRunnable() {

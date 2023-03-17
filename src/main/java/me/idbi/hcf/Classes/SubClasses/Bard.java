@@ -7,8 +7,8 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Particles.Shapes;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -121,7 +121,7 @@ public class Bard implements HCF_Class {
                         bardplayer.sendMessage(Messages.bard_dont_have_enough_energy.language(bardplayer).setAmount(String.valueOf(item.cost)).queue());
                         return;
                     }
-                    if (HCF_Timer.getBardTimer(bardplayer) != 0) {
+                    if (Timers.BARD_COOLDOWN.has(bardplayer)) {
                         return;
                     }
                     main.setAmount(main.getAmount() - 1);
@@ -138,7 +138,7 @@ public class Bard implements HCF_Class {
                             }
                         });
                     }
-                    HCF_Timer.addBardTimer(bardplayer);
+                    Timers.BARD_COOLDOWN.add(bardplayer);
                     new BukkitRunnable() {
                         private final Location loc = bardplayer.getLocation();
                         private int counts = 0;

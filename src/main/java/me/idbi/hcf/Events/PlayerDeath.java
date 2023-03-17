@@ -4,11 +4,11 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.StatTrak;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -66,7 +66,7 @@ public class PlayerDeath implements Listener {
             }
         }
         hcfVictim.banHCFPlayer();
-        HCF_Timer.removePVPTag(victim);
+        Timers.COMBAT.remove(victim);
     }
 
     @EventHandler

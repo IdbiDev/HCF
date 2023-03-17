@@ -7,11 +7,11 @@ import me.idbi.hcf.Scoreboard.FastBoard;
 import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.AdminTools;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import static me.idbi.hcf.Tools.HCF_Timer.addPvPTimerCoolDownSpawn;
 
 public class PlayerJoin implements Listener {
     private final Main m = Main.getPlugin(Main.class);
@@ -70,10 +68,10 @@ public class PlayerJoin implements Listener {
             e.getPlayer().teleport(spawn);
             //pvpTimer
             if(!Main.SOTWEnabled)
-                addPvPTimerCoolDownSpawn(e.getPlayer());
+                Timers.PVP_TIMER.add(e.getPlayer());
         }
         if(Main.SOTWEnabled) {
-            HCF_Timer.addSOTWTimer(p,Main.SOTWStarted - System.currentTimeMillis());
+            Timers.SOTW.add(p, Main.SOTWStarted - System.currentTimeMillis());
         }
         e.setJoinMessage("");
         List<Player> list = new ArrayList<>(AdminTools.InvisibleManager.getInvisedAdmins());

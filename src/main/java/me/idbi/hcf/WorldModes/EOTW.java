@@ -5,9 +5,9 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.HCF_Claiming;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -51,7 +51,7 @@ public class EOTW implements Gamemode {
                     Messages.eotw_start_subtitle.language(p).queue()
             );
             p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
-            HCF_Timer.addEOTWTimer(p);
+            Timers.EOTW.add(p);
         }
         //Todo: EOTW Koth
 
@@ -97,7 +97,7 @@ public class EOTW implements Gamemode {
                 f.refreshDTR();
             }
             for(Player p : Bukkit.getOnlinePlayers()) {
-                HCF_Timer.removeEOTWTimer(p);
+                Timers.EOTW.remove(p);
             }
             task.cancel();
             task = null;

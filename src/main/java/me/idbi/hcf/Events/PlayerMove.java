@@ -7,13 +7,13 @@ import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.HCF_Claiming;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.SpawnShield;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import static me.idbi.hcf.Tools.HCF_Timer.checkCombatTimer;
 
 public class PlayerMove implements Listener {
     @EventHandler
@@ -26,7 +26,7 @@ public class PlayerMove implements Listener {
 
             HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(e.getTo().getBlockX(), e.getTo().getBlockZ());
             if (claim != null) {
-                if (HCF_Claiming.FindPoint_old(claim.getStartX(), claim.getStartZ(), claim.getEndX(), claim.getEndZ(), e.getTo().getBlockX(), e.getTo().getBlockZ()) && ((SpawnShield.pvpCooldown(e.getPlayer()) && claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.NORMAL) || (checkCombatTimer(e.getPlayer()) && claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.PROTECTED))))) {
+                if (HCF_Claiming.FindPoint_old(claim.getStartX(), claim.getStartZ(), claim.getEndX(), claim.getEndZ(), e.getTo().getBlockX(), e.getTo().getBlockZ()) && ((SpawnShield.pvpCooldown(e.getPlayer()) && claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.NORMAL) || (Timers.COMBAT.has(p) && claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.PROTECTED))))) {
                     Location loc = new Location(
                             e.getPlayer().getWorld(),
                             e.getFrom().getBlockX(),
