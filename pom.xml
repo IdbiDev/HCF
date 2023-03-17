@@ -146,21 +146,14 @@
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
-            <systemPath>C:\Users\kille\Desktop\BuildTools\craftbukkit-1.8.8.jar</systemPath>
+            <systemPath>craftbukkit-1.8.8.jar</systemPath>
             <scope>system</scope>
         </dependency>
         <dependency>
             <groupId>me.idbi</groupId>
             <artifactId>hcf_abilitys</artifactId>
             <version>1.0</version>
-            <systemPath>C:\Users\kille\Desktop\TsipuEgymeleg\plugins\HCF+ Abilities.jar</systemPath>
-            <scope>system</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mcsg.double0negative</groupId>
-            <artifactId>tabapi</artifactId>
-            <version>3.5.5</version>
-            <systemPath>C:\Users\kille\Desktop\TsipuEgymeleg\plugins\TabAPI_1.8.8.jar</systemPath>
+            <systemPath>C:\Users\Balu\Desktop\Servers\1.8 server\plugins\HCF+ Abilities.jar</systemPath>
             <scope>system</scope>
         </dependency>
         <dependency>
