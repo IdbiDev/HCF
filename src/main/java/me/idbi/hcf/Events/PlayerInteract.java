@@ -47,11 +47,11 @@ public class onPlayerInteract implements Listener {
             if (claim == null) {
                 return;
             }
-            if (claim.faction == null) {
+            if (claim.getFaction() == null) {
                 Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
                 Bukkit.getPluginManager().disablePlugin(Main.getPlugin(Main.class));
             }
-            Faction baszogatottFaction = claim.faction;
+            Faction baszogatottFaction = claim.getFaction();
             //if(Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
 //                shouldCancel = false;
 //            }
@@ -63,14 +63,14 @@ public class onPlayerInteract implements Listener {
                 return;
             }
             if (f != null) {
-                if (HCF_Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).HaveAllyPermission(baszogatottFaction, Permissions.INTERACT)) {
+                if (HCF_Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).hasAllyPermission(baszogatottFaction, Permissions.INTERACT)) {
                     if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType())) {
                         e.setCancelled(true);
                         p.sendMessage(Messages.no_permission.language(p).queue());
                     }
                 }
                 if (HCF_Rules.usableBlacklist.contains(e.getClickedBlock().getType())) {
-                    if (HCF_Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).HaveAllyPermission(baszogatottFaction, Permissions.INVENTORY_ACCESS)) {
+                    if (HCF_Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).hasAllyPermission(baszogatottFaction, Permissions.INVENTORY_ACCESS)) {
                         e.setCancelled(true);
                         p.sendMessage(Messages.no_permission.language(p).queue());
                     }

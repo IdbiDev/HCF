@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class onSignPlace implements Listener {
+public class SignPlace implements Listener {
 
     public static void removeItem(Player p, int amount) {
         ItemStack is = p.getItemInHand();

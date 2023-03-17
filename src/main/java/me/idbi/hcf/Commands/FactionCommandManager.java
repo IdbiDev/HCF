@@ -8,7 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class FactionCommandManager implements CommandExecutor {
 
@@ -33,6 +35,7 @@ public class FactionCommandManager implements CommandExecutor {
         subcommands.add(new FactionShowCommand());
         subcommands.add(new FactionTransferCommand());
         subcommands.add(new FactionWithdrawCommand());
+        subcommands.add(new FactionStartEventCommand());
 
         for (SubCommand command : subcommands) {
             SubCommand.commandCooldowns.put(command, new HashMap<>());
@@ -84,5 +87,19 @@ public class FactionCommandManager implements CommandExecutor {
 
     public ArrayList<SubCommand> getSubcommands() {
         return subcommands;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if(command.getName().equalsIgnoreCase("faction")) {
+            if(args.length == 1) {
+                List<String> lista = new ArrayList<>();
+                for (SubCommand subcommand : this.getSubcommands()) {
+                    lista.add(subcommand.getName());
+                }
+                return lista;
+            }
+        }
+        return null;
     }
 }

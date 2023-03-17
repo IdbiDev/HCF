@@ -131,7 +131,8 @@ public class SetupEvents {
         pm.registerEvents(new LogoutCommand(), Main.getPlugin(Main.class));
         pm.registerEvents(new FactionHomeCommand(), Main.getPlugin(Main.class));
         pm.registerEvents(new FactionStuckCommand(), Main.getPlugin(Main.class));
-        pm.registerEvents(new BlockToBlockListener(), Main.getPlugin(Main.class));
+        pm.registerEvents(new BlockToBlock(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerLogin(), Main.getPlugin(Main.class));
 
         // Command events
         pm.registerEvents(new RollbackInventoryClick(), Main.getPlugin(Main.class));

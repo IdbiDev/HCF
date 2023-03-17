@@ -30,12 +30,12 @@ public class onBlockBreak implements Listener {
         if (claim == null) {
             return;
         }
-        if (claim.faction == null) {
+        if (claim.getFaction() == null) {
             Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
             Bukkit.getPluginManager().disablePlugin(Main.getPlugin(Main.class));
             return;
         }
-        Faction baszogatottFaction = claim.faction;
+        Faction baszogatottFaction = claim.getFaction();
 
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         // System.out.println(baszogatottFaction.name);
@@ -55,13 +55,13 @@ public class onBlockBreak implements Listener {
             e.setCancelled(true);
             Faction f = Playertools.getPlayerFaction(p);
             if (f == null) return;
-            if (!f.HaveAllyPermission(baszogatottFaction, Permissions.BREAK_BLOCK)) {
+            if (!f.hasAllyPermission(baszogatottFaction, Permissions.BREAK_BLOCK)) {
 
                 // System.out.println("uwuwuwwuuwuuwuuwuw");
                 e.setCancelled(true);
                 p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, bx, bz)).queue());
             } else if (HCF_Rules.usableBlacklist.contains(e.getBlock().getType())) {
-                if (!f.HaveAllyPermission(baszogatottFaction, Permissions.INVENTORY_ACCESS)) {
+                if (!f.hasAllyPermission(baszogatottFaction, Permissions.INVENTORY_ACCESS)) {
                     e.setCancelled(true);
                     p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, bx, bz)).queue());
                 } else {

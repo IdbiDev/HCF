@@ -9,12 +9,12 @@ import java.util.UUID;
 
 public class HCF_Timer {
     // Combatlog Timer
-    public static final HashMap<UUID, Long> timers = new HashMap<java.util.UUID, Long>();
-    public static final HashMap<UUID, Long> stuckTimers = new HashMap<>();
-    public static final HashMap<UUID, Long> golden_apple_Timers = new HashMap<>();
-    public static final HashMap<UUID, Long> OP_Golden_Apple_Timers = new HashMap<>();
-    public static final HashMap<UUID, Long> PVPTimers = new HashMap<>();
-    public static final HashMap<UUID, Long> BardCooldown = new HashMap<>();
+    private static final HashMap<UUID, Long> timers = new HashMap<java.util.UUID, Long>();
+    private static final HashMap<UUID, Long> stuckTimers = new HashMap<>();
+    private static final HashMap<UUID, Long> golden_apple_Timers = new HashMap<>();
+    private static final HashMap<UUID, Long> OP_Golden_Apple_Timers = new HashMap<>();
+    private static final HashMap<UUID, Long> PVPTimers = new HashMap<>();
+    private static final HashMap<UUID, Long> BardCooldown = new HashMap<>();
     private static final HashMap<UUID, Long> Archertimers = new HashMap<>();
     private static final HashMap<UUID, Long> eptimers = new HashMap<>();
     private static final HashMap<UUID, Long> logoutTimers = new HashMap<>();
@@ -117,6 +117,31 @@ public class HCF_Timer {
             return 0;
         }
     }
+
+    public static void removeEOTWTimer(Player player) {
+        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        Timers.EOTW.remove(player);
+        /*if (EOTWTimers.containsKey(player.getUniqueId())) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            EOTWTimers.remove(player.getUniqueId());
+            return true;
+        } else {
+            return true;
+        }*/
+    }
+
+    public static void removeSOTWTimer(Player player) {
+        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        Timers.SOTW.remove(player);
+        /*if (SOTWTimers.containsKey(player.getUniqueId())) {
+            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+            SOTWTimers.remove(player.getUniqueId());
+            return true;
+        } else {
+            return true;
+        }*/
+    }
+
     public static long getLogoutTime(Player player) {
         // Ha van rajta CombatTimer
         if (logoutTimers.containsKey(player.getUniqueId())) {

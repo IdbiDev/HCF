@@ -31,11 +31,11 @@ public class onBlockPlace implements Listener {
         if (claim == null) {
             return;
         }
-        if (claim.faction == null) {
+        if (claim.getFaction() == null) {
             Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
             Bukkit.getPluginManager().disablePlugin(Main.getPlugin(Main.class));
         }
-        Faction baszogatottFaction = claim.faction;
+        Faction baszogatottFaction = claim.getFaction();
 
         if (Playertools.getDistanceBetweenPoints2D(new HCF_Claiming.Point(block.getX(), block.getZ()),
                 new HCF_Claiming.Point(Playertools.getSpawn().getBlockX(),
@@ -67,7 +67,7 @@ public class onBlockPlace implements Listener {
             e.setCancelled(true);
             Faction f = Playertools.getPlayerFaction(p);
             if (f == null) return;
-            if (!f.HaveAllyPermission(baszogatottFaction, Permissions.PLACE_BLOCK)) {
+            if (!f.hasAllyPermission(baszogatottFaction, Permissions.PLACE_BLOCK)) {
                 e.setCancelled(true);
                 p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, block.getX(), block.getZ())).queue());
             } else {

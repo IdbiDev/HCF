@@ -11,12 +11,15 @@ import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import static me.idbi.hcf.Tools.Playertools.getDistanceBetweenPoints2D;
 
-public class EOTW {
-
-    public static void enableEOTW() {
+public class EOTW implements Gamemode {
+    BukkitTask task = null;
+    @Override
+    public void enable() {
+        disable();
         World world = Bukkit.getWorld(Config.WorldName.asStr());
         Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
         int EOTWTIME = Config.EOTWDuration.asInt() * 1000;
@@ -62,7 +65,7 @@ public class EOTW {
         }
         Main.EOTWENABLED = true;
         //EOTW End routine
-        new BukkitRunnable() {
+        task = new BukkitRunnable() {
             @Override
             public void run() {
                 Main.EOTWENABLED = false;
@@ -74,6 +77,34 @@ public class EOTW {
             }
         }.runTaskLater(Main.getPlugin(Main.class),Config.EOTWDuration.asInt() * 20L);
     }
+    @Override
+    public void disable() {
+        if(task != null) {
+            Main.EOTWENABLED = false;
+            Koth.stopKoth();
+            World world = Bukkit.getWorld(Config.WorldName.asStr());
+            Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
 
+            WorldBorder border = world.getWorldBorder();
+            border.setSize(Config.WorldBorderSize.asInt());
+
+            border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+            HCF_Claiming.Faction_Claim spawnClaim = null;
+            try {
+                spawnClaim = Main.factionCache.get(1).getClaims().get(0);
+                spawnClaim.setAttribute(HCF_Claiming.ClaimAttributes.PROTECTED);
+            } catch (Exception ignored) {
+                return;
+            }
+            for(Faction f : Main.factionCache.values()) {
+                f.refreshDTR();
+            }
+            for(Player p : Bukkit.getOnlinePlayers()) {
+                HCF_Timer.removeEOTWTimer(p);
+            }
+            task.cancel();
+            task = null;
+        }
     }
+}
 

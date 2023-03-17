@@ -32,19 +32,19 @@ public class onDamage implements Listener {
                 HCF_Claiming.Faction_Claim claim = victimplayer.getCurrentArea();
                 HCF_Claiming.Faction_Claim damagerClaim = damagerplayer.getCurrentArea();
                 if (claim != null && damagerClaim != null) {
-                    if (claim.attribute == HCF_Claiming.ClaimAttributes.PROTECTED || damagerClaim.attribute == HCF_Claiming.ClaimAttributes.PROTECTED) {
+                    if (claim.getAttribute() == HCF_Claiming.ClaimAttributes.PROTECTED || damagerClaim.getAttribute() == HCF_Claiming.ClaimAttributes.PROTECTED) {
                         e.setCancelled(true);
                         damager.sendMessage(Messages.cant_damage_protected_area.language(damager).queue());
                         return;
                     }
                 } else if (claim == null && damagerClaim != null) {
-                    if (damagerClaim.attribute == HCF_Claiming.ClaimAttributes.PROTECTED) {
+                    if (damagerClaim.getAttribute() == HCF_Claiming.ClaimAttributes.PROTECTED) {
                         e.setCancelled(true);
                         damager.sendMessage(Messages.cant_damage_protected_area.language(damager).queue());
                         return;
                     }
                 } else if (claim != null) {
-                    if (claim.attribute == HCF_Claiming.ClaimAttributes.PROTECTED) {
+                    if (claim.getAttribute() == HCF_Claiming.ClaimAttributes.PROTECTED) {
                         e.setCancelled(true);
                         damager.sendMessage(Messages.cant_damage_protected_area.language(damager).queue());
                         return;

@@ -64,7 +64,8 @@ permissions:
       factions.admin.customtimer,
       factions.command.revive,
       factions.commands.resetclaim,
-      factions.commands.admin.rollback
+      factions.commands.admin.rollback,
+      factions.admin.eotwjoin
     ]
   factions.admin.teleport.bypass:
     default: op
@@ -92,5 +93,7 @@ permissions:
     default: true
   factions.commands.factioncall:
     default: true
-  factions.commands.admin.rollbacK:
+  factions.commands.admin.rollback:
+    default: op
+  factions.admin.eotwjoin:
     default: op

@@ -2,6 +2,7 @@ package me.idbi.hcf.Events;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.Faction;
@@ -34,16 +35,17 @@ public class onDeath implements Listener {
         Player victim = e.getEntity().getPlayer();
         Faction faction = Playertools.getPlayerFaction(victim);
         HCFPlayer hcfVictim = HCFPlayer.getPlayer(victim);
+        hcfVictim.createRollback(victim.getLastDamageCause().getCause(), Rollback.RollbackLogType.DEATH);
         hcfVictim.addDeaths();
         e.setDeathMessage("");
         if (faction != null) {
                 Main.DTRREGEN.put(faction.getId(), System.currentTimeMillis() + DTRREGENTIME);
                 if(victim.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
-                    faction.DTR -= Config.OverworldDeathDTR.asDouble();
+                    faction.removeDTR(Config.OverworldDeathDTR.asDouble());
                 }else if(victim.getWorld().getEnvironment().equals(World.Environment.NETHER)) {
-                    faction.DTR -= Config.NetherDeathDTR.asDouble();
+                    faction.removeDTR(Config.NetherDeathDTR.asDouble());
                 }else {
-                    faction.DTR -= Config.EndDeathDTR.asDouble();
+                    faction.removeDTR(Config.EndDeathDTR.asDouble());
                 }
         }
         if (damager != null) {
@@ -53,7 +55,7 @@ public class onDeath implements Listener {
                 player.sendMessage(Messages.kill_message_broadcast.language(player).setVictimWithKills(victim, damager).queue());
             if (faction != null) {
                 for (Player member : faction.getOnlineMembers()) {
-                    member.sendMessage(Messages.kill_message_faction.language(member).setDeath(victim, damager).setDTR(faction.DTR).queue());
+                    member.sendMessage(Messages.kill_message_faction.language(member).setDeath(victim, damager).setDTR(faction.getDTR()).queue());
                 }
             }
             StatTrak.addStatTrak(damager, victim);

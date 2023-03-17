@@ -22,10 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static me.idbi.hcf.Koth.Koth.GLOBAL_TIME;
 import static me.idbi.hcf.Koth.Koth.stopKoth;
@@ -154,7 +151,7 @@ public class MiscTimers {
                         Location loc = HCF_Claiming.ReturnSafeSpot(player.getLocation());
                         if (loc != null) {
                             player.teleport(loc);
-                            player.sendMessage(me.idbi.hcf.CustomFiles.Messages.Messages.stuck_finished.queue());
+                            player.sendMessage(me.idbi.hcf.CustomFiles.Messages.Messages.stuck_finished.queue()); // Ez igy mi tell me ez a kukim same bro
                         }
                     }
                     //Stuck Time
@@ -209,7 +206,7 @@ public class MiscTimers {
                     if (!(hcfPlayer.getBardEnergy() >= bard.maxBardEnergy))
                         shouldRefresh = true;
                     if (HCF_Timer.getPvPTimerCoolDownSpawn(player) == 0 && HCF_Timer.getCombatTime(player) == 0) {
-                        DeleteWallsForPlayer(player);
+                        //DeleteWallsForPlayer(player);
                     }
                     if (shouldRefresh)
                         Scoreboards.refresh(player);
@@ -277,37 +274,33 @@ public class MiscTimers {
 
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                     SpawnShield.CalcWall(player);
-                    if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
-                    List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
-                    Location cur = null;
+                    if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) return;
+                    ListIterator<Location> it = Main.playerBlockChanges.get(player.getUniqueId()).listIterator();
                     try {
-                        for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
-
+                        while (it.hasNext()) {
                             Location loc = it.next();
-                            cur = loc;
-                            //System.out.println(player.getLocation().distance(loc));
-                            if (player.getLocation().distance(loc) > 12) {
+                            if(loc.distance(player.getLocation()) > 12) {
                                 player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                                if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
-                                    List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
-                                    it.remove();
-                                    //l.remove(loc);
-                                    Main.playerBlockChanges.put(player.getUniqueId(), l);
-                                }
+                                it.remove();
                             }
                         }
-                    } catch (Exception e) {
-                        try {
-                            copy.remove(cur);
-                        } catch (Exception ignored) {
-                        }
+                    }catch (Exception ignored){}
 
-                    }
+//                    try {
+//
+//                        for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
+//                            Location loc = it.next();
+//
+//
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
 
                 }
 
             }
-        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 20);
+        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 1);
     }
 
     public void archerTagEffect() {
@@ -380,26 +373,12 @@ public class MiscTimers {
             @Override
             public void run() {
                 if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) return;
-                List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
-                Location cur = null;
-                try {
-                    for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
-
-                        Location loc = it.next();
-                        //cur = loc;
+                ListIterator<Location> it = Main.playerBlockChanges.get(player.getUniqueId()).listIterator();
+                while (it.hasNext()) {
+                    Location loc = it.next();
+                    if(loc.distance(player.getLocation()) > 12) {
                         player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                        if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
-                            List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
-                            it.remove();
-                            //l.remove(loc);
-                            Main.playerBlockChanges.put(player.getUniqueId(), l);
-                        }
-                    }
-                } catch (Exception e) {
-                    try {
-
-                        copy.remove(null);
-                    } catch (Exception ignored) {
+                        it.remove();
                     }
                 }
             }

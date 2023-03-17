@@ -12,7 +12,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import static me.idbi.hcf.Tools.SpeedModifiers.brewingStands;
 import static me.idbi.hcf.Tools.SpeedModifiers.furnaces;
 
-public class onChunkLoaded implements Listener {
+public class ChunkLoad implements Listener {
     @EventHandler
     public void onChunkLoaded(ChunkLoadEvent e) {
         BlockState[] blocks = e.getChunk().getTileEntities();

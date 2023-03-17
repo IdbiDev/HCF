@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 
-public class onBowShoot implements Listener {
+public class BowShoot implements Listener {
     @EventHandler
     public void onBowShoot(EntityShootBowEvent e) {
         if (e.getEntity() instanceof Player) {

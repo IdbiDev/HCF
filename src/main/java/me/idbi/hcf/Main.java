@@ -28,6 +28,7 @@ import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Lag;
+import me.idbi.hcf.WorldModes.EOTW;
 import me.idbi.hcf.WorldModes.SOTW;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
@@ -313,7 +314,7 @@ public final class Main extends JavaPlugin implements Listener {
 
         border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
         autoKoth.startAutoKoth();
-        SOTW.EnableSOTW();
+
         /*HCF_Claiming.Faction_Claim spawnClaim = null;
         autoKoth.startAutoKoth();
         SOTW.EnableSOTW();*/
@@ -351,21 +352,21 @@ public final class Main extends JavaPlugin implements Listener {
                     hcf.save();
                 }
 
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
-                    List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
-                    for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
-                        Location loc = it.next();
-                        player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                        if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
-                            List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
-                            it.remove();
-                            //l.remove(loc);
-                            Main.playerBlockChanges.put(player.getUniqueId(), l);
-                        }
-                    }
-
-                }
+//                for (Player player : Bukkit.getOnlinePlayers()) {
+//                    if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
+//                    List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
+//                    for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
+//                        Location loc = it.next();
+//                        player.sendBlockChange(loc, Material.AIR, (byte) 0);
+//                        if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
+//                            List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
+//                            it.remove();
+//                            //l.remove(loc);
+//                            Main.playerBlockChanges.put(player.getUniqueId(), l);
+//                        }
+//                    }
+//
+//                }
                 for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
                     integerFactionEntry.getValue().saveFactionData();
                     for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
@@ -391,21 +392,21 @@ public final class Main extends JavaPlugin implements Listener {
                 hcf.save();
             }
 
-            for (Player player : getServer().getOnlinePlayers()) {
-                if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
-                List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
-                for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
-                    Location loc = it.next();
-                    player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                    if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
-                        List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
-                        it.remove();
-                        //l.remove(loc);
-                        Main.playerBlockChanges.put(player.getUniqueId(), l);
-                    }
-                }
-
-            }
+//            for (Player player : getServer().getOnlinePlayers()) {
+//                if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
+//                List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
+//                for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
+//                    Location loc = it.next();
+//                    player.sendBlockChange(loc, Material.AIR, (byte) 0);
+//                    if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
+//                        List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
+//                        it.remove();
+//                        //l.remove(loc);
+//                        Main.playerBlockChanges.put(player.getUniqueId(), l);
+//                    }
+//                }
+//
+//            }
             for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
                 integerFactionEntry.getValue().saveFactionData();
                 for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {

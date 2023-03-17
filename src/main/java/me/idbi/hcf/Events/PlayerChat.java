@@ -1,17 +1,12 @@
 package me.idbi.hcf.Events;
 
-import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Tools.Objects.ChatTypes;
-import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import me.idbi.hcf.Tools.Playertools;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-public class onPlayerChat implements Listener {
+public class PlayerChat implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         HCFPlayer player = HCFPlayer.getPlayer(e.getPlayer());

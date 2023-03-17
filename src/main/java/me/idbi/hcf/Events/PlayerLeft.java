@@ -3,6 +3,7 @@ package me.idbi.hcf.Events;
 import me.idbi.hcf.Bossbar.BossbarTools;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.FastBoard;
 import me.idbi.hcf.Tools.AdminTools;
@@ -40,6 +41,8 @@ public class onPlayerLeft implements Listener {
         if(board != null) board.delete();
 
         HCFPlayer player = HCFPlayer.getPlayer(e.getPlayer());
+        player.createRollback(e.getPlayer().getLastDamageCause().getCause(), Rollback.RollbackLogType.QUIT);
+
         player.setOnline(false);
         if (player.inFaction()) {
             Faction f = Playertools.getPlayerFaction(e.getPlayer());
@@ -74,7 +77,7 @@ public class onPlayerLeft implements Listener {
 
 
     public void setCombatLogger(Player p) {
-        if (!HCF_Timer.timers.containsKey(p.getUniqueId())) {
+        if (HCF_Timer.getCombatTime(p) == 0) {
             HCF_Timer.addCombatTimer(p);
         }
         long combatTimer = HCF_Timer.getCombatTime(p);
