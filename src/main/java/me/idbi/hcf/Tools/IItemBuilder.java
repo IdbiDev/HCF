@@ -56,10 +56,7 @@ public interface IItemBuilder {
 
     //IItemBuilder addFlag(@NotNull ItemFlag... flags);
 
-   default IItemBuilder addFlag(@NotNull ItemFlag... flags) {
-        Arrays.stream(flags).forEach(this::addFlag);
-        return this;
-    }
+    IItemBuilder addFlag(ItemFlag... flags);
 
     default IItemBuilder setLore(@NotNull String... lores) {
         Arrays.stream(lores).forEach(this::addLore);
@@ -159,7 +156,8 @@ class IIItemBuilder implements IItemBuilder {
         return this;
     }
 
-    public IIItemBuilder addFlag(@NotNull ItemFlag flag) {
+    @Override
+    public IIItemBuilder addFlag(ItemFlag... flag) {
         meta.addItemFlags(flag);
 
         return this;

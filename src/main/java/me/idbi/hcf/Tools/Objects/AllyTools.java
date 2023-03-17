@@ -8,19 +8,17 @@ import java.util.Map;
 public class AllyTools {
 
     public static String getAlliesJson(Faction mainFaction) {
-        HashMap<Integer, AllyFaction> allies = mainFaction.Allies;
-
         // {85:{"FRIENDLY_FIRE":false,"USEBLOCK":false,"VIEWITEMS":false,"BREAKBLOCK":false},AllyID:}
 
         JSONObject mainJson = new JSONObject();
-        for (Map.Entry<Integer, AllyFaction> allyHash : allies.entrySet()) {
+        for (Map.Entry<Integer, AllyFaction> allyHash : mainFaction.getAllies().entrySet()) {
             AllyFaction ally = allyHash.getValue();
             JSONObject permissions = new JSONObject();
             for (Map.Entry<Permissions, Boolean> perms : ally.getPermissions().entrySet()) {
                 permissions.put(perms.getKey().name(), perms.getValue());
             }
 
-            mainJson.put(String.valueOf(ally.getAllyFaction().id), permissions);
+            mainJson.put(String.valueOf(ally.getAllyFaction().getId()), permissions);
         }
         return mainJson.toString();
     }
@@ -34,14 +32,14 @@ public class AllyTools {
      */
     public static void addAlly(Faction mainFaction, Faction allyFaction) {
         //For this faction!
-        AllyFaction mainFactionAlly = new AllyFaction(allyFaction.id, allyFaction);
-        mainFaction.Allies.put(mainFactionAlly.getFactionId(), mainFactionAlly);
-        mainFaction.allyinvites.removePlayerFromInvite(allyFaction);
+        AllyFaction mainFactionAlly = new AllyFaction(allyFaction.getId(), allyFaction);
+        mainFaction.addAlly(mainFactionAlly);
+        mainFaction.getAllyInvites().removePlayerFromInvite(allyFaction);
 
         //For the ally faction!
-        mainFactionAlly = new AllyFaction(mainFaction.id, mainFaction);
-        allyFaction.Allies.put(mainFactionAlly.getFactionId(), mainFactionAlly);
-        allyFaction.allyinvites.removePlayerFromInvite(mainFaction);
+        mainFactionAlly = new AllyFaction(mainFaction.getId(), mainFaction);
+        allyFaction.addAlly(mainFactionAlly);
+        allyFaction.getAllyInvites().removePlayerFromInvite(mainFaction);
 
     }
 }

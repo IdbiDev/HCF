@@ -97,7 +97,7 @@ public class FactionJoinCommand extends SubCommand {
                 hcfPlayer.setChatType(ChatTypes.PUBLIC);
                 faction.refreshDTR();
                 PlayerStatistic stat = hcfPlayer.getPlayerStatistic();
-                stat.factionHistory.add(0, new FactionHistory(new Date().getTime(), 0L, "", faction.name, faction.getDefaultRank().getName(), faction.getId()));
+                stat.factionHistory.add(0, new FactionHistory(new Date().getTime(), 0L, "", faction.getName(), faction.getDefaultRank().getName(), faction.getId()));
                 faction.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(p.getName(), "invited", new Date().getTime()));
                 //NameChanger.refresh(p);
 

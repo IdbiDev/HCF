@@ -1,5 +1,6 @@
 package me.idbi.hcf.Tools.Objects;
 
+import lombok.Getter;
 import me.idbi.hcf.Main;
 
 import java.sql.Connection;
@@ -11,13 +12,13 @@ public class AllyFaction {
     /**
      * Az a faction, akivel szövetkezett a super class.
      */
-    private final Faction AllyFaction;
-    private final int factionid;
+    private final Faction allyFaction;
+    private final int factionId;
     private final HashMap<Permissions, Boolean> class_permissions = new HashMap<>();
 
     public AllyFaction(int factionid, Faction AllyFaction) {
-        this.factionid = factionid;
-        this.AllyFaction = AllyFaction;
+        this.factionId = factionid;
+        this.allyFaction = AllyFaction;
         for (Permissions p : Permissions.values()) {
             class_permissions.put(p, false);
         }
@@ -29,7 +30,7 @@ public class AllyFaction {
      * @return Integer Faction Id
      */
     public int getFactionId() {
-        return this.factionid;
+        return this.factionId;
     }
 
     /**
@@ -39,7 +40,7 @@ public class AllyFaction {
      */
 
     public Faction getAllyFaction() {
-        return this.AllyFaction;
+        return this.allyFaction;
     }
 
     public HashMap<Permissions, Boolean> getPermissions() {

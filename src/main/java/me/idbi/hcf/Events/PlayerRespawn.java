@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 import static me.idbi.hcf.Tools.HCF_Timer.addPvPTimerCoolDownSpawn;
 
-public class onPlayerRespawn implements Listener {
+public class PlayerRespawn implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         if (Main.debug)

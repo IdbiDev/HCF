@@ -1,6 +1,7 @@
 package me.idbi.hcf.InventoryRollback;
 
 import com.avaje.ebeaninternal.server.transaction.log.LogTime;
+import lombok.Getter;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Bukkit;
@@ -16,25 +17,25 @@ import java.util.UUID;
 
 public class Rollback {
 
-    private int id;
+    @Getter private int id;
     private HCFPlayer hcfPlayer;
     private UUID uuid;
-    private float level;
-    private EntityDamageEvent.DamageCause damageCause;
-    private ItemStack[] contents;
-    private ItemStack[] armorContents;
-    private RollbackLogType logType;
-    private Date date;
-    private boolean rolledBack;
+    @Getter private float exp;
+    @Getter private EntityDamageEvent.DamageCause damageCause;
+    @Getter private ItemStack[] contents;
+    @Getter private ItemStack[] armorContents;
+    @Getter private RollbackLogType logType;
+    @Getter private Date date;
+    @Getter private boolean rolled;
 
     public Rollback(int id, Player player, EntityDamageEvent.DamageCause damageCause, RollbackLogType logType, Date date) {
         this.uuid = player.getUniqueId();
-        this.level = player.getExp();
+        this.exp = player.getExp();
         this.contents = player.getInventory().getContents().clone();
         this.armorContents = player.getInventory().getArmorContents().clone();
         this.damageCause = damageCause;
         this.logType = logType;
-        this.rolledBack = false;
+        this.rolled = false;
         this.date = date;
         this.id = id;
         this.hcfPlayer = HCFPlayer.getPlayer(player);
@@ -50,8 +51,8 @@ public class Rollback {
 
         target.getInventory().setContents(this.contents);
         target.getInventory().setArmorContents(this.armorContents);
-        target.setExp(this.level);
-        rolledBack = true;
+        target.setExp(this.exp);
+        rolled = true;
 
         return true;
     }
@@ -59,40 +60,9 @@ public class Rollback {
     public UUID getUUID() {
         return this.uuid;
     }
-    public int getId() {
-        return this.id;
-    }
 
     public HCFPlayer getHCFPlayer() {
         return this.hcfPlayer;
-    }
-
-
-    public boolean isRolled() {
-        return this.rolledBack;
-    }
-
-    public RollbackLogType getLogType() {
-        return this.logType;
-    }
-
-    public EntityDamageEvent.DamageCause getDamageCause() {
-        return this.damageCause;
-    }
-    public float getExp() {
-        return this.level;
-    }
-
-    public ItemStack[] getContents() {
-        return this.contents;
-    }
-
-    public ItemStack[] getArmorContents() {
-        return this.armorContents;
-    }
-
-    public Date getDate() {
-        return this.date;
     }
 
     public static enum RollbackLogType {

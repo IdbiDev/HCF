@@ -73,8 +73,8 @@ public class AdminSetFactionLeaderCommand extends SubCommand {
             return;
         }
         Faction selectedFaction = Main.nameToFaction.get(args[1]);
-        selectedFaction.leader = Bukkit.getPlayer(args[2]).getUniqueId().toString();
-        SQL_Connection.dbExecute(con, "UPDATE factions SET leader='?' WHERE name='?'", selectedFaction.leader, args[1]);
+        selectedFaction.setLeader(Bukkit.getPlayer(args[2]).getUniqueId().toString());
+        SQL_Connection.dbExecute(con, "UPDATE factions SET leader='?' WHERE name='?'", selectedFaction.getLeader(), args[1]);
         //Todo: Broadcast the change
         Faction f = Main.nameToFaction.get(args[1]);
 

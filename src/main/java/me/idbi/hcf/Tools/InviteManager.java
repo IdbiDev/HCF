@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class InviteManager {
 
-    public static class factionInvite {
+    public static class FactionInvite {
         private final ArrayList<Player> invitedPlayers = new ArrayList<>();
 
         public void invitePlayerToFaction(Player p) {

@@ -1,15 +1,13 @@
 package me.idbi.hcf.Events;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.BanHandler;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
-
-public class onPlayerPreJoin implements Listener {
+public class PlayerPreJoin implements Listener {
 
     @EventHandler
     public void onPlayerPreJoin(AsyncPlayerPreLoginEvent e) {

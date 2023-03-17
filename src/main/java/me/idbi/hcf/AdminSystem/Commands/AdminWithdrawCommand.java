@@ -73,7 +73,7 @@ public class AdminWithdrawCommand extends SubCommand {
             return;
         }
         Faction selectedFaction = Main.nameToFaction.get(args[1]);
-        selectedFaction.balance -= amount;
+        selectedFaction.removeBalance(amount);
 
         for (Player member : selectedFaction.getOnlineMembers()) {
             member.sendMessage(Messages.faction_admin_withdraw.language(member).setExecutor(p).queue());

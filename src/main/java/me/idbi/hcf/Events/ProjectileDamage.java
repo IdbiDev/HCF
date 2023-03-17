@@ -43,7 +43,7 @@ public class ProjectileDamage implements Listener {
                 Faction vicFac = victimplayer.getFaction();
                 Faction damFac = damagerplayer.getFaction();
                 if (damFac.isAlly(vicFac)) {
-                    if (!vicFac.HaveAllyPermission(damFac, Permissions.FRIENDLY_FIRE) || !damFac.HaveAllyPermission(vicFac, Permissions.FRIENDLY_FIRE)) {
+                    if (!vicFac.hasAllyPermission(damFac, Permissions.FRIENDLY_FIRE) || !damFac.hasAllyPermission(vicFac, Permissions.FRIENDLY_FIRE)) {
                         damager.sendMessage(Messages.teammate_damage.language(damager).queue());
                         e.setCancelled(true);
                         return;

@@ -71,7 +71,7 @@ public class AdminDutyCommand extends SubCommand {
         boolean state = !hcf.isInDuty();
         if (state) {
             p.setGameMode(GameMode.CREATIVE);
-            hcf.setDuty(true);
+            hcf.setInDuty(true);
 
             NameChanger.refresh(p);
             AdminTools.InvisibleManager.hidePlayer(p);
@@ -82,7 +82,7 @@ public class AdminDutyCommand extends SubCommand {
         } else {
             p.setGameMode(GameMode.SURVIVAL);
 
-            hcf.setDuty(false);
+            hcf.setInDuty(false);
             NameChanger.refresh(p);
             AdminTools.InvisibleManager.showPlayer(p);
 

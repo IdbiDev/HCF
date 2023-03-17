@@ -98,7 +98,7 @@ public class FactionCreateCommand extends SubCommand {
                 //
 
                 Main.factionCache.put(x, faction);
-                Main.nameToFaction.put(faction.name, faction);
+                Main.nameToFaction.put(faction.getName(), faction);
 
                 addCooldown(p);
 
@@ -126,7 +126,7 @@ public class FactionCreateCommand extends SubCommand {
 
                 Scoreboards.refresh(p);
                 // LogLibrary.sendFactionCreate(p, faction.name);
-                faction.members.add(hcf);
+                faction.addMember(hcf);
                 faction.refreshDTR();
                 GUI_Sound.playSound(p, GUI_Sound.HCFSounds.SUCCESS);
                 PlayerStatistic stat = hcf.getPlayerStatistic();
@@ -136,7 +136,7 @@ public class FactionCreateCommand extends SubCommand {
 
                 faction.loadFactionHistory(faction.assembleFactionHistory());
 
-                faction.DTR = faction.DTR_MAX;
+                faction.setDTR(faction.getDTR_MAX());
                 NameChanger.refresh(p);
 
             } else {

@@ -96,7 +96,7 @@ public class AllyInviteCommand extends SubCommand {
                         for (Player member : Playertools.getFactionOnlineMembers(target)) {
 
                             Clickable_Join.sendMessage(member,
-                                    "/ally accept " + playerFaction.name,
+                                    "/ally accept " + playerFaction.getName(),
                                     Messages.faction_invited_ally.language(member).setFaction(playerFaction).setPlayer(p).queue(),
                                     Messages.hover_accept.language(member).queue());
                         }

@@ -28,21 +28,24 @@ public abstract class HCFCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(sender instanceof Player) {
-            Player p = (Player) sender;
-            if (!commandInfo.permission().isEmpty()) {
-                if (!sender.hasPermission(commandInfo.permission())) {
-                    sender.sendMessage(Messages.no_permission.language(p).queue());
-                    return true;
+        try {
+            if (sender instanceof Player) {
+                Player p = (Player) sender;
+                if (!commandInfo.permission().isEmpty()) {
+                    if (!sender.hasPermission(commandInfo.permission())) {
+                        sender.sendMessage(Messages.no_permission.language(p).queue());
+                        return true;
+                    }
                 }
+                execute(p, args);
+            } else if (sender instanceof ConsoleCommandSender) {
+                ConsoleCommandSender ccs = (ConsoleCommandSender) sender;
+                execute(ccs, args);
             }
-            execute(p, args);
-        } else if(sender instanceof ConsoleCommandSender) {
-            ConsoleCommandSender ccs = (ConsoleCommandSender) sender;
-            execute(ccs, args);
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            sender.sendMessage("§cUsage: " + getCommandInfo().syntax());
         }
-
-
         return true;
     }
 

@@ -76,7 +76,7 @@ public class AdminDepositCommand extends SubCommand {
         }
 
         Faction selectedFaction = Main.nameToFaction.get(args[1]);
-        selectedFaction.balance += amount;
+        selectedFaction.addBalance(amount);
 
         for (Player member : selectedFaction.getOnlineMembers()) {
             member.sendMessage(Messages.faction_admin_deposit.language(member).setExecutor(p).queue());

@@ -39,7 +39,7 @@ public class InviteManagerInventory {
         Faction faction = Playertools.getPlayerFaction(p);
 
         assert faction != null;
-        for (Player invitedPlayer : faction.invites.getInvitedPlayers()) {
+        for (Player invitedPlayer : faction.getInvites().getInvitedPlayers()) {
             if (invitedPlayer == null) continue;
 
             inv.addItem(IM_Items.invitedPlayer(invitedPlayer));

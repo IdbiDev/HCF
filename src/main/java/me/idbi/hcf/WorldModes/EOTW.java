@@ -31,7 +31,7 @@ public class EOTW implements Gamemode {
         HCF_Claiming.Faction_Claim spawnClaim = null;
         try {
             spawnClaim = Main.factionCache.get(1).getClaims().get(0);
-            spawnClaim.attribute = HCF_Claiming.ClaimAttributes.KOTH;
+            spawnClaim.setAttribute(HCF_Claiming.ClaimAttributes.KOTH);
             Koth.startKoth(spawnClaim.getFaction().getName());
         } catch (Exception ignored) {
             Main.sendCmdMessage(Messages.cant_start_eotw.queue());
@@ -58,9 +58,6 @@ public class EOTW implements Gamemode {
         for(Faction f : Main.factionCache.values()) {
             if(f.getId() != 1) {
                 f.setDTR(-9.9D);
-                for (HCF_Claiming.Faction_Claim claim : f.getClaims()) {
-                    claim.attribute = HCF_Claiming.ClaimAttributes.NORMAL;
-                }
             }
         }
         Main.EOTWENABLED = true;

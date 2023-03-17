@@ -80,7 +80,7 @@ public class FactionHomeCommand extends SubCommand implements Listener {
             return;
         }
 
-        Location loc = faction.homeLocation;
+        Location loc = faction.getHomeLocation();
         if(loc != null) {
             p.sendMessage(Messages.teleport_to_home.language(p).setTime(Config.TeleportHome.asStr()).queue());
             //p.sendMessage(Messages.teleport_cancel.language(p).queue().replace("%time%", Config.TeleportHome.asStr()));

@@ -31,7 +31,7 @@ public class Rogue implements HCF_Class, Listener {
     public final int maxRogueInFaction = ClassConfig.MaxRogueInFaction.asInt();
 
     @Override
-    public boolean CheckArmor(Player p) {
+    public boolean checkArmor(Player p) {
         try {
             //Get Archer armor
             ItemStack helmet = p.getInventory().getHelmet();
@@ -59,7 +59,7 @@ public class Rogue implements HCF_Class, Listener {
             addEffect(p, potionEffectTypeIntegerEntry.getKey(), potionEffectTypeIntegerEntry.getValue());
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        hcf.setClass(Classes.ROGUE);
+        hcf.setPlayerClass(Classes.ROGUE);
         Scoreboards.refresh(p);
     }
 
@@ -75,7 +75,7 @@ public class Rogue implements HCF_Class, Listener {
             p.removePotionEffect(potionEffectTypeIntegerEntry.getKey());
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        hcf.setClass(Classes.NONE);
+        hcf.setPlayerClass(Classes.NONE);
         Scoreboards.refresh(p);
     }
 

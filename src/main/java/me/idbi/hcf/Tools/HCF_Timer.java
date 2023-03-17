@@ -5,6 +5,7 @@ import me.idbi.hcf.Scoreboard.Scoreboards;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.Timer;
 import java.util.UUID;
 
 public class HCF_Timer {
@@ -34,45 +35,52 @@ public class HCF_Timer {
     private static final int PvpTimerDuration = Config.PvPTimer.asInt() * 1000;
     private static final int BardCooldownDuration = Config.BardEnergy.asInt() * 1000;
     private static final int LogoutCooldownDuration = Config.Logout.asInt() * 1000;
-    private static final int HomeCooldownDuration = Config.Logout.asInt() * 1000;
+    private static final int HomeCooldownDuration = Config.HomeTimer.asInt() * 1000;
     private static final int EOTWDuration = Config.EOTWDuration.asInt() * 1000;
 
     public static boolean addCombatTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
-        if (!timers.containsKey(player.getUniqueId())) {
+        return Timers.COMBAT.canAdd(player);
+        /*if (!timers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             timers.put(player.getUniqueId(), System.currentTimeMillis() + combatTimerDuration);
             return true;
         } else {
             timers.put(player.getUniqueId(), System.currentTimeMillis() + combatTimerDuration);
             return false;
-        }
+        }*/
     }
-    public static boolean addLogoutTimer(Player player) {
+
+    public static void addLogoutTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
-        if (!logoutTimers.containsKey(player.getUniqueId())) {
+        Timers.LOGOUT.add(player);
+        /*if (!logoutTimers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             logoutTimers.put(player.getUniqueId(), System.currentTimeMillis() + LogoutCooldownDuration);
             return true;
         } else {
             logoutTimers.put(player.getUniqueId(), System.currentTimeMillis() + LogoutCooldownDuration);
             return false;
-        }
+        }*/
     }
-    public static boolean addSOTWTimer(Player player,long time) {
+
+    public static void addSOTWTimer(Player player, long time) {
         // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
-        if (!SOTWTimers.containsKey(player.getUniqueId())) {
+        Timers.SOTW.add(player,time);
+        /*if (!SOTWTimers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             SOTWTimers.put(player.getUniqueId(), System.currentTimeMillis() + time);
             return true;
         } else {
             SOTWTimers.put(player.getUniqueId(), System.currentTimeMillis() + time);
             return false;
-        }
+        }*/
     }
+
     public static long getSOTWTime(Player player) {
         // Ha van rajta CombatTimer
-        if (SOTWTimers.containsKey(player.getUniqueId())) {
+        return Timers.SOTW.get(player);
+        /*if (SOTWTimers.containsKey(player.getUniqueId())) {
             //5600                            5000+500
             if (System.currentTimeMillis() >= SOTWTimers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
@@ -86,22 +94,26 @@ public class HCF_Timer {
             }
         } else {
             return 0;
-        }
+        }*/
     }
-    public static boolean addEOTWTimer(Player player) {
+
+    public static void addEOTWTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
-        if (!EOTWTimers.containsKey(player.getUniqueId())) {
+        Timers.EOTW.add(player);
+        /*if (!EOTWTimers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             EOTWTimers.put(player.getUniqueId(), System.currentTimeMillis() + EOTWDuration);
             return true;
         } else {
             EOTWTimers.put(player.getUniqueId(), System.currentTimeMillis() + EOTWDuration);
             return false;
-        }
+        }*/
     }
+
     public static long getEOTWTimer(Player player) {
         // Ha van rajta CombatTimer
-        if (EOTWTimers.containsKey(player.getUniqueId())) {
+        return Timers.EOTW.get(player);
+        /*if (EOTWTimers.containsKey(player.getUniqueId())) {
             //5600                            5000+500
             if (System.currentTimeMillis() >= EOTWTimers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
@@ -115,7 +127,7 @@ public class HCF_Timer {
             }
         } else {
             return 0;
-        }
+        }*/
     }
 
     public static void removeEOTWTimer(Player player) {
@@ -144,7 +156,8 @@ public class HCF_Timer {
 
     public static long getLogoutTime(Player player) {
         // Ha van rajta CombatTimer
-        if (logoutTimers.containsKey(player.getUniqueId())) {
+        return Timers.LOGOUT.get(player);
+        /*if (logoutTimers.containsKey(player.getUniqueId())) {
             //5600                            5000+500
             if (System.currentTimeMillis() >= logoutTimers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
@@ -159,22 +172,26 @@ public class HCF_Timer {
             }
         } else {
             return 0;
-        }
+        }*/
     }
-    public static boolean addHomeTimer(Player player) {
+
+    public static void addHomeTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
-        if (!homeTimers.containsKey(player.getUniqueId())) {
+        Timers.HOME.add(player);
+        /*if (!homeTimers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             homeTimers.put(player.getUniqueId(), System.currentTimeMillis() + HomeCooldownDuration);
             return true;
         } else {
             homeTimers.put(player.getUniqueId(), System.currentTimeMillis() + HomeCooldownDuration);
             return false;
-        }
+        }*/
     }
+
     public static long getHomeTime(Player player) {
         // Ha van rajta CombatTimer
-        if (homeTimers.containsKey(player.getUniqueId())) {
+        return Timers.HOME.get(player);
+        /*if (homeTimers.containsKey(player.getUniqueId())) {
             //5600                            5000+500
             if (System.currentTimeMillis() >= homeTimers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
@@ -188,57 +205,65 @@ public class HCF_Timer {
             }
         } else {
             return 0;
-        }
+        }*/
     }
-    public static boolean removeHomeTimer(Player player) {
+
+    public static void removeHomeTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
-        if (homeTimers.containsKey(player.getUniqueId())) {
+        Timers.HOME.remove(player);
+     /*   if (homeTimers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             homeTimers.remove(player.getUniqueId());
             return true;
         } else {
             return true;
-        }
+        }*/
 
     }
-    public static boolean removeStuckTimer(Player player) {
-        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
-        if (stuckTimers.containsKey(player.getUniqueId())) {
-            // A mostani időhöz hozzá adjuk a CombatTimer idejét
-            stuckTimers.remove(player.getUniqueId());
-            return true;
-        } else {
-            return true;
-        }
+
+    public static void removeStuckTimer(Player player) {
+//        // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
+        Timers.STUCK.remove(player);
+//        if (stuckTimers.containsKey(player.getUniqueId())) {
+//            // A mostani időhöz hozzá adjuk a CombatTimer idejét
+//            stuckTimers.remove(player.getUniqueId());
+//            return true;
+//        } else {
+//            return true;
+//        }
 
     }
-    public static boolean removeLogoutTimer(Player player) {
+
+    public static void removeLogoutTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
-        if (logoutTimers.containsKey(player.getUniqueId())) {
+        Timers.LOGOUT.remove(player);
+        /*if (logoutTimers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             logoutTimers.remove(player.getUniqueId());
             return true;
         } else {
             return true;
-        }
+        }*/
 
     }
 
-    public static boolean addStuckTimer(Player player) {
+    public static void addStuckTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
-        if (!stuckTimers.containsKey(player.getUniqueId())) {
+        Timers.STUCK.add(player);
+        /*if (!stuckTimers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             stuckTimers.put(player.getUniqueId(), System.currentTimeMillis() + StuckTimerDuration);
             return true;
         } else {
             stuckTimers.put(player.getUniqueId(), System.currentTimeMillis() + StuckTimerDuration);
             return false;
-        }
+        }*/
     }
 
     public static boolean checkCombatTimer(Player player) {
         // Ha van rajta CombatTimer
-        if (timers.containsKey(player.getUniqueId())) {
+        return Timers.COMBAT.has(player);
+        /*if (timers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= timers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 timers.remove(player.getUniqueId());
@@ -251,12 +276,13 @@ public class HCF_Timer {
         } else {
             //DeleteWallsForPlayer(player);
             return false;
-        }
+        }*/
     }
 
     public static boolean checkStuckTimer(Player player) {
         // Ha van rajta CombatTimer
-        if (stuckTimers.containsKey(player.getUniqueId())) {
+        return Timers.STUCK.has(player);
+        /*if (stuckTimers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= stuckTimers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 stuckTimers.remove(player.getUniqueId());
@@ -267,12 +293,13 @@ public class HCF_Timer {
             }
         } else {
             return false;
-        }
+        }*/
     }
 
     public static boolean expiredNowStuck(Player player) {
         // Ha van rajta CombatTimer
-        if (stuckTimers.containsKey(player.getUniqueId())) {
+        return Timers.STUCK.get(player) == 0;
+        /*if (stuckTimers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= stuckTimers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 stuckTimers.remove(player.getUniqueId());
@@ -283,12 +310,13 @@ public class HCF_Timer {
             }
         } else {
             return false;
-        }
+        }*/
     }
 
     public static boolean expiredNowHome(Player player) {
         // Ha van rajta CombatTimer
-        if (homeTimers.containsKey(player.getUniqueId())) {
+        return Timers.HOME.get(player) == 0;
+        /*if (homeTimers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= homeTimers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 homeTimers.remove(player.getUniqueId());
@@ -299,12 +327,13 @@ public class HCF_Timer {
             }
         } else {
             return false;
-        }
+        }*/
     }
 
     public static long getCombatTime(Player player) {
         // Ha van rajta CombatTimer
-        if (timers.containsKey(player.getUniqueId())) {
+        return Timers.COMBAT.get(player);
+        /*if (timers.containsKey(player.getUniqueId())) {
             //5600                            5000+500
             if (System.currentTimeMillis() >= timers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
@@ -318,12 +347,13 @@ public class HCF_Timer {
             }
         } else {
             return 0;
-        }
+        }*/
     }
 
     public static long getStuckTime(Player player) {
         // Ha van rajta CombatTimer
-        if (stuckTimers.containsKey(player.getUniqueId())) {
+        return Timers.STUCK.get(player);
+        /*if (stuckTimers.containsKey(player.getUniqueId())) {
             //5600                            5000+500
             if (System.currentTimeMillis() >= stuckTimers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
@@ -337,24 +367,26 @@ public class HCF_Timer {
             }
         } else {
             return 0;
-        }
+        }*/
     }
 
     public static boolean addArcherTimer(Player player) {
         // Ha már van rajta Archertag, akkor ne addjuk hozzá
-        if (!Archertimers.containsKey(player)) {
+        return Timers.ARCHER.canAdd(player);
+        /*if (!Archertimers.containsKey(player)) {
             // A mostani időhöz hozzá adjuk a Archertag idejét
             Archertimers.put(player.getUniqueId(), System.currentTimeMillis() + ArcherTimerDuration);
             return true;
         } else {
             return false;
-        }
+        }*/
     }
 
     // true active; false nem
     public static boolean checkArcherTimer(Player player) {
         // Ha van rajta Archertag
-        if (Archertimers.containsKey(player.getUniqueId())) {
+        return Timers.ARCHER.has(player);
+        /*if (Archertimers.containsKey(player.getUniqueId())) {
             // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta Archertag
             if (System.currentTimeMillis() >= Archertimers.get(player.getUniqueId())) {
                 Archertimers.remove(player.getUniqueId());
@@ -368,12 +400,13 @@ public class HCF_Timer {
         } else {
 
             return false;
-        }
+        }*/
     }
 
     public static boolean checkEpTimer(Player player) {
         // Ha van rajta CombatTimer
-        if (eptimers.containsKey(player.getUniqueId())) {
+        return Timers.ENDER_PEARL.has(player);
+        /*if (eptimers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= eptimers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 eptimers.remove(player.getUniqueId());
@@ -384,18 +417,19 @@ public class HCF_Timer {
             }
         } else {
             return false;
-        }
+        }*/
     }
 
-    public static boolean addEpTimer(Player player) {
+    public static void addEpTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
-        if (!eptimers.containsKey(player.getUniqueId())) {
+        Timers.ENDER_PEARL.add(player);
+        /*if (!eptimers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             eptimers.put(player.getUniqueId(), System.currentTimeMillis() + EpTimerDuration);
             return true;
         } else {
             return false;
-        }
+        }*/
     }
 
     public static boolean removeEpTimer(Player player) {
@@ -412,18 +446,20 @@ public class HCF_Timer {
 
     public static boolean addEpTimer(Player player, int cooldown) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
-        if (!eptimers.containsKey(player.getUniqueId())) {
+        return false;
+        /*if (!eptimers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             eptimers.put(player.getUniqueId(), System.currentTimeMillis() + cooldown * 1000L);
             return true;
         } else {
             return false;
-        }
+        }*/
     }
 
     public static long getEpTime(Player player) {
         // Ha van rajta CombatTimer
-        if (eptimers.containsKey(player.getUniqueId())) {
+        return Timers.ENDER_PEARL.get(player);
+        /*if (eptimers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= eptimers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 eptimers.remove(player.getUniqueId());
@@ -435,23 +471,25 @@ public class HCF_Timer {
             }
         } else {
             return 0;
-        }
+        }*/
     }
 
-    public static boolean add_Golden_Apple_Time(Player player) {
+    public static void add_Golden_Apple_Time(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
-        if (!golden_apple_Timers.containsKey(player.getUniqueId())) {
+        Timers.GOLDEN_APPLE.add(player);
+        /*if (!golden_apple_Timers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             golden_apple_Timers.put(player.getUniqueId(), System.currentTimeMillis() + Golden_Apple_Cooldown);
             return true;
         } else {
             return false;
-        }
+        }*/
     }
 
     public static long get_Golden_Apple_Time(Player player) {
         // Ha van rajta CombatTimer
-        if (golden_apple_Timers.containsKey(player.getUniqueId())) {
+        return Timers.GOLDEN_APPLE.get(player);
+        /*if (golden_apple_Timers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= golden_apple_Timers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 golden_apple_Timers.remove(player.getUniqueId());
@@ -463,23 +501,25 @@ public class HCF_Timer {
             }
         } else {
             return 0;
-        }
+        }*/
     }
 
-    public static boolean add_OP_Golden_Apple_Time(Player player) {
+    public static void add_OP_Golden_Apple_Time(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
-        if (!OP_Golden_Apple_Timers.containsKey(player.getUniqueId())) {
+        Timers.ENCHANTED_GOLDEN_APPLE.add(player);
+        /*if (!OP_Golden_Apple_Timers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             OP_Golden_Apple_Timers.put(player.getUniqueId(), System.currentTimeMillis() + OP_Golden_Apple_Cooldown);
             return true;
         } else {
             return false;
-        }
+        }*/
     }
 
     public static long get_OP_Golden_Apple_Time(Player player) {
         // Ha van rajta CombatTimer
-        if (OP_Golden_Apple_Timers.containsKey(player.getUniqueId())) {
+        return Timers.ENCHANTED_GOLDEN_APPLE.get(player);
+        /*if (OP_Golden_Apple_Timers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= OP_Golden_Apple_Timers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
                 OP_Golden_Apple_Timers.remove(player.getUniqueId());
@@ -491,34 +531,37 @@ public class HCF_Timer {
             }
         } else {
             return 0;
-        }
+        }*/
     }
 
 
     public static void removePVPTag(Player p) {
-        timers.remove(p.getUniqueId());
+        Timers.COMBAT.remove(p);
     }
 
-    public static boolean addPvPTimerCoolDownSpawn(Player player) {
-        if (!PVPTimers.containsKey(player.getUniqueId())) {
+    public static void addPvPTimerCoolDownSpawn(Player player) {
+        Timers.PVP_TIMER.add(player);
+        /*if (!PVPTimers.containsKey(player.getUniqueId())) {
             PVPTimers.put(player.getUniqueId(), System.currentTimeMillis() + PvpTimerDuration);
             return true;
         } else {
             return false;
-        }
+        }*/
     }
 
-    public static boolean addPvPTimerCoolDownSpawn(Player player, long duration) {
-        if (!PVPTimers.containsKey(player.getUniqueId())) {
+    public static void addPvPTimerCoolDownSpawn(Player player, long duration) {
+        Timers.PVP_TIMER.add(player);
+        /*if (!PVPTimers.containsKey(player.getUniqueId())) {
             PVPTimers.put(player.getUniqueId(), System.currentTimeMillis() + duration);
             return true;
         } else {
             return false;
-        }
+        }*/
     }
 
     public static long getPvPTimerCoolDownSpawn(Player player) {
-        if (PVPTimers.containsKey(player.getUniqueId())) {
+        return Timers.PVP_TIMER.get(player);
+       /* if (PVPTimers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= PVPTimers.get(player.getUniqueId())) {
                 PVPTimers.remove(player.getUniqueId());
                 Scoreboards.refresh(player);
@@ -528,23 +571,25 @@ public class HCF_Timer {
             }
         } else {
             return 0;
-        }
+        }*/
     }
 
-    public static boolean addBardTimer(Player player) {
+    public static void addBardTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
-        if (!BardCooldown.containsKey(player.getUniqueId())) {
+        Timers.BARD_COOLDOWN.add(player);
+        /*if (!BardCooldown.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             BardCooldown.put(player.getUniqueId(), System.currentTimeMillis() + BardCooldownDuration);
             return true;
         } else {
             BardCooldown.put(player.getUniqueId(), System.currentTimeMillis() + BardCooldownDuration);
             return false;
-        }
+        }*/
     }
 
     public static long getBardTimer(Player player) {
-        if (BardCooldown.containsKey(player.getUniqueId())) {
+        return Timers.BARD_COOLDOWN.get(player);
+        /*if (BardCooldown.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= BardCooldown.get(player.getUniqueId())) {
                 BardCooldown.remove(player.getUniqueId());
                 Scoreboards.refresh(player);
@@ -554,8 +599,6 @@ public class HCF_Timer {
             }
         } else {
             return 0;
-        }
+        }*/
     }
-
-
 }

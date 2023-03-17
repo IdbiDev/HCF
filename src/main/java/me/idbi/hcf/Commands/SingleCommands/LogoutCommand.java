@@ -5,6 +5,7 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.SQL_Connection;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,7 +21,7 @@ public class LogoutCommand implements CommandExecutor, Listener {
         // /revive <player>
         if (sender instanceof Player p) {
             if (p.hasPermission("factions.commands.logout")) {
-                if (HCF_Timer.getLogoutTime(p) != 0) {
+                if (Timers.LOGOUT.has(p)) {
                     //Todo: Already logging out
                     HCF_Timer.removeLogoutTimer(p);
                     p.sendMessage(Messages.logout_timer_already_started.language(p).queue());
@@ -40,8 +41,8 @@ public class LogoutCommand implements CommandExecutor, Listener {
         if (e.getFrom().getBlockX() != e.getTo().getBlockX()
                 || e.getFrom().getBlockY() != e.getTo().getBlockY()
                 || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
-            if (HCF_Timer.getLogoutTime(e.getPlayer()) != 0) {
-                HCF_Timer.removeLogoutTimer(e.getPlayer());
+            if (Timers.LOGOUT.has(e.getPlayer())) {
+                Timers.LOGOUT.remove(e.getPlayer());
                 e.getPlayer().sendMessage(Messages.logout_timer_interrupted.language(e.getPlayer()).queue());
             }
         }

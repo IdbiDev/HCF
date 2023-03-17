@@ -38,8 +38,8 @@ public class Click_AllyUnRequest implements Listener {
 
             Faction ally = null;
 
-            for (Faction invitedAlly : f.allyinvites.getInvitedAllies()) {
-                if (invitedAlly.name.equalsIgnoreCase(name))
+            for (Faction invitedAlly : f.getAllyInvites().getInvitedAllies()) {
+                if (invitedAlly.getName().equalsIgnoreCase(name))
                     ally = invitedAlly;
             }
 

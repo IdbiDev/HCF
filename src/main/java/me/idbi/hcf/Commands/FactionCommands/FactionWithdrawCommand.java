@@ -74,17 +74,17 @@ public class FactionWithdrawCommand extends SubCommand {
         if (args[1].matches("^[0-9]+$") || args[1].equalsIgnoreCase("all")) {
             try {
                 Faction faction = Playertools.getPlayerFaction(p);
-                int arg1 = args[1].matches("^[0-9]+$") ? Integer.parseInt(args[1]) : faction.balance;
+                int arg1 = args[1].matches("^[0-9]+$") ? Integer.parseInt(args[1]) : faction.getBalance();
                 if (arg1 <= 0) {
                     p.sendMessage(Messages.faction_bank_not_enough.language(p).queue());
                     return;
                 }
-                if (faction.balance <= 0) {
+                if (faction.getBalance() <= 0) {
                     p.sendMessage(Messages.faction_bank_not_enough.language(p).queue());
                     return;
                 }
 
-                if (faction.balance < Integer.parseInt(args[1])) {
+                if (faction.getBalance() < Integer.parseInt(args[1])) {
                     p.sendMessage(Messages.faction_bank_not_enough.language(p).queue());
                     return;
                 }
@@ -113,9 +113,9 @@ public class FactionWithdrawCommand extends SubCommand {
 
     public FactionWithdrawCommand withdrawFaction(Faction faction, Player p, int amount) {
         try {
-            int SumSumAmount = faction.balance - amount;
+            int SumSumAmount = faction.getBalance() - amount;
             HCFPlayer player = HCFPlayer.getPlayer(p);
-            faction.balance = SumSumAmount;
+            faction.setBalance(SumSumAmount);
 
             player.addMoney(amount);
 

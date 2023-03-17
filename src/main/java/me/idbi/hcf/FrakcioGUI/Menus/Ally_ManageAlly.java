@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory;
 public class Ally_ManageAlly {
 
     public static Inventory inv(Player owner, Faction ally) {
-        Inventory inv = Bukkit.createInventory(null, 3 * 9, "§8Managing " + ally.name + " §8ally");
+        Inventory inv = Bukkit.createInventory(null, 3 * 9, "§8Managing " + ally.getName() + " §8ally");
 
         for (int i = 0; i < inv.getSize(); i++) {
             inv.setItem(i, GUI_Items.blackGlass());

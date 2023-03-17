@@ -33,7 +33,7 @@ public class Click_MainInventory implements Listener {
                     if (Playertools.isValidName(text)) {
                         Faction faction = Playertools.getPlayerFaction(p);
                         assert faction != null;
-                        Playertools.RenameFaction(faction, text);
+                        Playertools.renameFaction(faction, text);
                         //p.sendMessage("Renamed!");
                         GUI_Sound.playSound(p, GUI_Sound.HCFSounds.SUCCESS);
                         return AnvilGUI.Response.close();

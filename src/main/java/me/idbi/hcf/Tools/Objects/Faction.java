@@ -15,10 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static me.idbi.hcf.Main.maxAlliesProFaction;
 import static me.idbi.hcf.Main.maxMembersProFaction;
@@ -26,21 +23,24 @@ import static me.idbi.hcf.Main.maxMembersProFaction;
 public class Faction {
     private static final Connection con = Main.getConnection();
 
-    @Getter public int id;
-    @Getter @Setter public String name;
-    @Getter @Setter public String leader;
-    @Getter @Setter public int balance;
-    @Getter @Setter public ArrayList<HCF_Claiming.Faction_Claim> claims = new ArrayList<>();
-    @Getter @Setter public double DTR = 0;
-    @Getter @Setter public double DTR_MAX = 0;
-    @Getter @Setter public long DTR_TIMEOUT = 0L;
-    @Getter @Setter public InviteManager.factionInvite invites;
-    @Getter @Setter public AllyManager allyinvites;
+    @Getter private int id;
+    @Getter @Setter private String name;
+    @Getter @Setter private String leader;
+    @Getter @Setter private int balance;
+    @Getter private ArrayList<HCF_Claiming.Faction_Claim> claims = new ArrayList<>();
+    @Getter @Setter private double DTR = 0;
+    @Getter @Setter private double DTR_MAX = 0;
+    @Getter @Setter private long DTR_TIMEOUT = 0L;
+    @Getter @Setter private InviteManager.FactionInvite invites;
 
-    @Getter @Setter public Location homeLocation;
+    @Getter @Setter private AllyManager allyInvites;
+    @Getter private HashMap<Integer, AllyFaction> allies = new HashMap<>();
 
-    @Getter @Setter public ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
-    @Getter @Setter public ArrayList<HCFPlayer> members = new ArrayList<>();
+    @Getter @Setter private Location homeLocation;
+
+    @Getter @Setter private ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
+    @Getter @Setter private ArrayList<HCFPlayer> members = new ArrayList<>();
+
     //Statistics
     public ArrayList<HistoryEntrys.BalanceEntry> balanceHistory = new ArrayList<>();
     public ArrayList<HistoryEntrys.KickEntry> kickHistory = new ArrayList<>();
@@ -48,20 +48,35 @@ public class Faction {
     public ArrayList<HistoryEntrys.FactionJoinLeftEntry> factionjoinLeftHistory = new ArrayList<>();
     public ArrayList<HistoryEntrys.InviteEntry> inviteHistory = new ArrayList<>();
     public ArrayList<HistoryEntrys.RankEntry> rankCreateHistory = new ArrayList<>();
-    public HashMap<Integer, AllyFaction> Allies = new HashMap<>();
 
 
     public Faction(int id, String name, String leader, int balance) {
         this.id = id;
         this.name = name;
         this.leader = leader;
-        this.invites = new InviteManager.factionInvite();
-        this.allyinvites = new AllyManager();
+        this.invites = new InviteManager.FactionInvite();
+        this.allyInvites = new AllyManager();
         this.balance = balance;
         this.ranks = new ArrayList<FactionRankManager.Rank>();
         this.claims = new ArrayList<HCF_Claiming.Faction_Claim>();
         this.members = new ArrayList<HCFPlayer>();
 
+    }
+
+    public void addDTR(double dtr) {
+        this.DTR += dtr;
+    }
+
+    public void addAlly(AllyFaction ally) {
+        this.allies.put(ally.getFactionId(), ally);
+    }
+
+    public void removeAlly(AllyFaction ally) {
+        this.allies.remove(ally.getFactionId());
+    }
+
+    public void removeDTR(double dtr) {
+        this.DTR -= dtr;
     }
 
     public void removeClaim(HCF_Claiming.Faction_Claim claim) {
@@ -90,14 +105,10 @@ public class Faction {
     /**
      * @return x, y, z
      */
-    public String getHomeLocation() {
+    public String getFormattedHomeLocation() {
         if(homeLocation == null)
             return "-";
         return Playertools.formatLocation(homeLocation);
-    }
-
-    public void setLeader(String leader) {
-        this.leader = leader;
     }
 
     public void saveFactionData() {
@@ -123,6 +134,13 @@ public class Faction {
     }
 
 
+    public void addBalance(int amount) {
+        this.balance += amount;
+    }
+    public void removeBalance(int amount) {
+        this.balance = Math.max(0, this.balance - amount);
+    }
+
     public int getMemberCount() {
         return this.members.size();
     }
@@ -136,24 +154,24 @@ public class Faction {
     }
 
     public void unInviteAlly(Faction faction) {
-        allyinvites.removePlayerFromInvite(faction);
+        allyInvites.removePlayerFromInvite(faction);
     }
 
     public boolean isFactionAllyInvited(Faction faction) {
-        return allyinvites.isFactionInvited(faction);
+        return allyInvites.isFactionInvited(faction);
     }
 
     public void inviteFactionAlly(Faction ally) {
-        if (Allies.size() + 1 > maxAlliesProFaction || allyinvites.getInvitedAllies().size() + 1 > HCF_Rules.maxAlliesPerFaction) {
+        if (allies.size() + 1 > maxAlliesProFaction || allyInvites.getInvitedAllies().size() + 1 > HCF_Rules.maxAlliesPerFaction) {
             return;
         }
-        allyinvites.inviteFactionToAlly(ally);
+        allyInvites.inviteFactionToAlly(ally);
         Main.sendCmdMessage("Invite requested! Requester: " + this.name + " Receiver: " + ally.name);
     }
 
     public void resolveFactionAlly(Faction ally) {
-        Allies.remove(ally.id);
-        ally.Allies.remove(this.id);
+        allies.remove(ally.id);
+        ally.allies.remove(this.id);
 
         // Allies.removeIf(allyFaction -> allyFaction.getAllyFaction().id == ally.id);
     }
@@ -276,7 +294,7 @@ public class Faction {
                 for (Map.Entry<Permissions, Boolean> permsHash : perms.entrySet()) {
                     allyFaction.setPermission(permsHash.getKey(), permsHash.getValue());
                 }
-                this.Allies.put(id, allyFaction);
+                this.allies.put(id, allyFaction);
             }
         });
         //        //(String) permissionmap.get("Allies")
@@ -286,7 +304,7 @@ public class Faction {
     //Faction: Aki területén történt
     //THIS: Executor factionje
     //Permission . Perm
-    public boolean HaveAllyPermission(Faction faction, Permissions perm) {
+    public boolean hasAllyPermission(Faction faction, Permissions perm) {
 
 //        //if(faction == null) return true;
 //        if(faction.claims.isEmpty()) return true;
@@ -294,7 +312,7 @@ public class Faction {
 //        if(faction.DTR <= 0) return true;
         if (faction == null) return false;
         if (this.isAlly(faction)) {
-            if (faction.Allies.get(this.id).hasPermission(perm)) {
+            if (faction.getAllies().get(this.id).hasPermission(perm)) {
                 return true;
             }
         }
@@ -315,7 +333,7 @@ public class Faction {
     public boolean isAlly(Faction faction) {
         if (faction == null) return false;
         if (this == null) return false;
-        for (AllyFaction allyFaction : this.Allies.values()) {
+        for (AllyFaction allyFaction : this.allies.values()) {
             if (allyFaction.getFactionId() == faction.id) {
                 return true;
             }
@@ -326,9 +344,10 @@ public class Faction {
     public void selfDestruct() {
         Main.factionCache.remove(this.id);
         Main.nameToFaction.remove(this.name);
+        this.claims = new ArrayList<>();
 
-        for (AllyFaction value : this.Allies.values()) {
-            value.getAllyFaction().Allies.remove(this.id);
+        for (AllyFaction value : this.allies.values()) {
+            value.getAllyFaction().getAllies().remove(this.id);
         }
 
         SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(this.id));

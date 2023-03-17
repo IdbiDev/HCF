@@ -19,7 +19,7 @@ public class FactionChatToggleCommand extends SubCommand {
 
     @Override
     public boolean isCommand(String argument) {
-        return argument.equalsIgnoreCase(getName());
+        return argument.equalsIgnoreCase(getName()) || argument.equalsIgnoreCase("toggle");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class FactionChatToggleCommand extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/faction togglechat <staff | faction | ally | leader>";
+        return "/faction togglechat <public | staff | faction | ally | leader>";
     }
 
     @Override
@@ -71,10 +71,6 @@ public class FactionChatToggleCommand extends SubCommand {
             if (newChat == null) {
                 // ToDo Message: This chat channel is not available!
                 p.sendMessage("Nem elérhető a channel!");
-                return;
-            }
-            if(newChat == ChatTypes.PUBLIC) {
-                p.sendMessage(Messages.cant_disable_chat.language(p).queue());
                 return;
             }
             boolean chat = hcfPlayer.toggleChat(newChat);

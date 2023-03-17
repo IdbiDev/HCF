@@ -20,7 +20,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import static me.idbi.hcf.Main.warzoneSize;
 
-public class onBlockPlace implements Listener {
+public class BlockPlace implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {

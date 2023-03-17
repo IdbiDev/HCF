@@ -48,7 +48,7 @@ public class Click_InviteManager implements Listener {
                                     p.sendMessage(Messages.invited_player.language(p).setPlayer(target).queue());
                                     //target.sendMessage(Messages.INVITED_BY.repExecutor(p).setFaction(faction.factioname).queue());
                                     Clickable_Join.sendMessage(target,
-                                            "/f join " + faction.name,
+                                            "/f join " + faction.getName(),
                                             Messages.invited_by.language(target).setExecutor(p).setFaction(faction).queue(),
                                             Messages.hover_join.language(target).queue());
 

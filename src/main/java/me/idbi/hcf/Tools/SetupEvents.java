@@ -37,27 +37,27 @@ public class SetupEvents {
         //getServer().getPluginManager().registerEvents(new Assassin(), Main.getPlugin(Main.class));
         PluginManager pm = getServer().getPluginManager();
 
-        pm.registerEvents(new onPlayerJoin(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerJoin(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onPlayerLeft(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerLeft(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onDamage(), Main.getPlugin(Main.class));
+        pm.registerEvents(new EntDamageByEnt(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onBlockBreak(), Main.getPlugin(Main.class));
+        pm.registerEvents(new BlockBreak(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onBlockPlace(), Main.getPlugin(Main.class));
+        pm.registerEvents(new BlockPlace(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onDeath(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerDeath(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onPlayerInteract(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerInteract(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onPlayerMove(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerMove(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onPlayerRespawn(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerRespawn(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onPlayerPreJoin(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerPreJoin(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onBowShoot(), Main.getPlugin(Main.class));
+        pm.registerEvents(new BowShoot(), Main.getPlugin(Main.class));
 
         pm.registerEvents(new FactionSetHomeCommand(), Main.getPlugin(Main.class));
         pm.registerEvents(new FactionHomeCommand(), Main.getPlugin(Main.class));
@@ -70,9 +70,9 @@ public class SetupEvents {
 
         pm.registerEvents(new ElevatorInteract(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onPlayerChat(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerChat(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onChunkLoaded(), Main.getPlugin(Main.class));
+        pm.registerEvents(new ChunkLoad(), Main.getPlugin(Main.class));
 
         // Enchant
         pm.registerEvents(new TableEvent(), Main.getPlugin(Main.class));
@@ -87,9 +87,9 @@ public class SetupEvents {
         pm.registerEvents(new KOTHCloseEvent(), Main.getPlugin(Main.class));
         pm.registerEvents(new KOTHInvClickEvent(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onSignPlace(), Main.getPlugin(Main.class));
+        pm.registerEvents(new SignPlace(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new onConsumeItem(), Main.getPlugin(Main.class));
+        pm.registerEvents(new ConsumeItem(), Main.getPlugin(Main.class));
         pm.registerEvents(new BasicClaim(), Main.getPlugin(Main.class));
         pm.registerEvents(new SpawnClaim(), Main.getPlugin(Main.class));
         pm.registerEvents(new KothClaim(), Main.getPlugin(Main.class));
@@ -123,7 +123,7 @@ public class SetupEvents {
 
         pm.registerEvents(new Rogue(), Main.getPlugin(Main.class));
 
-        pm.registerEvents(new CrowbarInteractListener(), Main.getPlugin(Main.class));
+        pm.registerEvents(new CrowbarInteraction(), Main.getPlugin(Main.class));
 
         pm.registerEvents(new SubClaimSignListener(), Main.getPlugin(Main.class));
         getServer().getPluginManager().registerEvents(new SubClaimListener(), Main.getPlugin(Main.class));
@@ -136,6 +136,7 @@ public class SetupEvents {
 
         // Command events
         pm.registerEvents(new RollbackInventoryClick(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerWorldChange(), Main.getPlugin(Main.class));
 
     }
 }

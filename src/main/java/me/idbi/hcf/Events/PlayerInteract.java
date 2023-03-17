@@ -25,7 +25,7 @@ import java.util.Objects;
 import static me.idbi.hcf.Classes.SubClasses.Assassin.TeleportBehindPlayer;
 
 
-public class onPlayerInteract implements Listener {
+public class PlayerInteract implements Listener {
     Bard bard = new Bard();
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {

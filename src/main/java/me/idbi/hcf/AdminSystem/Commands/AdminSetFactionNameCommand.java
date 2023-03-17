@@ -69,14 +69,14 @@ public class AdminSetFactionNameCommand extends SubCommand {
             return;
         }
         Faction selectedFaction = Main.nameToFaction.get(args[1]);
-        selectedFaction.name = args[2];
+        selectedFaction.setName(args[2]);
         //Todo: Broadcast the change
 
         for (Player member : selectedFaction.getOnlineMembers()) {
             member.sendMessage(Messages.set_faction_name.language(member).setExecutor(p).setFaction(args[2]).queue());
         }
 
-        p.sendMessage(Messages.admin_set_faction_name.setFaction(selectedFaction.name).queue());
+        p.sendMessage(Messages.admin_set_faction_name.setFaction(selectedFaction.getName()).queue());
 
         Scoreboards.RefreshAll();
     }

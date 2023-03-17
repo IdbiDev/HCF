@@ -75,7 +75,7 @@ public class Ally_Items {
     public static ItemStack manageAlly(AllyFaction ally) {
         ItemStack is = new ItemStack(Material.DIAMOND);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§e" + ally.getAllyFaction().name);
+        im.setDisplayName("§e" + ally.getAllyFaction().getName());
         im.setLore(Arrays.asList(
                 "§5",
                 "§7Click here to manage!"
@@ -87,7 +87,7 @@ public class Ally_Items {
     public static ItemStack requestedAlly(Faction ally) {
         ItemStack is = new ItemStack(Material.DIAMOND);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§e" + ally.name);
+        im.setDisplayName("§e" + ally.getName());
         im.setLore(Arrays.asList(
                 "§5",
                 "§7Click here to abort the request!"

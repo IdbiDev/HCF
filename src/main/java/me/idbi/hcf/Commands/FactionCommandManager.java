@@ -5,6 +5,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class FactionCommandManager implements CommandExecutor {
+public class FactionCommandManager implements CommandExecutor, TabCompleter {
 
     private final ArrayList<SubCommand> subcommands = new ArrayList<>();
 

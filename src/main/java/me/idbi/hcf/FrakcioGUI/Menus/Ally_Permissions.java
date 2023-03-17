@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 public class Ally_Permissions {
 
     public static Inventory inv(Player p, AllyFaction ally) {
-        Inventory inv = Bukkit.createInventory(null, 5 * 9, ally.getAllyFaction().name + " §8Ally Permissions");
+        Inventory inv = Bukkit.createInventory(null, 5 * 9, ally.getAllyFaction().getName() + " §8Ally Permissions");
 
         for (int i = 0; i < inv.getSize(); i++) {
             inv.setItem(i, GUI_Items.blackGlass());

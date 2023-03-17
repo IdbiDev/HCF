@@ -37,7 +37,7 @@ public class Miner implements HCF_Class {
     }
 
     @Override
-    public boolean CheckArmor(Player p) {
+    public boolean checkArmor(Player p) {
         try {
             //Get Archer armor
             ItemStack helmet = p.getInventory().getHelmet();
@@ -62,7 +62,7 @@ public class Miner implements HCF_Class {
             addEffect(p, potionEffectTypeIntegerEntry.getKey(), potionEffectTypeIntegerEntry.getValue());
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        hcf.setClass(Classes.MINER);
+        hcf.setPlayerClass(Classes.MINER);
         Scoreboards.refresh(p);
     }
 
@@ -78,7 +78,7 @@ public class Miner implements HCF_Class {
             p.removePotionEffect(potionEffectTypeIntegerEntry.getKey());
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        hcf.setClass(Classes.NONE);
+        hcf.setPlayerClass(Classes.NONE);
         Scoreboards.refresh(p);
     }
 }

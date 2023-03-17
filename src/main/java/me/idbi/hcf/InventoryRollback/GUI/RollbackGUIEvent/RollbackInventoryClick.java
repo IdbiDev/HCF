@@ -36,8 +36,8 @@ public class RollbackInventoryClick implements Listener {
 
                 Rollback currentRollback = hcfPlayer.getRollback(id);
                 if (e.getClick() == ClickType.DROP) {
-                    if (e.getCurrentItem().getType() == Material.BLAZE_ROD || e.getCurrentItem().getType() == Material.WOOL) {
-                        if (e.getCurrentItem().getType() == Material.WOOL) {
+                    if (e.getCurrentItem().getType() == Material.BLAZE_ROD || e.getCurrentItem().getType() == Material.INK_SACK) {
+                        if (e.getCurrentItem().getType() == Material.INK_SACK) {
                             int clickedId = e.getCurrentItem().getEnchantmentLevel(Enchantment.DURABILITY);
                             if (id != clickedId) {
                                 return;
@@ -45,7 +45,7 @@ public class RollbackInventoryClick implements Listener {
                         }
                         if (player.isOnline()) {
                             if (currentRollback.rollback()) {
-                                owner.sendMessage("Visszaadva!");
+                                owner.sendMessage(Messages.rollback_successfully_rollbacked.language(owner).setPlayer(hcfPlayer).queue());
                                 owner.openInventory(PlayerRollbackListInventory.inv(owner, player.getPlayer(), hcfPlayer.getRollback(id)));
                             } else owner.sendMessage(Messages.not_found_player.language(owner).queue());
                         } else owner.sendMessage(Messages.not_found_player.language(owner).queue());

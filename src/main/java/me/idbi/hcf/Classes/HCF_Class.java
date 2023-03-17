@@ -7,7 +7,7 @@ import org.bukkit.potion.PotionEffectType;
 public interface HCF_Class {
 
 
-    boolean CheckArmor(Player p);
+    boolean checkArmor(Player p);
 
     void setEffect(Player p);
 

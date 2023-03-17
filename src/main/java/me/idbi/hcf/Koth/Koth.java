@@ -35,27 +35,27 @@ public class Koth implements Listener {
         if (!(e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()))
             return;
         if (GLOBAL_AREA != null) {
-            HCF_Claiming.Point start = new HCF_Claiming.Point(GLOBAL_AREA.startX, GLOBAL_AREA.startZ);
-            HCF_Claiming.Point end = new HCF_Claiming.Point(GLOBAL_AREA.endX, GLOBAL_AREA.endZ);
+            HCF_Claiming.Point start = new HCF_Claiming.Point(GLOBAL_AREA.getStartX(), GLOBAL_AREA.getStartZ());
+            HCF_Claiming.Point end = new HCF_Claiming.Point(GLOBAL_AREA.getEndX(), GLOBAL_AREA.getEndZ());
             HCF_Claiming.Point point = new HCF_Claiming.Point(e.getTo().getBlockX(), e.getTo().getBlockZ());
             Player p = e.getPlayer();
             if (GLOBAL_PLAYER == null) {
                 // ha kothba ment ÉS nem foglalja senki
-                if (GLOBAL_AREA.attribute.equals(HCF_Claiming.ClaimAttributes.KOTH) && HCF_Claiming.doOverlap(start, end, point, point)) {
+                if (GLOBAL_AREA.getAttribute().equals(HCF_Claiming.ClaimAttributes.KOTH) && HCF_Claiming.doOverlap(start, end, point, point)) {
                     HCFPlayer hcf = HCFPlayer.getPlayer(p);
                     if (hcf.inFaction()) {
                         GLOBAL_PLAYER = e.getPlayer();
 
 
-                        Bukkit.broadcastMessage(Messages.koth_capturing_started.setFaction(GLOBAL_AREA.faction).queue());
+                        Bukkit.broadcastMessage(Messages.koth_capturing_started.setFaction(GLOBAL_AREA.getFaction()).queue());
                     }
                 }
             } else {
-                if (GLOBAL_AREA.attribute.equals(HCF_Claiming.ClaimAttributes.KOTH) && !HCF_Claiming.doOverlap(start, end, point, point)) {
+                if (GLOBAL_AREA.getAttribute().equals(HCF_Claiming.ClaimAttributes.KOTH) && !HCF_Claiming.doOverlap(start, end, point, point)) {
                     if (GLOBAL_PLAYER == e.getPlayer()) {
                         GLOBAL_PLAYER = null;
                         GLOBAL_TIME = Config.KOTHDuration.asInt() * 60;
-                        Bukkit.broadcastMessage(Messages.koth_capturing_ended.language(p).setFaction(GLOBAL_AREA.faction).queue());
+                        Bukkit.broadcastMessage(Messages.koth_capturing_ended.language(p).setFaction(GLOBAL_AREA.getFaction()).queue());
                     }
                 }
             }
@@ -78,7 +78,7 @@ public class Koth implements Listener {
             HCF_Claiming.Faction_Claim kothArea = null;
             if(kothFaction != null) {
                 for(HCF_Claiming.Faction_Claim claim : kothFaction.getClaims()) {
-                    if(claim.attribute.equals(HCF_Claiming.ClaimAttributes.KOTH)) {
+                    if(claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.KOTH)) {
                         kothArea = claim;
                         break;
                     }
@@ -109,7 +109,7 @@ public class Koth implements Listener {
             HCF_Claiming.Faction_Claim kothArea = null;
             if(kothFaction != null) {
                 for(HCF_Claiming.Faction_Claim claim : kothFaction.getClaims()) {
-                    if(claim.attribute.equals(HCF_Claiming.ClaimAttributes.KOTH)) {
+                    if(claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.KOTH)) {
                         kothArea = claim;
                         break;
                     }

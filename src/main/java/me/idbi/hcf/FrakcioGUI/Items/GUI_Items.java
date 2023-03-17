@@ -11,8 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.UUID;
-
 public class GUI_Items {
 
     public static ItemStack rankManager(Player p) {
@@ -67,8 +65,8 @@ public class GUI_Items {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(GUIMessages.faction_stats.language(p).setFaction(faction).getName());
         String homeLocation;
-        if (faction.homeLocation != null)
-            homeLocation = faction.homeLocation.getBlockX() + ", " + faction.homeLocation.getBlockY() + ", " + faction.homeLocation.getBlockZ();
+        if (faction.getHomeLocation() != null)
+            homeLocation = faction.getHomeLocation().getBlockX() + ", " + faction.getHomeLocation().getBlockY() + ", " + faction.getHomeLocation().getBlockZ();
         else homeLocation = "-";
 
         String factionStatus = (Playertools.isFactionOnline(faction)
@@ -76,23 +74,23 @@ public class GUI_Items {
                 : Messages.status_design_offline.language(p).queue());
         String leaderName = "";
         try {
-            leaderName = ((Bukkit.getPlayer(faction.leader)) != null
-                    ? Bukkit.getPlayer(UUID.fromString(faction.leader)).getName()
-                    : Bukkit.getOfflinePlayer(UUID.fromString(faction.leader)).getName());
+            leaderName = ((Bukkit.getPlayer(faction.getLeader())) != null
+                    ? Bukkit.getPlayer(faction.getLeader()).getName()
+                    : Bukkit.getOfflinePlayer(faction.getLeader()).getName());
         } catch (IllegalArgumentException ignore) {
         }
 
         im.setLore(GUIMessages.faction_stats.language(p).setupShow(
-                faction.name, factionStatus, leaderName, String.valueOf(faction.balance),
+                faction.getName(), factionStatus, leaderName, String.valueOf(faction.getBalance()),
                 String.valueOf(faction.getKills()),
                 String.valueOf(faction.getDeaths()),
                 homeLocation,
-                String.valueOf(faction.DTR),
-                ((faction.DTR == faction.DTR_MAX) ? "-" : Playertools.convertLongToTime(faction.DTR_TIMEOUT)),
-                String.valueOf(faction.DTR_MAX),
+                String.valueOf(faction.getDTR()),
+                ((faction.getDTR() == faction.getDTR_MAX()) ? "-" : Playertools.convertLongToTime(faction.getDTR_TIMEOUT())),
+                String.valueOf(faction.getDTR_MAX()),
                 String.valueOf(Playertools.getOnlineSize(faction)),
-                String.valueOf(faction.members.size()),
-                (faction.DTR <= 0 ? "true" : "false")
+                String.valueOf(faction.getMembers().size()),
+                (faction.getDTR() <= 0 ? "true" : "false")
 
         ).getLore());
         is.setItemMeta(im);

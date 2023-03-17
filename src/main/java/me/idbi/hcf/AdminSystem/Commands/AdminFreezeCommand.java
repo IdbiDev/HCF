@@ -75,6 +75,6 @@ public class AdminFreezeCommand extends SubCommand {
             p.sendMessage(Messages.freeze_executor_off.language(p).setPlayer(p).queue());
             target.sendMessage(Messages.freeze_player_off.language(p).setExecutor(p).queue());
         }
-        player.setFreezeStatus(!player.isFreezed());
+        player.setFreezed(!player.isFreezed());
     }
 }

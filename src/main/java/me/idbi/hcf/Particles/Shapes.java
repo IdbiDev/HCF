@@ -72,19 +72,19 @@ public class Shapes {
 
         HCF_Claiming.Point bottom_left = new HCF_Claiming.Point(start.getBlockX(), start.getBlockZ());
         HCF_Claiming.Point top_right = new HCF_Claiming.Point(end.getBlockX(), end.getBlockZ());
-        HCF_Claiming.Point top_left = new HCF_Claiming.Point(top_right.x, bottom_left.z);
-        HCF_Claiming.Point bottom_right = new HCF_Claiming.Point(bottom_left.x, top_right.z);
+        HCF_Claiming.Point top_left = new HCF_Claiming.Point(top_right.getX(), bottom_left.getZ());
+        HCF_Claiming.Point bottom_right = new HCF_Claiming.Point(bottom_left.getX(), top_right.getZ());
 
         int width = getDistanceBetweenPoints2D(bottom_left, top_left) + 1;
         int height = getDistanceBetweenPoints2D(bottom_left, bottom_right) + 1;
         final double X_RES = (double) width / res;
         final double Z_RES = (double) height / res;
         //HCF_Claiming.Point l1, HCF_Claiming.Point r1, HCF_Claiming.Point l2, HCF_Claiming.Point r2
-        int firstRectangle_Starting_X = bottom_left.x;
-        int firstRectangle_Starting_Z = bottom_left.z;
+        int firstRectangle_Starting_X = bottom_left.getX();
+        int firstRectangle_Starting_Z = bottom_left.getZ();
 
-        int firstRectangle_Ending_X = top_right.x;
-        int firstRectangle_Ending_Z = top_right.z;
+        int firstRectangle_Ending_X = top_right.getX();
+        int firstRectangle_Ending_Z = top_right.getZ();
 
         int maxX = Math.max(firstRectangle_Starting_X, firstRectangle_Ending_X);
         int minX = Math.min(firstRectangle_Starting_X, firstRectangle_Ending_X);

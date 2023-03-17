@@ -5,7 +5,6 @@ import me.idbi.hcf.Classes.SubClasses.Miner;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.HCF_Claiming;
-import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.SpawnShield;
 import org.bukkit.Location;
@@ -16,7 +15,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import static me.idbi.hcf.Tools.HCF_Timer.checkCombatTimer;
 
-public class onPlayerMove implements Listener {
+public class PlayerMove implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();

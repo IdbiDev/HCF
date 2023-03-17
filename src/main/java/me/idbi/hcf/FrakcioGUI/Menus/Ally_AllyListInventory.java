@@ -27,7 +27,7 @@ public class Ally_AllyListInventory {
 
         Faction faction = Playertools.getPlayerFaction(p);
         assert faction != null;
-        for (Map.Entry<Integer, AllyFaction> ally : faction.Allies.entrySet()) {
+        for (Map.Entry<Integer, AllyFaction> ally : faction.getAllies().entrySet()) {
             inv.addItem(Ally_Items.manageAlly(ally.getValue()));
         }
 
@@ -51,7 +51,7 @@ public class Ally_AllyListInventory {
         //       név,     uuid
         Faction faction = Playertools.getPlayerFaction(p);
         assert faction != null;
-        for (Faction ally : faction.allyinvites.getInvitedAllies()) {
+        for (Faction ally : faction.getAllyInvites().getInvitedAllies()) {
             inv.addItem(Ally_Items.requestedAlly(ally));
         }
 

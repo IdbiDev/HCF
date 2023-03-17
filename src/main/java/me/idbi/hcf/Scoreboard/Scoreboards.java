@@ -9,16 +9,14 @@ import me.idbi.hcf.Tools.HCF_Timer;
 import me.idbi.hcf.Tools.MiscTimers;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Scoreboards {
     private static final Main m = Main.getPlugin(Main.class);
@@ -148,18 +146,15 @@ public class Scoreboards {
                 .replace("%bard_energy%", dfSharp.format(
                                 hcf.getBardEnergy())
                         .replace(",", "."))
-//                        new SimpleDateFormat("s").format(
-//                                new Date((long) (Double.parseDouble(playertools.getMetadata(p, "bardenergy")) * 1000L)))))
-                //.replace("%bard_energy%", new SimpleDateFormat("s").format(new Date()))
-                .replace("%spawntag%", getDouble(HCF_Timer.getCombatTime(p)))
-                .replace("%pvp_timer%", getDouble(HCF_Timer.getPvPTimerCoolDownSpawn(p)))
-                .replace("%stuck_timer%", getDouble(HCF_Timer.getStuckTime(p)))
-                .replace("%logout%", getDouble(HCF_Timer.getLogoutTime(p)))
-                .replace("%ep_cd%", getDouble(HCF_Timer.getEpTime(p)))
-                .replace("%gapple_cd%", getDouble(HCF_Timer.get_Golden_Apple_Time(p)))
-                .replace("%opgapple_cd%", ConvertTime((int) (HCF_Timer.get_OP_Golden_Apple_Time(p) / 1000)))
-                .replace("%eotw%", ConvertTime((int) HCF_Timer.getEOTWTimer(p) / 1000))
-                .replace("%sotw%", ConvertTime((int) HCF_Timer.getSOTWTime(p) / 1000))
+                .replace("%spawntag%", Timers.COMBAT.getConvertSeconds(hcf))
+                .replace("%pvp_timer%", Timers.PVP_TIMER.getConvertSeconds(hcf))
+                .replace("%stuck_timer%", Timers.STUCK.getConvertSeconds(hcf))
+                .replace("%logout%", Timers.LOGOUT.getConvertSeconds(hcf))
+                .replace("%ep_cd%", Timers.ENDER_PEARL.getRoundSeconds(hcf) + "s")
+                .replace("%gapple_cd%", Timers.GOLDEN_APPLE.getConvertSeconds(hcf))
+                .replace("%opgapple_cd%", Timers.ENCHANTED_GOLDEN_APPLE.getConvertSeconds(hcf))
+                .replace("%eotw%", Timers.EOTW.getConvertSeconds(hcf))
+                .replace("%sotw%", Timers.SOTW.getConvertSeconds(hcf))
                 .replace("%location%", hcf.getLocationFormatted() == null ? Messages.wilderness.language(p).queue() : hcf.getLocationFormatted());
     }
 

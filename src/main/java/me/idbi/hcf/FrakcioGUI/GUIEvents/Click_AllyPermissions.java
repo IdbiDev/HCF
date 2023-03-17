@@ -89,7 +89,7 @@ public class Click_AllyPermissions implements Listener {
             Faction f = Playertools.getPlayerFaction((Player) e.getWhoClicked());
             assert f != null;
 
-            AllyFaction ally = f.Allies.get(Objects.requireNonNull(Playertools.getFactionByName(allyName)).id);
+            AllyFaction ally = f.getAllies().get(Objects.requireNonNull(Playertools.getFactionByName(allyName)).getId());
             if (ally == null) return;
 
             for (Map.Entry<Permissions, Boolean> hashMap : getPermissions(e.getInventory()).entrySet()) {

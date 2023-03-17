@@ -21,7 +21,7 @@ public enum GUIMessages {
     leave_button("&cLeave", Arrays.asList(" ", "&7Click here to close the menu!")),
     save_button("&aSave All Changes", Arrays.asList(" ", "&7Click here to save the changes!")),
     discard_button("&cDiscard All Changes", Arrays.asList(" ", "&7Click here to discard the changes!")),
-    member_head("&e%player_name%", List.of()),
+    member_head("&e%player%", List.of()),
     faction_rename("&eRename Faction", Arrays.asList("&5", "&7Click here to rename your faction!")),
     faction_histories("&eFaction Histories", Arrays.asList("&5", "&7Click here to see the histories!")),
     faction_member_manager("&eManage Players", Arrays.asList("&5", "&7Click here to manage members!")),
@@ -29,7 +29,7 @@ public enum GUIMessages {
     faction_invite_manager("&eInvite Manager", Arrays.asList("&5", "&7Click here to manage the invites!")),
     faction_invite_player("&eInvite Player", Arrays.asList("&5", "&7Click here to invite a player!")),
     faction_invited_players("&eInvited Players", Arrays.asList("&5", "&7Click here to show the invited players!")),
-    faction_uninvite_player("&e%player_name%", Arrays.asList("&5", "&7Click here to &euninvite %player_name%&7!")),
+    faction_uninvite_player("&e%player%", Arrays.asList("&5", "&7Click here to &euninvite %player%&7!")),
     faction_player_rank_manager("&eManage Player's Rank", Arrays.asList("&5", "&7Click here to manage rank!")),
     faction_kick_player("&eKick Player", Arrays.asList("&5", "&7Click here to kick player!")),
     manage_rank("&e%rank%", Arrays.asList("&5", "&7Click here to manage rank!")),
@@ -123,8 +123,8 @@ public enum GUIMessages {
     }
 
     public GUIMessages setFaction(Faction f) {
-        this.tempName = this.tempName.replace("%faction_name%", f.name);
-        this.tempLore = replaceLore("%faction_name%", f.name);
+        this.tempName = this.tempName.replace("%faction_name%", f.getName());
+        this.tempLore = replaceLore("%faction_name%", f.getName());
         return this;
     }
 
@@ -135,8 +135,8 @@ public enum GUIMessages {
     }
 
     public GUIMessages setPlayerName(Player p) {
-        this.tempName = this.tempName.replace("%player_name%", p.getName());
-        this.tempLore = replaceLore("%player_name%", p.getName());
+        this.tempName = this.tempName.replace("%player%", p.getName());
+        this.tempLore = replaceLore("%player%", p.getName());
         return this;
     }
 
@@ -147,8 +147,8 @@ public enum GUIMessages {
     }
 
     public GUIMessages setPlayerName(String name) {
-        this.tempName = this.tempName.replace("%player_name%", name);
-        this.tempLore = replaceLore("%player_name%", name);
+        this.tempName = this.tempName.replace("%player%", name);
+        this.tempLore = replaceLore("%player%", name);
         return this;
     }
 

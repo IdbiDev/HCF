@@ -26,7 +26,7 @@ public class MemberListInventory {
         //       név,     uuid
         Faction faction = Playertools.getPlayerFaction(p);
         assert faction != null;
-        ArrayList<String> members = Playertools.getFactionMembers(faction.id);
+        ArrayList<String> members = Playertools.getFactionMembers(faction.getId());
 
         for (String memberName : members) {
             inv.addItem(GUI_Items.memberHead(p, memberName));

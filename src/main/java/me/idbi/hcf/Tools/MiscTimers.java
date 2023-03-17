@@ -94,9 +94,9 @@ public class MiscTimers {
                         Main.DTRREGEN.remove(key);
                         if (Main.debug)
                             Main.sendCmdMessage("DTR REGEN finished: ");
-                        f.DTR = f.DTR_MAX;
+                        f.setDTR(f.getDTR_MAX());
                     } //DTR regen: 0 Minutes 10 Seconds
-                    f.DTR_TIMEOUT = val - System.currentTimeMillis();
+                    f.setDTR_TIMEOUT(val - System.currentTimeMillis());
                 }
 
                 HashMap<LivingEntity, Long> savedPlayers = Main.savedPlayers;
@@ -145,7 +145,7 @@ public class MiscTimers {
 
                     boolean shouldRefresh = false;
                     //Stuck Time
-                    if (HCF_Timer.expiredNowStuck(player)) {
+                    if (Timers.STUCK.nowExpire(player)) {
                         shouldRefresh = true;
                         //Scoreboards.refresh(player);
                         Location loc = HCF_Claiming.ReturnSafeSpot(player.getLocation());
@@ -155,13 +155,13 @@ public class MiscTimers {
                         }
                     }
                     //Stuck Time
-                    if (HCF_Timer.expiredNowHome(player)) {
+                    if (Timers.HOME.nowExpire(player)) {
                         shouldRefresh = true;
                         //Scoreboards.refresh(player);
                         Faction faction = Playertools.getPlayerFaction(player);
                         if(faction != null) {
-                            if (faction.homeLocation != null) {
-                                player.teleport(faction.homeLocation);
+                            if (faction.getHomeLocation() != null) {
+                                player.teleport(faction.getHomeLocation());
                                 player.sendMessage(me.idbi.hcf.CustomFiles.Messages.Messages.successfully_home_teleport.queue());
                             }
                         }
@@ -231,7 +231,7 @@ public class MiscTimers {
                     GLOBAL_TIME--;
                     if (GLOBAL_TIME % 30 == 0)
                         Bukkit.broadcastMessage(Messages.koth_capture_timer
-                                .setFaction(Koth.GLOBAL_AREA.faction).setFormattedTime(GLOBAL_TIME).queue());
+                                .setFaction(Koth.GLOBAL_AREA.getFaction()).setFormattedTime(GLOBAL_TIME).queue());
                     //  Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
                     if (GLOBAL_TIME <= 0) {
                         stopKoth();

@@ -173,7 +173,7 @@ public class Bard implements HCF_Class {
     }
 
     @Override
-    public boolean CheckArmor(Player p) {
+    public boolean checkArmor(Player p) {
         try {
             //Get Archer armor
             ItemStack helmet = p.getInventory().getHelmet();
@@ -198,7 +198,7 @@ public class Bard implements HCF_Class {
             addEffect(p, potionEffectTypeIntegerEntry.getKey(), potionEffectTypeIntegerEntry.getValue());
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        hcf.setClass(Classes.BARD);
+        hcf.setPlayerClass(Classes.BARD);
         hcf.setBardEnergy(0D);
         Scoreboards.refresh(p);
     }
@@ -215,7 +215,7 @@ public class Bard implements HCF_Class {
             p.removePotionEffect(potionEffectTypeIntegerEntry.getKey());
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        hcf.setClass(Classes.NONE);
+        hcf.setPlayerClass(Classes.NONE);
         hcf.setBardEnergy(0D);
         Scoreboards.refresh(p);
     }

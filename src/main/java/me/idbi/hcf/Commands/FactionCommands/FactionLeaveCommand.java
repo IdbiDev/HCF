@@ -73,7 +73,7 @@ public class FactionLeaveCommand extends SubCommand {
         if (Playertools.getPlayerFaction(p) != null) {
 
             Faction f = Playertools.getPlayerFaction(p);
-            if (!Objects.equals(f.leader, p.getUniqueId().toString())) {
+            if (!Objects.equals(f.getLeader(), p.getUniqueId().toString())) {
 
                 SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?' WHERE uuid = '?'", "None", "0", p.getUniqueId().toString());
 
@@ -98,11 +98,11 @@ public class FactionLeaveCommand extends SubCommand {
                 f.refreshDTR();
                 PlayerStatistic stat = hcf.getPlayerStatistic();
                 for (FactionHistory statF : stat.factionHistory) {
-                    if (statF.id == f.id) {
+                    if (statF.id == f.getId()) {
                         statF.left = new Date();
                         statF.cause = "Left";
                         statF.lastRole = rankForLejjebb;
-                        statF.name = f.name;
+                        statF.name = f.getName();
                     }
                 }
                 f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(p.getName(), "leaved", new Date().getTime()));

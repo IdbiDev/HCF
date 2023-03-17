@@ -147,8 +147,8 @@ public enum Messages {
     ally_chat("Chat","&7[&dAllience&7] &7[&d%faction_name%&7] &5&o%player%&7: &d%message%"),
     leader_chat("Chat","&7[&aLeader&7] &2&o%player%&7: &a%message%"),
     toggle_chat_enable("Chat","%prefix% &aYou enabled the &2&o%chat% &achat."),
-    toggle_chat_disable("Chat","%prefix% &cYou disabled the &2&o%chat% &achat."),
-    cant_disable_chat("Chat","%prefix% &cYou can't disable this chat!"),
+    toggle_chat_disable("Chat","%prefix% &cYou disabled the &2&o%chat% &cchat."),
+    cant_send_message_to_channel("Chat","%prefix% &cYou can't send message, because you muted this channel!"),
 /*    faction_chat_toggle_on("%prefix% &aYou are now in &2&ofaction chat&a!"),
     faction_chat_toggle_off("%prefix% &cYou are now in &c&oALL chat&c!"),*/
     chat_channel_changed("Chat","%prefix% &aYou are now in &2&o%chat% &achat."),
@@ -284,6 +284,10 @@ public enum Messages {
     subclaim_cant_create("Subclaims","%prefix% &cYou can't create a subclaim here!"),
     subclaim_no_access("Subclaims","%prefix% &cAccess denied!"),
     subclaim_lower_rank("Subclaims","%prefix% &cYou must type a lower rank or your rank!"),
+
+    rollback_successfully_rollbacked("rollback", "%prefix% &aYou successfully setted %player%'s inventory to this!"),
+    rollback_dont_have_rollback("rollback", "%prefix% &cThis player doesn't have saved inventory!"),
+    rollback_not_found("rollback", "%prefix% &cThis ID does not have rollback!"),
 
     // Hover things
     hover_join("chat","&7Click here to join!"),
@@ -566,7 +570,7 @@ public enum Messages {
 
     public Messages setFaction(Faction faction) {
         if (this.isString()) {
-            this.playerMessage = this.playerMessage.replaceAll("%faction_name%", faction.name);
+            this.playerMessage = this.playerMessage.replaceAll("%faction_name%", faction.getName());
         }
 
         return this;

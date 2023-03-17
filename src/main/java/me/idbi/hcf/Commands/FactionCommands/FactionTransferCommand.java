@@ -68,7 +68,7 @@ public class FactionTransferCommand extends SubCommand {
     public void perform(Player p, String[] args) {
         Faction playerFaction = Playertools.getPlayerFaction(p);
         if (playerFaction != null) {
-            if (p.getUniqueId().toString().equalsIgnoreCase(playerFaction.leader)) {
+            if (p.getUniqueId().toString().equalsIgnoreCase(playerFaction.getLeader())) {
                 OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[1]);
                 if (targetPlayer != null) {
                     //Player targetPlayer_Online;
@@ -88,7 +88,7 @@ public class FactionTransferCommand extends SubCommand {
                     }
 
                     addCooldown(p);
-                    playerFaction.leader = targetPlayer.getUniqueId().toString();
+                    playerFaction.setLeader(targetPlayer.getUniqueId().toString());
 
                     targetHCF.setRank(playerFaction.getLeaderRank());
                     playerHCF.setRank(playerFaction.getDefaultRank());

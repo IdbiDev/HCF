@@ -104,11 +104,11 @@ public class FactionKickCommand extends SubCommand {
                 SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?' WHERE uuid = '?'", "None", "0", hcf.getUUID().toString());
                 PlayerStatistic stat = hcf.getPlayerStatistic();
                 for (FactionHistory statF : stat.factionHistory) {
-                    if (statF.id == f.id) {
+                    if (statF.id == f.getId()) {
                         statF.left = new Date();
                         statF.cause = "Kicked";
                         statF.lastRole = previousRank;
-                        statF.name = f.name;
+                        statF.name = f.getName();
                     }
                 }
 

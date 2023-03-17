@@ -41,8 +41,8 @@ public class Click_ManageAlly implements Listener {
         assert f != null;
         AllyFaction ally = null;
 
-        for (Map.Entry<Integer, AllyFaction> allies : f.Allies.entrySet()) {
-            if (allies.getValue().getAllyFaction().name.equalsIgnoreCase(factionName)) {
+        for (Map.Entry<Integer, AllyFaction> allies : f.getAllies().entrySet()) {
+            if (allies.getValue().getAllyFaction().getName().equalsIgnoreCase(factionName)) {
                 ally = allies.getValue();
             }
         }

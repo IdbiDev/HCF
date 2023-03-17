@@ -26,7 +26,7 @@ import java.util.UUID;
 import static me.idbi.hcf.Main.DTRREGENTIME;
 
 
-public class onDeath implements Listener {
+public class PlayerDeath implements Listener {
     private final Connection con = Main.getConnection();
 
     @EventHandler
@@ -59,7 +59,7 @@ public class onDeath implements Listener {
                 }
             }
             StatTrak.addStatTrak(damager, victim);
-            victim.getWorld().dropItemNaturally(victim.getLocation(), onSignPlace.deathSign(damager, victim));
+            victim.getWorld().dropItemNaturally(victim.getLocation(), SignPlace.deathSign(damager, victim));
         } else {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.sendMessage(Messages.kill_message_broadcast_without_killer.language(player).setDeathWithoutKiller(victim).queue());
@@ -78,7 +78,7 @@ public class onDeath implements Listener {
             HCFPlayer hcf = HCFPlayer.getPlayer(UUID.fromString(uuid));
             if (e.getEntity().getKiller() != null)
                 e.getEntity().getWorld().dropItemNaturally(e.getEntity().getLocation(),
-                        onSignPlace.deathSign(
+                        SignPlace.deathSign(
                                 e.getEntity().getKiller().getName(),
                                 Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName()
                         )

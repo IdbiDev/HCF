@@ -3,7 +3,6 @@ package me.idbi.hcf.Tools;
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
@@ -126,7 +125,7 @@ public class Playertools {
         List<HCFPlayer> list = new ArrayList<>();
         if(faction == null)
             return list;
-        for(HCFPlayer p : faction.members)
+        for(HCFPlayer p : faction.getMembers())
             if(p.getPlayerClass().equals(classes)) // cső meleg
                 list.add(p);
         return list;
@@ -166,7 +165,7 @@ public class Playertools {
             hcf.setLives(rs.getInt("lives"));
             Main.playerCache.put(hcf.getUUID(), hcf);
             if (hcf.inFaction())
-                hcf.getFaction().members.add(hcf);
+                hcf.getFaction().addMember(hcf);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -256,17 +255,17 @@ public class Playertools {
         ArrayList<String> players = new ArrayList<>();
         Faction f = Main.factionCache.get(id);
         assert null != f;
-        for (HCFPlayer member : f.members) {
+        for (HCFPlayer member : f.getMembers()) {
             players.add(member.getName());
         }
         return players;
     }
 
-    public static void RenameFaction(Faction faction, String name) {
+    public static void renameFaction(Faction faction, String name) {
         faction.setName(name);
         Main.factionCache.put(faction.getId(), faction);
         Main.nameToFaction.put(faction.getName(), faction);
-        for (HCFPlayer player : faction.members) {
+        for (HCFPlayer player : faction.getMembers()) {
             player.setFaction(faction);
         }
         //SQL_Connection.dbExecute(con,"UPDATE factions SET name='?' WHERE id='?'", name, String.valueOf(faction.id));
@@ -419,8 +418,8 @@ public class Playertools {
                 Main.factionCache.put(rs.getInt("ID"), faction);
                 Main.nameToFaction.put(rs.getString("name"), faction);
 
-                faction.DTR = Double.parseDouble(CalculateDTR(faction));
-                faction.DTR_MAX = Double.parseDouble(CalculateDTR(faction));
+                faction.setDTR(Double.parseDouble(CalculateDTR(faction)));
+                faction.setDTR(Double.parseDouble(CalculateDTR(faction)));
 //                if(main_score.getTeam(faction.name) == null)
 //                    main_score.registerNewTeam(faction.name).setPrefix(ChatColor.GREEN.toString());
 //                else{
@@ -447,7 +446,7 @@ public class Playertools {
 
             }
             //Check if warzone enabled, and the spawn location is setted
-            if (Config.WarzoneSize.asInt() != 0 && !Main.factionCache.get(1).claims.isEmpty()) {
+            if (Config.WarzoneSize.asInt() != 0 && !Main.factionCache.get(1).getClaims().isEmpty()) {
                 String str = Config.SpawnLocation.asStr();
                 Location spawn = new Location(
                         Bukkit.getWorld(Config.WorldName.asStr()),
@@ -489,7 +488,7 @@ public class Playertools {
     public static HashMap<String, List<String>> getRankPlayers(Faction faction) {
         HashMap<String, List<String>> returnHashMap = new HashMap<>();
         List<String> alreadyMembers = new ArrayList<>();
-        for (HCFPlayer hcf : faction.members) {
+        for (HCFPlayer hcf : faction.getMembers()) {
             alreadyMembers.add(hcf.getName());
             returnHashMap.put(hcf.getRank().getName(), alreadyMembers);
 
@@ -521,7 +520,7 @@ public class Playertools {
                         FactionRankManager.Rank rank = new FactionRankManager.Rank(rank_rs.getInt("ID"), rank_rs.getString("name"), rank_rs.getInt("isDefault") == 1, rank_rs.getInt("isLeader") == 1);
                         rank.setPriority(rank_rs.getInt("priority"));
                         ranks.add(rank);
-                        faction.getRanks().add(rank);
+                        faction.addRank(rank);
 
                     }
                 }
@@ -612,12 +611,12 @@ public class Playertools {
     //Todo: Check + Bugfix ha van
     public static boolean CheckClaimPlusOne(HCF_Claiming.Point left_c, HCF_Claiming.Point right_c, int diff, HCF_Claiming.Point p1, HCF_Claiming.Point p2) {
         //Getting the bottom left point
-        int minX = Math.min(left_c.x, right_c.x);
-        int minZ = Math.min(left_c.z, right_c.z);
+        int minX = Math.min(left_c.getX(), right_c.getX());
+        int minZ = Math.min(left_c.getZ(), right_c.getZ());
 
         //Getting the top right point
-        int maxX = Math.max(left_c.x, right_c.x);
-        int maxZ = Math.max(left_c.z, right_c.z);
+        int maxX = Math.max(left_c.getX(), right_c.getX());
+        int maxZ = Math.max(left_c.getZ(), right_c.getZ());
 
         //Creating the new claim
         HCF_Claiming.Point new_claim_start = new HCF_Claiming.Point(minX - diff, minZ - diff);
@@ -627,7 +626,7 @@ public class Playertools {
     }
 
     public static int getDistanceBetweenPoints2D(HCF_Claiming.Point p1, HCF_Claiming.Point p2) {
-        return (Math.abs(p1.x - p2.x) + Math.abs(p1.z - p2.z));
+        return (Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getZ() - p2.getZ()));
     }
 
     public static int getDistanceBetweenPoints2D(Location p1, Location p2) {
@@ -659,7 +658,7 @@ public class Playertools {
         Faction f2 = getPlayerFaction(p2);
         if (f1 == null || f2 == null)
             return false;
-        return Objects.equals(f1.id, f2.id);
+        return Objects.equals(f1.getId(), f2.getId());
     }
 
     private static Map<String, FactionRankManager.Rank> sortbykey(HashMap map) {

@@ -38,12 +38,12 @@ public class PearlFixer implements Listener {
         if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL) && !event.isCancelled() && checkCombatTimer(event.getPlayer())) {
             Location location = event.getTo();
             for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-                for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().claims) {
-                    if (claim.attribute.equals(HCF_Claiming.ClaimAttributes.PROTECTED)) {
-                        HCF_Claiming.Point claimStart = new HCF_Claiming.Point(claim.startX, claim.startZ);
-                        HCF_Claiming.Point claimEnd = new HCF_Claiming.Point(claim.endX, claim.endZ);
+                for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().getClaims()) {
+                    if (claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.PROTECTED)) {
+                        HCF_Claiming.Point claimStart = new HCF_Claiming.Point(claim.getStartX(), claim.getStartZ());
+                        HCF_Claiming.Point claimEnd = new HCF_Claiming.Point(claim.getEndX(), claim.getEndZ());
                         HCF_Claiming.Point getTo = new HCF_Claiming.Point(location.getBlockX(), location.getBlockZ());
-                        if (HCF_Claiming.FindPoint_old(claimStart.x, claimStart.z, claimEnd.x, claimEnd.z, getTo.x, getTo.z)) {
+                        if (HCF_Claiming.FindPoint_old(claimStart.getX(), claimStart.getZ(), claimEnd.getX(), claimEnd.getZ(), getTo.getX(), getTo.getZ())) {
                             event.setCancelled(true);
                             event.getPlayer().sendMessage(Messages.cant_teleport_to_safezone.language(event.getPlayer()).queue());
                             break;

@@ -27,7 +27,7 @@ import java.util.Map;
 
 import static me.idbi.hcf.Tools.HCF_Timer.addPvPTimerCoolDownSpawn;
 
-public class onPlayerJoin implements Listener {
+public class PlayerJoin implements Listener {
     private final Main m = Main.getPlugin(Main.class);
 
     @EventHandler

@@ -27,6 +27,7 @@ public enum Config {
     BardEnergy("Cooldowns", 3, createComment("This will be set if you use the bard powerup", "Must be in seconds")),
     Deathban("Cooldowns", 3600, createComment("This will be set if you die.", "Must be in seconds")),
     TeleportHome("Cooldowns", 10, createComment("This will be set if you teleporting home.", "Must be in seconds")),
+    HomeTimer("Cooldowns", 15, createComment("This will be set if you use the command", "Must be in seconds")),
     StuckTimer("Cooldowns", 30, createComment("This will be set if you use the command", "Must be in seconds")),
     Logout("Cooldowns", 30, createComment("This will be set if you use the command", "Must be in seconds")),
     KOTHDuration("Cooldowns", 300, createComment("Set the KoTH event length", "Must be in seconds")),

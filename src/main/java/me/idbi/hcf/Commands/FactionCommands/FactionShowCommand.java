@@ -72,31 +72,25 @@ public class FactionShowCommand extends SubCommand {
         String factionStatus = (Playertools.isFactionOnline(faction)
                 ? Messages.status_design_online.language(p).queue()
                 : Messages.status_design_offline.language(p).queue());
-        String leaderName = "";
-        try {
-            leaderName = ((Bukkit.getPlayer(faction.leader)) != null
-                    ? Bukkit.getPlayer(UUID.fromString(faction.leader)).getName()
-                    : Bukkit.getOfflinePlayer(UUID.fromString(faction.leader)).getName());
-        } catch (IllegalArgumentException ignore) {
-        }
+        String leaderName = Bukkit.getOfflinePlayer(faction.getLeader()).getName() == null ? "-" : Bukkit.getOfflinePlayer(faction.getLeader()).getName();
         Location homeLoc;
-        if (faction.homeLocation == null)
+        if (faction.getHomeLocation() == null)
             homeLoc = new Location(Bukkit.getWorld(Config.WorldName.asStr()), 0, 0, 0, 0, 0);
-        else homeLoc = faction.homeLocation;
+        else homeLoc = faction.getHomeLocation();
 
         addCooldown(p);
 
         for (String line : Messages.faction_show.language(p).setupShow(
-                        faction.name, factionStatus, leaderName, String.valueOf(faction.balance),
-                        String.valueOf(faction.getKills()),
-                        String.valueOf(faction.getDeaths()),
+                        faction.getName(), factionStatus, leaderName, String.valueOf(faction.getBalance()),
+                        faction.getKills() + "",
+                        faction.getDeaths() + "",
                         homeLoc.getBlockX() + ", " + homeLoc.getBlockZ(),
-                        String.valueOf(faction.DTR),
-                        ((faction.DTR == faction.DTR_MAX) ? "-" : Playertools.convertLongToTime(faction.DTR_TIMEOUT)),
-                        String.valueOf(faction.DTR_MAX),
-                        String.valueOf(Playertools.getOnlineSize(faction)),
-                        String.valueOf(faction.getMemberCount()),
-                        (faction.DTR <= 0 ? "true" : "false")
+                        faction.getDTR() + "",
+                        ((faction.getDTR() == faction.getDTR_MAX()) ? "-" : Playertools.convertLongToTime(faction.getDTR_TIMEOUT())),
+                        faction.getDTR_MAX() + "",
+                        Playertools.getOnlineSize(faction) + "",
+                        faction.getMemberCount() + "",
+                        (faction.getDTR() <= 0 ? "true" : "false")
 
                 )
                 .setMembers(Playertools.getRankPlayers(faction),

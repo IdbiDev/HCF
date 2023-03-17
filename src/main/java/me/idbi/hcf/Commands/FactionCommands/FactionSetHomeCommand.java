@@ -80,7 +80,7 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
         }};
         HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
         if (claim != null) {
-            if (claim.faction.id == faction.id) {
+            if (claim.getFaction().getId() == faction.getId()) {
                 faction.setHomeLocation(p.getLocation());
                 addCooldown(p);
 

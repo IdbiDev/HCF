@@ -119,7 +119,7 @@ public class FactionDepositCommand extends SubCommand {
                 return this;
             }
 
-            faction.balance = faction.balance + amount;
+            faction.addBalance(amount);
 
             player.takeMoney(amount);
 

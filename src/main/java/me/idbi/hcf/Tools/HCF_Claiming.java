@@ -68,13 +68,13 @@ public class HCF_Claiming {
             if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
                 Point faction_start = startpositions.get(faction);
                 Point faction_end = endpositions.get(faction);
-                int startX = Math.min(faction_start.x, faction_end.x);
-                int startZ = Math.min(faction_start.z, faction_end.z);
-                int endX = Math.max(faction_start.x, faction_end.x);
-                int endZ = Math.max(faction_start.z, faction_end.z);
+                int startX = Math.min(faction_start.getX(), faction_end.getX());
+                int startZ = Math.min(faction_start.getZ(), faction_end.getZ());
+                int endX = Math.max(faction_start.getX(), faction_end.getX());
+                int endZ = Math.max(faction_start.getZ(), faction_end.getZ());
 
-                HCF_Claiming.Point top_left = new HCF_Claiming.Point(faction_start.x, faction_end.z);
-                HCF_Claiming.Point bottom_right = new HCF_Claiming.Point(faction_end.x, faction_start.z);
+                HCF_Claiming.Point top_left = new HCF_Claiming.Point(faction_start.getX(), faction_end.getZ());
+                HCF_Claiming.Point bottom_right = new HCF_Claiming.Point(faction_end.getX(), faction_start.getZ());
                 if(getDistanceBetweenPoints2D(top_left,faction_end) < Config.MinClaimSize.asInt() || getDistanceBetweenPoints2D(faction_start,top_left) < Config.MinClaimSize.asInt() ){
                     p.sendMessage(Messages.faction_claim_too_small.language(p).setNumber(Config.MinClaimSize.asInt()).queue());
                     return false;
@@ -88,17 +88,17 @@ public class HCF_Claiming {
 
                     //if (f.claims.isEmpty()) continue;
 
-                    for (HCF_Claiming.Faction_Claim val : f.claims) {
+                    for (HCF_Claiming.Faction_Claim val : f.getClaims()) {
 
-                        Point start_this = new Point(Math.min(val.startX, val.endX), Math.min(val.startZ, val.endZ));
-                        Point end_this = new Point(Math.max(val.startX, val.endX), Math.max(val.startZ, val.endZ));
+                        Point start_this = new Point(Math.min(val.getStartX(), val.getEndX()), Math.min(val.getStartZ(), val.getEndZ()));
+                        Point end_this = new Point(Math.max(val.getStartX(), val.getEndX()), Math.max(val.getStartZ(), val.getEndZ()));
 
-                        /*Point start_other = new Point(faction_start.x, faction_start.z);
-                        Point end_other = new Point(faction_end.x, faction_end.z);*/
+                        /*Point start_other = new Point(faction_start.getX(), faction_start.getZ());
+                        Point end_other = new Point(faction_end.getX(), faction_end.getZ());*/
 
 
                         if (doOverlap(faction_start, faction_end, start_this, end_this)) {
-                            //if (doOverlap(new Point(val.startX, val.endX), new Point(val.startZ, val.endZ), new Point(start[0], end[0]), new Point(start[1], end[1]))) {
+                            //if (doOverlap(new Point(val.getStartX(), val.getEndX()), new Point(val.getStartZ(), val.getEndZ()), new Point(start[0], end[0]), new Point(start[1], end[1]))) {
                             p.sendMessage(Messages.faction_claim_overlap.language(p).queue());
                             return false;
                         }
@@ -112,14 +112,14 @@ public class HCF_Claiming {
                 Faction f = Main.factionCache.get(faction);
                 boolean validClaim = false;
 
-                if(!f.claims.isEmpty() && Config.MustBeConnected.asBoolean()) {
-                    for(Faction_Claim claim : f.claims) {
+                if(!f.getClaims().isEmpty() && Config.MustBeConnected.asBoolean()) {
+                    for(Faction_Claim claim : f.getClaims()) {
                         if (isClaimConnected(new Faction_Claim(startX,endX,startZ,endZ,1,ClaimAttributes.NORMAL,"UwU"),claim)) {
                             validClaim = true;
                         }
                     }
                 }
-                if(!validClaim && !f.claims.isEmpty() && Config.MustBeConnected.asBoolean()){
+                if(!validClaim && !f.getClaims().isEmpty() && Config.MustBeConnected.asBoolean()){
                     p.sendMessage(Messages.faction_claim_not_connected.language(p).queue());
                     return false;
                 }
@@ -149,7 +149,7 @@ public class HCF_Claiming {
                 endpositions.remove(faction);
                 startpositions.remove(faction);
                 HCF_Claiming.Faction_Claim claim;
-                claim = new HCF_Claiming.Faction_Claim(startX, endX, startZ, endZ, f.id, attribute, p.getWorld().getName());
+                claim = new HCF_Claiming.Faction_Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
                 f.addClaim(claim);
                 Scoreboards.RefreshAll();
                 return true;
@@ -166,10 +166,10 @@ public class HCF_Claiming {
             if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
                 Point faction_start = startpositions.get(faction);
                 Point faction_end = endpositions.get(faction);
-                int startX = Math.min(faction_start.x, faction_end.x);
-                int startZ = Math.min(faction_start.z, faction_end.z);
-                int endX = Math.max(faction_start.x, faction_end.x);
-                int endZ = Math.max(faction_start.z, faction_end.z);
+                int startX = Math.min(faction_start.getX(), faction_end.getX());
+                int startZ = Math.min(faction_start.getZ(), faction_end.getZ());
+                int endX = Math.max(faction_start.getX(), faction_end.getX());
+                int endZ = Math.max(faction_start.getZ(), faction_end.getZ());
                 SQL_Connection.dbExecute(
                         con,
                         "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?', type='?',world='?'",
@@ -185,7 +185,7 @@ public class HCF_Claiming {
                 Faction f = Main.factionCache.get(faction);
                 endpositions.remove(faction);
                 startpositions.remove(faction);
-                HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(startX, endX, startZ, endZ, f.id, attribute, p.getWorld().getName());
+                HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
                 f.addClaim(claim);
                 Scoreboards.RefreshAll();
 
@@ -202,11 +202,11 @@ public class HCF_Claiming {
     //                              1. kezdő  1. end   2. kezdő   2. end
     public static boolean doOverlap(Point l1, Point r1, Point l2, Point r2) {
         // If one rectangle is on left side of other
-        int firstRectangle_Starting_X = l1.x;
-        int firstRectangle_Starting_Z = l1.z;
+        int firstRectangle_Starting_X = l1.getX();
+        int firstRectangle_Starting_Z = l1.getZ();
 
-        int firstRectangle_Ending_X = r1.x;
-        int firstRectangle_Ending_Z = r1.z;
+        int firstRectangle_Ending_X = r1.getX();
+        int firstRectangle_Ending_Z = r1.getZ();
 
         int maxX = Math.max(firstRectangle_Starting_X, firstRectangle_Ending_X);
         int minX = Math.min(firstRectangle_Starting_X, firstRectangle_Ending_X);
@@ -216,7 +216,7 @@ public class HCF_Claiming {
 
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                if (FindPoint_old(l2.x, l2.z, r2.x, r2.z, x, z)) {
+                if (FindPoint_old(l2.getX(), l2.getZ(), r2.getX(), r2.getZ(), x, z)) {
                     return true;
                 }
             }
@@ -226,11 +226,11 @@ public class HCF_Claiming {
 
     public static boolean doOverlap3(Point l1, Point r1, Point l2, Point r2) {
         // If one rectangle is on left side of other
-        int firstRectangle_Starting_X = l1.x;
-        int firstRectangle_Starting_Z = l1.z;
+        int firstRectangle_Starting_X = l1.getX();
+        int firstRectangle_Starting_Z = l1.getZ();
 
-        int firstRectangle_Ending_X = r1.x;
-        int firstRectangle_Ending_Z = r1.z;
+        int firstRectangle_Ending_X = r1.getX();
+        int firstRectangle_Ending_Z = r1.getZ();
 
 
         int minX = Math.min(firstRectangle_Starting_X, firstRectangle_Ending_X);
@@ -240,41 +240,41 @@ public class HCF_Claiming {
 
         Point bottom_left = new Point(minX, minZ);
         Point top_right = new Point(maxX, maxZ);
-        Point top_left = new Point(top_right.x, bottom_left.z);
-        Point bottom_right = new Point(bottom_left.x, top_right.z);
+        Point top_left = new Point(top_right.getX(), bottom_left.getZ());
+        Point bottom_right = new Point(bottom_left.getX(), top_right.getZ());
 
         int width = getDistanceBetweenPoints2D(bottom_left, top_left) + 1;
 
         int height = getDistanceBetweenPoints2D(bottom_left, bottom_right) + 1;
 
         for (int x = minX; x <= minX + width; x++) {
-            if (FindPoint_old(l1.x, l1.z, r1.x, r1.z, x, minZ)) {
+            if (FindPoint_old(l1.getX(), l1.getZ(), r1.getX(), r1.getZ(), x, minZ)) {
                 return true;
             }
-            if (FindPoint_old(l2.x, l2.z, r2.x, r2.z, x, height - 1)) {
+            if (FindPoint_old(l2.getX(), l2.getZ(), r2.getX(), r2.getZ(), x, height - 1)) {
                 return true;
             }
             //Main.sendCmdMessage("");
         }
         for (int y = minZ; y <= minZ + height; y++) {
-            if (FindPoint_old(l2.x, l2.z, r2.x, r2.z, minX, y)) {
+            if (FindPoint_old(l2.getX(), l2.getZ(), r2.getX(), r2.getZ(), minX, y)) {
                 return true;
             }
-            if (FindPoint_old(l2.x, l2.z, r2.x, r2.z, width - 1, y)) {
+            if (FindPoint_old(l2.getX(), l2.getZ(), r2.getX(), r2.getZ(), width - 1, y)) {
                 return true;
             }
         }
         return false;
     }
     public static boolean megvanakellotavolsag(Point ownClaim1, Point ownClaim2, Point otherClaim1, Point otherClaim2) {
-        if ((ownClaim1.x - otherClaim1.x) > 1
-                || (ownClaim1.x - otherClaim1.x) < -1) {
-            if ((ownClaim1.x - otherClaim2.x) > 1
-                    || (ownClaim1.x - otherClaim2.x) < -1) {
-                if ((ownClaim2.x - otherClaim1.x) > 1
-                        || (ownClaim2.x - otherClaim1.x) < -1) {
-                    if ((ownClaim2.x - otherClaim2.x) > 1
-                            || (ownClaim2.x - otherClaim2.x) < -1) {
+        if ((ownClaim1.getX() - otherClaim1.getX()) > 1
+                || (ownClaim1.getX() - otherClaim1.getX()) < -1) {
+            if ((ownClaim1.getX() - otherClaim2.getX()) > 1
+                    || (ownClaim1.getX() - otherClaim2.getX()) < -1) {
+                if ((ownClaim2.getX() - otherClaim1.getX()) > 1
+                        || (ownClaim2.getX() - otherClaim1.getX()) < -1) {
+                    if ((ownClaim2.getX() - otherClaim2.getX()) > 1
+                            || (ownClaim2.getX() - otherClaim2.getX()) < -1) {
                         return true;
                     }
                 }
@@ -283,14 +283,14 @@ public class HCF_Claiming {
 
         ////////////////////////////////////////////
 
-        if ((ownClaim1.z - otherClaim1.z) > 1
-                || (ownClaim1.z - otherClaim1.z) < -1) {
-            if ((ownClaim1.z - otherClaim2.z) > 1
-                    || (ownClaim1.z - otherClaim2.z) < -1) {
-                if ((ownClaim2.z - otherClaim1.z) > 1
-                        || (ownClaim2.z - otherClaim1.z) < -1) {
-                    return (ownClaim2.z - otherClaim2.z) > 1
-                            || (ownClaim2.z - otherClaim2.z) < -1;
+        if ((ownClaim1.getZ() - otherClaim1.getZ()) > 1
+                || (ownClaim1.getZ() - otherClaim1.getZ()) < -1) {
+            if ((ownClaim1.getZ() - otherClaim2.getZ()) > 1
+                    || (ownClaim1.getZ() - otherClaim2.getZ()) < -1) {
+                if ((ownClaim2.getZ() - otherClaim1.getZ()) > 1
+                        || (ownClaim2.getZ() - otherClaim1.getZ()) < -1) {
+                    return (ownClaim2.getZ() - otherClaim2.getZ()) > 1
+                            || (ownClaim2.getZ() - otherClaim2.getZ()) < -1;
                 }
             }
         }
@@ -303,8 +303,8 @@ public class HCF_Claiming {
 //    public static boolean checkEnemyAction(int x, int z, Faction faction) {
 //        for (Map.Entry<Integer, Faction> thisFaction : Main.faction_cache.entrySet()) {
 //            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
-//                Point start = new Point(val.startX,val.startZ);
-//                Point end = new Point(val.endX,val.endZ);
+//                Point start = new Point(val.getStartX(),val.getStartZ());
+//                Point end = new Point(val.getEndX(),val.getEndZ());
 //                Point p = new Point(x,z);
 //
 //                if (doOverlap(start,end,p,p)) {
@@ -328,10 +328,10 @@ public class HCF_Claiming {
 //    }
 
     public static boolean isClaimConnected(Faction_Claim a,Faction_Claim b) {
-        Point aStart = new Point(a.startX,a.startZ);
-        Point aEnd = new Point(a.endX,a.endZ);
-        Point bStart = new Point(b.startX,b.startZ);
-        Point bEnd = new Point(b.endX,b.endZ);
+        Point aStart = new Point(a.getStartX(),a.getStartZ());
+        Point aEnd = new Point(a.getEndX(),a.getEndZ());
+        Point bStart = new Point(b.getStartX(),b.getStartZ());
+        Point bEnd = new Point(b.getEndX(),b.getEndZ());
         if(!doOverlap(aStart,aEnd,bStart,bEnd)) {
             return CheckClaimPlusOne(aStart, aEnd, 1, bStart, bEnd);
         }
@@ -341,7 +341,7 @@ public class HCF_Claiming {
     public static boolean isEnemyClaim(Player executePlayer, Faction_Claim actionClaim) {
 
         Faction playerFac = Playertools.getPlayerFaction(executePlayer);
-        Faction actionFaction = actionClaim.faction;
+        Faction actionFaction = actionClaim.getFaction();
         if (playerFac == null) {
             return true;
         }
@@ -367,18 +367,18 @@ public class HCF_Claiming {
     /// TODO:     This need some optimization
     public static HCF_Claiming.Faction_Claim getPlayerArea(Player p) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
+            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
 
                 int x = p.getLocation().getBlockX();
                 int z = p.getLocation().getBlockZ();
 
-                if (val.startX <= x && val.endX >= x) {
-                    if (val.startZ <= z && val.endZ >= z) {
+                if (val.getStartX() <= x && val.getEndX() >= x) {
+                    if (val.getStartZ() <= z && val.getEndZ() >= z) {
                         return val;
                     }
                 }
 
-                //if(FindPoint(claimrc.x,claimrc.z,claimlc.x,claimlc.z,playerPoint.x,playerPoint.z)){
+                //if(FindPoint(claimrc.getX(),claimrc.getZ(),claimlc.getX(),claimlc.getZ(),playerPoint.getX(),playerPoint.getZ())){
                 /*if(doOverlap(claimlc,claimrc,playerPoint,playerPoint)) {
                     return val;
                 }*/
@@ -389,8 +389,8 @@ public class HCF_Claiming {
 
     public static boolean isAreaNeutral(Location loc) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
-                if (FindPoint_old(val.startX, val.startZ, val.endX, val.endZ, loc.getBlockX(), loc.getBlockZ())) {
+            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
+                if (FindPoint_old(val.getStartX(), val.getStartZ(), val.getEndX(), val.getEndZ(), loc.getBlockX(), loc.getBlockZ())) {
                     return false;
                 }
             }
@@ -400,9 +400,9 @@ public class HCF_Claiming {
 
     public static String sendFactionTerretoryByXZ(Player p, int x, int z) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
-                if (FindPoint_old(val.startX, val.startZ, val.endX, val.endZ, x, z)) {
-                    return Config.EnemyColor.asStr() + thisFaction.getValue().name;
+            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
+                if (FindPoint_old(val.getStartX(), val.getStartZ(), val.getEndX(), val.getEndZ(), x, z)) {
+                    return Config.EnemyColor.asStr() + thisFaction.getValue().getName();
                 }
             }
         }
@@ -411,10 +411,10 @@ public class HCF_Claiming {
 
     public static Faction_Claim sendClaimByXZ(int x, int z) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
+            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
                 Point playerPoint = new Point(x, z);
-                Point claimrc = new Point(val.startX, val.startZ);
-                Point claimlc = new Point(val.endX, val.endZ);
+                Point claimrc = new Point(val.getStartX(), val.getStartZ());
+                Point claimlc = new Point(val.getEndX(), val.getEndZ());
                 if (doOverlap(claimlc, claimrc, playerPoint, playerPoint)) {
                     return val;
                 }
@@ -424,14 +424,14 @@ public class HCF_Claiming {
     }
     public static boolean isClaimBorder(int x, int z) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().claims) {
+            for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
                 Point playerPoint = new Point(x, z);
 
-                int maxX = Math.max(val.startX, val.endX);
-                int minX = Math.min(val.startX, val.endX);
+                int maxX = Math.max(val.getStartX(), val.getEndX());
+                int minX = Math.min(val.getStartX(), val.getEndX());
 
-                int maxZ = Math.max(val.startZ, val.endZ);
-                int minZ = Math.min(val.startZ, val.endZ);
+                int maxZ = Math.max(val.getStartZ(), val.getEndZ());
+                int minZ = Math.min(val.getStartZ(), val.getEndZ());
 
                 if(x == maxX || x == minX) {
                     if(z >= minZ && z <= maxZ) {
@@ -445,8 +445,8 @@ public class HCF_Claiming {
                     }
                 }
 
-                /*Point claimrc = new Point(val.startX, val.startZ);
-                Point claimlc = new Point(val.endX, val.endZ);
+                /*Point claimrc = new Point(val.getStartX(), val.getStartZ());
+                Point claimlc = new Point(val.getEndX(), val.getEndZ());
                 if (doOverlap3(claimlc, claimrc, playerPoint, playerPoint)) {
                     System.out.println("Found target");
                     return true;
@@ -484,7 +484,7 @@ public class HCF_Claiming {
         if (startpositions.containsKey(faction) && endpositions.containsKey(faction)) {
             Point start = startpositions.get(faction);
             Point end = endpositions.get(faction);
-            return Math.round((Math.abs(end.x - start.x) * Math.abs(end.z - start.z)));
+            return Math.round((Math.abs(end.getX() - start.getX()) * Math.abs(end.getZ() - start.getZ())));
         }
         return -1;
     }
@@ -581,7 +581,7 @@ public class HCF_Claiming {
     }
 
     public static class Point {
-        public int x, z;
+        @Getter @Setter private int x, z;
 
         public Point(int x, int z) {
             this.x = x;
@@ -590,14 +590,14 @@ public class HCF_Claiming {
     }
 
     public static class Faction_Claim {
-        @Getter @Setter public World world;
-        @Getter @Setter public int startX;
-        @Getter @Setter public int endX;
-        @Getter @Setter public int startZ;
-        @Getter @Setter public int endZ;
-        @Getter @Setter public Faction faction;
+        @Getter @Setter private World world;
+        @Getter @Setter private int startX;
+        @Getter @Setter private int endX;
+        @Getter @Setter private int startZ;
+        @Getter @Setter private int endZ;
+        @Getter @Setter private Faction faction;
         //Attributes: Protected, KOTH, normal,Special
-        @Getter @Setter public ClaimAttributes attribute;
+        @Getter @Setter private ClaimAttributes attribute;
 
         public Faction_Claim(int startX, int endX, int startZ, int endZ, int faction, ClaimAttributes attribute, String world) {
             this.startX = startX;

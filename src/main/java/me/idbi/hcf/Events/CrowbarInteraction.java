@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class CrowbarInteractListener implements Listener {
+public class CrowbarInteraction implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {

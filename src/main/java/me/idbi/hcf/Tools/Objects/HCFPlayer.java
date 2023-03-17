@@ -12,9 +12,11 @@ import me.idbi.hcf.Tools.*;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.JSONObject;
 
@@ -27,30 +29,32 @@ public class HCFPlayer {
 
     private static final Connection con = Main.getConnection();
 
+    // le lehet kérni: "getUUID()"
     private UUID uuid;
     @Getter private String name;
-    private HCF_Claiming.ClaimTypes claimType;
-    private Faction faction;
-    private int money;
-    private Classes playerClass;
-    private boolean freezeStatus;
-    private double bardEnergy;
-    private HCF_Claiming.Faction_Claim currentArea;
-    private int assassinState;
-    private boolean inDuty;
+    @Getter private Faction faction;
+    @Getter private int money;
+    @Getter private ArrayList<ChatTypes> toggledChatTypes;
+    @Getter private String language;
+    @Getter private PlayerStatistic playerStatistic;
+    @Getter private TreeMap<Integer, Rollback> rollbacks;
+    @Getter private TableTabList tabList;
+    @Getter @Setter private HCF_Claiming.ClaimTypes claimType;
+    @Getter @Setter private Classes playerClass;
+    @Getter @Setter private boolean freezed;
+    @Getter @Setter private double bardEnergy;
+    @Getter @Setter private HCF_Claiming.Faction_Claim currentArea;
+    @Getter @Setter private int assassinState;
+    @Getter @Setter private boolean inDuty;
     @Getter @Setter private Location stuckLocation;
-    private ChatTypes chatType;
-    private ArrayList<ChatTypes> toggledChatTypes;
-    private int kothId;
-    private String language;
-    private FactionRankManager.Rank rank;
-    private PlayerStatistic playerStatistic;
-    private boolean isDeathBanned;
-    private int lives;
-    private long deathTime;
-    private boolean online;
-    private TreeMap<Integer, Rollback> rollbacks;
-    private TableTabList tabList;
+    @Getter @Setter private ChatTypes chatType;
+    @Getter @Setter private int kothId;
+    @Getter @Setter private FactionRankManager.Rank rank;
+    @Getter @Setter private boolean isDeathBanned;
+    @Getter @Setter private int lives;
+    @Getter @Setter private long deathTime;
+    @Getter @Setter private boolean online;
+    @Getter private HashMap<Timers, Long> timers;
 
     public HCFPlayer(UUID uuid,
                      int deaths,
@@ -78,7 +82,7 @@ public class HCFPlayer {
             this.currentArea = null;
             this.stuckLocation = null;
             this.claimType = HCF_Claiming.ClaimTypes.NONE;
-            this.freezeStatus = false;
+            this.freezed = false;
             this.kothId = 0;
             this.toggledChatTypes = new ArrayList<>();
             this.language = language;
@@ -95,6 +99,7 @@ public class HCFPlayer {
                 this.deathTime = 0;
             }
             this.rollbacks = new TreeMap<>();
+            this.timers = new HashMap<>();
             /*
             SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',money='?'",
                     this.name, this.uuid.toString(), Config.default_balance.asInt() + "");*/
@@ -172,36 +177,8 @@ public class HCFPlayer {
         return this.tabList;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isInDuty() {
-        return this.inDuty;
-    }
-
-    public void setDuty(boolean duty) {
-        this.inDuty = duty;
-    }
-
     public boolean hasStaffChat() {
         return this.chatType == ChatTypes.STAFF;
-    }
-
-    public void setChatType(ChatTypes chatType) {
-        this.chatType = chatType;
-    }
-
-    public void setFreezeStatus(boolean state) {
-        this.freezeStatus = state;
-    }
-
-    public void setClass(Classes newClass) {
-        this.playerClass = newClass;
-    }
-
-    public void setRank(FactionRankManager.Rank rank) {
-        this.rank = rank;
     }
 
     public void addKills() {
@@ -214,26 +191,6 @@ public class HCFPlayer {
 
     public void addBardEnergy(double energy) {
         this.bardEnergy += energy;
-    }
-
-    public int getMoney() {
-        return this.money;
-    }
-
-    public void setClaimType(HCF_Claiming.ClaimTypes type) {
-        this.claimType = type;
-    }
-
-    public Classes getPlayerClass() {
-        return this.playerClass;
-    }
-
-    public HCF_Claiming.ClaimTypes getClaimType() {
-        return this.claimType;
-    }
-
-    public void setLocation(HCF_Claiming.Faction_Claim newLoc) {
-        this.currentArea = newLoc;
     }
 
     /**
@@ -259,14 +216,6 @@ public class HCFPlayer {
         Main.getEconomy().withdrawPlayer(Bukkit.getOfflinePlayer(this.uuid), this.money);
         EconomyResponse r = Main.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(this.uuid), money);
         this.money = Math.toIntExact(Math.round(r.balance));
-    }
-
-    public boolean isFreezed() {
-        return this.freezeStatus;
-    }
-
-    public void setCurrentArea(HCF_Claiming.Faction_Claim currentArea) {
-        this.currentArea = currentArea;
     }
 
     public void addMoney(int amount) {
@@ -306,20 +255,12 @@ public class HCFPlayer {
         Main.currentLanguages.put(this.uuid, newLang);
     }
 
-    public void setKothId(int id) {
-        this.kothId = id;
-    }
-
-    public void setAssassinState(int state) {
-        this.assassinState = state;
-    }
-
-    public Faction getFaction() {
-        return this.faction;
+    public Rollback getLastRollback() {
+        return this.rollbacks.get(this.rollbacks.lastKey());
     }
 
     public String getFactionName() {
-        return this.faction == null ? "None" : this.faction.name;
+        return this.faction == null ? "None" : this.faction.getName();
     }
 
     public void takeMoney(int amount) {
@@ -330,14 +271,6 @@ public class HCFPlayer {
 
         EconomyResponse r = Main.getEconomy().withdrawPlayer(Bukkit.getOfflinePlayer(this.uuid), amount);
         this.money = Math.toIntExact(Math.round(r.balance));
-    }
-
-    public void setBardEnergy(double energy) {
-        this.bardEnergy = energy;
-    }
-
-    public void setOnline(boolean online) {
-        this.online = online;
     }
 
     public void setFaction(Faction faction) {
@@ -352,12 +285,12 @@ public class HCFPlayer {
     public void addFaction(Faction f) {
         this.faction = f;
         this.rank = f.getDefaultRank();
-        this.faction.members.add(this);
+        this.faction.addMember(this);
     }
 
     public void removeFaction() {
         setChatType(ChatTypes.PUBLIC);
-        this.faction.members.remove(this);
+        this.faction.removeMember(this);
         this.faction = null;
         this.rank = null;
     }
@@ -378,10 +311,23 @@ public class HCFPlayer {
         this.playerStatistic.deaths = deaths;
     }
 
-    public TreeMap<Integer, Rollback> getRollbacks() {
-        return rollbacks;
-    }
-    public Rollback createRollback(Player p, EntityDamageEvent.DamageCause damageCause, Rollback.RollbackLogType logType) {
+    public Rollback createRollback(EntityDamageEvent.DamageCause damageCause, Rollback.RollbackLogType logType) {
+        Player p = Bukkit.getPlayer(this.uuid);
+        if(p == null) return null;
+        boolean isEmpty = true;
+        for(ItemStack it : p.getInventory().getContents()) {
+            if(isEmpty)
+                if(it != null && it.getType() != Material.AIR) {
+                    isEmpty = false;
+                }
+        }
+        for(ItemStack it : p.getInventory().getArmorContents()) {
+            if(isEmpty)
+                if(it != null && it.getType() != Material.AIR) {
+                    isEmpty = false;
+                }
+        }
+        if(isEmpty) return null;
         Date date = new Date();
         int id = this.rollbacks.size();
         Rollback rollback = new Rollback(id, p, damageCause, logType, date);
@@ -396,27 +342,10 @@ public class HCFPlayer {
     public boolean inFaction() {
         return faction != null;
     }
-    public void setDeathTime(long time) {
-        this.deathTime = time;
-    }
-    public long getDeathTime() {
-        return this.deathTime;
-    }
-    public void setDeathBanned(boolean state) {
-        this.isDeathBanned = state;
-    }
-    public boolean isDeathBanned() {
-        return this.isDeathBanned;
-    }
-    public void setLives(int amount) {
-        this.lives = amount;
-    }
     public void addLives(int amount) {
         this.lives += amount;
     }
-    public int getLives() {
-        return this.lives;
-    }
+
     public void banHCFPlayer() {
         this.isDeathBanned = true;
         this.deathTime = System.currentTimeMillis() + Main.deathbanTime;
@@ -466,39 +395,49 @@ public class HCFPlayer {
             if (currentArea == null) {
                 return Messages.wilderness.language(offline.getPlayer()).queue();
             }
-            boolean friendly = currentArea.faction == faction;
+            boolean friendly = currentArea.getFaction() == faction;
             boolean isAlly = false;
             if (!friendly) {
                 if (faction != null)
-                    isAlly = currentArea.faction.isAlly(faction);
+                    isAlly = currentArea.getFaction().isAlly(faction);
             }
             if (friendly) {
                 //return Messages.zone_friendly.language(offline.getPlayer()).setZone(currentArea.faction.name).queue();
-                return Config.TeammateColor.asStr() + currentArea.faction.name;
+                return Config.TeammateColor.asStr() + currentArea.getFaction().getName();
             } else {
                 if (isAlly) {
-                    return Config.AllyColor.asStr() + currentArea.faction.name;
+                    return Config.AllyColor.asStr() + currentArea.getFaction().getName();
                 }
-                return Config.EnemyColor.asStr() + currentArea.faction.name;
+                return Config.EnemyColor.asStr() + currentArea.getFaction().getName();
             }
         }
         return null;
     }
 
     public void sendChat(String message, ChatTypes chatTypes) {
+        if(isDisabled(chatTypes)) {
+            Player p = Bukkit.getPlayer(this.uuid);
+            if(p == null) return;
+            p.sendMessage(Messages.cant_send_message_to_channel.language(p).queue());
+            return;
+        }
         if(chatTypes == ChatTypes.PUBLIC || message.startsWith("!")) {
             if(message.equalsIgnoreCase("!")) {
                 message = message.substring(1);
             }
             if(this.inFaction()) {
                 for (Player onlines : Bukkit.getOnlinePlayers()) {
+                    HCFPlayer hcfPlayer = HCFPlayer.getPlayer(onlines);
+                    if(hcfPlayer.isDisabled(ChatTypes.PUBLIC)) continue;
                     onlines.sendMessage(Messages.chat_prefix_faction.language(onlines)
-                            .setFaction(this.faction.name)
+                            .setFaction(this.faction.getName())
                             .setMessage(message)
                             .setPlayer(this).queue());
                 }
             } else {
                 for (Player onlines : Bukkit.getOnlinePlayers()) {
+                    HCFPlayer hcfPlayer = HCFPlayer.getPlayer(onlines);
+                    if(hcfPlayer.isDisabled(ChatTypes.PUBLIC)) continue;
                     onlines.sendMessage(Messages.chat_prefix_without_faction.language(onlines)
                             .setMessage(message)
                             .setPlayer(this).queue());
@@ -542,8 +481,8 @@ public class HCFPlayer {
             if (!this.inFaction()) {
                 return;
             }
-            if (!this.faction.Allies.isEmpty()) {
-                for (AllyFaction value : this.faction.Allies.values()) {
+            if (!this.faction.getAllies().isEmpty()) {
+                for (AllyFaction value : this.faction.getAllies().values()) {
                     for (Player member : value.getAllyFaction().getOnlineMembers()) {
                         HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
                         if (hcfMember.isDisabled(ChatTypes.ALLY)) continue;
@@ -557,6 +496,11 @@ public class HCFPlayer {
                 }
             }
         }
+    }
+
+    // kell mert a @Getter function "getUuid()" szarul néz ki.
+    public UUID getUUID() {
+        return this.uuid;
     }
 
     public void save() {
@@ -581,60 +525,11 @@ public class HCFPlayer {
         this.playerStatistic.save(this.uuid);
     }
 
-    public FactionRankManager.Rank getRank() {
-        return this.rank;
+    public void addTimer(Timers timer, long time) {
+        this.timers.put(timer, time);
     }
 
-    public UUID getUUID() {
-        return this.uuid;
+    public void removeTimer(Timers timer) {
+        this.timers.remove(timer);
     }
-
-    public void setUUID(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public double getBardEnergy() {
-        return bardEnergy;
-    }
-
-    public HCF_Claiming.Faction_Claim getCurrentArea() {
-        return currentArea;
-    }
-
-    public int getAssassinState() {
-        return assassinState;
-    }
-
-    public ChatTypes getChatType() {
-        return chatType;
-    }
-
-    /**
-     *
-     * @return list of disabled chat types
-     */
-    public ArrayList<ChatTypes> getToggledChatTypes() {
-        return toggledChatTypes;
-    }
-
-    public int getKothId() {
-        return kothId;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public PlayerStatistic getPlayerStatistic() {
-        return playerStatistic;
-    }
-
-    public void setPlayerStatistic(PlayerStatistic playerStatistic) {
-        this.playerStatistic = playerStatistic;
-    }
-
-    public boolean isOnline() {
-        return online;
-    }
-
 }

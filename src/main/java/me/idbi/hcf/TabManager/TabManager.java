@@ -1,10 +1,7 @@
 package me.idbi.hcf.TabManager;
 
-import com.keenant.tabbed.item.BlankTabItem;
-import com.keenant.tabbed.item.PlayerTabItem;
 import com.keenant.tabbed.item.TabItem;
 import com.keenant.tabbed.item.TextTabItem;
-import com.keenant.tabbed.tablist.TableTabList;
 import me.idbi.hcf.CustomFiles.TabFile;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
@@ -12,10 +9,7 @@ import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.mcsg.double0negative.tabapi.TabAPI;
-import org.mcsg.double0negative.tabapi.TabUtils;
 
-import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -170,8 +164,8 @@ public class TabManager {
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         if(hcfPlayer.inFaction()) {
             s = s
-                    .replace("%dtr%", hcfPlayer.getFaction().DTR + "")
-                    .replace("%home%", hcfPlayer.getFaction().getHomeLocation());
+                    .replace("%dtr%", hcfPlayer.getFaction().getDTR() + "")
+                    .replace("%home%", hcfPlayer.getFaction().getFormattedHomeLocation());
         }
         s = s
                 .replace("%player%", hcfPlayer.getName())

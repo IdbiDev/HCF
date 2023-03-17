@@ -84,7 +84,7 @@ public class FactionInviteCommand extends SubCommand {
                         addCooldown(p);
 
                         Clickable_Join.sendMessage(target,
-                                "/f join " + faction.name,
+                                "/f join " + faction.getName(),
                                 Messages.invited_by.language(p).setFaction(faction).setExecutor(p).queue(),
                                 Messages.hover_join.language(p).queue());
 

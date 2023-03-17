@@ -17,7 +17,7 @@ public class FactionHistoryInventory {
      */
 
     public static Inventory inv(Faction f, int balancePage, int kickPage, int joinLeftPage, int fJoinLeftPage, int invitePage, int rankCreatePage) {
-        Inventory inv = Bukkit.createInventory(null, 5 * 9, "§8" + f.name + "'s histories");
+        Inventory inv = Bukkit.createInventory(null, 5 * 9, "§8" + f.getName() + "'s histories");
 
         for (int i = 0; i < inv.getSize(); i++) {
             inv.setItem(i, GUI_Items.blackGlass());

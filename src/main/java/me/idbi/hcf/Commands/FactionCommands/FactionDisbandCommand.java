@@ -10,6 +10,7 @@ import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
@@ -78,7 +79,7 @@ public class FactionDisbandCommand extends SubCommand {
         }
 
 
-        if (!Objects.equals(selectedFaction.leader, p.getUniqueId().toString())) {
+        if (!Objects.equals(selectedFaction.getLeader(), p.getUniqueId().toString())) {
             //Todo: Nope factionLeader
             p.sendMessage(Messages.not_leader.language(p).queue());
             GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
@@ -86,7 +87,7 @@ public class FactionDisbandCommand extends SubCommand {
         }
 //        displayTeams.removePlayerFromTeam(p);
 //        displayTeams.removeTeam(selectedFaction);
-        for (HCFPlayer player : selectedFaction.members) {
+        for (HCFPlayer player : selectedFaction.getMembers()) {
             Player bukkitPlayer = Bukkit.getPlayer(player.getUUID());
 
             final String rankName = player.getRank().getName();
@@ -103,18 +104,18 @@ public class FactionDisbandCommand extends SubCommand {
 
             PlayerStatistic stat = player.getPlayerStatistic();
             for (FactionHistory f : stat.factionHistory) {
-                if (f.id == selectedFaction.id) {
+                if (f.id == selectedFaction.getId()) {
                     f.left = new Date();
                     f.cause = "Disbanded";
                     f.lastRole = rankName;
-                    f.name = selectedFaction.name;
+                    f.name = selectedFaction.getName();
                 }
             }
         }
 
         addCooldown(p);
         HCFPlayer.getPlayer(p).setChatType(ChatTypes.PUBLIC);
-        selectedFaction.members.clear();
+        selectedFaction.setMembers(new ArrayList<HCFPlayer>());
 
         // LogLibrary.sendFactionDisband(p, selectedFaction.name);
 
@@ -122,7 +123,7 @@ public class FactionDisbandCommand extends SubCommand {
             onlinePlayer.sendMessage(Messages.faction_disband
                     .language(onlinePlayer)
                     .setPlayer(p)
-                    .setFaction(selectedFaction.name).queue());
+                    .setFaction(selectedFaction.getName()).queue());
         }
 
         Scoreboards.refresh(p);

@@ -29,7 +29,7 @@ public class ClassSelector {
         }*/
 
 
-        if (rogue_class.CheckArmor(p)) {
+        if (rogue_class.checkArmor(p)) {
             if (rogue_class.rogueEnabled && (rogue_class.maxRogueInFaction >= Playertools.getClassesInFaction(faction, Classes.ROGUE).size() + 1 || rogue_class.maxRogueInFaction == -1)) {
                 if (clss != Classes.ROGUE) {
                     rogue_class.setEffect(p);
@@ -40,7 +40,7 @@ public class ClassSelector {
         }
         //Archer class
 
-        if (archer_class.CheckArmor(p)) {
+        if (archer_class.checkArmor(p)) {
             if (archer_class.archerClassEnabled && (archer_class.maxArcherInFaction >= Playertools.getClassesInFaction(faction, Classes.ARCHER).size() + 1 || archer_class.maxArcherInFaction == -1)) {
                 if (clss != Classes.ARCHER) {
                     archer_class.setEffect(p);
@@ -51,7 +51,7 @@ public class ClassSelector {
         }
         //Bard class
 
-        if (bard_class.CheckArmor(p)) {
+        if (bard_class.checkArmor(p)) {
             if (bard_class.bardEnabled && ((bard_class.maxBardInFaction >= Playertools.getClassesInFaction(faction, Classes.BARD).size() + 1) || bard_class.maxBardInFaction == -1)) {
                 if (clss != Classes.BARD) {
                     bard_class.setEffect(p);
@@ -64,7 +64,7 @@ public class ClassSelector {
 
         //Miner class
 
-        if (miner_class.CheckArmor(p)) {
+        if (miner_class.checkArmor(p)) {
             if (miner_class.minerEnabled && ((miner_class.maxMinerInFaction >= Playertools.getClassesInFaction(faction, Classes.MINER).size() + 1) || miner_class.maxMinerInFaction == -1)) {
                 if (clss != Classes.MINER) {
                     miner_class.setEffect(p);
