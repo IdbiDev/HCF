@@ -8,20 +8,20 @@ import java.util.UUID;
 
 public enum Timers {
 
-    COMBAT(Config.CombatTag.asInt() * 1000),
+    COMBAT_TAG(Config.CombatTag.asInt() * 1000),
     STUCK(Config.StuckTimer.asInt() * 1000),
-    GOLDEN_APPLE(Config.GolderApple.asInt() * 1000),
-    ENCHANTED_GOLDEN_APPLE(Config.EnchantedGoldenApple.asInt() * 1000),
+    APPLE(Config.GolderApple.asInt() * 1000),
+    GAPPLE(Config.EnchantedGoldenApple.asInt() * 1000),
     PVP_TIMER(Config.PvPTimer.asInt() * 1000),
     BARD_COOLDOWN(Config.BardEnergy.asInt() * 1000),
-    ARCHER(Config.ArcherTag.asInt() * 1000),
+    ARCHER_TAG(Config.ArcherTag.asInt() * 1000),
     ENDER_PEARL(Config.EnderPearl.asInt() * 1000),
     LOGOUT(Config.Logout.asInt() * 1000),
     HOME(Config.HomeTimer.asInt() * 1000),
     SOTW(Config.SOTWDuration.asInt() * 1000),
     EOTW(Config.EOTWDuration.asInt() * 1000);
 
-    private int time;
+    private final int time;
 
     Timers(int time) {
         this.time = time;
@@ -79,7 +79,7 @@ public enum Timers {
         if(hcfPlayer.getTimers().get(this) == null) return false;
 
         long unixTime = System.currentTimeMillis();
-        long timer = get(hcfPlayer);
+        long timer = hcfPlayer.getTimers().get(this);
         if(timer >= unixTime) {
             return true;
         } else {
@@ -98,14 +98,15 @@ public enum Timers {
         long unixTime = System.currentTimeMillis();
         long timer = hcfPlayer.getTimers().get(this);
 
-        return timer - unixTime <= 0;
+        if(timer - unixTime <= 0) {
+            remove(hcfPlayer);
+            return true;
+        }
+        return false;
     }
 
     public int getSeconds(HCFPlayer hcfPlayer) {
-        long currentUnix = System.currentTimeMillis();
-        long timer = get(hcfPlayer);
-        
-        return Math.toIntExact(timer / 1000 - currentUnix / 1000);
+        return Math.toIntExact(get(hcfPlayer)) / 1000;
     }
 
     /**
@@ -122,11 +123,15 @@ public enum Timers {
     public long get(HCFPlayer hcfPlayer) {
         long currentUnix = System.currentTimeMillis();
         if(hcfPlayer.getTimers().get(this) == null) {
+            /*if(this == ENDER_PEARL) {
+                System.out.println("IGEN");
+            }*/
             return 0;
         }
         long timer = hcfPlayer.getTimers().get(this);
         long diff = timer - currentUnix;
         if(diff <= 0) {
+            //System.out.println("Removeolta");
             remove(hcfPlayer);
         }
         return timer - currentUnix;
@@ -141,9 +146,6 @@ public enum Timers {
     }
 
     public static String convertTime(int seconds) {
-        if (seconds <= 0)
-            return "0";
-
         int minute = 0;
         int hours = 0;
         int second = seconds;

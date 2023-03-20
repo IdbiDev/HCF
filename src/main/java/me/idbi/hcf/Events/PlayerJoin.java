@@ -38,12 +38,14 @@ public class PlayerJoin implements Listener {
 
         //TabManager.test(e.getPlayer());
         TabManager.getManager().refresh(e.getPlayer());
-        FastBoard board = new FastBoard(e.getPlayer());
-        board.updateTitle(Config.DefaultScoreboardTitle.asStr());
-        Main.boards.put(e.getPlayer().getUniqueId(), board);
 
-        Playertools.loadOnlinePlayer(p);
+        /*FastBoard board = new FastBoard(e.getPlayer());
+        board.updateTitle(Config.DefaultScoreboardTitle.asStr());
+        Main.boards.put(e.getPlayer().getUniqueId(), board);*/
+
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
+        hcf.createScoreboard(p);
+        Playertools.loadOnlinePlayer(p);
 
         Main.getEconomy().createPlayerAccount(e.getPlayer());
         if (Main.deathWaitClear.contains(p.getUniqueId())) {

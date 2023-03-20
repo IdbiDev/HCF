@@ -18,15 +18,15 @@ public class ConsumeItem implements Listener {
                 && e.getItem().getType() == Material.GOLDEN_APPLE
                 && !player.isInDuty()) {
 
-            if (!Timers.GOLDEN_APPLE.has(player)) {
-                Timers.GOLDEN_APPLE.add(player);
+            if (!Timers.APPLE.has(player)) {
+                Timers.APPLE.add(player);
             } else e.setCancelled(true);
         } else if (e.getItem().getData().getData() == (byte) 1
                 && e.getItem().getType() == Material.GOLDEN_APPLE
                 && !player.isInDuty()) {
 
-            if (!Timers.ENCHANTED_GOLDEN_APPLE.has(player)) {
-                Timers.ENCHANTED_GOLDEN_APPLE.add(player);
+            if (!Timers.GAPPLE.has(player)) {
+                Timers.GAPPLE.add(player);
             } else
                 e.setCancelled(true);
         }

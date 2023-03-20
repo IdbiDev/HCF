@@ -277,13 +277,13 @@ public class FastBoard {
         checkLineNumber(lines.size(), false, true);
 
         if (!VersionType.V1_13.isHigherOrEqual()) {
-            /*int lineCount = 0;
+            int lineCount = 0;
             for (String s : lines) {
                 if (s != null && s.length() > 30) {
                     throw new IllegalArgumentException("Line " + lineCount + " is longer than 30 chars");
                 }
                 lineCount++;
-            }*/
+            }
         }
 
         List<String> oldLines = new ArrayList<>(this.lines);

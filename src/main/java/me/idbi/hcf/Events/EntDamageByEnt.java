@@ -49,6 +49,8 @@ public class EntDamageByEnt implements Listener {
                         return;
                     }
                 }
+
+
                 if(Timers.LOGOUT.has(victimplayer)) {
                     Timers.LOGOUT.remove(victimplayer);
                     victim.sendMessage(Messages.logout_timer_interrupted.language(victim).queue());

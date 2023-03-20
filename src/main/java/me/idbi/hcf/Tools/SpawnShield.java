@@ -5,7 +5,6 @@ import me.idbi.hcf.Tools.Objects.Faction;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.json.XML;
 
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class SpawnShield {
                     kellfal = true;
                 } else if (Main.SOTWEnabled && ((claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.NORMAL) && claim.getFaction().getId() != (player_faction != null ? player_faction.getId() : 0)))) {
                     kellfal = true;
-                } else if ((Timers.COMBAT.has(p) && claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.PROTECTED))) {
+                } else if ((Timers.COMBAT_TAG.has(p) && claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.PROTECTED))) {
                     kellfal = true;
                 }
                 if (!kellfal)

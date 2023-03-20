@@ -151,7 +151,7 @@ public class MiscTimers {
                         Location loc = HCF_Claiming.ReturnSafeSpot(player.getLocation());
                         if (loc != null) {
                             player.teleport(loc);
-                            player.sendMessage(me.idbi.hcf.CustomFiles.Messages.Messages.stuck_finished.queue()); // Ez igy mi tell me ez a kukim same bro
+                            player.sendMessage(Messages.stuck_finished.queue()); // Ez igy mi tell me ez a kukim same bro
                         }
                     }
                     //Stuck Time
@@ -162,12 +162,12 @@ public class MiscTimers {
                         if(faction != null) {
                             if (faction.getHomeLocation() != null) {
                                 player.teleport(faction.getHomeLocation());
-                                player.sendMessage(me.idbi.hcf.CustomFiles.Messages.Messages.successfully_home_teleport.queue());
+                                player.sendMessage(Messages.successfully_home_teleport.queue());
                             }
                         }
                     }
                     //Combat Time
-                    if (Timers.COMBAT.has(player)) {
+                    if (Timers.COMBAT_TAG.has(player)) {
                         shouldRefresh = true;
                     }
                     //Scoreboards.refresh(player);
@@ -177,12 +177,12 @@ public class MiscTimers {
                         //Scoreboards.refresh(player);
                     }
                     //Golden Apple
-                    if (Timers.GOLDEN_APPLE.has(player)) {
+                    if (Timers.APPLE.has(player)) {
                         shouldRefresh = true;
                         //Scoreboards.refresh(player);
                     }
                     //OP Golden Apple
-                    if (Timers.ENCHANTED_GOLDEN_APPLE.has(player)) {
+                    if (Timers.GAPPLE.has(player)) {
                         shouldRefresh = true;
                         //Scoreboards.refresh(player);
                     }
@@ -205,7 +205,7 @@ public class MiscTimers {
                     }
                     if (!(hcfPlayer.getBardEnergy() >= bard.maxBardEnergy))
                         shouldRefresh = true;
-                    if (!Timers.PVP_TIMER.has(player) && !Timers.COMBAT.has(player)) {
+                    if (!Timers.PVP_TIMER.has(player) && !Timers.COMBAT_TAG.has(player)) {
                         //DeleteWallsForPlayer(player);
                     }
                     if (shouldRefresh)

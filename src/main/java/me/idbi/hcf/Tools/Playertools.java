@@ -115,6 +115,7 @@ public class Playertools {
 
         HCFPlayer hcf = HCFPlayer.getPlayer(player);
         assert hcf != null;
+        hcf.createScoreboard(player);
         hcf.setCurrentArea(HCF_Claiming.getPlayerArea(player));
         hcf.setOnline(true);
         Main.playerCache.put(hcf.getUUID(), hcf);
@@ -731,6 +732,15 @@ public class Playertools {
 
     public static boolean isInStaffDuty(Player p) {
         return HCFPlayer.getPlayer(p).isInDuty();
+    }
+    public static List<HCFPlayer> getStaffs() {
+        List<HCFPlayer> hcfs = new ArrayList<>();
+        for (HCFPlayer value : Main.playerCache.values()) {
+            if(value.isInDuty()) {
+                hcfs.add(value);
+            }
+        }
+        return hcfs;
     }
 
     public static void sendStaffChat(Messages message) {

@@ -3,6 +3,7 @@ package me.idbi.hcf.Events;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.HCF_Claiming;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Timers;
@@ -34,7 +35,8 @@ public class PearlFixer implements Listener {
             location.setZ(location.getBlockZ() + 0.5D);
             event.setTo(location);
         }*/
-        if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL) && !event.isCancelled() && Timers.COMBAT.has(event.getPlayer())) {
+        Scoreboards.refresh(event.getPlayer());
+        if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL) && !event.isCancelled() && Timers.COMBAT_TAG.has(event.getPlayer())) {
             Location location = event.getTo();
             for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
                 for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().getClaims()) {

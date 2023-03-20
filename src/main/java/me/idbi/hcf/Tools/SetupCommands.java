@@ -25,6 +25,7 @@ public class SetupCommands {
         m.getCommand("revive").setExecutor(new ReviveCommand());
         m.getCommand("reclaim").setExecutor(new ReclaimCommand());
         m.getCommand("logout").setExecutor(new LogoutCommand());
+        m.getCommand("deleteconfig").setExecutor(new Command_test());
 
 
         CommandRegistry.register(BukkitCommandManager.getCommands());

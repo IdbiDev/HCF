@@ -1,9 +1,12 @@
 package me.idbi.hcf.Commands;
 
+import me.idbi.hcf.Main;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.io.File;
 
 public class Command_test implements CommandExecutor {
 
@@ -11,7 +14,9 @@ public class Command_test implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player p) {
             if (p.isOp()) {
-                if (command.getName().equalsIgnoreCase("")) {
+                if (command.getName().equalsIgnoreCase("deleteconfig")) {
+                    //new File(Main.getInstance().getDataFolder(), "config.yml").delete();
+                    new File(Main.getInstance().getDataFolder(), "scoreboard.yml").delete();
                 }
             }
         }

@@ -9,6 +9,7 @@ import me.idbi.hcf.Bossbar.Bossbar;
 import me.idbi.hcf.BukkitCommands.BukkitCommandManager;
 import me.idbi.hcf.Commands.FactionCommands.FactionSetHomeCommand;
 import me.idbi.hcf.Commands.SubCommand;
+import me.idbi.hcf.CustomFiles.BoardFile;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.KothRewardsFile;
@@ -21,6 +22,7 @@ import me.idbi.hcf.Koth.AutoKoth;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.Scoreboard.FastBoard;
+import me.idbi.hcf.Scoreboard.BoardManager;
 import me.idbi.hcf.TabManager.TabAPIv2.TabAPI;
 import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.*;
@@ -28,8 +30,6 @@ import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Lag;
-import me.idbi.hcf.WorldModes.EOTW;
-import me.idbi.hcf.WorldModes.SOTW;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
@@ -42,7 +42,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
@@ -112,6 +111,7 @@ public final class Main extends JavaPlugin implements Listener {
     @Getter
     private TabManager tabManager;
     @Getter private TabAPI tabAPI;
+    @Getter private BoardManager scoreboardManager;
 
 
     // Egyszerű SQL Connection getter
@@ -159,6 +159,7 @@ public final class Main extends JavaPlugin implements Listener {
     public void onEnable() {
         instance = this;
         tabbed = new Tabbed(this);
+
         /*if (!setupEconomy() ) {
             Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
@@ -196,7 +197,10 @@ public final class Main extends JavaPlugin implements Listener {
         blacklistedRankNames = Config.BlackListedNames.asStrList();
         miscTimers = new MiscTimers();
 
+        BoardFile.setup();
 
+        this.scoreboardManager = new BoardManager(this);
+        this.scoreboardManager.setup();
 
         // Messages
         /*this.manager = new SimpleConfigManager(this);

@@ -66,7 +66,7 @@ public class PlayerDeath implements Listener {
             }
         }
         hcfVictim.banHCFPlayer();
-        Timers.COMBAT.remove(victim);
+        Timers.COMBAT_TAG.remove(victim);
     }
 
     @EventHandler

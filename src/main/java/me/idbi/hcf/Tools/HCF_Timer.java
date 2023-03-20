@@ -1,11 +1,9 @@
 package me.idbi.hcf.Tools;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
-import me.idbi.hcf.Scoreboard.Scoreboards;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
-import java.util.Timer;
 import java.util.UUID;
 
 public class HCF_Timer {
@@ -40,7 +38,7 @@ public class HCF_Timer {
 
     public static boolean addCombatTimer(Player player) {
         // Ha már van rajta CombatTimer, akkor ne adjuk hozzá
-        return Timers.COMBAT.canAdd(player);
+        return Timers.COMBAT_TAG.canAdd(player);
         /*if (!timers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             timers.put(player.getUniqueId(), System.currentTimeMillis() + combatTimerDuration);
@@ -262,7 +260,7 @@ public class HCF_Timer {
 
     public static boolean checkCombatTimer(Player player) {
         // Ha van rajta CombatTimer
-        return Timers.COMBAT.has(player);
+        return Timers.COMBAT_TAG.has(player);
         /*if (timers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= timers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
@@ -332,7 +330,7 @@ public class HCF_Timer {
 
     public static long getCombatTime(Player player) {
         // Ha van rajta CombatTimer
-        return Timers.COMBAT.get(player);
+        return Timers.COMBAT_TAG.get(player);
         /*if (timers.containsKey(player.getUniqueId())) {
             //5600                            5000+500
             if (System.currentTimeMillis() >= timers.get(player.getUniqueId())) {
@@ -372,7 +370,7 @@ public class HCF_Timer {
 
     public static boolean addArcherTimer(Player player) {
         // Ha már van rajta Archertag, akkor ne addjuk hozzá
-        return Timers.ARCHER.canAdd(player);
+        return Timers.ARCHER_TAG.canAdd(player);
         /*if (!Archertimers.containsKey(player)) {
             // A mostani időhöz hozzá adjuk a Archertag idejét
             Archertimers.put(player.getUniqueId(), System.currentTimeMillis() + ArcherTimerDuration);
@@ -385,7 +383,7 @@ public class HCF_Timer {
     // true active; false nem
     public static boolean checkArcherTimer(Player player) {
         // Ha van rajta Archertag
-        return Timers.ARCHER.has(player);
+        return Timers.ARCHER_TAG.has(player);
         /*if (Archertimers.containsKey(player.getUniqueId())) {
             // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta Archertag
             if (System.currentTimeMillis() >= Archertimers.get(player.getUniqueId())) {
@@ -476,7 +474,7 @@ public class HCF_Timer {
 
     public static void add_Golden_Apple_Time(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
-        Timers.GOLDEN_APPLE.add(player);
+        Timers.APPLE.add(player);
         /*if (!golden_apple_Timers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             golden_apple_Timers.put(player.getUniqueId(), System.currentTimeMillis() + Golden_Apple_Cooldown);
@@ -488,7 +486,7 @@ public class HCF_Timer {
 
     public static long get_Golden_Apple_Time(Player player) {
         // Ha van rajta CombatTimer
-        return Timers.GOLDEN_APPLE.get(player);
+        return Timers.APPLE.get(player);
         /*if (golden_apple_Timers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= golden_apple_Timers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
@@ -506,7 +504,7 @@ public class HCF_Timer {
 
     public static void add_OP_Golden_Apple_Time(Player player) {
         // Ha már van rajta CombatTimer, akkor ne addjuk hozzá
-        Timers.ENCHANTED_GOLDEN_APPLE.add(player);
+        Timers.GAPPLE.add(player);
         /*if (!OP_Golden_Apple_Timers.containsKey(player.getUniqueId())) {
             // A mostani időhöz hozzá adjuk a CombatTimer idejét
             OP_Golden_Apple_Timers.put(player.getUniqueId(), System.currentTimeMillis() + OP_Golden_Apple_Cooldown);
@@ -518,7 +516,7 @@ public class HCF_Timer {
 
     public static long get_OP_Golden_Apple_Time(Player player) {
         // Ha van rajta CombatTimer
-        return Timers.ENCHANTED_GOLDEN_APPLE.get(player);
+        return Timers.GAPPLE.get(player);
         /*if (OP_Golden_Apple_Timers.containsKey(player.getUniqueId())) {
             if (System.currentTimeMillis() >= OP_Golden_Apple_Timers.get(player.getUniqueId())) {
                 // Ha lejárt, akkor kivesszük a listából, majd vissza dobjuk hogy nincs már rajta CombatTimer
@@ -536,7 +534,7 @@ public class HCF_Timer {
 
 
     public static void removePVPTag(Player p) {
-        Timers.COMBAT.remove(p);
+        Timers.COMBAT_TAG.remove(p);
     }
 
     public static void addPvPTimerCoolDownSpawn(Player player) {

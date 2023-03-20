@@ -1,5 +1,6 @@
 package me.idbi.hcf.Scoreboard;
 
+import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
@@ -26,7 +27,11 @@ public class Scoreboards {
     private static final DecimalFormat dfSharp = new DecimalFormat("0.0");
 
     public static void refresh(Player p) {
-        TabManager.getManager().refresh(p);
+        if(HCFPlayer.getPlayer(p).getScoreboard() == null) {
+            HCFPlayer.getPlayer(p).createScoreboard(p);
+        }
+        HCFPlayer.getPlayer(p).getScoreboard().update();
+        /*TabManager.getManager().refresh(p);
         if (Playertools.isInStaffDuty(p)) {
             AdminScoreboard.refresh(p);
             return;
@@ -74,23 +79,24 @@ public class Scoreboards {
             Main.boards.put(p.getUniqueId(), newBoard);
             return;
         }
-        board.updateLines(newReplacedList);
+        board.updateLines(newReplacedList);*/
     }
 
     public static void RefreshAll() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            Scoreboards.refresh(p);
+            //Scoreboards.refresh(p);
+            HCFPlayer.getPlayer(p).getScoreboard().update();
             NameChanger.refresh(p);
         }
     }
 
     public static boolean isContinue(Player p, String line) {
         HCFPlayer player = HCFPlayer.getPlayer(p);
-        if (line.contains("%spawntag%") && !Timers.COMBAT.has(p)) {
+        if (line.contains("%spawntag%") && !Timers.COMBAT_TAG.has(p)) {
             return true;
-        } else if (line.contains("%ep_cd%") && !Timers.ENDER_PEARL.has(p)) {
+        } else if (line.contains("%enderpearl%") && !Timers.ENDER_PEARL.has(p)) {
             return true;
-        } else if (line.contains("%stuck_timer%") && !Timers.STUCK.has(p)) {
+        } else if (line.contains("%stuck%") && !Timers.STUCK.has(p)) {
             return true;
         } else if (line.contains("%bard_energy%") && player.getBardEnergy() <= 0.0) {
             return true;
@@ -98,45 +104,22 @@ public class Scoreboards {
             return true;
         } else if (line.contains("%sotw%") && !Timers.SOTW.has(p)) {
             return true;
+        } else if (line.contains("%class%") && player.getPlayerClass() == Classes.NONE) {
+            return true;
         } else if (line.contains("%logout%") && !Timers.LOGOUT.has(p)) {
+            return true;
+        } else if (line.contains("%home%") && !Timers.HOME.has(p)) {
             return true;
         } else if (line.contains("%pvp_timer%") && !Timers.PVP_TIMER.has(p)) {
             return true;
-        } else if (line.contains("%gapple_cd%") && !Timers.GOLDEN_APPLE.has(p)) {
+        } else if (line.contains("%bard_cooldown%") && !Timers.BARD_COOLDOWN.has(p)) {
             return true;
-        } else if (line.contains("%opgapple_cd%") && !Timers.ENCHANTED_GOLDEN_APPLE.has(p)) {
+        } else if (line.contains("%apple%") && !Timers.APPLE.has(p)) {
+            return true;
+        } else if (line.contains("%gapple%") && !Timers.GAPPLE.has(p)) {
             return true;
         }
         return false;
-    }
-
-    public static ArrayList<List<String>> sortLists() {
-        List<String> str = Config.DefaultScoreboard.asStrList();
-        List<String> fix = new ArrayList<>();
-        List<String> timers = new ArrayList<>();
-        for (String line : str) {
-            if (line.contains("%spawntag%")
-                    || line.contains("%ep_cd%")
-                    || line.contains("%bard_energy%")
-                    || line.contains("%stuck_timer%")
-                    || line.contains("%gapple_cd%")
-                    || line.contains("%pvp_timer%")
-                    || line.contains("%opgapple_cd%")
-                    || line.contains("%sotw%")
-                    || line.contains("%eotw%")
-                    || line.contains("%customtimers%")
-                    || line.contains("%logout%"))
-                    {
-                timers.add(ChatColor.translateAlternateColorCodes('&', line));
-                continue;
-            }
-            fix.add(ChatColor.translateAlternateColorCodes('&', line));
-        }
-
-        ArrayList<List<String>> returnList = new ArrayList<>();
-        returnList.add(fix);
-        returnList.add(timers);
-        return returnList;
     }
 
     public static String replaceVariables(String inputString, Player p) {
@@ -148,13 +131,15 @@ public class Scoreboards {
                 .replace("%bard_energy%", dfSharp.format(
                                 hcf.getBardEnergy())
                         .replace(",", "."))
-                .replace("%spawntag%", Timers.COMBAT.getConvertSeconds(hcf))
+                .replace("%spawntag%", Timers.COMBAT_TAG.getConvertSeconds(hcf))
                 .replace("%pvp_timer%", Timers.PVP_TIMER.getConvertSeconds(hcf))
-                .replace("%stuck_timer%", Timers.STUCK.getConvertSeconds(hcf))
+                .replace("%stuck%", Timers.STUCK.getConvertSeconds(hcf))
                 .replace("%logout%", Timers.LOGOUT.getConvertSeconds(hcf))
-                .replace("%ep_cd%", Timers.ENDER_PEARL.getRoundSeconds(hcf) + "s")
-                .replace("%gapple_cd%", Timers.GOLDEN_APPLE.getConvertSeconds(hcf))
-                .replace("%opgapple_cd%", Timers.ENCHANTED_GOLDEN_APPLE.getConvertSeconds(hcf))
+                .replace("%enderpearl%", Timers.ENDER_PEARL.getRoundSeconds(hcf) + "s")
+                .replace("%apple%", Timers.APPLE.getConvertSeconds(hcf))
+                .replace("%home%", Timers.HOME.getConvertSeconds(hcf))
+                .replace("%bard_cooldown%", Timers.BARD_COOLDOWN.getRoundSeconds(hcf) + "s")
+                .replace("%gapple%", Timers.GAPPLE.getConvertSeconds(hcf))
                 .replace("%eotw%", Timers.EOTW.getConvertSeconds(hcf))
                 .replace("%sotw%", Timers.SOTW.getConvertSeconds(hcf))
                 .replace("%location%", hcf.getLocationFormatted() == null ? Messages.wilderness.language(p).queue() : hcf.getLocationFormatted());

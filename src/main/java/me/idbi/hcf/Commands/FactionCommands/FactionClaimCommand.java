@@ -68,10 +68,10 @@ public class FactionClaimCommand extends SubCommand {
                 p.sendMessage(Messages.no_permission.language(p).queue());
                 return;
             }
-            if(Config.MaxClaims.asInt() > hcfPlayer.getFaction().getClaims().size()) {
-
+            /*if(Config.MaxClaims.asInt() > hcfPlayer.getFaction().getClaims().size()) {
+                p.sendMessage("Igen?"); // ToDo: Not working
                 return;
-            }
+            }*/
             if (p.getInventory().firstEmpty() != -1) {
                 p.getInventory().setItem(p.getInventory().firstEmpty(), HCF_Claiming.Wands.claimWand());
 

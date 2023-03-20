@@ -44,6 +44,7 @@ commands:
   reclaim:
     description: reclaim lol
   rollback:
+  deleteconfig:
 
 
 permissions:

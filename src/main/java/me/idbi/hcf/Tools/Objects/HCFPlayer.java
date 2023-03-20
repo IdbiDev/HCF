@@ -8,6 +8,8 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Scoreboard.Board;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.*;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -53,6 +55,7 @@ public class HCFPlayer {
     @Getter @Setter private long deathTime;
     @Getter @Setter private boolean online;
     @Getter private HashMap<Timers, Long> timers;
+    @Getter private Board scoreboard;
 
     public HCFPlayer(UUID uuid,
                      int deaths,
@@ -496,6 +499,14 @@ public class HCFPlayer {
         }
     }
 
+    public void createScoreboard(Player p) {
+        this.scoreboard = new Board(p);
+    }
+
+    public void removeScoreboard() {
+        this.scoreboard = null;
+    }
+
     // kell mert a @Getter function "getUuid()" szarul néz ki.
     public UUID getUUID() {
         return this.uuid;
@@ -528,6 +539,9 @@ public class HCFPlayer {
     }
 
     public void removeTimer(Timers timer) {
+        if(Bukkit.getPlayer(this.uuid) != null) {
+            Scoreboards.refresh(Bukkit.getPlayer(this.uuid));
+        }
         this.timers.remove(timer);
     }
 }

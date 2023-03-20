@@ -3,6 +3,7 @@ package me.idbi.hcf.CustomFiles.ConfigManagers;
 import me.idbi.hcf.CustomFiles.Configs.ClassConfig;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Configs.ConfigComments;
+import me.idbi.hcf.CustomFiles.Configs.LimitConfig;
 import me.idbi.hcf.CustomFiles.GUIMessages.GUIMessages;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.CustomFiles.Messages.MessagesComments;
@@ -20,6 +21,7 @@ public class ConfigManager {
     public static String[] guiHeader = {"GUIGUGIGUI", "GUIGUGIGUI", "GUIGUGIGUI"}; // ToDo: Edited
     private static SimpleConfigManager manager;
     private static SimpleConfig config;
+    private static SimpleConfig limitConfig;
     private static SimpleConfig messages;
     public static HashMap<String, SimpleConfig> allMessages;
     public static HashMap<String, SimpleConfig> allGuiMessages;
@@ -44,6 +46,9 @@ public class ConfigManager {
     }
     public static SimpleConfig getClassConfig() {
         return classes;
+    }
+    public static SimpleConfig getLimitConfig() {
+        return limitConfig;
     }
 
     public static SimpleConfig getEnglishMessages() {
@@ -78,6 +83,9 @@ public class ConfigManager {
 
         config = manager.getNewConfig("config.yml", header);
         this.setupConfig();
+
+        limitConfig = manager.getNewConfig("limits.yml");
+        this.setupLimits();
 
         messages = manager.getNewConfig("messages/messages_" + Config.DefaultLanguage.asStr() + ".yml");
         enMessages = manager.getNewConfig("messages/messages_en.yml");
@@ -131,6 +139,12 @@ public class ConfigManager {
 
     public void setupClasses() {
         for (ClassConfig msg : ClassConfig.values()) {
+            msg.load();
+        }
+    }
+
+    public void setupLimits() {
+        for (LimitConfig msg : LimitConfig.values()) {
             msg.load();
         }
     }

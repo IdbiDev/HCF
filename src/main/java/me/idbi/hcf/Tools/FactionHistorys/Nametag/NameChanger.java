@@ -61,7 +61,7 @@ public class NameChanger implements Listener {
                     continue;
                 }
 
-                if (Timers.ARCHER.has(player)) {
+                if (Timers.ARCHER_TAG.has(player)) {
                     forWhom.hidePlayer(player);
                     fakeNames.put(player.getUniqueId(), Config.ArcherTagColor.asStr() + player.getName());
                     forWhom.showPlayer(player);

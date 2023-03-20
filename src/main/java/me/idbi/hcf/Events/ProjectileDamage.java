@@ -14,6 +14,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import static me.idbi.hcf.Tools.Playertools.isTeammate;
 
@@ -57,20 +58,21 @@ public class ProjectileDamage implements Listener {
             }
             //Add combatTimer
 
+            if (e.getCause() != EntityDamageEvent.DamageCause.FALL) {
+                if (!Timers.COMBAT_TAG.has(victimplayer)) {
+                    victim.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.CombatTag.asStr()));
+                }
+                if (!Timers.COMBAT_TAG.has(damagerplayer)) {
+                    damager.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.CombatTag.asStr()));
+                }
 
-            if (!Timers.COMBAT.has(victimplayer)) {
-                victim.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.CombatTag.asStr()));
+                Timers.COMBAT_TAG.add(victimplayer);
+                Timers.COMBAT_TAG.add(damagerplayer);
             }
-            if (!Timers.COMBAT.has(damagerplayer)) {
-                damager.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.CombatTag.asStr()));
-            }
-
-            Timers.COMBAT.add(victimplayer);
-            Timers.COMBAT.add(damagerplayer);
 
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(damager);
-            if (!Timers.ARCHER.has(victimplayer) && hcfPlayer.getPlayerClass() == Classes.ARCHER && archer.archerTagEnabled) {
-                Timers.ARCHER.add(victimplayer);
+            if (!Timers.ARCHER_TAG.has(victimplayer) && hcfPlayer.getPlayerClass() == Classes.ARCHER && archer.archerTagEnabled) {
+                Timers.ARCHER_TAG.add(victimplayer);
             }
         }
     }

@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import static me.idbi.hcf.Tools.Playertools.isTeammate;
 
@@ -51,17 +52,19 @@ Archer archer = new Archer();
                 e.setCancelled(true);
                 return;
             }
-            //Add combatTimer
-            if (!Timers.COMBAT.has(victimplayer)) {
-                victim.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.CombatTag.asStr()));
+            if (e.getCause() != EntityDamageEvent.DamageCause.FALL) {
+                //Add combatTimer
+                if (!Timers.COMBAT_TAG.has(victimplayer)) {
+                    victim.sendMessage(Messages.combat_message.language(victim).queue().replace("%sec%", Config.CombatTag.asStr()));
+                }
+                if (!Timers.COMBAT_TAG.has(damagerplayer)) {
+                    damager.sendMessage(Messages.combat_message.language(damager).queue().replace("%sec%", Config.CombatTag.asStr()));
+                }
+                Timers.COMBAT_TAG.add(victimplayer);
+                Timers.COMBAT_TAG.add(damagerplayer);
             }
-            if (!Timers.COMBAT.has(damagerplayer)) {
-                damager.sendMessage(Messages.combat_message.language(damager).queue().replace("%sec%", Config.CombatTag.asStr()));
-            }
-            Timers.COMBAT.add(victimplayer);
-            Timers.COMBAT.add(damagerplayer);
             //Damage if ArcherTag
-            if (Timers.ARCHER.has(victimplayer)) {
+            if (Timers.ARCHER_TAG.has(victimplayer)) {
                 double dmg = e.getDamage();
                 e.setDamage(dmg + (dmg * archer.archerTagDamageAmplifier / 100));
             }
