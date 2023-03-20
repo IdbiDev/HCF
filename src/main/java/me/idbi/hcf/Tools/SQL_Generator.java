@@ -20,7 +20,7 @@ public class SQL_Generator {
                       `endX` int(255) NOT NULL DEFAULT 0,
                       `endZ` int(255) NOT NULL DEFAULT 0,
                       `type` varchar(255) NOT NULL DEFAULT 'normal' COMMENT 'Types: normal;protected;koth;end;',
-                      `world` text NOT NULL DEFAULT 'world',
+                      `world` varchar(255) NOT NULL DEFAULT 'world',
                       PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,
@@ -29,10 +29,10 @@ public class SQL_Generator {
                       `ID` int(255) NOT NULL AUTO_INCREMENT,
                       `name` varchar(255) NOT NULL,
                       `money` bigint(255) NOT NULL DEFAULT 0,
-                      `home` text CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT NULL,
-                      `leader` text NOT NULL,
-                      `statistics` longtext DEFAULT NULL,
-                      `Allies` longtext NOT NULL DEFAULT '{}',
+                      `home` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT NULL,
+                      `leader` varchar(255) NOT NULL,
+                      `statistics` varchar(255) DEFAULT NULL,
+                      `Allies` varchar(255) NOT NULL DEFAULT '{}',
                       PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -47,9 +47,9 @@ public class SQL_Generator {
                               `deaths` int(255) NOT NULL DEFAULT 0,
                               `money` int(255) NOT NULL DEFAULT 0,
                               `lives` int(255) NOT NULL DEFAULT 0,
-                              `uuid` text DEFAULT NULL,
+                              `uuid` varchar(255) DEFAULT NULL,
                               `language` varchar(255) NOT NULL DEFAULT '%default_language%',
-                              `statistics` longtext NOT NULL DEFAULT '%player_statistics%',
+                              `statistics`varchar(255) NOT NULL DEFAULT '%player_statistics%',
                                 PRIMARY KEY (`ID`)
                             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -87,16 +87,16 @@ public class SQL_Generator {
 //                    CREATE TABLE IF NOT EXISTS `playerstatistics` (
 //                      `ID` int(255) NOT NULL AUTO_INCREMENT,
 //                      `uuid` varchar(255) NOT NULL,
-//                      `statistics` text NOT NULL DEFAULT '{"totalFactions":0,"lastLogin":0,"TimePlayed":0,"MoneySpend":0,"ClassTimes":{"Miner":0,"Archer":0,"Assassin":0,"Total":0,"Bard":0},"MoneyEarned":0,"FactionHistory":[],"startDate":0}',
+//                      `statistics` varchar(255) NOT NULL DEFAULT '{"totalFactions":0,"lastLogin":0,"TimePlayed":0,"MoneySpend":0,"ClassTimes":{"Miner":0,"Archer":0,"Assassin":0,"Total":0,"Bard":0},"MoneyEarned":0,"FactionHistory":[],"startDate":0}',
 //                      PRIMARY KEY (`ID`)
 //                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 //                """,
                 """
                 CREATE TABLE IF NOT EXISTS `logs` (
                   `ID` bigint(255) NOT NULL AUTO_INCREMENT,
-                  `player` text NOT NULL,
-                  `action` text NOT NULL,
-                  `type` text NOT NULL,
+                  `player` varchar(255) NOT NULL,
+                  `action` varchar(255) NOT NULL,
+                  `type` varchar(255) NOT NULL,
                   `time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
                   PRIMARY KEY (`ID`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

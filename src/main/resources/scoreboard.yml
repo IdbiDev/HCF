@@ -1,0 +1,144 @@
+scoreboard_info:
+  enabled: true
+  title: '&d&lAzurite &7┃ &fHCF' # If changer not enabled
+  lines: '&7&m--------------------'
+  lines_enabled: true
+
+title_config:
+  changer_enabled: true
+  changer_title: 160 # Less for faster changing, more for slower changing
+  # Create as many as you want
+  changes:
+    - '&d&lAzurite &7┃ &fHCF'
+    - '&d&lAzurite &7┃ &fHCF'
+    - '&d&lAzurite &7┃ &fHCF'
+    - '&d&lAzurite &7┃ &fHCF'
+    - '&d&lAzurite &7┃ &fHCF'
+    - '&d&lAzurite &7┃ &fHCF'
+    - '&d&lAzurite &7┃ &fHCF'
+    - '&d&lAzurite &7┃ &fHCF'
+    - '&d&lAzurite &7┃ &fHCF'
+    - '&d&lAzurite &7┃ &fHCF'
+    - '&5&lA&d&lzurite &7┃ &fHCF'
+    - '&d&lA&5&lz&d&lurite &7┃ &fHCF'
+    - '&d&lAz&5&lu&d&lrite &7┃ &fHCF'
+    - '&d&lAzu&5&lr&d&lite &7┃ &fHCF'
+    - '&d&lAzur&5&li&d&lte &7┃ &fHCF'
+    - '&d&lAzuri&5&lt&d&le &7┃ &fHCF'
+    - '&d&lAzurit&5&le &7┃ &fHCF'
+    - '&5&lAzurite &7┃ &fHCF'
+
+FOOTER:
+  ENABLED: true
+  LINES:
+    - ''
+    - '%footer%'
+
+FOOTER_CONFIG:
+  CHANGER_TICKS: 3000 # Less for faster changing, more for slower changing
+  # Create as many as you want
+  CHANGES:
+    - '&7store.azurite.cc'
+    - '&7play.azurite.cc'
+    - '&7discord.azurite.cc'
+
+KITS_INFO:
+  - '&5&lStatistics'
+  - '&dKills&7: &f%kills%'
+  - '&dDeaths&7: &f%deaths%'
+  - '&dBalance&7: &f$%balance%'
+
+deathban_info:
+  time: '&c&lDeathban&7: &c'
+  lives: '&a&lLives&7: &c'
+
+player_timers:
+  sotw: '&d&lSOTW&7: &c'
+  sotw_off: '&d&l&mSOTW&r&7: &c'
+  location: '&6&lClaim&7: &c'
+  INVINCIBILITY: '&a&lInvincible&7: &c'
+  pvp_timer: '&a&lPvP Timer&7: &c'
+  combat_tag: '&c&lSpawn Tag&7: &c'
+  ender_pearl: '&e&lEnderpearl&7: &c'
+  apple: '&6&lApple&7: &c'
+  gapple: '&e&lGapple&7: &c'
+  stuck: '&4&lStuck&7: &c'
+  home: '&9&lHome&7: &9'
+  archer_tag: '&6&lArcher Tag&7: &c'
+  warmup: '&b&lClass Warmup&7: &c'
+  logout: '&4&lLogout&7: &c'
+  active_class: '&d&lClass&7: &c'
+  koth: '%color%%koth%&7: &c'
+  spawn: '&a&lSpawn&7: &c'
+  ABILITIES: '' # %ability%&7: &c if you want per ability cooldown
+  global_abilities: '&d&lPartner Item&7: &c'
+  PRE_EOTW: '&4&lPRE-EOTW&7: &c'
+  PURGE: '&4&lPurge&7: &c'
+  FISHING_ROD: '&b&lFishing Rod&7: &c'
+  APPLE_LIMIT: '&d&lApple Limit&7: &c%amount%/%max-amount%'
+
+bard_class:
+  bard_energy: '&4&lBard Energy&7: &c'
+  bard_cooldown: '&b&lBard Effect&7: &c'
+
+MAGE_CLASS:
+  MAGE_ENERGY: '&4&lMage Energy&7: &c'
+  MAGE_EFFECT: '&b&lMage Effect&7: &c'
+
+GHOST_CLASS:
+  MODE: '&3&lMode&7: &c'
+  QUARTZ: '&f&lQuartz&7: &c'
+
+ROGUE_CLASS:
+  BACKSTAB: '&8&lBackstab&7: &c'
+
+MINER_CLASS:
+  INVIS: '&7&lInvisible&7: &c'
+  DIAMONDS: '&b&lDiamonds&7: &c'
+
+CONQUEST:
+  FORMAT_POINTS: '&e%team% &f- %points%'
+  LINES:
+    - '&7&m--------------------'
+    - '&6&lConquest'
+    - '&71. &f%points-1%'
+    - '&72. &f%points-2%'
+    - '&73. &f%points-3%'
+    - '&7&m--------------------'
+    - '&e■&7: &f%yellow% &c■&7: &f%red%'
+    - '&a■&7: &f%green% &9■&7: &f%blue%'
+
+KILL_THE_KING:
+  ENABLED: true
+  LINES:
+    - '&4&lKing&7: &f%king%'
+    - '&4&lReward&7: &f%reward%'
+    - '&4&lHealth&7: &c%health%❤'
+    - '&7&m--------------------'
+
+team_focus:
+  enabled: true
+  lines:
+    - '&7&m--------------------'
+    - '&d&lTeam&7: &f%team%'
+    - '&d&lDTR&7: &f%dtr-color%%dtr%%dtr-symbol%'
+    - '&d&lHQ&7: &f%hq%'
+    - '&d&lOnline&7: &f%online%'
+
+staff_mode:
+  enabled: true
+  VANISH_NO_MODMODE: # They are vanished but not in staff mode.
+    - '&5&lStaff Mode'
+    - '&dVanished&7: &7%vanished%'
+    - '&7&m--------------------'
+  mod_mode:
+    - '&5&lStaff Mode'
+    - '&dVanished&7: &7%vanished%'
+    - '&dPlayers&7: &7%players%'
+    - '&dChat&7: &7%chat%'
+    - '&dStaff Online&7: &7%staff%'
+    - '&dTPS&7: &7%tps%'
+    - '&7&m--------------------'
+
+custom_timers:
+  format: '%displayName%&7: &c'

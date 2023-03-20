@@ -122,6 +122,7 @@ public class SetupEvents {
         pm.registerEvents(new Click_ManageAlly(), Main.getPlugin(Main.class));
 
         pm.registerEvents(new Rogue(), Main.getPlugin(Main.class));
+        pm.registerEvents(new BrewPotion(), Main.getPlugin(Main.class));
 
         pm.registerEvents(new CrowbarInteraction(), Main.getPlugin(Main.class));
 
