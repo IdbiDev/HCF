@@ -64,6 +64,15 @@ public enum Config {
     MaxDTRSolo("Faction DTR",1.5,createComment("The maximum amount of DTR reached by a solo faction.")),
     DTRRegen("Faction DTR", 60, createComment("DTR regeneration.(Must be in seconds)")),
 
+    DTRLowDTR("Faction DTR", 0.25),
+    DTRColorRaidable("Faction DTR", "&4"),
+    DTRColorLowDTR("Faction DTR", "&e"),
+    DTRColorNormal("Faction DTR", "&a"),
+    DTRSymbolFreeze("Faction DTR", "&c■"),
+    DTRSymbolRegenerating("Faction DTR", "&a▲"),
+    DTRSymbolNormal("Faction DTR", "&a◀"),
+
+
     //DeathDTR("Faction DTR", 1, createComment("The DTR will be decreased by this number, when a member die.")),
 
 
@@ -119,54 +128,7 @@ public enum Config {
     CrowbarDisabledInWarzone("Crowbar", false),
 
     SubClaimTitle("SubClaim", "&b[Subclaim]"),
-    SubClaimAllowLowerRank("SubClaim", true, createComment("Allows player which have lower ranks to open chests")),
-
-
-
-    DefaultScoreboardTitle("Scoreboards", "&6HCF+ &7- &eMap &6#1"),
-    DefaultScoreboard("Scoreboards", Arrays.asList(
-            //"123456789123456789123456789123456789",
-            "&7&m--------------------------",
-            "&c&lLocation&7: %location%",
-            "&e&lEnderpearl&7: &c%enderpearl%",
-            "&4&lLogout&7: &c%logout%",
-            "&c&lSpawn Tag&7: &6%spawntag%",
-            "&6&lEOTW&7: &6%eotw%",
-            "&9&lSOTW&7: &6%sotw%",
-            "&a&lApple&7: &6%apple%",
-            "&b&lGapple&7: &6%gapple%",
-            "&3&lStuck&7: &6%stuck%",
-            "&d&lHome&7: &6%home%",
-            "&e%customtimers%",
-            "&3&lClass&7: &c%class%",
-            "&7 * &b&lEnergy&7: &c%bard_energy%",
-            "&7 * &b&lCooldown&7: &c%bard_cooldown%",
-            "&7&m--------------------------"
-            ), createComment("RATATATATATATATATATATATA")),
-
-    StaffDutyScoreboardTitle("Scoreboards", "&6HCF+ &7- &eStaff Duty"),
-    StaffScoreboard("Scoreboards", Arrays.asList(
-            "&7&m----------------------",
-            "&4* &cStaff Panel",
-            "&f* &7Visible: &f%invisible%",
-            "&f* &7Chat: &f%chat_mode%",
-            "&f* &7Players: &f%online_players%",
-            "&f* &7TPS: &a%tps%",
-            "&7&m----------------------&r",
-            "&e%customtimers%",
-            "&cSpawn Tag&7: &6%spawntag%",
-            "&eEnderpearl&7: &c%enderpearl%",
-            "&4&lLogout&7: &c%logout%",
-            "&6EOTW&7: &6%eotw%",
-            "&9SOTW&7: &6%sotw%",
-            "&aApple&7: &6%apple%",
-            "&bGapple&7: &6%gapple%",
-            "&3Stuck&7: &6%stuck%",
-            "&eHome&7: &6%home%",
-            "&3Class&7: &c%class%",
-            " &7 * &bEnergy&7: &c%bard_energy",
-            " &7 * &bCooldown&7: &c%bard_cooldown%"
-    ), createComment("Duty RATATATATA"));
+    SubClaimAllowLowerRank("SubClaim", true, createComment("Allows player which have lower ranks to open chests"));
 
     public String section;
     public Object value;

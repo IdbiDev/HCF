@@ -178,9 +178,9 @@ public enum GUIMessages {
         return this;
     }
 
-    public GUIMessages setDamageCause(EntityDamageEvent.DamageCause damageCause) {
-        this.tempName = this.tempName.replace("%damage_cause%", damageCause.name());
-        this.tempLore = replaceLore("%damage_cause%", damageCause.name());
+    public GUIMessages setDamageCause(String damageCause) {
+        this.tempName = this.tempName.replace("%damage_cause%", damageCause);
+        this.tempLore = replaceLore("%damage_cause%", damageCause);
         return this;
     }
 

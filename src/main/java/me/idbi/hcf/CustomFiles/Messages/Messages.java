@@ -6,8 +6,11 @@ import me.idbi.hcf.CustomFiles.MessagesTool;
 import me.idbi.hcf.Tools.Objects.ChatTypes;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Playertools;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -46,6 +49,7 @@ public enum Messages {
     exists_faction_name("Factions","%prefix% &cThis faction name already exists!"),
     you_already_in_faction("Factions","%prefix% &cYou are already in faction!"),
     not_in_faction("Factions","%prefix% &cYou are not in a faction!"),
+    target_not_in_faction("Factions","%prefix% &cThis player does not in a faction!"),
     player_in_faction("Factions","%prefix% &cThis player is already in a faction!"),
 
     uninvite_target("Factions","%prefix% &2&o%player%&c canceled your invitation!"),
@@ -55,11 +59,18 @@ public enum Messages {
 
     no_faction_exists("Factions","%prefix% &cThis faction does not exists!"),
 
-    already_invited_ally("%prefix% &cThis faction is already invited to your ally."),
-    not_invited_ally("%prefix% &cThis faction didnt invited you to their ally."),
+    already_invited_ally("Factions","%prefix% &cThis faction is already invited to your ally."),
+    not_invited_ally("Factions","%prefix% &cThis faction didnt invited you to their ally."),
     //
-    faction_invited_ally("%prefix% &2&o%faction_name% &awas invited to join this faction ally."),
-    joined_ally("%prefix% &2&o%faction_name% &anow is your ally!"),
+    faction_invited_ally("Factions","%prefix% &2&o%faction_name% &awas invited to join this faction ally."),
+    joined_ally("Factions","%prefix% &2&o%faction_name% &anow is your ally!"),
+
+    faction_team_focused("Factions","%prefix% &2&o%faction_name% &ahas been focused by &2&o%player%!"),
+    faction_team_unfocused("Factions","%prefix% &eYour team focus has been cleared!"),
+    faction_own_team_focus("Factions","%prefix% &cYou can't focus your faction!"),
+
+    faction_rally("Factions","%prefix% &2&o%player% &ahas set a rally point at &2&o%location% &a(&2&o%world%&a)"),
+    faction_unrally("Factions","%prefix% &eYour factions rally point has been removed!"),
 
     // Commands
     faction_creation("Factions","%prefix% &2&o%faction_name% &awas created by &2&o%player%&a!"),
@@ -245,8 +256,8 @@ public enum Messages {
     stuck_finished("Factions","%prefix%  &bYou successfully teleported to a safe zone!"),
     stuck_interrupted("Factions","%prefix% &cYou interrupted the stuck timer!"),
 
-    claim_pos_start("Claims","%prefix% &bClaim start position: &a&n%loc%"),
-    claim_pos_end("Claims","%prefix% &bClaim end position: &a&n%loc%"),
+    claim_pos_start("Claims","%prefix% &bClaim start position: &a&n%location%"),
+    claim_pos_end("Claims","%prefix% &bClaim end position: &a&n%location%"),
 
     // KOTH SOTW EOTW
     enable_eotw("EOTW","%prefix% &aEOTW started!"),
@@ -626,6 +637,12 @@ public enum Messages {
         return this;
     }
 
+
+    public Messages setWorld(World world) {
+        playerMessage = playerMessage.replace("%world%", world.getName());
+        return this;
+    }
+
     public Messages setItem(ItemStack item) {
         playerMessage = playerMessage.replace("%item%", (item.getType().name().charAt(0) + item.getType().name().substring(1).toLowerCase()).replace("_", " "));
         return this;
@@ -683,7 +700,17 @@ public enum Messages {
     }
 
     public Messages setLoc(int x, int z) {
-        playerMessage = playerMessage.replace("%loc%", "X:" + x + " Y:" + z);
+        playerMessage = playerMessage.replace("%location%", "X:" + x + " Y:" + z);
+        return this;
+    }
+
+    /**
+     * replacing %location% -> "x, y, z"
+     * @param loc
+     * @return
+     */
+    public Messages setLoc(Location loc) {
+        playerMessage = playerMessage.replace("%location%", Playertools.formatLocation(loc));
         return this;
     }
 

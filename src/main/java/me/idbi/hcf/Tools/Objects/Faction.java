@@ -40,6 +40,8 @@ public class Faction {
 
     @Getter @Setter private ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
     @Getter @Setter private ArrayList<HCFPlayer> members = new ArrayList<>();
+    @Getter @Setter private Faction focusedTeam;
+    @Getter @Setter private Location rallyPosition;
 
     //Statistics
     public ArrayList<HistoryEntrys.BalanceEntry> balanceHistory = new ArrayList<>();
@@ -106,6 +108,15 @@ public class Faction {
      * @return x, y, z
      */
     public String getFormattedHomeLocation() {
+        if(homeLocation == null)
+            return "-";
+        return Playertools.formatLocation(homeLocation);
+    }
+
+    /**
+     * @return x, z
+     */
+    public String getFormattedHomeLocationWithoutY() {
         if(homeLocation == null)
             return "-";
         return Playertools.formatLocation(homeLocation);
@@ -229,6 +240,10 @@ public class Faction {
         return null;
     }
 
+    public void clearClaims() {
+        this.claims.clear();
+    }
+
     public FactionRankManager.Rank getLeaderRank() {
         for (FactionRankManager.Rank rank : ranks) {
             if (rank.isLeader())
@@ -245,11 +260,8 @@ public class Faction {
         return Playertools.getFactionOnlineMembers(this);
     }
 
-    public void PlayerBroadcast(String message) {
-        ArrayList<Player> members = Playertools.getFactionOnlineMembers(this);
-        for (Player member : members) {
-            member.sendMessage();
-        }
+    public void broadcast() {
+
     }
 
     public int getKills() {

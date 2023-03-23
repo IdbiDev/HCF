@@ -334,7 +334,11 @@ public class HCFPlayer {
         if(isEmpty) return null;
         Date date = new Date();
         int id = this.rollbacks.size();
-        Rollback rollback = new Rollback(id, p, damageCause, logType, date);
+        String cause = "-";
+        if(damageCause != null)
+            cause = damageCause.name();
+
+        Rollback rollback = new Rollback(id, p, cause, logType, date);
         this.rollbacks.put(id, rollback);
         return rollback;
     }
@@ -369,6 +373,7 @@ public class HCFPlayer {
                 p.setFoodLevel(20);
                 p.setFallDistance(0);
                 p.getInventory().clear();
+                p.getInventory().setArmorContents(null);
                 Timers.PVP_TIMER.add(p);
                 this.isDeathBanned = false;
                 this.deathTime = 0L;
@@ -542,9 +547,6 @@ public class HCFPlayer {
     }
 
     public void removeTimer(Timers timer) {
-        if(Bukkit.getPlayer(this.uuid) != null) {
-            Scoreboards.refresh(Bukkit.getPlayer(this.uuid));
-        }
         this.timers.remove(timer);
     }
 }

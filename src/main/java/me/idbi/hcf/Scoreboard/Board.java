@@ -1,5 +1,6 @@
 package me.idbi.hcf.Scoreboard;
 
+import com.comphenix.protocol.PacketType;
 import lombok.Getter;
 import lombok.Setter;
 import me.idbi.hcf.Classes.Classes;
@@ -9,12 +10,15 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
 import me.idbi.hcf.Tools.AdminTools;
 import me.idbi.hcf.Tools.Formatter;
+import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -105,7 +109,7 @@ public class Board {
         if(hcfPlayer.isInDuty()) {
             List<String> list = new ArrayList<>(BoardManager.get().getStaffModeLines());
             list.replaceAll(s -> s
-                    .replace("%vanish%", AdminTools.InvisibleManager.getInvisedAdmins().contains(this.player) + "")
+                    .replace("%vanished%", Playertools.upperFirst(AdminTools.InvisibleManager.getInvisedAdmins().contains(this.player) + ""))
                     .replace("%players%", Bukkit.getOnlinePlayers().size() + "")
                     .replace("%staff%", Playertools.getStaffs().size() + "")
                     .replace("%chat%", Playertools.upperFirst(hcfPlayer.getChatType().name()))
@@ -120,10 +124,19 @@ public class Board {
         // ToDo: Koth
         if(BoardManager.get().getActiveClass() != null) {
             boardList.add(BoardManager.get().getActiveClass() + Playertools.upperFirst(hcfPlayer.getPlayerClass().name()));
-            if(hcfPlayer.getPlayerClass() == Classes.BARD) {
-                boardList.add(BoardManager.get().getBardEnergy() + Formatter.formatBardEnergy(hcfPlayer.getBardEnergy()));
-                if(Timers.BARD_COOLDOWN.has(hcfPlayer))
-                    boardList.add(BoardManager.get().getBardCooldown() + Formatter.getRemaining(Timers.BARD_COOLDOWN.get(hcfPlayer), true));
+            switch (hcfPlayer.getPlayerClass()) {
+                case BARD:
+                    boardList.add(BoardManager.get().getBardEnergy() + Formatter.formatBardEnergy(hcfPlayer.getBardEnergy()));
+                    if (Timers.BARD_COOLDOWN.has(hcfPlayer))
+                        boardList.add(BoardManager.get().getBardCooldown() + Formatter.getRemaining(Timers.BARD_COOLDOWN.get(hcfPlayer), true));
+                    break;
+                case MINER:
+                    int diamonds = 0;
+                    if(Miner.diamonds.containsKey(this.player))
+                        diamonds = Miner.diamonds.get(this.player);
+                    boardList.add(BoardManager.get().getMinerInvis() + Playertools.upperFirst(this.player.hasPotionEffect(PotionEffectType.INVISIBILITY) + ""));
+                    boardList.add(BoardManager.get().getMinerDiamonds() + diamonds + "");
+                    break;
             }
         }
 
@@ -141,8 +154,58 @@ public class Board {
             }
         }
 
+        for (CustomTimers value : Main.customSBTimers.values()) {
+            boardList.add(BoardManager.get().getCustomTimer().replace("%displayName%", value.text) + Formatter.formatMMSS(value.getTime()));
+        }
+
+        if(hcfPlayer.inFaction()) {
+            if(BoardManager.get().isTeamFocusEnabled()) {
+                if (hcfPlayer.getFaction().getFocusedTeam() != null) {
+                    Faction focusedTeam = hcfPlayer.getFaction().getFocusedTeam();
+                    List<String> lines = new ArrayList<>(BoardManager.get().getTeamFocusLines());
+                    lines.replaceAll(line -> line
+                            .replace("%team%", focusedTeam.getName())
+                            .replace("%home%", focusedTeam.getFormattedHomeLocationWithoutY())
+                            .replace("%dtr%", Formatter.formatDtr(focusedTeam))
+                            .replace("%online%", focusedTeam.getOnlineMembers().size() + ""));
+                    boardList.addAll(lines);
+                }
+            }
+
+            if(BoardManager.get().isRallyEnabled()) {
+                if(hcfPlayer.getFaction().getRallyPosition() != null) {
+                    Location loc = hcfPlayer.getFaction().getRallyPosition();
+                    List<String> lines = new ArrayList<>(BoardManager.get().getRallyLines());
+                    lines.replaceAll(line -> line
+                            .replace("%world%", Playertools.upperFirst(loc.getWorld().getName()))
+                            .replace("%location%", Playertools.formatLocation(loc)));
+                    boardList.addAll(lines);
+                }
+            }
+        }
+
         // ToDo: Footer
-        boardList.add(BoardManager.get().getLine());
-        return boardList;
+        if(BoardManager.get().isFooterEnabled()) {
+            boardList.addAll(BoardManager.get().getFooterLines());
+        }
+
+        List<String> returnList = new ArrayList<>();
+
+        if(boardList.size() > 15) {
+            boardList = boardList.subList(0, 15);
+            boardList.set(boardList.size() - 1, BoardManager.get().getLine());
+        } else if(boardList.size() == 15) {
+            boardList.set(boardList.size() - 1, BoardManager.get().getLine());
+        } else {
+            boardList.add(BoardManager.get().getLine());
+        }
+
+        for (String s : boardList) {
+            if (s.length() > 30)
+                returnList.add(ChatColor.translateAlternateColorCodes('&', s.substring(0, 30)));
+            else
+                returnList.add(ChatColor.translateAlternateColorCodes('&', s));
+        }
+        return returnList;
     }
 }

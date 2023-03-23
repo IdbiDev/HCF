@@ -1,6 +1,6 @@
 scoreboard_info:
   enabled: true
-  title: '&d&lAzurite &7┃ &fHCF' # If changer not enabled
+  title: '&6&lFactions &7| &7HCF' # If changer not enabled
   lines: '&7&m--------------------'
   lines_enabled: true
 
@@ -9,38 +9,30 @@ title_config:
   changer_title: 160 # Less for faster changing, more for slower changing
   # Create as many as you want
   changes:
-    - '&d&lAzurite &7┃ &fHCF'
-    - '&d&lAzurite &7┃ &fHCF'
-    - '&d&lAzurite &7┃ &fHCF'
-    - '&d&lAzurite &7┃ &fHCF'
-    - '&d&lAzurite &7┃ &fHCF'
-    - '&d&lAzurite &7┃ &fHCF'
-    - '&d&lAzurite &7┃ &fHCF'
-    - '&d&lAzurite &7┃ &fHCF'
-    - '&d&lAzurite &7┃ &fHCF'
-    - '&d&lAzurite &7┃ &fHCF'
-    - '&5&lA&d&lzurite &7┃ &fHCF'
-    - '&d&lA&5&lz&d&lurite &7┃ &fHCF'
-    - '&d&lAz&5&lu&d&lrite &7┃ &fHCF'
-    - '&d&lAzu&5&lr&d&lite &7┃ &fHCF'
-    - '&d&lAzur&5&li&d&lte &7┃ &fHCF'
-    - '&d&lAzuri&5&lt&d&le &7┃ &fHCF'
-    - '&d&lAzurit&5&le &7┃ &fHCF'
-    - '&5&lAzurite &7┃ &fHCF'
+    - '&6&lFactions &7| &7HCF'
+    - '&6&lFactions &7| &7HCF'
+    - '&6&lFactions &7| &7HCF'
+    - '&6&lFactions &7| &7HCF'
+    - '&6&lFactions &7| &7HCF'
+    - '&6&lFactions &7| &7HCF'
+    - '&6&lFactions &7| &7HCF'
+    - '&6&lFactions &7| &7HCF'
+    - '&6&lFactions &7| &7HCF'
+    - '&6&lFactions &7| &7HCF'
+    - '&e&lF&6&lactions &7| &7HCF'
+    - '&6&lF&e&la&6&lctions &7| &7HCF'
+    - '&6&lFa&e&lc&6&ltions &7| &7HCF'
+    - '&6&lFac&e&lt&6&lions &7| &7HCF'
+    - '&6&lFact&e&li&6&lons &7| &7HCF'
+    - '&6&lFacti&e&lo&6&lns &7| &7HCF'
+    - '&6&lFactio&e&ln&6&ls &7| &7HCF'
+    - '&e&lFactions &7| &7HCF'
 
-FOOTER:
-  ENABLED: true
-  LINES:
+footer:
+  enabled: true
+  lines:
     - ''
-    - '%footer%'
-
-FOOTER_CONFIG:
-  CHANGER_TICKS: 3000 # Less for faster changing, more for slower changing
-  # Create as many as you want
-  CHANGES:
-    - '&7store.azurite.cc'
-    - '&7play.azurite.cc'
-    - '&7discord.azurite.cc'
+    - '&7&ospigotmc.org/hcfplus'
 
 KITS_INFO:
   - '&5&lStatistics'
@@ -65,7 +57,7 @@ player_timers:
   stuck: '&4&lStuck&7: &c'
   home: '&9&lHome&7: &9'
   archer_tag: '&6&lArcher Tag&7: &c'
-  warmup: '&b&lClass Warmup&7: &c'
+  class_warmup: '&b&lClass Warmup&7: &c'
   logout: '&4&lLogout&7: &c'
   active_class: '&d&lClass&7: &c'
   koth: '%color%%koth%&7: &c'
@@ -78,23 +70,16 @@ player_timers:
   APPLE_LIMIT: '&d&lApple Limit&7: &c%amount%/%max-amount%'
 
 bard_class:
-  bard_energy: '&4&lBard Energy&7: &c'
-  bard_cooldown: '&b&lBard Effect&7: &c'
+  bard_energy: ' &7* &4&lEnergy&7: &c'
+  bard_cooldown: ' &7* &b&lCooldown&7: &c'
 
-MAGE_CLASS:
-  MAGE_ENERGY: '&4&lMage Energy&7: &c'
-  MAGE_EFFECT: '&b&lMage Effect&7: &c'
+ghost_class:
+  mode: '&3&lMode&7: &c'
+  quartz: '&f&lQuartz&7: &c'
 
-GHOST_CLASS:
-  MODE: '&3&lMode&7: &c'
-  QUARTZ: '&f&lQuartz&7: &c'
-
-ROGUE_CLASS:
-  BACKSTAB: '&8&lBackstab&7: &c'
-
-MINER_CLASS:
-  INVIS: '&7&lInvisible&7: &c'
-  DIAMONDS: '&b&lDiamonds&7: &c'
+miner_class:
+  invis: '&7&lInvisible&7: &c'
+  diamonds: '&b&lDiamonds&7: &c'
 
 CONQUEST:
   FORMAT_POINTS: '&e%team% &f- %points%'
@@ -116,28 +101,31 @@ KILL_THE_KING:
     - '&4&lHealth&7: &c%health%❤'
     - '&7&m--------------------'
 
+rally:
+  enabled: true
+  lines:
+    - '&7&m--------------------'
+    - "&6Rally"
+    - " &fWorld: %world%"
+    - " &fPosition: %location%"
+
 team_focus:
   enabled: true
   lines:
     - '&7&m--------------------'
-    - '&d&lTeam&7: &f%team%'
-    - '&d&lDTR&7: &f%dtr-color%%dtr%%dtr-symbol%'
-    - '&d&lHQ&7: &f%hq%'
-    - '&d&lOnline&7: &f%online%'
+    - '&6&lTeam&7: &f%team%'
+    - ' &6&lDTR&7: &f%dtr%'
+    - ' &6&lHome&7: &f%home%'
+    - ' &6&lOnline&7: &f%online%'
 
 staff_mode:
   enabled: true
-  VANISH_NO_MODMODE: # They are vanished but not in staff mode.
-    - '&5&lStaff Mode'
-    - '&dVanished&7: &7%vanished%'
-    - '&7&m--------------------'
   mod_mode:
     - '&5&lStaff Mode'
-    - '&dVanished&7: &7%vanished%'
-    - '&dPlayers&7: &7%players%'
-    - '&dChat&7: &7%chat%'
-    - '&dStaff Online&7: &7%staff%'
-    - '&dTPS&7: &7%tps%'
+    - ' &f* &dVanished&7: &7%vanished%'
+    - ' &f* &dPlayers&7: &7%players%'
+    - ' &f* &dStaff Online&7: &7%staff%'
+    - ' &f* &dTPS&7: &7%tps%'
     - '&7&m--------------------'
 
 custom_timers:

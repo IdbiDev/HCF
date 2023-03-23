@@ -30,6 +30,7 @@ public class PlayerInteract implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
+        HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
 
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (e.getItem() != null) {
@@ -52,16 +53,8 @@ public class PlayerInteract implements Listener {
                 Bukkit.getPluginManager().disablePlugin(Main.getPlugin(Main.class));
             }
             Faction baszogatottFaction = claim.getFaction();
-            //if(Boolean.parseBoolean(playertools.getMetadata(p, "adminDuty"))) {
-//                shouldCancel = false;
-//            }
-//
+
             Faction f = Playertools.getPlayerFaction(p);
-            HCFPlayer hcf = HCFPlayer.getPlayer(p);
-            if (hcf.isInDuty()) {
-                e.setCancelled(false);
-                return;
-            }
             if (f != null) {
                 if (HCF_Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).hasAllyPermission(baszogatottFaction, Permissions.INTERACT)) {
                     if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType())) {
@@ -121,6 +114,9 @@ public class PlayerInteract implements Listener {
                 TeleportBehindPlayer(e.getPlayer());
             }
 
+        }
+        if(hcfPlayer.isInDuty()) {
+            e.setCancelled(false);
         }
 
 

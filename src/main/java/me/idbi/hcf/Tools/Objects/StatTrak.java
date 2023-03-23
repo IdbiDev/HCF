@@ -2,6 +2,7 @@ package me.idbi.hcf.Tools.Objects;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +15,7 @@ public class StatTrak {
 
 
     public static void addStatTrak(Player killer, Player victim) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM HH:mm:ss");
         TimeZone timezone = TimeZone.getTimeZone(Config.Timezone.asStr());
         formatter.setTimeZone(timezone);
 
@@ -35,13 +36,20 @@ public class StatTrak {
                     .replace("%killer%", killer.getName())
                     .replace("%date%", formatter.format(new Date()));
 
-            if(kills > 0) {
+            if(kills > 0 && kills < 3) {
                 currentLore.set(currentLore.size() - kills - 1, killCounter);
                 currentLore.add(currentLore.size() - kills, killStatTrak);
+            } else if(kills >= 3) {
+                currentLore.set(currentLore.size() - 3 - 1, killCounter);
+                currentLore.add(currentLore.size() - 3, killStatTrak);
             } else {
                 currentLore.add(" ");
                 currentLore.add(killCounter);
                 currentLore.add(killStatTrak);
+            }
+
+            if(kills >= 3) {
+                currentLore.remove(currentLore.size() - 1);
             }
 
             im.setLore(currentLore);

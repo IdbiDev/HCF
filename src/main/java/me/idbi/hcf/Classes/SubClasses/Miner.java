@@ -19,6 +19,7 @@ public class Miner implements HCF_Class {
     public final boolean minerEnabled = ClassConfig.MinerEnabled.asBoolean();
     public final int maxMinerInFaction = ClassConfig.MaxMinerInFaction.asInt();
     public final boolean invisibleEnable = ClassConfig.MinerInvisibleEnabled.asBoolean();
+    public static HashMap<Player, Integer> diamonds = new HashMap<>();
 
     private final HashMap<PotionEffectType, Integer> effect = new HashMap<>() {{
         put(PotionEffectType.SPEED, 1);
@@ -63,6 +64,7 @@ public class Miner implements HCF_Class {
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         hcf.setPlayerClass(Classes.MINER);
+        diamonds.put(p, 0);
         Scoreboards.refresh(p);
     }
 
@@ -79,6 +81,7 @@ public class Miner implements HCF_Class {
         }
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         hcf.setPlayerClass(Classes.NONE);
+        diamonds.remove(p);
         Scoreboards.refresh(p);
     }
 }

@@ -28,23 +28,21 @@ public class BlockPlace implements Listener {
         Block block = e.getBlock();
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
         HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(block.getX(), block.getZ());
-        if (claim == null) {
-            return;
-        }
-        if (claim.getFaction() == null) {
-            Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
-            Bukkit.getPluginManager().disablePlugin(Main.getPlugin(Main.class));
-        }
-        Faction baszogatottFaction = claim.getFaction();
+        if (claim != null) {
+            if (claim.getFaction() == null) {
+                Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
+                Bukkit.getPluginManager().disablePlugin(Main.getPlugin(Main.class));
+            }
+            Faction baszogatottFaction = claim.getFaction();
 
-        if (Playertools.getDistanceBetweenPoints2D(new HCF_Claiming.Point(block.getX(), block.getZ()),
-                new HCF_Claiming.Point(Playertools.getSpawn().getBlockX(),
-                        Playertools.getSpawn().getBlockZ())) == warzoneSize && !hcf.isInDuty()) {
+            if (Playertools.getDistanceBetweenPoints2D(new HCF_Claiming.Point(block.getX(), block.getZ()),
+                    new HCF_Claiming.Point(Playertools.getSpawn().getBlockX(),
+                            Playertools.getSpawn().getBlockZ())) == warzoneSize && !hcf.isInDuty()) {
 
-            p.sendMessage(Messages.warzone_no_permission.language(p).queue());
-            e.setCancelled(true);
-            return;
-        }
+                p.sendMessage(Messages.warzone_no_permission.language(p).queue());
+                e.setCancelled(true);
+                return;
+            }
 //        if(hcf.inDuty) {
 //            e.setCancelled(false);
 //        } else if(HCF_Claiming.checkEnemyClaimAction(block.getX(), block.getZ(), baszogatottFaction)) {
@@ -59,23 +57,24 @@ public class BlockPlace implements Listener {
 //            }
 //
 //        }
-        if (hcf.isInDuty()) {
-            // System.out.println("BUZ");
-            e.setCancelled(false);
-        } else if (HCF_Claiming.isEnemyClaim(p, claim)) {
-            // System.out.println("MAU");
-            e.setCancelled(true);
-            Faction f = Playertools.getPlayerFaction(p);
-            if (f == null) return;
-            if (!f.hasAllyPermission(baszogatottFaction, Permissions.PLACE_BLOCK)) {
-                e.setCancelled(true);
-                p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, block.getX(), block.getZ())).queue());
-            } else {
+            if (hcf.isInDuty()) {
+                // System.out.println("BUZ");
                 e.setCancelled(false);
-            }
+            } else if (HCF_Claiming.isEnemyClaim(p, claim)) {
+                // System.out.println("MAU");
+                e.setCancelled(true);
+                Faction f = Playertools.getPlayerFaction(p);
+                if (f == null) return;
+                if (!f.hasAllyPermission(baszogatottFaction, Permissions.PLACE_BLOCK)) {
+                    e.setCancelled(true);
+                    p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, block.getX(), block.getZ())).queue());
+                } else {
+                    e.setCancelled(false);
+                }
 
-        } else {
-            // System.out.println("ODA KELL asd MÁ AFDőpédfklőpsdkfglpdfkgpldfkglőéfgkőlpdgl,");
+            } else {
+                // System.out.println("ODA KELL asd MÁ AFDőpédfklőpsdkfglpdfkgpldfkglőéfgkőlpdgl,");
+            }
         }
 
         if (block.getType() == Material.BREWING_STAND) {

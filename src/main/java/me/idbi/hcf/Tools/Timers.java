@@ -1,7 +1,10 @@
 package me.idbi.hcf.Tools;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -63,6 +66,9 @@ public enum Timers {
     }
     public void remove(HCFPlayer hcfPlayer) {
         hcfPlayer.removeTimer(this);
+        OfflinePlayer target = Bukkit.getOfflinePlayer(hcfPlayer.getUUID());
+        if(target.isOnline())
+            Scoreboards.refresh(target.getPlayer());
     }
     public void remove(UUID uuid) {
         remove(HCFPlayer.getPlayer(uuid));

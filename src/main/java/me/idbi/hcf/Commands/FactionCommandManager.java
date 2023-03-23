@@ -30,11 +30,16 @@ public class FactionCommandManager implements CommandExecutor, TabCompleter {
         subcommands.add(new FactionKickCommand());
         subcommands.add(new FactionLeaveCommand());
         subcommands.add(new FactionManageCommand());
+        subcommands.add(new FactionRallyCommand());
         subcommands.add(new FactionSetHomeCommand());
+        subcommands.add(new FactionShowCommand());
         subcommands.add(new FactionStatsCommand());
         subcommands.add(new FactionStuckCommand());
-        subcommands.add(new FactionShowCommand());
+        subcommands.add(new FactionTeamFocusCommand());
         subcommands.add(new FactionTransferCommand());
+        subcommands.add(new FactionUnclaimCommand());
+        subcommands.add(new FactionUnrallyCommand());
+        subcommands.add(new FactionUnteamFocusCommand());
         subcommands.add(new FactionWithdrawCommand());
         subcommands.add(new FactionStartEventCommand());
 

@@ -196,10 +196,14 @@ public final class Main extends JavaPlugin implements Listener {
         blacklistedRankNames = Config.BlackListedNames.asStrList();
         miscTimers = new MiscTimers();
 
+        System.out.println("KÖZELSEM");
+
         BoardFile.setup();
 
         this.scoreboardManager = new BoardManager(this);
         this.scoreboardManager.setup();
+
+        System.out.println("IGEN");
 
         // Messages
         /*this.manager = new SimpleConfigManager(this);

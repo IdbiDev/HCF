@@ -248,6 +248,7 @@ public class Playertools {
 
     public static ArrayList<Player> getFactionOnlineMembers(Faction faction) {
         ArrayList<Player> players = new ArrayList<Player>();
+        if(faction == null) return players;
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (faction.isPlayerInFaction(p)) {
                 players.add(p);
@@ -790,6 +791,15 @@ public class Playertools {
      */
     public static String formatLocation(Location loc) {
         return loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ();
+    }
+
+    /**
+     *
+     * @param loc
+     * @return {x}, {z}
+     */
+    public static String formatLocationWithoutY(Location loc) {
+        return loc.getBlockX() + ", " + loc.getBlockZ();
     }
 
 }

@@ -4,6 +4,7 @@ import com.avaje.ebeaninternal.server.transaction.log.LogTime;
 import lombok.Getter;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -21,19 +22,19 @@ public class Rollback {
     private HCFPlayer hcfPlayer;
     private UUID uuid;
     @Getter private float exp;
-    @Getter private EntityDamageEvent.DamageCause damageCause;
+    @Getter private String damageCause;
     @Getter private ItemStack[] contents;
     @Getter private ItemStack[] armorContents;
     @Getter private RollbackLogType logType;
     @Getter private Date date;
     @Getter private boolean rolled;
 
-    public Rollback(int id, Player player, EntityDamageEvent.DamageCause damageCause, RollbackLogType logType, Date date) {
+    public Rollback(int id, Player player, String damageCauseName, RollbackLogType logType, Date date) {
         this.uuid = player.getUniqueId();
         this.exp = player.getExp();
         this.contents = player.getInventory().getContents().clone();
         this.armorContents = player.getInventory().getArmorContents().clone();
-        this.damageCause = damageCause;
+        this.damageCause = Playertools.upperFirst(damageCauseName);
         this.logType = logType;
         this.rolled = false;
         this.date = date;

@@ -8,6 +8,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.Tools.Formatter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,7 +45,7 @@ public class Command_customtimer implements CommandExecutor {
                         for (Map.Entry<String, CustomTimers> cus : Main.customSBTimers.entrySet()) {
                             p.sendMessage("§3#" + counter + " §b" + cus.getKey() + " §7(" + (cus.getValue().isActive() ? "§aActive§7" : "§cExpired§7")
                                     + ")§7: §r" + cus.getValue().text);
-                            p.sendMessage("§7§o(( Expire in §b" + Scoreboards.ConvertTime(((int) (cus.getValue().getTime() / 1000))) + "§7§o ))");
+                            p.sendMessage("§7§o(( Expire in §b" + Formatter.formatMMSS((cus.getValue().getTime())) + "§7§o ))");
                             p.sendMessage(" ");
                             counter++;
                         }

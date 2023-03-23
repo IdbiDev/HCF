@@ -3,6 +3,7 @@ package me.idbi.hcf.Scoreboard;
 import lombok.Getter;
 import me.idbi.hcf.CustomFiles.BoardFile;
 import me.idbi.hcf.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
@@ -18,8 +19,6 @@ public class BoardManager {
    @Getter private int titleChangerTicks;
    @Getter private List<String> titleChangeLines;
    @Getter private boolean footerEnabled;
-   @Getter private int footerChangeTicks;
-   @Getter private List<String> footer;
    @Getter private List<String> footerLines;
 
    @Getter private String deathbanInfoTime;
@@ -50,6 +49,12 @@ public class BoardManager {
    @Getter private List<String> staffModeLines;
    @Getter private String customTimer;
 
+   @Getter private String minerInvis;
+   @Getter private String minerDiamonds;
+
+   @Getter private boolean rallyEnabled;
+   @Getter private List<String> rallyLines;
+
    private Main plugin;
    private static BoardManager manager;
 
@@ -69,9 +74,7 @@ public class BoardManager {
       titleChangeLines = getStringList("title_config.changes");
 
       footerEnabled = getBoolean("footer.enabled");
-      footer = getStringList("footer.lines");
-      footerChangeTicks = getInt("footer_config.changer_ticks");
-      footerLines = getStringList("footer_config.changes");
+      footerLines = getStringList("footer.lines");
 
       deathbanInfoTime = get("deathban_info.time");
       deathbanInfoLives = get("deathban_info.lives");
@@ -87,7 +90,7 @@ public class BoardManager {
       stuck = get("player_timers.stuck");
       home = get("player_timers.home");
       archerTag = get("player_timers.archer_tag");
-      warmup = get("player_timers.warmup");
+      warmup = get("player_timers.class_warmup");
       logout = get("player_timers.logout");
       activeClass = get("player_timers.active_class");
       koth = get("player_timers.koth");
@@ -102,7 +105,13 @@ public class BoardManager {
       staffModeEnabled = getBoolean("staff_mode.enabled");
       staffModeLines = getStringList("staff_mode.mod_mode");
 
+      minerDiamonds = get("miner_class.diamonds");
+      minerInvis = get("miner_class.invis");
+
       customTimer = get("custom_timers.format");
+
+      rallyEnabled = getBoolean("rally.enabled");
+      rallyLines = getStringList("rally.lines");
    }
 
    public static BoardManager get() {
@@ -110,23 +119,42 @@ public class BoardManager {
    }
 
    private String get(String path) {
-      System.out.println(path);
-      return ChatColor.translateAlternateColorCodes('&', BoardFile.get().getString(path));
+      try {
+         return ChatColor.translateAlternateColorCodes('&', BoardFile.get().getString(path));
+      } catch (NullPointerException e) {
+         Bukkit.getLogger().severe("Scoreboard line is not found! Path '" + path + "'");
+      }
+      return "";
    }
 
    private boolean getBoolean(String path) {
-      return BoardFile.get().getBoolean(path);
+      try {
+         return BoardFile.get().getBoolean(path);
+      } catch (NullPointerException e) {
+         Bukkit.getLogger().severe("Scoreboard line is not found! Path '" + path + "'");
+      }
+      return false;
    }
 
    private List<String> getStringList(String path) {
       List<String> list = new ArrayList<>();
-      for (String s : BoardFile.get().getStringList(path)) {
-         list.add(ChatColor.translateAlternateColorCodes('&', s));
+      try {
+         for (String s : BoardFile.get().getStringList(path)) {
+            list.add(ChatColor.translateAlternateColorCodes('&', s));
+         }
+      } catch (NullPointerException e) {
+         Bukkit.getLogger().severe("Scoreboard line is not found! Path '" + path + "'");
       }
       return list;
    }
 
    private int getInt(String path) {
-      return BoardFile.get().getInt(path);
+      try {
+         return BoardFile.get().getInt(path);
+      } catch (NullPointerException e) {
+         Bukkit.getLogger().severe("Scoreboard line is not found! Path '" + path + "'");
+      }
+
+      return 0;
    }
 }

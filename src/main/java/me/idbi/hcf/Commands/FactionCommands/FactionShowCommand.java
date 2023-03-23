@@ -1,12 +1,16 @@
 package me.idbi.hcf.Commands.FactionCommands;
 
+import com.comphenix.protocol.PacketType;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Tools.Formatter;
 import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -20,7 +24,7 @@ public class FactionShowCommand extends SubCommand {
 
     @Override
     public boolean isCommand(String argument) {
-        return argument.equalsIgnoreCase(getName());
+        return argument.equalsIgnoreCase(getName()) || argument.equalsIgnoreCase("info") || argument.equalsIgnoreCase("who");
     }
 
     @Override
@@ -64,6 +68,21 @@ public class FactionShowCommand extends SubCommand {
     @Override
     public void perform(Player p, String[] args) {
         Faction faction = Playertools.getPlayerFaction(p);
+        if(args.length == 2) {
+            OfflinePlayer offline = Bukkit.getOfflinePlayer(args[1]);
+            if(offline.hasPlayedBefore()) {
+                if(HCFPlayer.getPlayer(offline.getUniqueId()).inFaction()) {
+                    faction = HCFPlayer.getPlayer(offline.getUniqueId()).getFaction();
+                }
+            } else {
+                if(args[0].equalsIgnoreCase("who")) {
+                    p.sendMessage(Messages.not_found_player.language(p).queue());
+                    return;
+                }
+                faction = Playertools.getFactionByName(args[1]);
+            }
+        }
+
         if (faction == null) {
             p.sendMessage(Messages.no_faction_exists.language(p).queue());
             return;
@@ -72,7 +91,9 @@ public class FactionShowCommand extends SubCommand {
         String factionStatus = (Playertools.isFactionOnline(faction)
                 ? Messages.status_design_online.language(p).queue()
                 : Messages.status_design_offline.language(p).queue());
-        String leaderName = Bukkit.getOfflinePlayer(faction.getLeader()).getName() == null ? "-" : Bukkit.getOfflinePlayer(faction.getLeader()).getName();
+
+        String leaderName = Bukkit.getOfflinePlayer(UUID.fromString(faction.getLeader())).getName() == null
+                ? "-" : Bukkit.getOfflinePlayer(UUID.fromString(faction.getLeader())).getName();
         Location homeLoc;
         if (faction.getHomeLocation() == null)
             homeLoc = new Location(Bukkit.getWorld(Config.WorldName.asStr()), 0, 0, 0, 0, 0);
@@ -80,12 +101,13 @@ public class FactionShowCommand extends SubCommand {
 
         addCooldown(p);
 
+        Bukkit.broadcastMessage(leaderName);
         for (String line : Messages.faction_show.language(p).setupShow(
                         faction.getName(), factionStatus, leaderName, String.valueOf(faction.getBalance()),
                         faction.getKills() + "",
                         faction.getDeaths() + "",
                         homeLoc.getBlockX() + ", " + homeLoc.getBlockZ(),
-                        faction.getDTR() + "",
+                        Formatter.formatDtr(faction),
                         ((faction.getDTR() == faction.getDTR_MAX()) ? "-" : Playertools.convertLongToTime(faction.getDTR_TIMEOUT())),
                         faction.getDTR_MAX() + "",
                         Playertools.getOnlineSize(faction) + "",

@@ -25,7 +25,8 @@ public class AdminScoreboard {
     private static final DecimalFormat dfSharp = new DecimalFormat("0.0");
 
     public static void refresh(Player p) {
-        List<String> mainScoreboard = new ArrayList<>();
+        Scoreboards.refresh(p);
+        /*List<String> mainScoreboard = new ArrayList<>();
         for (String s : Config.StaffScoreboard.asStrList()) {
             mainScoreboard.add(ChatColor.translateAlternateColorCodes('&', s));
         }
@@ -77,7 +78,7 @@ public class AdminScoreboard {
             Main.boards.put(p.getUniqueId(), newBoard);
             return;
         }
-        board.updateLines(newReplacedList);
+        board.updateLines(newReplacedList);*/
 
     }
 
@@ -97,6 +98,7 @@ public class AdminScoreboard {
   - "&f* &7TPS: &a%tps%"
      */
 
+/*
     public static ArrayList<List<String>> sortLists() {
         List<String> str = Config.StaffScoreboard.asStrList();
         List<String> fix = new ArrayList<>();
@@ -123,6 +125,7 @@ public class AdminScoreboard {
         returnList.add(timers);
         return returnList;
     }
+*/
 
     public static String replaceVariablesAdmin(String inputString, Player p) {
         HCFPlayer player = HCFPlayer.getPlayer(p);

@@ -1,6 +1,10 @@
 package me.idbi.hcf.Tools;
 
 import java.text.*;
+
+import me.idbi.hcf.CustomFiles.Configs.Config;
+import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Objects.Faction;
 import org.apache.commons.lang.time.*;
 import java.util.concurrent.*;
 import java.util.*;
@@ -18,15 +22,25 @@ public class Formatter {
     private static final ThreadLocal<DecimalFormat> REMAINING_SECONDS;
     public static SimpleDateFormat DATE_FORMAT;
 
-    public static String formatDtr(double time) {
-        String dtr = Formatter.DTR_CACHE.get(time);
-        if (dtr != null) {
-            return dtr;
-        }
-        String format = Formatter.DTR_FORMATTER.format(time);
-        Formatter.DTR_CACHE.put(time, format);
+    public static String formatDtr(Faction faction) {
+        double dtr = faction.getDTR();
+        DecimalFormat formatter = new DecimalFormat("0.00");
 
-        return format;
+        double lowDTR = Config.DTRLowDTR.asDouble();
+        String color = Config.DTRColorNormal.asStr();
+
+        if(dtr <= lowDTR && dtr > 0) {
+            color = Config.DTRColorLowDTR.asStr();
+        } else if(dtr <= 0) {
+            color = Config.DTRColorRaidable.asStr();
+        }
+
+        String suffix = Config.DTRSymbolNormal.asStr();
+        if(faction.getDTR_TIMEOUT() != 0) {
+            suffix = Config.DTRSymbolRegenerating.asStr();
+        }
+
+        return color + formatter.format(dtr) + suffix;
     }
 
     /**
