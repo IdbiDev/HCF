@@ -13,6 +13,7 @@ public enum Timers {
     APPLE(Config.GolderApple.asInt() * 1000),
     GAPPLE(Config.EnchantedGoldenApple.asInt() * 1000),
     PVP_TIMER(Config.PvPTimer.asInt() * 1000),
+    CLASS_WARMUP(Config.ClassWarmupTime.asInt() * 1000),
     BARD_COOLDOWN(Config.BardEnergy.asInt() * 1000),
     ARCHER_TAG(Config.ArcherTag.asInt() * 1000),
     ENDER_PEARL(Config.EnderPearl.asInt() * 1000),

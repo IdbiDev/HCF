@@ -21,7 +21,7 @@ import me.idbi.hcf.Economy.VaultHook;
 import me.idbi.hcf.Koth.AutoKoth;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Scoreboard.CustomTimers;
-import me.idbi.hcf.Scoreboard.FastBoard;
+import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
 import me.idbi.hcf.Scoreboard.BoardManager;
 import me.idbi.hcf.TabManager.TabAPIv2.TabAPI;
 import me.idbi.hcf.TabManager.TabManager;
@@ -75,17 +75,16 @@ public final class Main extends JavaPlugin implements Listener {
     public static boolean SOTWEnabled;
     public static int warzoneSize;
     public static double maxDTR;
+    public static long dtrRegenTime;
     public static boolean abilitiesLoaded = false;
     public static boolean customEnchantsLoaded = false;
     public static boolean discordLogLoaded = false;
     public static HashMap<String, CustomTimers> customSBTimers;
-    public static int DTRREGENTIME;
     public static HashMap<Integer, Faction> factionCache = new HashMap<>();
     public static HashMap<String, HCF_Claiming.Faction_Claim> kothCache = new HashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
     public static HashMap<UUID, HCFPlayer> playerCache = new HashMap<>();
     public static ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
-    public static HashMap<Integer, Long> DTRREGEN = new HashMap<>();
     public static HashMap<LivingEntity, ArrayList<ItemStack>> savedItems = new HashMap<>();
     public static HashMap<LivingEntity, Long> savedPlayers = new HashMap<>();
     public static ArrayList<UUID> deathWaitClear = new ArrayList<>();
@@ -210,7 +209,7 @@ public final class Main extends JavaPlugin implements Listener {
 
         // Setup variables
 
-        DTRREGENTIME = Config.DTRRegen.asInt() * 1000;
+        dtrRegenTime = Config.DTRRegen.asInt() * 1000;
         deathbanTime = Config.Deathban.asInt() * 1000L;
         stuckDuration = Config.StuckTimer.asInt() * 1000;
         Koth.GLOBAL_TIME = Config.KOTHDuration.asInt() * 1000;
@@ -276,14 +275,11 @@ public final class Main extends JavaPlugin implements Listener {
         }
 
         // Timers
-        miscTimers.checkArmors();
         miscTimers.DTRTimer();
-        miscTimers.bardEnergy();
-        miscTimers.potionLimiter();
+        miscTimers.mainRefresher();
         miscTimers.autoSave();
         miscTimers.KOTHCountdown();
         miscTimers.cleanupFakeWalls();
-        miscTimers.archerTagEffect();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
 
         SpeedModifiers.asyncCacheBrewingStands();

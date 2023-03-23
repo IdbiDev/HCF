@@ -2,8 +2,8 @@ package me.idbi.hcf.Scoreboard;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.idbi.hcf.CustomFiles.Configs.Config;
-import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
 import me.idbi.hcf.Tools.AdminTools;
 import me.idbi.hcf.Tools.MiscTimers;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;

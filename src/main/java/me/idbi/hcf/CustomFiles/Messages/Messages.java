@@ -76,6 +76,8 @@ public enum Messages {
     faction_claim_too_large("Claims","%prefix% &cYour claim is too large! (Max size: %number%x%number%)"),
     faction_claim_overlap_plus_one("Claims","%prefix% &cYour claim can't overlap an existing claim! Leave a block between the two claims"),
     faction_claim_not_connected("Claims","%prefix% &cYour claim is not connected to the main claim."),
+    faction_not_have_claim("Claims","%prefix% &cYour faction does not have any claims."),
+    success_unclaim("Claims","%prefix% &aYou successfully unclaimed! The money is deposi"),
 
 
 

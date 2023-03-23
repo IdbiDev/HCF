@@ -32,6 +32,7 @@ public class HCFPlayer {
     // le lehet kérni: "getUUID()"
     private UUID uuid;
     @Getter private String name;
+
     @Getter private Faction faction;
     @Getter private int money;
     @Getter private ArrayList<ChatTypes> toggledChatTypes;
@@ -56,6 +57,7 @@ public class HCFPlayer {
     @Getter @Setter private boolean online;
     @Getter private HashMap<Timers, Long> timers;
     @Getter private Board scoreboard;
+    @Getter @Setter private boolean isClassWarmup;
 
     public HCFPlayer(UUID uuid,
                      int deaths,
@@ -101,6 +103,7 @@ public class HCFPlayer {
             }
             this.rollbacks = new TreeMap<>();
             this.timers = new HashMap<>();
+            this.isClassWarmup = false;
             /*
             SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',money='?'",
                     this.name, this.uuid.toString(), Config.default_balance.asInt() + "");*/

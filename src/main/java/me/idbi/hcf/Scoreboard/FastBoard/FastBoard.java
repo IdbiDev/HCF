@@ -1,4 +1,4 @@
-package me.idbi.hcf.Scoreboard;
+package me.idbi.hcf.Scoreboard.FastBoard;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

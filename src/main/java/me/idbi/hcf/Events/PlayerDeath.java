@@ -23,7 +23,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static me.idbi.hcf.Main.DTRREGENTIME;
+import static me.idbi.hcf.Main.dtrRegenTime;
 
 
 public class PlayerDeath implements Listener {
@@ -39,7 +39,8 @@ public class PlayerDeath implements Listener {
         hcfVictim.addDeaths();
         e.setDeathMessage("");
         if (faction != null) {
-                Main.DTRREGEN.put(faction.getId(), System.currentTimeMillis() + DTRREGENTIME);
+                //Main.DTRREGEN.put(faction.getId(), System.currentTimeMillis() + DTRREGENTIME);
+            faction.setDTR_TIMEOUT(System.currentTimeMillis() + dtrRegenTime);
                 if(victim.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
                     faction.removeDTR(Config.OverworldDeathDTR.asDouble());
                 }else if(victim.getWorld().getEnvironment().equals(World.Environment.NETHER)) {

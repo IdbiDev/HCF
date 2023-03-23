@@ -74,4 +74,35 @@ public class ClassSelector {
             miner_class.removeEffects(p);
         }
     }
+    public static boolean isPlayerWearingValidClass(Player p) {
+        if(archer_class.checkArmor(p)){
+            return true;
+        }
+        if(miner_class.checkArmor(p)){
+            return true;
+        }
+        if(bard_class.checkArmor(p)){
+            return true;
+        }
+        if(rogue_class.checkArmor(p)){
+            return true;
+        }
+        return false;
+    }
+    public static Classes getPlayerWearingClass(Player p) {
+        if(archer_class.checkArmor(p)){
+            return Classes.ARCHER;
+        }
+        if(miner_class.checkArmor(p)){
+            return Classes.MINER;
+        }
+        if(bard_class.checkArmor(p)){
+            return Classes.BARD;
+        }
+        if(rogue_class.checkArmor(p)){
+            return Classes.ROGUE;
+        }
+        return Classes.NONE;
+    }
+
 }

@@ -231,15 +231,19 @@ public class Playertools {
     }
 
     public static Faction getFactionByName(String name) {
-        if (Main.nameToFaction.containsKey(name)) {
-            return Main.nameToFaction.get(name);
-        }
-        /*for (Map.Entry<Integer, Faction> entry : Main.faction_cache.entrySet()) {
-            if(entry.getValue().name.equalsIgnoreCase(name)) {
-                return entry.getValue();
-            }
-        }*/
+        for(Faction f : Main.factionCache.values())
+            if(f.getName().equalsIgnoreCase(name))
+                return f;
         return null;
+//        if (Main.nameToFaction.containsKey(name)) {
+//            return Main.nameToFaction.get(name);
+//        }
+//        /*for (Map.Entry<Integer, Faction> entry : Main.faction_cache.entrySet()) {
+//            if(entry.getValue().name.equalsIgnoreCase(name)) {
+//                return entry.getValue();
+//            }
+//        }*/
+//        return null;
     }
 
     public static ArrayList<Player> getFactionOnlineMembers(Faction faction) {

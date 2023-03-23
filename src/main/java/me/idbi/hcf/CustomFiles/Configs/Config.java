@@ -25,6 +25,7 @@ public enum Config {
     GolderApple("Cooldowns", 30, createComment("This will be set if you eat a normal G apple", "Must be in seconds")),
     EnchantedGoldenApple("Cooldowns", 3600, createComment("This will be set if you eat an Enchanted G apple", "Must be in seconds")),
     BardEnergy("Cooldowns", 3, createComment("This will be set if you use the bard powerup", "Must be in seconds")),
+    ClassWarmupTime("Cooldowns", 3, createComment("This will be used if you are equipping a class", "Must be in seconds")),
     Deathban("Cooldowns", 3600, createComment("This will be set if you die.", "Must be in seconds")),
     TeleportHome("Cooldowns", 10, createComment("This will be set if you teleporting home.", "Must be in seconds")),
     HomeTimer("Cooldowns", 15, createComment("This will be set if you use the command", "Must be in seconds")),

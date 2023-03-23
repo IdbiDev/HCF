@@ -123,6 +123,7 @@ public class SetupEvents {
 
         pm.registerEvents(new Rogue(), Main.getPlugin(Main.class));
         pm.registerEvents(new BrewPotion(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerPortal(), Main.getPlugin(Main.class));
 
         pm.registerEvents(new CrowbarInteraction(), Main.getPlugin(Main.class));
 

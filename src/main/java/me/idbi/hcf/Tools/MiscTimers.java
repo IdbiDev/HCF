@@ -21,6 +21,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -28,23 +29,41 @@ import static me.idbi.hcf.Koth.Koth.GLOBAL_TIME;
 import static me.idbi.hcf.Koth.Koth.stopKoth;
 
 public class MiscTimers {
+    private final HashMap<HCFPlayer,BukkitTask> warmup_tasks = new HashMap<>();
     Bard bard = new Bard();
-    public void checkArmors() {
-
-        new BukkitRunnable() {
+//    public void checkArmors() {
+//
+//        new BukkitRunnable() {
+//            @Override
+//            public void run() {
+//
+//                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+//                    ClassSelector.addClassToPlayer(player);
+//                    HCFPlayer hcf = HCFPlayer.getPlayer(player);
+//
+//                    //Shapes.Crossing(new Location(player.getWorld(),10,64,16),new Location(player.getWorld(),-21,64,-5),Effect.HEART,10);
+//                }
+//            }
+//        }.runTaskTimer(Main.getPlugin(Main.class), 0, 60);
+//    }
+    public void addClassToPlayer(Player player) {
+        HCFPlayer p = HCFPlayer.getPlayer(player);
+        if(p.isClassWarmup()) return;
+        BukkitTask task;
+        task = new BukkitRunnable() {
             @Override
             public void run() {
+                if(!ClassSelector.isPlayerWearingValidClass(player))
+                    cancel();
 
-                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                else 
                     ClassSelector.addClassToPlayer(player);
-                    HCFPlayer hcf = HCFPlayer.getPlayer(player);
-                    if (hcf.getPlayerClass() == Classes.BARD) {
-                        bard.useSimpleBardEffect(player);
-                    }
-                    //Shapes.Crossing(new Location(player.getWorld(),10,64,16),new Location(player.getWorld(),-21,64,-5),Effect.HEART,10);
-                }
+                p.setClassWarmup(false);
+                Timers.CLASS_WARMUP.remove(p);
+                System.out.println("EVENT HAPPEND");
             }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 60);
+        }.runTaskLater(Main.getPlugin(Main.class),60);
+        warmup_tasks.put(p, task);
     }
 
     /*public static void addBardEffects() {
@@ -84,19 +103,24 @@ public class MiscTimers {
         new BukkitRunnable() {
             @Override
             public void run() {
-                HashMap<Integer, Long> dtrRegen = Main.DTRREGEN;
-                for (Map.Entry<Integer, Long> entry : dtrRegen.entrySet()) {
-                    int key = entry.getKey();
-                    long val = entry.getValue();
-                    Faction f = Main.factionCache.get(key);
-                    // 4000+10000 <= 4000
-                    if (val <= System.currentTimeMillis()) {
-                        Main.DTRREGEN.remove(key);
-                        if (Main.debug)
-                            Main.sendCmdMessage("DTR REGEN finished: ");
-                        f.setDTR(f.getDTR_MAX());
-                    } //DTR regen: 0 Minutes 10 Seconds
-                    f.setDTR_TIMEOUT(val - System.currentTimeMillis());
+//                HashMap<Integer, Long> dtrRegen = Main.DTRREGEN;
+//                for (Map.Entry<Integer, Long> entry : dtrRegen.entrySet()) {
+//                    int key = entry.getKey();
+//                    long val = entry.getValue();
+//                    Faction f = Main.factionCache.get(key);
+//                    // 4000+10000 <= 4000
+//                    if (val <= System.currentTimeMillis()) {
+//                        Main.DTRREGEN.remove(key);
+//                        if (Main.debug)
+//                            Main.sendCmdMessage("DTR REGEN finished: ");
+//                        f.setDTR(f.getDTR_MAX());
+//                    } //DTR regen: 0 Minutes 10 Seconds
+//                    f.setDTR_TIMEOUT(val - System.currentTimeMillis());
+//                }
+                for(Faction f : Main.factionCache.values()){
+                    if(f.getDTR_TIMEOUT() <= System.currentTimeMillis()) {
+                        f.setDTR_TIMEOUT(0L);
+                    }
                 }
 
                 HashMap<LivingEntity, Long> savedPlayers = Main.savedPlayers;
@@ -129,6 +153,7 @@ public class MiscTimers {
                     if (clss == Classes.MINER) {
                         stats.TotalMinerClassTime += 1000L;
                     }
+
                 }
 
             }
@@ -137,7 +162,16 @@ public class MiscTimers {
 
     //LEc see
     //2Tick
-    public void bardEnergy() {
+    //                    if (hcf.getPlayerClass() == Classes.BARD) {
+    //                        new BukkitRunnable() {
+    //                            @Override
+    //                            public void run(){
+    //                                bard.useSimpleBardEffect(onlines);
+    //                            }
+    //
+    //                        }.runTaskLater(Main.getPlugin(Main.class),40);
+    //                    }
+    public void mainRefresher() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -166,6 +200,7 @@ public class MiscTimers {
                             }
                         }
                     }
+
                     //Combat Time
                     if (Timers.COMBAT_TAG.has(player)) {
                         shouldRefresh = true;
@@ -208,11 +243,47 @@ public class MiscTimers {
                     if (!Timers.PVP_TIMER.has(player) && !Timers.COMBAT_TAG.has(player)) {
                         //DeleteWallsForPlayer(player);
                     }
+                    if (!Timers.CLASS_WARMUP.has(player)) {
+                        shouldRefresh = true;
+                        //DeleteWallsForPlayer(player);
+                    }
                     if (shouldRefresh)
                         Scoreboards.refresh(player);
                         //Scoreboards.refresh(player);
                     //Class selector
                     //HCFPlayer hcf = HCFPlayer.getPlayer(player);
+//                    if(hcfPlayer.getPlayerClass())
+                    //Detect armor change
+                    if(!hcfPlayer.getPlayerClass().equals(ClassSelector.getPlayerWearingClass(player))) {
+                        if(hcfPlayer.getPlayerClass().equals(Classes.NONE)
+                                && !ClassSelector.getPlayerWearingClass(player).equals(Classes.NONE)
+                                && !hcfPlayer.isClassWarmup()) {
+                            //Add
+                            addClassToPlayer(player);
+                            hcfPlayer.setClassWarmup(true);
+                            Timers.CLASS_WARMUP.add(hcfPlayer);
+                        } else if(ClassSelector.getPlayerWearingClass(player).equals(Classes.NONE) && !hcfPlayer.getPlayerClass().equals(Classes.NONE)) {
+                            //Remove
+                            ClassSelector.addClassToPlayer(player);
+                            hcfPlayer.setClassWarmup(false);
+                            Timers.CLASS_WARMUP.remove(hcfPlayer);
+                            if(warmup_tasks.containsKey(hcfPlayer))
+                                warmup_tasks.get(hcfPlayer).cancel();
+                        }
+                        if(ClassSelector.getPlayerWearingClass(player).equals(Classes.NONE) && hcfPlayer.isClassWarmup()){
+                            hcfPlayer.setClassWarmup(false);
+                            Timers.CLASS_WARMUP.remove(hcfPlayer);
+                            if(warmup_tasks.containsKey(hcfPlayer))
+                                warmup_tasks.get(hcfPlayer).cancel();
+                        }
+                    }else {
+                        if(ClassSelector.getPlayerWearingClass(player).equals(Classes.NONE) && hcfPlayer.isClassWarmup()){
+                            hcfPlayer.setClassWarmup(false);
+                            Timers.CLASS_WARMUP.remove(hcfPlayer);
+                            if(warmup_tasks.containsKey(hcfPlayer))
+                                warmup_tasks.get(hcfPlayer).cancel();
+                        }
+                    }
                     if (hcfPlayer.getPlayerClass() != Classes.BARD) continue;
                     if (!(hcfPlayer.getBardEnergy() >= bard.maxBardEnergy)) {
                         hcfPlayer.addBardEnergy(0.1 * bard.bardEnergyMultiplier);
@@ -249,23 +320,23 @@ public class MiscTimers {
     }
 
 
-    public void potionLimiter() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                    for (PotionEffect effect : player.getActivePotionEffects()) {
-                        if (HCF_Rules.potionLimits.containsKey(effect.getType())) {
-                            if (effect.getAmplifier() > HCF_Rules.potionLimits.get(effect.getType())) {
-                                player.removePotionEffect(effect.getType());
-                                player.addPotionEffect(new PotionEffect(effect.getType(), effect.getDuration(), HCF_Rules.potionLimits.get(effect.getType()), false, false));
-                            }
-                        }
-                    }
-                }
-            }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
-    }
+//    public void potionLimiter() {
+//        new BukkitRunnable() {
+//            @Override
+//            public void run() {
+//                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+//                    for (PotionEffect effect : player.getActivePotionEffects()) {
+//                        if (HCF_Rules.potionLimits.containsKey(effect.getType())) {
+//                            if (effect.getAmplifier() > HCF_Rules.potionLimits.get(effect.getType())) {
+//                                player.removePotionEffect(effect.getType());
+//                                player.addPotionEffect(new PotionEffect(effect.getType(), effect.getDuration(), HCF_Rules.potionLimits.get(effect.getType()), false, false));
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
+//    }
 
     public void cleanupFakeWalls() {
         new BukkitRunnable() {

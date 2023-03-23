@@ -477,6 +477,14 @@ public class HCF_Claiming {
         }
         return -1;
     }
+    public static double calculateMoneyFromClaim(Faction faction) {
+        double money = 0;
+        for(Faction_Claim claim : faction.getClaims()) {
+            int size = Math.round((Math.abs(claim.getEndX() - claim.getStartX()) * Math.abs(claim.getEndZ () - claim.getStartZ())));
+            money += (size*Config.ClaimPriceMultiplier.asDouble());
+        }
+        return money;
+    }
 
     public static int calcBlocks(Player p) {
         HCFPlayer player = HCFPlayer.getPlayer(p);
