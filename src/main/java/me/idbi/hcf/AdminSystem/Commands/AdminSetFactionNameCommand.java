@@ -64,20 +64,22 @@ public class AdminSetFactionNameCommand extends SubCommand {
             p.sendMessage(Messages.not_found_faction.language(p).queue());
             return;
         }
-        if (args[2].length() > 5) {
-            p.sendMessage(Messages.not_a_number.language(p).queue());
-            return;
-        }
+//        if (args[2].length() > 5) {
+//            p.sendMessage(Messages.not_a_number.language(p).queue());
+//            return;
+//        }
         Faction selectedFaction = Main.nameToFaction.get(args[1]);
         selectedFaction.setName(args[2]);
         //Todo: Broadcast the change
+        selectedFaction.saveFactionData();
 
         for (Player member : selectedFaction.getOnlineMembers()) {
             member.sendMessage(Messages.set_faction_name.language(member).setExecutor(p).setFaction(args[2]).queue());
         }
 
         p.sendMessage(Messages.admin_set_faction_name.setFaction(selectedFaction.getName()).queue());
-
+        Main.nameToFaction.remove(args[1])  ;
+        Main.nameToFaction.put(args[2],selectedFaction);
         Scoreboards.RefreshAll();
     }
 }

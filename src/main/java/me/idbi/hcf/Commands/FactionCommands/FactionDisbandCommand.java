@@ -5,6 +5,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.FrakcioGUI.GUI_Sound;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
+import me.idbi.hcf.Tools.HCF_Claiming;
 import me.idbi.hcf.Tools.Objects.*;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
@@ -114,7 +115,8 @@ public class FactionDisbandCommand extends SubCommand {
         }
 
         addCooldown(p);
-        HCFPlayer.getPlayer(p).setChatType(ChatTypes.PUBLIC);
+        HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
+        hcfPlayer.setChatType(ChatTypes.PUBLIC);
         selectedFaction.setMembers(new ArrayList<HCFPlayer>());
 
         // LogLibrary.sendFactionDisband(p, selectedFaction.name);
@@ -130,6 +132,12 @@ public class FactionDisbandCommand extends SubCommand {
         GUI_Sound.playSound(p, GUI_Sound.HCFSounds.SUCCESS);
         NameChanger.refresh(p);
         NameChanger.refreshAll();
+        if(!hcfPlayer.getFaction().getClaims().isEmpty()) {
+            double backmoney = HCF_Claiming.calculateMoneyFromClaim(hcfPlayer.getFaction());
+            hcfPlayer.addMoney(Math.toIntExact(Math.round(backmoney)));
+            hcfPlayer.getFaction().clearClaims(); // done
+
+        }
         selectedFaction.selfDestruct();
         //Bukkit.broadcastMessage(Messages.DELETE_FACTION_BY_ADMIN.repExecutor(p).setFaction(selectedFaction.factioname).queue());
     }

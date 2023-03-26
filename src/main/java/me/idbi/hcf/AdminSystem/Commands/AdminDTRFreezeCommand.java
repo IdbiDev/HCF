@@ -8,10 +8,10 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
-public class AdminSetDTRCommand extends SubCommand {
+public class AdminDTRFreezeCommand extends SubCommand {
     @Override
     public String getName() {
-        return "setdtr";
+        return "freezedtr";
     }
 
     @Override
@@ -26,7 +26,7 @@ public class AdminSetDTRCommand extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/admin " + getName() + " <faction> <dtr>";
+        return "/admin " + getName() + " <faction> <true | false>";
     }
 
     @Override
@@ -41,7 +41,7 @@ public class AdminSetDTRCommand extends SubCommand {
 
     @Override
     public boolean hasCooldown(Player p) {
-        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
+        if (!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
         return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
     }
 
@@ -59,19 +59,18 @@ public class AdminSetDTRCommand extends SubCommand {
 
     @Override
     public void perform(Player p, String[] args) {
-        addCooldown(p);
         Faction faction = Playertools.getFactionByName(args[1]);
         if(faction != null) {
             try {
-                double dtr = Double.parseDouble(args[2]);
-                if(dtr > faction.getDTR_MAX())
-                    dtr = faction.getDTR_MAX();
-                faction.setDTR(dtr);
-            }catch (Exception e) {
+                faction.setDTRRegenEnabled(Boolean.parseBoolean(args[2]));
+            } catch (Exception e) {
                 p.sendMessage(Messages.not_a_number.language(p).queue());
             }
-        } else {
+            //Todo: Messages
+        }else {
             p.sendMessage(Messages.not_found_faction.language(p).queue());
         }
+
+
     }
 }

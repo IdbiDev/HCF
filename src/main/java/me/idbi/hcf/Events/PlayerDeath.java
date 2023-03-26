@@ -37,6 +37,8 @@ public class PlayerDeath implements Listener {
         HCFPlayer hcfVictim = HCFPlayer.getPlayer(victim);
         hcfVictim.createRollback(victim.getLastDamageCause().getCause(), Rollback.RollbackLogType.DEATH);
         hcfVictim.addDeaths();
+        hcfVictim.takeMoney(hcfVictim.getMoney());
+
         e.setDeathMessage("");
         if (faction != null) {
                 //Main.DTRREGEN.put(faction.getId(), System.currentTimeMillis() + DTRREGENTIME);
@@ -51,7 +53,11 @@ public class PlayerDeath implements Listener {
         }
         if (damager != null) {
             HCFPlayer hcfDamager = HCFPlayer.getPlayer(damager);
+            hcfDamager.addMoney(Config.AddMoneyOnKill.asInt());
             hcfDamager.addKills();
+            if(Config.PlayerLoseMoney.asBoolean())
+                hcfDamager.addMoney(hcfVictim.getMoney());
+
             for (Player player : Bukkit.getOnlinePlayers())
                 player.sendMessage(Messages.kill_message_broadcast.language(player).setVictimWithKills(victim, damager).queue());
             if (faction != null) {

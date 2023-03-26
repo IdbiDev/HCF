@@ -6,9 +6,12 @@ import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.Objects.Faction;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static me.idbi.hcf.Commands.FactionCommands.FactionCreateCommand.con;
 
 public class FactionSetHomeCommand extends SubCommand implements Listener {
     public static ArrayList<Player> teleportPlayers = new ArrayList<>();
@@ -78,6 +81,7 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
             put("YAW", (int) p.getLocation().getYaw());
             put("PITCH", (int) p.getLocation().getPitch());
         }};
+        SQL_Connection.dbExecute(con,"UPDATE factions SET home='?' WHERE ID='?'",new JSONObject(map).toString());
         HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
         if (claim != null) {
             if (claim.getFaction().getId() == faction.getId()) {

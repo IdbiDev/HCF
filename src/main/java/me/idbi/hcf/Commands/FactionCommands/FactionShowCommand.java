@@ -100,8 +100,6 @@ public class FactionShowCommand extends SubCommand {
         else homeLoc = faction.getHomeLocation();
 
         addCooldown(p);
-
-        Bukkit.broadcastMessage(leaderName);
         for (String line : Messages.faction_show.language(p).setupShow(
                         faction.getName(), factionStatus, leaderName, String.valueOf(faction.getBalance()),
                         faction.getKills() + "",

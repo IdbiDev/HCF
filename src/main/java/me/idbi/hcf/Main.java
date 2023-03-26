@@ -213,7 +213,7 @@ public final class Main extends JavaPlugin implements Listener {
 
         // Setup variables
 
-        dtrRegenTime = Config.DTRRegen.asInt() * 1000;
+        dtrRegenTime = Config.DTRRegen.asInt() * 1000L;
         deathbanTime = Config.Deathban.asInt() * 1000L;
         stuckDuration = Config.StuckTimer.asInt() * 1000;
         Koth.GLOBAL_TIME = Config.KOTHDuration.asInt() * 1000;

@@ -51,6 +51,8 @@ public enum Messages {
     not_in_faction("Factions","%prefix% &cYou are not in a faction!"),
     target_not_in_faction("Factions","%prefix% &cThis player does not in a faction!"),
     player_in_faction("Factions","%prefix% &cThis player is already in a faction!"),
+    player_cant_self_promote("Factions","%prefix% &c&nNice try&r&c, but you cant promote yourself :("),
+    player_cant_self_demote("Factions","%prefix% &c&nNice try&r&c, but you cant demote yourself :("),
 
     uninvite_target("Factions","%prefix% &2&o%player%&c canceled your invitation!"),
     uninvite_executor("Factions","%prefix% &cYou canceled to invite &2&o%player%&c!"),
@@ -85,10 +87,11 @@ public enum Messages {
     faction_claim_too_small("Claims","%prefix% &cYour claim is too small! (Min size: %number%x%number%)"),
     //The difference between sizes :o
     faction_claim_too_large("Claims","%prefix% &cYour claim is too large! (Max size: %number%x%number%)"),
+    faction_reached_max_claims("Claims","%prefix% &cYour faction reached the max amount of claims."),
     faction_claim_overlap_plus_one("Claims","%prefix% &cYour claim can't overlap an existing claim! Leave a block between the two claims"),
     faction_claim_not_connected("Claims","%prefix% &cYour claim is not connected to the main claim."),
     faction_not_have_claim("Claims","%prefix% &cYour faction does not have any claims."),
-    success_unclaim("Claims","%prefix% &aYou successfully unclaimed! The money is deposi"),
+    success_unclaim("Claims","%prefix% &aYou successfully unclaimed!"),
 
 
 
@@ -172,11 +175,11 @@ public enum Messages {
     leader_chat_channel("Chat","Leader"),
 
     // Faction permissions messages // ToDo: valamit kezdeni vele
-//    promote_message("Factions","%prefix% &6&o%executor% &epromoted you to &6&o%rank%&e!"),
-//    demote_message("Factions","%prefix% &6&o%executor% &edemoted you to &6&o%rank%&e!"),
+    promote_message("Factions","%prefix% &6&o%executor% &epromoted you to &6&o%rank%&e!"),
+    demote_message("Factions","%prefix% &6&o%executor% &edemoted you to &6&o%rank%&e!"),
 //
-//    executor_promote_message("Factions","%prefix% &eYou promoted &6&o%player% &eto &6&o%rank%&e!"),
-//    executor_demote_message("Factions","%prefix% &eYou demoted &6&o%player% &eto &6&o%rank%&e!"),
+    executor_promote_message("Factions","%prefix% &eYou promoted &6&o%player% &eto &6&o%rank%&e!"),
+    executor_demote_message("Factions","%prefix% &eYou demoted &6&o%player% &eto &6&o%rank%&e!"),
 //
 //    faction_create_rank("Factions","%prefix% &aRank successfully created!"),
 //    faction_rank_exists("Factions","%prefix% &cThis rank already exists!"),

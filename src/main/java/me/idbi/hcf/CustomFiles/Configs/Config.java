@@ -48,6 +48,8 @@ public enum Config {
 
     BrewingSpeedMultiplier("Default values", 1, createComment("")),
     CookingSpeedMultiplier("Default values", 1, createComment("")),
+    PlayerLoseMoney("Kills", true, createComment("If the player dies, the current balance of the player will be transfered to the killer, or deleted.")),
+    AddMoneyOnKill("Kills", 1000, createComment("If the player kills, then this value will deposited into the killer account.")),
     ClaimingWandTitle("Claim", "&6Claiming Wand"),
     ClaimingWandLore("Claim", Arrays.asList(
             "&eLeft and right click on the ground",

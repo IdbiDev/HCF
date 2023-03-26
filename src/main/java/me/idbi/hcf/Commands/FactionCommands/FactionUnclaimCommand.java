@@ -61,6 +61,7 @@ public class FactionUnclaimCommand extends SubCommand {
 
     @Override
     public void perform(Player p, String[] args) {
+        addCooldown(p);
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if(player.inFaction()) {
             if(player.getRank().isLeader()) {

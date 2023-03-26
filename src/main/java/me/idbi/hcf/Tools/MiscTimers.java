@@ -118,8 +118,9 @@ public class MiscTimers {
 //                    f.setDTR_TIMEOUT(val - System.currentTimeMillis());
 //                }
                 for(Faction f : Main.factionCache.values()){
-                    if(f.getDTR_TIMEOUT() <= System.currentTimeMillis()) {
+                    if(f.getDTR_TIMEOUT() <= System.currentTimeMillis() && f.getDTR() != f.getDTR_MAX() && f.isDTRRegenEnabled()) {
                         f.setDTR_TIMEOUT(0L);
+                        f.setDTR(f.getDTR_MAX());
                     }
                 }
 

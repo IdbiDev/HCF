@@ -32,6 +32,7 @@ public class AdminCommandManager implements CommandExecutor {
         subcommands.add(new AdminSetPlayerFactionCommand());
         subcommands.add(new AdminSpawnPlaceCommand());
         subcommands.add(new AdminTakeMoneyCommand());
+        subcommands.add(new AdminDTRFreezeCommand());
 
         subcommands.add(new AdminVanishCommand());
         subcommands.add(new AdminWithdrawCommand());
@@ -56,6 +57,7 @@ public class AdminCommandManager implements CommandExecutor {
                             sender.sendMessage(Messages.missing_argument.queue());
                         } catch (Exception e) {
                             sender.sendMessage(Messages.error_while_executing.queue());
+                            e.printStackTrace();
                         }
                     }
                     for (int i = 0; i < getSubcommands().size(); i++) {
@@ -82,6 +84,7 @@ public class AdminCommandManager implements CommandExecutor {
                             p.sendMessage(Messages.missing_argument.language(p).queue());
                         } catch (Exception e) {
                             p.sendMessage(Messages.error_while_executing.language(p).queue());
+                            e.printStackTrace();
                         }
                     }
                 } else if (args.length == 0) {

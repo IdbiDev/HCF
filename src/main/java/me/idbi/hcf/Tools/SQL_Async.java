@@ -35,6 +35,9 @@ public class SQL_Async {
                     poll_stm = con.createStatement();
                 } catch (SQLException e) {
                     e.printStackTrace();
+                    try {
+                        poll_stm.close();
+                    } catch (SQLException ignored) {}
                     result.completeExceptionally(e);
                 }
                 assert poll_stm != null;
@@ -81,6 +84,12 @@ public class SQL_Async {
                         }
                     }
                 }
+                try {
+                    poll_stm.close();
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }.runTaskAsynchronously(m);
         return result;
@@ -109,11 +118,14 @@ public class SQL_Async {
                     if (genkys != null && genkys.next()) {
                         result.complete((int) genkys.getLong(1));
                     }
-
+                    st.close();
+                    assert genkys != null;
+                    genkys.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                     result.completeExceptionally(e);
                 }
+
             }
         }.runTaskAsynchronously(m);
         return result;

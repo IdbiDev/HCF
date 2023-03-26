@@ -436,7 +436,7 @@ public class Playertools {
                 //Main.sendCmdMessage(faction.name + " UWUUUUUUUUUUUUUUUUUUU");
                 if (Main.debug)
                     Main.sendCmdMessage(faction.getName() + " Prepared");
-                if (rs.getString("home") == null)
+                if (rs.getString("home") == null || rs.getString("home").equalsIgnoreCase("null"))
                     continue;
                 Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(rs.getString("home")));
                 Location loc = new Location(
@@ -628,7 +628,7 @@ public class Playertools {
         HCF_Claiming.Point new_claim_start = new HCF_Claiming.Point(minX - diff, minZ - diff);
         HCF_Claiming.Point new_claim_end = new HCF_Claiming.Point(maxX + diff, maxZ + diff);
 
-        return HCF_Claiming.doOverlap3(new_claim_start, new_claim_end, p1, p2);
+        return HCF_Claiming.doOverlap(new_claim_start, new_claim_end, p1, p2);
     }
 
     public static int getDistanceBetweenPoints2D(HCF_Claiming.Point p1, HCF_Claiming.Point p2) {

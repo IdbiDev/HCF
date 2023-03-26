@@ -42,6 +42,7 @@ public class Faction {
     @Getter @Setter private ArrayList<HCFPlayer> members = new ArrayList<>();
     @Getter @Setter private Faction focusedTeam;
     @Getter @Setter private Location rallyPosition;
+    @Getter @Setter private boolean isDTRRegenEnabled;
 
     //Statistics
     public ArrayList<HistoryEntrys.BalanceEntry> balanceHistory = new ArrayList<>();
@@ -62,6 +63,8 @@ public class Faction {
         this.ranks = new ArrayList<FactionRankManager.Rank>();
         this.claims = new ArrayList<HCF_Claiming.Faction_Claim>();
         this.members = new ArrayList<HCFPlayer>();
+        this.DTR_MAX = Double.parseDouble(Playertools.CalculateDTR(this));
+        this.DTR = this.getDTR_MAX();
 
     }
 
@@ -99,6 +102,7 @@ public class Faction {
 
     public void addMember(HCFPlayer hcfPlayer) {
         this.members.add(hcfPlayer);
+        this.refreshDTR();
     }
     public void removeMember(HCFPlayer hcfPlayer) {
         this.members.remove(hcfPlayer);
@@ -124,12 +128,24 @@ public class Faction {
 
     public void saveFactionData() {
         String AlliesEntry = AllyTools.getAlliesJson(this);
-        SQL_Connection.dbExecute(con, "UPDATE factions SET name='?',money='?',leader='?',`statistics`='?', Allies='?' WHERE ID='?'", name, String.valueOf(balance), leader, assembleFactionHistory().toString(), AlliesEntry, String.valueOf(id));
+
+        SQL_Connection.dbExecute(con, "UPDATE factions SET name='?',money='?',leader='?',`statistics`='?', Allies='?',home='?' WHERE ID='?'", name, String.valueOf(balance), leader, assembleFactionHistory().toString(), AlliesEntry,homeLocationToJSON(), String.valueOf(id));
         for (FactionRankManager.Rank rank : ranks) {
             rank.saveRank();
         }
     }
-
+    private String homeLocationToJSON() {
+        if(getHomeLocation() == null)
+            return null;
+        HashMap<String, Integer> map = new HashMap<String, Integer>() {{
+            put("X",getHomeLocation().getBlockX());
+            put("Y", getHomeLocation().getBlockY());
+            put("Z", getHomeLocation().getBlockZ());
+            put("YAW", (int) getHomeLocation().getYaw());
+            put("PITCH", (int) getHomeLocation().getPitch());
+        }};
+        return new JSONObject(map).toString();
+    }
     public void invitePlayer(Player p) {
         if (getMemberCount() + 1 > maxMembersProFaction || invites.getInvitedPlayers().size() + 1 > HCF_Rules.maxInvitesPerFaction) {
             p.sendMessage(Messages.max_members_reached.language(p).queue());

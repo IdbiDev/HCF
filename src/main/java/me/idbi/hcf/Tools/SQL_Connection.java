@@ -51,9 +51,11 @@ public class SQL_Connection {
                 try {
                     PreparedStatement st = con.prepareStatement(private_string_query);
                     st.executeUpdate();
-
+                    st.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
+                } finally {
+
                 }
             }
         }.runTaskAsynchronously(m);
@@ -76,8 +78,10 @@ public class SQL_Connection {
             st.executeUpdate();
             ResultSet genkys = st.getGeneratedKeys();
             if (genkys != null && genkys.next()) {
+                st.close();
                 return ((int) genkys.getLong(1));
             }
+            st.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -109,6 +113,7 @@ public class SQL_Connection {
         }
         ResultSet rs = null;
         try {
+            assert poll_stm != null;
             rs = poll_stm.executeQuery(private_string_query);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -116,12 +121,14 @@ public class SQL_Connection {
 
         ResultSetMetaData metaData = null;
         try {
+            assert rs != null;
             metaData = rs.getMetaData();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         int colCount = 0;
         try {
+            assert metaData != null;
             colCount = metaData.getColumnCount();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -141,37 +148,11 @@ public class SQL_Connection {
                 }
             }
         }
-
+        try {
+            poll_stm.close();
+        } catch (SQLException ignored) {
+        }
         return poll_qh;
 
-    }
-
-    // Kobának bruh..          tábla név, Listába a keyek, valuek
-    public static int dbInsert(Connection con, String table, String[] keys, String[] values) {
-        String private_string_query = "INSERT INTO " + table + "(" + String.join(",", keys) + ") VALUES (" + String.join(",", values) + ")";
-        Statement st = null;
-        try {
-            st = con.createStatement();
-            return st.executeUpdate(private_string_query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    // Kobának bruh..          tábla név, Listába a keyek, valuek; whereclause pl: "x=1 AND y=2" tehát a 'WHERE' állítás nem kell
-    public static int dbUpdate(Connection con, String table, String[] keys, String[] values, String whereClause) {
-        String private_string_query = "UPDATE " + table + "SET ";
-        for (int i = 0; i < keys.length; i++) {
-            private_string_query += keys[i] + "=" + values[i];
-        }
-        private_string_query += " WHERE " + whereClause;
-        try {
-            Statement st = con.createStatement();
-            return st.executeUpdate(private_string_query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
     }
 }
