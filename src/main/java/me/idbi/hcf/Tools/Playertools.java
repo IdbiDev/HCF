@@ -499,8 +499,6 @@ public class Playertools {
                 alreadyMembers = new ArrayList<>();
             alreadyMembers.add(hcf.getName());
             returnHashMap.put(hcf.getRank().getName(), alreadyMembers);
-
-
         }
         return returnHashMap;
     }

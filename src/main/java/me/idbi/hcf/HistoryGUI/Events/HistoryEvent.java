@@ -1,5 +1,7 @@
 package me.idbi.hcf.HistoryGUI.Events;
 
+import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
+import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
 import me.idbi.hcf.HistoryGUI.GUITools;
 import me.idbi.hcf.HistoryGUI.History.FactionHistoryInventory;
 import me.idbi.hcf.Tools.Objects.Faction;
@@ -32,7 +34,7 @@ public class HistoryEvent implements Listener {
 
         if (f == null) return;
 
-        p.openInventory(FactionHistoryInventory.inv(f,
+        p.openInventory(FactionHistoryInventory.inv(p,f,
                 slot(balance) + page,
                 slot(kick),
                 slot(joinLeft),
@@ -54,7 +56,7 @@ public class HistoryEvent implements Listener {
 
         if (f == null) return;
 
-        p.openInventory(FactionHistoryInventory.inv(f,
+        p.openInventory(FactionHistoryInventory.inv(p, f,
                 slot(balance),
                 slot(kick) + page,
                 slot(joinLeft),
@@ -76,7 +78,7 @@ public class HistoryEvent implements Listener {
 
         if (f == null) return;
 
-        p.openInventory(FactionHistoryInventory.inv(f,
+        p.openInventory(FactionHistoryInventory.inv(p, f,
                 slot(balance),
                 slot(kick),
                 slot(joinLeft) + page,
@@ -98,7 +100,7 @@ public class HistoryEvent implements Listener {
 
         if (f == null) return;
 
-        p.openInventory(FactionHistoryInventory.inv(f,
+        p.openInventory(FactionHistoryInventory.inv(p, f,
                 slot(balance),
                 slot(kick),
                 slot(joinLeft),
@@ -120,7 +122,7 @@ public class HistoryEvent implements Listener {
 
         if (f == null) return;
 
-        p.openInventory(FactionHistoryInventory.inv(f,
+        p.openInventory(FactionHistoryInventory.inv(p, f,
                 slot(balance),
                 slot(kick),
                 slot(joinLeft),
@@ -142,7 +144,7 @@ public class HistoryEvent implements Listener {
 
         if (f == null) return;
 
-        p.openInventory(FactionHistoryInventory.inv(f,
+        p.openInventory(FactionHistoryInventory.inv(p, f,
                 slot(balance),
                 slot(kick),
                 slot(joinLeft),
@@ -158,6 +160,10 @@ public class HistoryEvent implements Listener {
         e.setCancelled(true);
 
         if (e.getCurrentItem() == null) return;
+        if(e.getCurrentItem().isSimilar(GUI_Items.back((Player) e.getWhoClicked()))) {
+            e.getWhoClicked().openInventory(MainInventory.mainInv((Player) e.getWhoClicked()));
+            return;
+        }
         if (e.getCurrentItem().getType() != Material.PAPER) return;
 
         if (e.getClickedInventory() != e.getView().getTopInventory()) return;

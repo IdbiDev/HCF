@@ -24,7 +24,7 @@ public class Formatter {
 
     public static String formatDtr(Faction faction) {
         double dtr = faction.getDTR();
-        DecimalFormat formatter = new DecimalFormat("0.00");
+        DecimalFormat formatter = new DecimalFormat("0.0");
 
         double lowDTR = Config.DTRLowDTR.asDouble();
         String color = Config.DTRColorNormal.asStr();
@@ -40,7 +40,7 @@ public class Formatter {
             suffix = Config.DTRSymbolRegenerating.asStr();
         }
 
-        return color + formatter.format(dtr) + suffix;
+        return color + String.format("#.1f", dtr) + suffix;
     }
 
     /**

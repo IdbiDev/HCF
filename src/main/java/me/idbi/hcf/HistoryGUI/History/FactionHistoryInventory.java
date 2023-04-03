@@ -3,6 +3,7 @@ package me.idbi.hcf.HistoryGUI.History;
 import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
 import me.idbi.hcf.Tools.Objects.Faction;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 public class FactionHistoryInventory {
@@ -16,7 +17,7 @@ public class FactionHistoryInventory {
         public ArrayList<HistoryEntrys.RankEntry> rankCreateHistory = new ArrayList<>();
      */
 
-    public static Inventory inv(Faction f, int balancePage, int kickPage, int joinLeftPage, int fJoinLeftPage, int invitePage, int rankCreatePage) {
+    public static Inventory inv(Player p, Faction f, int balancePage, int kickPage, int joinLeftPage, int fJoinLeftPage, int invitePage, int rankCreatePage) {
         Inventory inv = Bukkit.createInventory(null, 5 * 9, "§8" + f.getName() + "'s histories");
 
         for (int i = 0; i < inv.getSize(); i++) {
@@ -61,6 +62,7 @@ public class FactionHistoryInventory {
         inv.setItem(29, HistoryItems_2.fJoinLeft(f, fJoinLeftPage));
         inv.setItem(31, HistoryItems_2.inviteHistory(f, invitePage));
         inv.setItem(33, HistoryItems_2.rankCreateHistory(f, rankCreatePage));
+        inv.setItem(40, GUI_Items.back(p));
         return inv;
     }
 
