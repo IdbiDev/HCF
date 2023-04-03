@@ -10,10 +10,10 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
-public class FactionPromoteCommand extends SubCommand {
+public class FactionDemoteCommand extends SubCommand {
     @Override
     public String getName() {
-        return "promote";
+        return "demote";
     }
 
     @Override
@@ -71,30 +71,20 @@ public class FactionPromoteCommand extends SubCommand {
                                 FactionRankManager.Rank rank = hcfTarget.getRank();
                                 FactionRankManager.Rank nextRank;
                                 try {
-                                    nextRank = ranks.get(ranks.indexOf(rank)+1);
+                                    nextRank = ranks.get(ranks.indexOf(rank)-1);
                                 }catch (IndexOutOfBoundsException ignored) {
-                                    p.sendMessage(Messages.no_permission_in_faction.language(hcfPlayer).queue());
-                                    return;
-                                }
-
-                                if(nextRank == null) {
-                                    p.sendMessage(Messages.no_permission_in_faction.language(hcfPlayer).queue());
-                                    return;
-                                }
-                                if(nextRank.isLeader()) {
                                     p.sendMessage(Messages.no_permission_in_faction.language(hcfPlayer).queue());
                                     return;
                                 }
                                 hcfTarget.setRank(nextRank);
                                 Player target = Bukkit.getPlayer(hcfTarget.getUUID());
                                 if(target != null)
-                                    target.sendMessage(Messages.promote_message.language(target).setExecutor(p).setRank(nextRank.getName()).queue());
-                                p.sendMessage(Messages.executor_promote_message.language(target).setPlayer(hcfTarget).setRank(nextRank.getName()).queue());
+                                    target.sendMessage(Messages.demote_message.language(target).setExecutor(p).setRank(nextRank.getName()).queue());
+                                p.sendMessage(Messages.executor_demote_message.language(target).setPlayer(hcfTarget).setRank(nextRank.getName()).queue());
                                 for(HCFPlayer _player : f.getMembers()) {
                                     Player _player_  = Bukkit.getPlayer(_player.getUUID());
                                     if(_player_ != null)
-                                        _player_.sendMessage(Messages.executor_promote_broadcast_message.language(_player).setExecutor(hcfPlayer).setPlayer(hcfTarget).setRank(nextRank.getName()).queue());
-
+                                        _player_.sendMessage(Messages.executor_demote_broadcast_message.language(_player).setExecutor(hcfPlayer).setPlayer(hcfTarget).setRank(nextRank.getName()).queue());
                                 }
                             } else {
                                 p.sendMessage(Messages.no_permission_in_faction.language(p).queue());
@@ -103,7 +93,7 @@ public class FactionPromoteCommand extends SubCommand {
                             p.sendMessage(Messages.not_found_player.language(p).queue());
                         }
                     } else {
-                       p.sendMessage(Messages.player_cant_self_promote.language(p).queue());
+                        p.sendMessage(Messages.player_cant_self_demote.language(p).queue());
                     }
                 } else {
                     p.sendMessage(Messages.not_found_player.language(p).queue());

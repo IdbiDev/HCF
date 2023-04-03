@@ -493,8 +493,10 @@ public class Playertools {
     //TRASH RAM BOL        <RANK, PLAYERS>
     public static HashMap<String, List<String>> getRankPlayers(Faction faction) {
         HashMap<String, List<String>> returnHashMap = new HashMap<>();
-        List<String> alreadyMembers = new ArrayList<>();
         for (HCFPlayer hcf : faction.getMembers()) {
+            List<String> alreadyMembers = returnHashMap.get(hcf.getRank().getName());
+            if(alreadyMembers == null)
+                alreadyMembers = new ArrayList<>();
             alreadyMembers.add(hcf.getName());
             returnHashMap.put(hcf.getRank().getName(), alreadyMembers);
 
@@ -527,7 +529,7 @@ public class Playertools {
                         rank.setPriority(rank_rs.getInt("priority"));
                         ranks.add(rank);
                         faction.addRank(rank);
-
+                        faction.sortRanks();
                     }
                 }
             }

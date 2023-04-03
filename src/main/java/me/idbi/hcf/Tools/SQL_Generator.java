@@ -4,11 +4,11 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 
-import java.sql.Connection;
+import java.sql.*;
 
 public class SQL_Generator {
     private static final Connection con = Main.getConnection();
-
+@SuppressWarnings("unchecked")
     public SQL_Generator() {
         String[] tables = {
                 """
@@ -31,8 +31,8 @@ public class SQL_Generator {
                       `money` bigint(255) NOT NULL DEFAULT 0,
                       `home` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT NULL,
                       `leader` varchar(255) NOT NULL,
-                      `statistics` varchar(255) DEFAULT NULL,
-                      `Allies` varchar(255) NOT NULL DEFAULT '{}',
+                      `statistics` longtext DEFAULT NULL,
+                      `Allies` longtext DEFAULT NULL,
                       PRIMARY KEY (`ID`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -49,11 +49,11 @@ public class SQL_Generator {
                               `lives` int(255) NOT NULL DEFAULT 0,
                               `uuid` varchar(255) DEFAULT NULL,
                               `language` varchar(255) NOT NULL DEFAULT '%default_language%',
-                              `statistics`varchar(255) NOT NULL DEFAULT '%player_statistics%',
+                              `statistics` longtext DEFAULT NULL,
                                 PRIMARY KEY (`ID`)
                             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-                        """.replace("%default_language%", Config.DefaultLanguage.asStr()).replace("%player_statistics%", PlayerStatistic.defaultStats),
+                        """.replace("%default_language%", Config.DefaultLanguage.asStr()),
                 """
                      CREATE TABLE IF NOT EXISTS `ranks` (
                       `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -101,16 +101,35 @@ public class SQL_Generator {
                   PRIMARY KEY (`ID`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """,
-
+                """
+                    CREATE TRIGGER faction_inserter 
+                    BEFORE INSERT ON `factions`
+                    FOR EACH ROW SET NEW.`Allies` = CASE WHEN NEW.Allies IS NULL THEN '{}' END;
+                """,
+                """
+                    CREATE TRIGGER member_inserter 
+                    BEFORE INSERT ON `members`
+                    FOR EACH ROW SET NEW.`statistics` = CASE WHEN NEW.statistics IS NULL THEN '%player_statistics%' END;
+                """.replace("%player_statistics%", PlayerStatistic.defaultStats),//                              `statistics` longtext NOT NULL DEFAULT '%player_statistics%',
                 """
                     INSERT IGNORE INTO `factions` SET ID = 1, money = 0, name = 'Spawn', leader = '';
                 """,
                 """
                     INSERT IGNORE INTO `factions` SET ID = 2, money = 0, name = 'Warzone', leader = '';
-                """
+                """,
         };
         for (String data : tables) {
-            SQL_Connection.dbSyncExec(con, data);
+            PreparedStatement st = null;
+            try {
+                st = con.prepareStatement(data);
+                st.executeUpdate();
+                st.close();
+            } catch (SQLWarning ignored) {
+            }
+            catch (SQLException ignored) {
+            }
+
+            //SQL_Connection.dbSyncExec(con, data);
         }
     }
 

@@ -15,7 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 public class EntDamageByEnt implements Listener {
     Archer archer = new Archer();
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player damager && e.getEntity() instanceof Player victim) {
             // Check Friendly Fire

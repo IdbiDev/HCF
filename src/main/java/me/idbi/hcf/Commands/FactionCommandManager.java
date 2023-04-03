@@ -42,6 +42,8 @@ public class FactionCommandManager implements CommandExecutor, TabCompleter {
         subcommands.add(new FactionUnteamFocusCommand());
         subcommands.add(new FactionWithdrawCommand());
         subcommands.add(new FactionStartEventCommand());
+        subcommands.add(new FactionPromoteCommand());
+        subcommands.add(new FactionDemoteCommand());
 
         for (SubCommand command : subcommands) {
             SubCommand.commandCooldowns.put(command, new HashMap<>());

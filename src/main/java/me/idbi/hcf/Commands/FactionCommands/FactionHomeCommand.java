@@ -86,7 +86,7 @@ public class FactionHomeCommand extends SubCommand implements Listener {
             //p.sendMessage(Messages.teleport_cancel.language(p).queue().replace("%time%", Config.TeleportHome.asStr()));
             Timers.HOME.add(p);
         } else {
-            p.sendMessage(Messages.doesnt_home.language(p).queue());
+            p.sendMessage(Messages.no_home.language(p).queue());
         }
     }
 

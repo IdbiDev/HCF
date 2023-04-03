@@ -7,6 +7,7 @@ import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -69,7 +70,10 @@ public class Faction {
     }
 
     public void addDTR(double dtr) {
-        this.DTR += dtr;
+        if(getDTR() + dtr < getDTR_MAX())
+           setDTR(Math.min(getDTR_MAX(), dtr + getDTR()));
+        else
+            setDTR(getDTR_MAX());
     }
 
     public void addAlly(AllyFaction ally) {
@@ -224,6 +228,7 @@ public class Faction {
             }
         }
         //NameChanger.refresh(p);
+        Bukkit.broadcastMessage("Not found rank: "+ name);
         return getDefaultRank();
     }
 
@@ -276,9 +281,6 @@ public class Faction {
         return Playertools.getFactionOnlineMembers(this);
     }
 
-    public void broadcast() {
-
-    }
 
     public int getKills() {
         int total = 0;
@@ -544,5 +546,16 @@ public class Faction {
         }
         main.put("rankCreateHistory", rankModifyHistory);
         return main;
+    }
+    public void broadcastMessage(String message) {
+        for(HCFPlayer hcfPlayer : getMembers()) {
+            Player p = Bukkit.getPlayer(hcfPlayer.getUUID());
+            if(p != null){
+                p.sendMessage(Messages.prefix_cmd.queue() + message);
+            }
+        }
+    }
+    public void sortRanks() {
+        this.ranks.sort(Comparator.comparingInt(FactionRankManager.Rank::getPriority));
     }
 }

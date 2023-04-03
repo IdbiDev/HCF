@@ -78,7 +78,6 @@ public class SQL_Connection {
             st.executeUpdate();
             ResultSet genkys = st.getGeneratedKeys();
             if (genkys != null && genkys.next()) {
-                st.close();
                 return ((int) genkys.getLong(1));
             }
             st.close();

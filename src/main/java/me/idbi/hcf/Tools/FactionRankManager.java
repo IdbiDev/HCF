@@ -42,7 +42,7 @@ public class FactionRankManager {
                 rank.getPriority() + "",
                 String.valueOf(id));
         //rank.saveRank();
-        System.out.println("Priority for: " + rank.getName() + " IS: " + rank.getPriority());
+        faction.sortRanks();
         return rank;
     }
     // public static Rank create(Faction faction, String name) {
@@ -72,6 +72,7 @@ public class FactionRankManager {
         SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE faction='?' AND rank='?'", newName, String.valueOf(faction.getId()), oldName);
         rank.saveRank();
         Scoreboards.RefreshAll();
+        faction.sortRanks();
         return true;
     }
 
@@ -93,6 +94,7 @@ public class FactionRankManager {
         faction.removeRank(rank);
         Main.ranks.remove(rank);
         Scoreboards.RefreshAll();
+        faction.sortRanks();
     }
 
     public enum Permissions {

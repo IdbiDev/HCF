@@ -141,10 +141,10 @@ public enum Messages {
     faction_dont_have_claim("Claims","%prefix% &4Your faction does not have a claim yet!"),
 
     // reclaim
-    reclaim_claimed("%prefix% &aYou successfully reclaimed!"),
-    reclaim_already_claimed("%prefix% &aYou already reclaimed!"),
-    reclaim_reset_all("%prefix% &aYou successfully reclaim for all player!"),
-    reclaim_reset_player("%prefix% &aYou successfully reclaim for &2&o%player%!"),
+    reclaim_claimed("Reclaim","%prefix% &aYou successfully reclaimed!"),
+    reclaim_already_claimed("Reclaim","%prefix% &aYou already reclaimed!"),
+    reclaim_reset_all("Reclaim","%prefix% &aYou successfully reclaim for all player!"),
+    reclaim_reset_player("Reclaim","%prefix% &aYou successfully reclaim for &2&o%player%!"),
 
     // Faction home
     sethome_message("Factions","%prefix% &aSuccessfully set home of your faction to your location!"),
@@ -154,7 +154,7 @@ public enum Messages {
     already_home_teleporting("Factions","%prefix% &cTeleportation canceled!"),
     successfully_teleport("Factions","%prefix% &eSuccessfully teleported to your faction's home!"),
     teleport_cancel("Factions","%prefix% &cYou moved, teleportation cancelled!"),
-    doesnt_home("Factions","%prefix% &cYour faction doesn't have a home set!"),
+    no_home("Factions","%prefix% &cYour faction doesn't have a home set!"),
     not_deathbanned("%prefix% &cThis player is not deathbanned!"),
 
     // Faction chat
@@ -180,6 +180,10 @@ public enum Messages {
 //
     executor_promote_message("Factions","%prefix% &eYou promoted &6&o%player% &eto &6&o%rank%&e!"),
     executor_demote_message("Factions","%prefix% &eYou demoted &6&o%player% &eto &6&o%rank%&e!"),
+    executor_promote_broadcast_message("Factions","%prefix% &6&o%executor% &epromoted &6&o%player% to &6&o%rank%&e!"),
+    executor_demote_broadcast_message("Factions","%prefix% &6&o%executor% &edemoted &6&o%player% to &6&o%rank%&e!"),
+
+
 //
 //    faction_create_rank("Factions","%prefix% &aRank successfully created!"),
 //    faction_rank_exists("Factions","%prefix% &cThis rank already exists!"),
@@ -731,6 +735,10 @@ public enum Messages {
     }
 
     public Messages setExecutor(Player executor) {
+        playerMessage = playerMessage.replace("%executor%", executor.getName());
+        return this;
+    }
+    public Messages setExecutor(HCFPlayer executor) {
         playerMessage = playerMessage.replace("%executor%", executor.getName());
         return this;
     }
