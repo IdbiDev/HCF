@@ -2,6 +2,7 @@ package me.idbi.hcf.Tools.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Main;
@@ -27,15 +28,16 @@ public class Faction {
     @Getter private int id;
     @Getter @Setter private String name;
     @Getter @Setter private String leader;
-    @Getter @Setter private int balance;
+    @Setter private int balance;
     @Getter private ArrayList<HCF_Claiming.Faction_Claim> claims = new ArrayList<>();
     @Getter @Setter private double DTR = 0;
     @Getter @Setter private double DTR_MAX = 0;
     @Getter @Setter private long DTR_TIMEOUT = 0L;
     @Getter @Setter private InviteManager.FactionInvite invites;
+    @Getter @Setter private int points;
 
     @Getter @Setter private AllyManager allyInvites;
-    @Getter private HashMap<Integer, AllyFaction> allies = new HashMap<>();
+    @Getter private final HashMap<Integer, AllyFaction> allies = new HashMap<>();
 
     @Getter @Setter private Location homeLocation;
 
@@ -64,9 +66,13 @@ public class Faction {
         this.ranks = new ArrayList<FactionRankManager.Rank>();
         this.claims = new ArrayList<HCF_Claiming.Faction_Claim>();
         this.members = new ArrayList<HCFPlayer>();
-        this.DTR_MAX = Double.parseDouble(Playertools.CalculateDTR(this));
+        this.DTR_MAX = Config.MaxDTR.asDouble();
         this.DTR = this.getDTR_MAX();
 
+    }
+    
+    public int getBalance() {
+        return this.balance;
     }
 
     public void addDTR(double dtr) {
@@ -104,6 +110,13 @@ public class Faction {
         return members.contains(HCFPlayer.getPlayer(p));
     }
 
+    public void addPoints(int points) {
+        this.points = Math.min(Integer.MAX_VALUE, this.points + points);
+    }
+    public void removePoints(int points) {
+        this.points = Math.max(0, this.points - points);
+    }
+
     public void addMember(HCFPlayer hcfPlayer) {
         this.members.add(hcfPlayer);
         this.refreshDTR();
@@ -133,9 +146,17 @@ public class Faction {
     public void saveFactionData() {
         String AlliesEntry = AllyTools.getAlliesJson(this);
 
-        SQL_Connection.dbExecute(con, "UPDATE factions SET name='?',money='?',leader='?',`statistics`='?', Allies='?',home='?' WHERE ID='?'", name, String.valueOf(balance), leader, assembleFactionHistory().toString(), AlliesEntry,homeLocationToJSON(), String.valueOf(id));
+        SQL_Connection.dbExecute(con, "UPDATE factions SET name='?',money='?',leader='?',`statistics`='?', Allies='?',home='?',points='?' WHERE ID='?'", this.name, String.valueOf(this.balance), leader, assembleFactionHistory().toString(), AlliesEntry,homeLocationToJSON(), String.valueOf(this.points), String.valueOf(id));
         for (FactionRankManager.Rank rank : ranks) {
             rank.saveRank();
+        }
+    }
+    public void saveFactionDataSync() {
+        String AlliesEntry = AllyTools.getAlliesJson(this);
+
+        SQL_Connection.dbSyncExec(con, "UPDATE factions SET name='?',money='?',leader='?',`statistics`='?', Allies='?',home='?',points='?' WHERE ID='?'", this.name, String.valueOf(this.balance), leader, assembleFactionHistory().toString(), AlliesEntry,homeLocationToJSON(), String.valueOf(this.points), String.valueOf(id));
+        for (FactionRankManager.Rank rank : ranks) {
+            rank.saveRankSync();
         }
     }
     private String homeLocationToJSON() {
@@ -156,6 +177,9 @@ public class Faction {
             return;
         }
         invites.invitePlayerToFaction(p);
+    }
+    public int countOnlineMembers() {
+        return getOnlineMembers().size();
     }
 
     public FactionRankManager.Rank getPlayerRank(Player p) {
@@ -179,8 +203,14 @@ public class Faction {
     public void unInvitePlayer(Player p) {
         invites.removePlayerFromInvite(p);
     }
+    public void unInvitePlayer(HCFPlayer p) {
+        invites.removePlayerFromInvite(p);
+    }
 
     public boolean isPlayerInvited(Player p) {
+        return invites.isPlayerInvited(p);
+    }
+    public boolean isPlayerInvited(HCFPlayer p) {
         return invites.isPlayerInvited(p);
     }
 

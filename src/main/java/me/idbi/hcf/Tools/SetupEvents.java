@@ -128,7 +128,7 @@ public class SetupEvents {
         pm.registerEvents(new CrowbarInteraction(), Main.getPlugin(Main.class));
 
         pm.registerEvents(new SubClaimSignListener(), Main.getPlugin(Main.class));
-        getServer().getPluginManager().registerEvents(new SubClaimListener(), Main.getPlugin(Main.class));
+        pm.registerEvents(new SubClaimListener(), Main.getPlugin(Main.class));
         pm.registerEvents(new SubClaimBreakListener(), Main.getPlugin(Main.class));
         pm.registerEvents(new LogoutCommand(), Main.getPlugin(Main.class));
         pm.registerEvents(new FactionHomeCommand(), Main.getPlugin(Main.class));

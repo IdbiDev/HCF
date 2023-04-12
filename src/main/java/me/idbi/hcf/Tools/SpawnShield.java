@@ -16,6 +16,7 @@ public class SpawnShield {
     }
 
     public static void CalcWall(Player p) {
+        System.out.println(pvpCooldown(p) + " " + p.getName());
         HCF_Claiming.Point player_point = new HCF_Claiming.Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
         Faction player_faction = Playertools.getPlayerFaction(p);
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
@@ -32,7 +33,7 @@ public class SpawnShield {
                 }
                 if (!kellfal)
                     continue;
-
+                System.out.println("Rakni le da fal");
                 // Négy sarokpont
                 HCF_Claiming.Point bottom_left = new HCF_Claiming.Point(claim.getStartX(), claim.getStartZ());
                 HCF_Claiming.Point top_right = new HCF_Claiming.Point(claim.getEndX(), claim.getEndZ());
@@ -83,13 +84,14 @@ public class SpawnShield {
                     continue;
                 String side;
 
-                if (bottom_left.getZ() == record_point.getZ() || top_left.getZ() == record_point.getZ()) {
-                    side = "x";
-                } else if (bottom_right.getZ() == record_point.getZ() || top_right.getZ() == record_point.getZ()) {
-                    side = "x";
-                } else {
-                    side = "z";
-                }
+//                if (bottom_left.getZ() == record_point.getZ() || top_left.getZ() == record_point.getZ()) {
+//                    side = "x";
+//                } else if (bottom_right.getZ() == record_point.getZ() || top_right.getZ() == record_point.getZ()) {
+//                    side = "x";
+//                } else {
+//                    side = "z";
+//                }
+                side = bottom_left.getZ() == record_point.getZ() || top_right.getZ() == record_point.getZ() ? "x" : "z";
                 //Main.sendCmdMessage("Side: %s Record point Z: %d Bottom right Z: %d Bottom left Z: %d".formatted(side,record_point.z,bottom_right.z,bottom_left.z));
                 //System.out.printf("SIDE: " + side);
                 placeWall(p, new Location(p.getWorld(), record_point.getX(), p.getLocation().getBlockY(), record_point.getZ()), side, claim);

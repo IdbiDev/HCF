@@ -31,7 +31,7 @@
                 <configuration>
                     <!--<source>${java.version}</source>
                     <target>${java.version}</target> -->
-                    <outputDirectory>C:\Users\kille\Desktop\TsipuEgymeleg\plugins</outputDirectory>
+                    <outputDirectory>C:\Users\kille\Desktop\HCFPlus\TsipuEgymeleg\plugins</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -154,7 +154,7 @@
             <groupId>me.idbi</groupId>
             <artifactId>hcf_abilitys</artifactId>
             <version>1.0</version>
-            <systemPath>C:\Users\kille\Desktop\TsipuEgymeleg\plugins\HCF+ Abilities.jar</systemPath>
+            <systemPath>C:\Users\kille\Desktop\HCFPlus\TsipuEgymeleg\plugins\HCF+ Abilities.jar</systemPath>
             <scope>system</scope>
         </dependency>
         <dependency>

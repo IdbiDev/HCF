@@ -12,6 +12,7 @@ import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.Metadatable;
@@ -118,6 +119,7 @@ public class Playertools {
         hcf.createScoreboard(player);
         hcf.setCurrentArea(HCF_Claiming.getPlayerArea(player));
         hcf.setOnline(true);
+        hcf.join();
         Main.playerCache.put(hcf.getUUID(), hcf);
         Scoreboards.refresh(player);
         NameChanger.refresh(player);
@@ -134,10 +136,11 @@ public class Playertools {
     }
 
     public static void cacheAll() {
+        ResultSet rs = null;
         try {
             //PreparedStatement ps = con.prepareStatement("SELECT * FROM members");
             PreparedStatement ps = con.prepareStatement("SELECT members.uuid,members.name,members.faction,members.rank,members.kills,members.deaths,members.money,members.language,members.statistics,members.lives,deathbans.time FROM `members` LEFT JOIN deathbans ON members.uuid = deathbans.uuid;");
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 cachePlayerSync(UUID.fromString(rs.getString("uuid")), rs);
@@ -145,7 +148,15 @@ public class Playertools {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-
+        }catch (Exception e) {
+            try {
+                while (rs.next()) {
+                    cachePlayerSync(UUID.randomUUID(), rs);
+                    Main.sendCmdMessage("Player " + rs.getString("uuid") + " cached!");
+                }
+            }catch (SQLException ignored){
+                System.out.println("WTF");
+            }
         }
     }
 
@@ -287,46 +298,6 @@ public class Playertools {
         HCFPlayer.getPlayer(p).setMoney(amount);
     }
 
-    /*public static void setMetadata(Player p, String key, Object data) {
-        if (Main.player_cache.containsKey(p.getUniqueId())) {
-            PlayerObject obj = Main.player_cache.get(p.getUniqueId());
-            obj.setData(key, data);
-        }
-    }
-    public static void setMetadata(UUID uuid, String key, Object data) {
-        if (Main.player_cache.containsKey(uuid)) {
-            PlayerObject obj = Main.player_cache.get(uuid);
-            obj.setData(key, data);
-        }
-    }
-
-    public static String getMetadata(Player p, String key) {
-        if (Main.player_cache.containsKey(p.getUniqueId())) {
-            PlayerObject obj = Main.player_cache.get(p.getUniqueId());
-            return obj.getData(key);
-        } else {
-            return "0";
-        }
-    }
-
-    public static String getMetadata(UUID uuid, String key) {
-        if (Main.player_cache.containsKey(uuid)) {
-            PlayerObject obj = Main.player_cache.get(uuid);
-            return obj.getData(key);
-        } else {
-            return "0";
-        }
-    }
-    public static Object getRealMetadata(Player p, String key) {
-        if (Main.player_cache.containsKey(p.getUniqueId())) {
-            PlayerObject obj = Main.player_cache.get(p.getUniqueId());
-            return obj.getData(key);
-        } else {
-            if (Main.debug)
-                Bukkit.getLogger().severe("GET Nem tartalamzza a playert a cache! >> " + p.getDisplayName() + "KEY >> " + key);
-            return "0";
-        }
-    }*/
 
     public static void setEntityData(Metadatable entity, String key, Object value) {
         entity.setMetadata(key, new FixedMetadataValue(Main.getPlugin(Main.class), value));
@@ -336,17 +307,6 @@ public class Playertools {
         return entity.getMetadata(key).get(0).asString();
     }
 
-
-/*    public static boolean HasMetaData(Player p, String key) {
-        if (Main.player_cache.containsKey(p.getUniqueId())) {
-            PlayerObject obj = Main.player_cache.get(p.getUniqueId());
-            return obj.hasData(key);
-        } else {
-            if (Main.debug)
-                Bukkit.getLogger().severe("§4 Nem tartalamzza a playert a cache! >> " + p.getDisplayName());
-            return false;
-        }
-    }*/
 
     public static void cacheFactionClaims() {
         try {
@@ -420,6 +380,7 @@ public class Playertools {
                 } else {
                     faction.loadFactionHistory(faction.assembleFactionHistory());
                 }
+                faction.setPoints(rs.getInt("points"));
 
                 Main.factionCache.put(rs.getInt("ID"), faction);
                 Main.nameToFaction.put(rs.getString("name"), faction);
@@ -469,7 +430,7 @@ public class Playertools {
                 f.addClaim(claim);
             }
 
-            // Setup allies!
+            // ToDo: Setup allies!
 
         } catch (SQLException | JSONException e) {
             e.printStackTrace();
@@ -535,31 +496,21 @@ public class Playertools {
             e.printStackTrace();
         }
 
-    }/*
-        Member              MAX DTR
-        1                       1.5
-        2                       2.0
-        3                       3.5
-        4                       4.0
-        5                       5.5
-
-    */
+    }
 
     public static String CalculateDTR(Faction faction) {
 
 
-        double addedDTR = Config.MaxDTRSolo.asDouble();
+        double addedDTR = 1.1;
+        if(faction.getMemberCount() == 1) return String.valueOf(roundDTR(Config.MaxDTRSolo.asDouble()));
+//                   1                   5
         for (int i = 1; i <= faction.getMemberCount(); i++) {
-            if(faction.getMemberCount() == 1){
-                break;
-            }else{
-                if( addedDTR + Config.DTRPerPlayer.asDouble() <= maxDTR)
-                    addedDTR += Config.DTRPerPlayer.asDouble();
-                else
-                    addedDTR = maxDTR;
-            }
+            if( addedDTR + Config.DTRPerPlayer.asDouble() <= maxDTR)
+                addedDTR += Config.DTRPerPlayer.asDouble();
+            else
+                addedDTR = maxDTR;
         }
-        return String.valueOf(addedDTR);
+        return String.valueOf(roundDTR(addedDTR));
     }
 
     public static Location getSpawn() {
@@ -575,6 +526,15 @@ public class Playertools {
         }
 
         return list.toArray(new Integer[list.size()]);
+    }
+
+    public static Double[] getDoubles(String[] string) {
+        ArrayList<Double> list = new ArrayList<>();
+        for (String str : string) {
+            list.add(Double.parseDouble(str));
+        }
+
+        return list.toArray(new Double[list.size()]);
     }
 
     public static int getFreeFactionId() {
@@ -602,13 +562,12 @@ public class Playertools {
 
     public static Faction createCustomFaction(String name, String leader) {
         int largestID = getFreeFactionId();
-        Faction faction = new Faction(largestID, name, "", 0);
+        Faction faction = new Faction(largestID, name, leader, 0);
 
         Main.factionCache.put(largestID, faction);
 
         Main.nameToFaction.put(faction.getName(), faction);
-        SQL_Connection.dbExecute(con, "INSERT INTO factions SET ID='?' name='?',leader='?'", String.valueOf(faction.getId()), name, leader);
-        //com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'name='CICA',leader=''' at line 1
+        SQL_Connection.dbExecute(con, "INSERT INTO factions SET ID='?', name='?',leader='?'", String.valueOf(faction.getId()), name, leader);
         return faction;
     }
 
@@ -780,7 +739,25 @@ public class Playertools {
     }
 
     public static boolean isValidName(String name) {
-        return name.matches("^\\w{3,16}$");
+        if(name.length() <= Config.MinNameLength.asInt()){
+            return false;
+        }
+        if(name.length() >= Config.MaxNameLength.asInt()){
+            return false;
+        }
+        for (String badNames : Config.DisabledCharactersInName.asStrList()){
+            if(name.toLowerCase().contains(badNames.toLowerCase())){
+                return false;
+            }
+        }
+        for (String badNames : Config.BlackListedNames.asStrList()){
+            if(name.toLowerCase().contains(badNames.toLowerCase())){
+                return false;
+            }
+        }
+        return name.matches("^[a-zA-Z0-9]+$");
+        //return name.matches("^\\w{1,32}$");
+        //return name.matches("^\\w{3,16}$");
     }
 
 
@@ -802,4 +779,73 @@ public class Playertools {
         return loc.getBlockX() + ", " + loc.getBlockZ();
     }
 
+    /**
+     *
+     * @param DTRNumber
+     * @return Rounded DTR number (0.1 -> 0.0 || 0.6 -> 0.5)
+     */
+    public static double roundDTR(double DTRNumber) {
+        DTRNumber = Math.min(DTRNumber, Config.MaxDTR.asDouble());
+        if(DTRNumber-Math.floor(DTRNumber) < 0.5)
+            DTRNumber = Math.floor(DTRNumber) + 0.1D;
+        else
+            DTRNumber = Math.floor(DTRNumber) + 0.5D;
+        return DTRNumber;
+    }
+
+    public static ArrayList<Faction> sortByOnlineMembers() {
+        ArrayList<Faction> f = new ArrayList<>(Main.factionCache.values());
+        f.sort(Comparator.comparingInt(Faction::countOnlineMembers));
+        Collections.reverse(f);
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
+        return f;
+    }
+    public static ArrayList<Faction> sortByDTR() {
+        ArrayList<Faction> f = new ArrayList<>(Main.factionCache.values());
+        f.sort(Comparator.comparingDouble(Faction::getDTR));
+        Collections.reverse(f);
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
+        return f;
+    }
+    public static ArrayList<Faction> sortByBalance() {
+        ArrayList<Faction> f = new ArrayList<>(Main.factionCache.values());
+        f.sort(Comparator.comparingInt(Faction::getBalance));
+        Collections.reverse(f);
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
+        return f;
+    }
+    public static ArrayList<Faction> sortByKills() {
+        ArrayList<Faction> f = new ArrayList<>(Main.factionCache.values());
+        f.sort(Comparator.comparingInt(Faction::getKills));
+        Collections.reverse(f);
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
+        return f;
+    }
+    public static ArrayList<Faction> sortByPoints() {
+        ArrayList<Faction> f = new ArrayList<>(Main.factionCache.values());
+        f.sort(Comparator.comparingInt(Faction::getPoints));
+        Collections.reverse(f);
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
+        return f;
+    }
+
+    /**
+     *
+     * @param str (x y z yaw pitch)
+     * @return
+     */
+    public static Location parseLoc(World world, String str) {
+        Double[] ints = getDoubles(str.split(" "));
+        return new Location(world,
+                ints[0],
+                ints[1],
+                ints[2],
+                Float.parseFloat(ints[3] + ""),
+                Float.parseFloat(ints[4] + "")
+        );
+    }
+
+    public static boolean isInt(String value) {
+        return value.matches("^[0-9]+$");
+    }
 }

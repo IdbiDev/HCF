@@ -55,6 +55,7 @@ public class Bard implements HCF_Class {
     }};
 
     public void useSimpleBardEffect(Player bardplayer) {
+        if(!HCFPlayer.getPlayer(bardplayer).getPlayerClass().equals(Classes.BARD)) return;
         if(simpleBoostEnabled) {
             //Hotbar loop
             if(enableNewBard) {
@@ -66,6 +67,7 @@ public class Bard implements HCF_Class {
                     if (item != null) {
                         //Végig megyünk az összes frakciótárson a közelbe
                         for (Player p : getFactionMembersInDistance(bardplayer, 10)) {
+                            if(p == bardplayer && Timers.PVP_TIMER.has(bardplayer)) continue;
                             PotionEffectType potion = item.effect;
                             p.addPotionEffect(new PotionEffect(potion, 180, 0, false, false));
                             if(enableEffects && !bardplayer.isSneaking())
@@ -81,6 +83,7 @@ public class Bard implements HCF_Class {
                 if (item != null) {
                     //Végig megyünk az összes frakciótárson a közelbe
                     for (Player p : getFactionMembersInDistance(bardplayer, 10)) {
+                        if(p == bardplayer && Timers.PVP_TIMER.has(bardplayer)) continue;
                         PotionEffectType potion = item.effect;
                         p.addPotionEffect(new PotionEffect(potion, 180, 0, false, false));
                         if(enableEffects && !bardplayer.isSneaking())

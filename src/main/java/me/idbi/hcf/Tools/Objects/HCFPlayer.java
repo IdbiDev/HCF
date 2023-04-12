@@ -58,6 +58,8 @@ public class HCFPlayer {
     @Getter private HashMap<Timers, Long> timers;
     @Getter private Board scoreboard;
     @Getter @Setter private boolean isClassWarmup;
+    @Getter @Setter private boolean viewMap;
+    @Getter private List<HCF_Claiming.Point> factionViewMapLocations;
 
     public HCFPlayer(UUID uuid,
                      int deaths,
@@ -89,6 +91,7 @@ public class HCFPlayer {
             this.kothId = 0;
             this.toggledChatTypes = new ArrayList<>();
             this.language = language;
+            this.factionViewMapLocations = new ArrayList<>();
             this.playerClass = Classes.NONE;
             this.playerStatistic = playerStatistic;
             this.playerStatistic.kills = kills;
@@ -119,7 +122,7 @@ public class HCFPlayer {
             //todo: SQL?
             Playertools.loadOnlinePlayer(p);
             /*return new HCFPlayer(
-                    p.getUniqueId(),
+                    p.getUniqueId(),c
                     0,
                     0,
                     null,
@@ -197,6 +200,18 @@ public class HCFPlayer {
         this.bardEnergy += energy;
     }
 
+    public void join() {
+        this.playerClass = Classes.NONE;
+        this.isClassWarmup = false;
+        this.claimType = HCF_Claiming.ClaimTypes.NONE;
+        this.toggledChatTypes = new ArrayList<>();
+        this.factionViewMapLocations = new ArrayList<>();
+        this.viewMap = false;
+        this.inDuty = false;
+        this.bardEnergy = 0D;
+        this.kothId = 0;
+    }
+
     /**
      *
      * @param chatTypes
@@ -230,6 +245,19 @@ public class HCFPlayer {
         EconomyResponse r = Main.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(this.uuid), amount);
         System.out.println("Economy response addMoney: " + r.transactionSuccess() + " Error: " + r.errorMessage);
         this.money =  Math.toIntExact(Math.round(r.balance));
+    }
+
+    public void addFactionViewMapLocation(HCF_Claiming.Point loc) {
+        if(!this.factionViewMapLocations.contains(loc))
+            this.factionViewMapLocations.add(loc);
+    }
+
+    public void removeFactionViewMapLocation(HCF_Claiming.Point loc) {
+        this.factionViewMapLocations.remove(loc);
+    }
+
+    public void removeFactionViewMap(Player p) {
+        TowerTools.removePillar(p, this.factionViewMapLocations);
     }
 
     public String getFormattedChatType() {
@@ -337,6 +365,7 @@ public class HCFPlayer {
         String cause = "-";
         if(damageCause != null)
             cause = damageCause.name();
+        else cause = "NaN";
 
         Rollback rollback = new Rollback(id, p, cause, logType, date);
         this.rollbacks.put(id, rollback);
@@ -525,7 +554,7 @@ public class HCFPlayer {
         if (this.name == null) return;
 
         SQL_Connection.dbExecute(con,
-                "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?',lives='?' WHERE UUID='?'",
+                "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?', lives='?' WHERE UUID='?'",
                 this.faction == null ? 0 + "" : this.faction.getId() + "",
                 this.rank == null ? "None" : this.rank.getName(),
                 this.playerStatistic.kills + "",
@@ -537,9 +566,29 @@ public class HCFPlayer {
                 this.uuid.toString());
         saveStats();
     }
+    public void saveSync() {
+        // ToDo: Push to SQL
+        if (this.name == null) return;
+
+        SQL_Connection.dbSyncExec(con,
+                "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?', lives='?' WHERE UUID='?'",
+                this.faction == null ? 0 + "" : this.faction.getId() + "",
+                this.rank == null ? "None" : this.rank.getName(),
+                this.playerStatistic.kills + "",
+                this.playerStatistic.deaths + "",
+                this.money + "",
+                this.name,
+                this.language,
+                this.lives+"",
+                this.uuid.toString());
+        saveStatsSync();
+    }
 
     public void saveStats() {
         this.playerStatistic.save(this.uuid);
+    }
+    public void saveStatsSync() {
+        this.playerStatistic.saveSync(this.uuid);
     }
 
     public void addTimer(Timers timer, long time) {

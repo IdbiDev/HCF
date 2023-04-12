@@ -50,11 +50,13 @@ public class PlayerDeath implements Listener {
                 }else {
                     faction.removeDTR(Config.EndDeathDTR.asDouble());
                 }
+                faction.removePoints(Config.PointDecreaseOnDeath.asInt());
         }
         if (damager != null) {
             HCFPlayer hcfDamager = HCFPlayer.getPlayer(damager);
             hcfDamager.addMoney(Config.AddMoneyOnKill.asInt());
             hcfDamager.addKills();
+
             if(Config.PlayerLoseMoney.asBoolean())
                 hcfDamager.addMoney(hcfVictim.getMoney());
 
@@ -64,6 +66,10 @@ public class PlayerDeath implements Listener {
                 for (Player member : faction.getOnlineMembers()) {
                     member.sendMessage(Messages.kill_message_faction.language(member).setDeath(victim, damager).setDTR(faction.getDTR()).queue());
                 }
+            }
+            Faction damagerFaction = hcfDamager.getFaction();
+            if(damagerFaction != null){
+                damagerFaction.addPoints(Config.PointPerKill.asInt());
             }
             StatTrak.addStatTrak(damager, victim);
             victim.getWorld().dropItemNaturally(victim.getLocation(), SignPlace.deathSign(damager, victim));

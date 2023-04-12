@@ -167,6 +167,8 @@ public class FactionRankManager {
         public boolean hasPermission(Permissions perm) {
             if (class_permissions.get(Permissions.MANAGE_ALL))
                 return true;
+            if (this.isLeader)
+                return true;
             return class_permissions.get(perm);
         }
 
@@ -178,6 +180,33 @@ public class FactionRankManager {
         public void saveRank() {
             //System.out.println("Priority for: " + this.name + " IS: " + priority);
             SQL_Connection.dbExecute(con, "UPDATE ranks SET " +
+                            "name = '?'," +
+                            "ALL_Permission='?'," +
+                            "MONEY_Permission='?'," +
+                            "INVITE_Permission='?'," +
+                            "RANK_Permission='?'," +
+                            "PLAYER_Permission='?'," +
+                            "KICK_Permission='?'," +
+                            "isDefault='?'," +
+                            "isLeader='?'," +
+                            "priority='?'" +
+                            "WHERE ID = '?'",
+                    String.valueOf(this.name),
+                    (this.class_permissions.get(Permissions.MANAGE_ALL)) ? "1" : "0",
+                    (this.class_permissions.get(Permissions.MANAGE_MONEY)) ? "1" : "0",
+                    (this.class_permissions.get(Permissions.MANAGE_INVITE)) ? "1" : "0",
+                    (this.class_permissions.get(Permissions.MANAGE_RANKS)) ? "1" : "0",
+                    (this.class_permissions.get(Permissions.MANAGE_PLAYERS)) ? "1" : "0",
+                    (this.class_permissions.get(Permissions.MANAGE_KICK)) ? "1" : "0",
+                    (this.isDefault) ? "1" : "0",
+                    (this.isLeader) ? "1" : "0",
+                    String.valueOf(this.priority),
+                    String.valueOf(this.id)
+            );
+        }
+        public void saveRankSync() {
+            //System.out.println("Priority for: " + this.name + " IS: " + priority);
+            SQL_Connection.dbSyncExec(con, "UPDATE ranks SET " +
                             "name = '?'," +
                             "ALL_Permission='?'," +
                             "MONEY_Permission='?'," +

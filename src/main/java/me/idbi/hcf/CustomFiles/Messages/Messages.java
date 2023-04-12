@@ -124,6 +124,7 @@ public enum Messages {
     //    zone_friendly("&a%zone%"),
 //    zone_enemy("&c%zone%"),
     wilderness("Claims","&2Wilderness"),
+    cant_find_page("Server","&cThis page does not exists!"),
 
     // Faction messages
     kick_message("Factions","&%prefix% &a%executor% &ekicked &a%player%&e from the faction!"),

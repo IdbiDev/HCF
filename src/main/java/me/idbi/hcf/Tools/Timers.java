@@ -90,12 +90,8 @@ public enum Timers {
 
         long unixTime = System.currentTimeMillis();
         long timer = hcfPlayer.getTimers().get(this);
-        if(timer >= unixTime) {
-            return true;
-        } else {
-            remove(hcfPlayer);
-            return false;
-        }
+        //            remove(hcfPlayer);
+        return timer >= unixTime;
     }
 
     public boolean nowExpire(Player p) {
@@ -107,7 +103,6 @@ public enum Timers {
 
         long unixTime = System.currentTimeMillis();
         long timer = hcfPlayer.getTimers().get(this);
-
         if(timer - unixTime <= 0) {
             remove(hcfPlayer);
             return true;

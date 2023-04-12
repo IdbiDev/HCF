@@ -5,6 +5,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.AdminTools;
+import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
@@ -89,6 +90,7 @@ public class PlayerJoin implements Listener {
                 }
                 //f.addPrefixPlayer(p);
                 //Bukkit.getScoreboardManager().getMainScoreboard().getTeam(f.name).addEntry(p.getName());
+                f.joinLeftHistory.add(0, new HistoryEntrys.JoinLeftEntry(p.getName(), true, new Date().getTime()));
             }
         }
 

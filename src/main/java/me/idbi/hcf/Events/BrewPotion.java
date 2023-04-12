@@ -16,53 +16,53 @@ public class BrewPotion implements Listener {
             if (e.getContents().getContents()[i] != null) {
                 Potion potion = Potion.fromItemStack(e.getContents().getContents()[0]);
                 switch (potion.getType()) {
-                    case SPEED:
+                    case SPEED -> {
                         if (potion.getLevel() > LimitConfig.Speed.asInt())
                             e.setCancelled(true);
-                        break;
-                    case JUMP:
+                    }
+                    case JUMP -> {
                         if (potion.getLevel() > LimitConfig.Jump.asInt())
                             e.setCancelled(true);
-                        break;
-                    case REGEN:
+                    }
+                    case REGEN -> {
                         if (potion.getLevel() > LimitConfig.Regen.asInt())
                             e.setCancelled(true);
-                        break;
-                    case POISON:
+                    }
+                    case POISON -> {
                         if (potion.getLevel() > LimitConfig.Poison.asInt())
                             e.setCancelled(true);
-                        break;
-                    case SLOWNESS:
+                    }
+                    case SLOWNESS -> {
                         if (potion.getLevel() > LimitConfig.Slowness.asInt())
                             e.setCancelled(true);
-                        break;
-                    case STRENGTH:
+                    }
+                    case STRENGTH -> {
                         if (potion.getLevel() > LimitConfig.Strength.asInt())
                             e.setCancelled(true);
-                        break;
-                    case WEAKNESS:
+                    }
+                    case WEAKNESS -> {
                         if (potion.getLevel() > LimitConfig.Weakness.asInt())
                             e.setCancelled(true);
-                        break;
-                    case INSTANT_HEAL:
+                    }
+                    case INSTANT_HEAL -> {
                         // 3                             0
                         if (potion.getLevel() > LimitConfig.InstantHeal.asInt())
                             e.setCancelled(true);
-                        break;
-                    case INSTANT_DAMAGE:
+                    }
+                    case INSTANT_DAMAGE -> {
                         if (potion.getLevel() > LimitConfig.EmotionalDamage.asInt())
                             e.setCancelled(true);
-                        break;
-                    case FIRE_RESISTANCE:
+                    }
+                    case FIRE_RESISTANCE -> {
                         if (potion.getLevel() > LimitConfig.FireResistance.asInt())
                             e.setCancelled(true);
-                        break;
-                    case WATER_BREATHING:
+                    }
+                    case WATER_BREATHING -> {
                         if (potion.getLevel() > LimitConfig.WaterBreathing.asInt())
                             e.setCancelled(true);
-                        break;
-                    default:
-                        break;
+                    }
+                    default -> {
+                    }
                 }
             }
         }

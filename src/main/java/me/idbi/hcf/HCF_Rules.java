@@ -43,14 +43,7 @@ public class HCF_Rules {
         add(Material.FURNACE);
         add(Material.BURNING_FURNACE);
     }};
-    public final static HashMap<PotionEffectType, Integer> potionLimits = new HashMap<PotionEffectType, Integer>() {{
-        put(PotionEffectType.INCREASE_DAMAGE, 2);
-        put(PotionEffectType.SPEED, 4);
-        put(PotionEffectType.REGENERATION, 2);
-        put(PotionEffectType.DAMAGE_RESISTANCE, 3);
-        put(PotionEffectType.ABSORPTION, 2);
-        put(PotionEffectType.JUMP, 3);
-    }};
+
     public final static HashMap<Enchantment, Integer> allowedLevels = new HashMap<>() {{
         put(Enchantment.ARROW_INFINITE, 1);
         put(Enchantment.ARROW_KNOCKBACK, 2);

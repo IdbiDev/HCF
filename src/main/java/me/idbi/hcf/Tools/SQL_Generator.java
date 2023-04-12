@@ -31,6 +31,7 @@ public class SQL_Generator {
                       `money` bigint(255) NOT NULL DEFAULT 0,
                       `home` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT NULL,
                       `leader` varchar(255) NOT NULL,
+                      `points` int(255) NOT NULL DEFAULT 0,
                       `statistics` longtext DEFAULT NULL,
                       `Allies` longtext DEFAULT NULL,
                       PRIMARY KEY (`ID`)

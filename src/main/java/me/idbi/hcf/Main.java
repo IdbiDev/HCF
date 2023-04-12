@@ -80,10 +80,10 @@ public final class Main extends JavaPlugin implements Listener {
     public static boolean customEnchantsLoaded = false;
     public static boolean discordLogLoaded = false;
     public static HashMap<String, CustomTimers> customSBTimers;
-    public static HashMap<Integer, Faction> factionCache = new HashMap<>();
-    public static HashMap<String, HCF_Claiming.Faction_Claim> kothCache = new HashMap<>();
+    public static LinkedHashMap<Integer, Faction> factionCache = new LinkedHashMap<>();
+    public static LinkedHashMap<String, HCF_Claiming.Faction_Claim> kothCache = new LinkedHashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
-    public static HashMap<UUID, HCFPlayer> playerCache = new HashMap<>();
+    public static LinkedHashMap<UUID, HCFPlayer> playerCache = new LinkedHashMap<>();
     public static ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
     public static HashMap<LivingEntity, ArrayList<ItemStack>> savedItems = new HashMap<>();
     public static HashMap<LivingEntity, Long> savedPlayers = new HashMap<>();
@@ -318,6 +318,12 @@ public final class Main extends JavaPlugin implements Listener {
 
         border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
         autoKoth.startAutoKoth();
+//        for (int i = 0; i < 100; i++) {
+//            Faction f = Playertools.createCustomFaction("Faction"+i,UUID.randomUUID().toString());
+//            f.addBalance(i);
+//            f.setPoints(i);
+//
+//        }
 
         /*HCF_Claiming.Faction_Claim spawnClaim = null;
         autoKoth.startAutoKoth();
@@ -353,7 +359,7 @@ public final class Main extends JavaPlugin implements Listener {
         if (e.getPlugin().equals(this)) {
             try {
                 for (HCFPlayer hcf : playerCache.values()) {
-                    hcf.save();
+                    hcf.saveSync();
                 }
 
 //                for (Player player : Bukkit.getOnlinePlayers()) {
@@ -370,17 +376,19 @@ public final class Main extends JavaPlugin implements Listener {
 //                        }
 //                    }
 //
-//                }
+                System.out.println("Saving");
                 for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
-                    integerFactionEntry.getValue().saveFactionData();
+                    integerFactionEntry.getValue().saveFactionDataSync();
+                    System.out.println("Saving:  " + integerFactionEntry.getValue().getName());
                     for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
-                        rank.saveRank();
+                        rank.saveRankSync();
                     }
                 }
                 con.close();
                 con = null;
 
             } catch (Exception asked) {
+                asked.printStackTrace();
             }
         }
     }
@@ -393,7 +401,7 @@ public final class Main extends JavaPlugin implements Listener {
         vaultHook.unhook();
         try {
             for (HCFPlayer hcf : playerCache.values()) {
-                hcf.save();
+                hcf.saveSync();
             }
 
 //            for (Player player : getServer().getOnlinePlayers()) {
@@ -411,16 +419,19 @@ public final class Main extends JavaPlugin implements Listener {
 //                }
 //
 //            }
+            System.out.println("Saving");
             for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
-                integerFactionEntry.getValue().saveFactionData();
+                integerFactionEntry.getValue().saveFactionDataSync();
+                System.out.println("Saving:  " + integerFactionEntry.getValue().getName());
                 for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
-                    rank.saveRank();
+                    rank.saveRankSync();
                 }
             }
             con.close();
             con = null;
 
         } catch (Exception ignored) {
+            ignored.printStackTrace();
         }
 
     }

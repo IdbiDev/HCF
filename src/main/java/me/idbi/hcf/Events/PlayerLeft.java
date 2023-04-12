@@ -6,6 +6,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.AdminTools;
+import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
@@ -29,7 +30,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class PlayerLeft implements Listener {
-    private final Connection con = Main.getConnection();
+    //private final Connection con = Main.getConnection();
     private final Main m = Main.getPlugin(Main.class);
 
     @EventHandler
@@ -49,6 +50,7 @@ public class PlayerLeft implements Listener {
                 for (Player member : f.getOnlineMembers()) {
                     member.sendMessage(Messages.leave_online_player_in_faction.language(member).setPlayer(e.getPlayer()).queue());
                 }
+                f.joinLeftHistory.add(0, new HistoryEntrys.JoinLeftEntry(player.getName(), false, new Date().getTime()));
             }
             //Main.cacheRanks.remove(e.getPlayer());
         }
@@ -92,7 +94,7 @@ public class PlayerLeft implements Listener {
         Main.savedPlayers.put(entity, combatTimer);
 
         entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, Integer.MAX_VALUE, false, false));
-        entity.setMetadata("player.UUID", new FixedMetadataValue(Main.getPlugin(Main.class), p.getUniqueId().toString()));
+        entity.setMetadata("player.UUID", new FixedMetadataValue(m, p.getUniqueId().toString()));
 
     }
    /* public void CombatLogger(Player p, long combatTime){

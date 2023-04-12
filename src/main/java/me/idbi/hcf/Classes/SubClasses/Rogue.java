@@ -83,6 +83,7 @@ public class Rogue implements HCF_Class, Listener {
     public void onDamage(EntityDamageByEntityEvent e) {
         if (e.isCancelled()) return;
         if(!backstabEnabled) return;
+
         if (e.getDamager() instanceof Player damager) {
             if (e.getEntity() instanceof Player victim) {
                 HCFPlayer hcf = HCFPlayer.getPlayer(damager);

@@ -83,4 +83,29 @@ public class PlayerStatistic {
 
         SQL_Connection.dbExecute(con, "UPDATE members SET statistics='?' WHERE uuid='?'", jsonComp.toString(), uuid.toString());
     }
+    public void saveSync(UUID uuid) {
+        JSONObject jsonComp = new JSONObject();
+        JSONArray factions = new JSONArray();
+        //JSONArray ClassTimes = new JSONArray();
+        JSONObject classTimes = new JSONObject();
+        classTimes.put("Bard", TotalBardClassTime);
+        classTimes.put("Assassin", TotalAssassinClassTime);
+        classTimes.put("Archer", TotalArcherClassTime);
+        classTimes.put("Miner", TotalMinerClassTime);
+        classTimes.put("Total", TotalMinerClassTime + TotalArcherClassTime + TotalAssassinClassTime + TotalBardClassTime);
+
+        jsonComp.put("totalFactions", factionHistory.size());
+        jsonComp.put("MoneySpend", MoneySpend);
+        jsonComp.put("MoneyEarned", MoneyEarned);
+        jsonComp.put("TimePlayed", TimePlayed);
+        jsonComp.put("startDate", startDate);
+        jsonComp.put("lastLogin", new Date().getTime());
+        for (FactionHistory f : factionHistory) {
+            factions.put(f.toJSON());
+        }
+        jsonComp.put("FactionHistory", factions);
+        jsonComp.put("ClassTimes", classTimes);
+
+        SQL_Connection.dbSyncExec(con, "UPDATE members SET statistics='?' WHERE uuid='?'", jsonComp.toString(), uuid.toString());
+    }
 }

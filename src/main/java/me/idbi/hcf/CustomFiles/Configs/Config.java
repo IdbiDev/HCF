@@ -37,6 +37,10 @@ public enum Config {
     //DTRRegen("Cooldowns", 60, createComment("Must be in seconds")),
 
     WorldName("Default values", "world", createComment("Sets the world, where the HCF server are.")),
+    EndOverworldLocation("Default values", "-9.5 64 -28.5 0 0", createComment("Sets the end, where the HCF end are.")),
+    EndName("Default values", "world_the_end", createComment("Sets the end, where the HCF end are.")),
+    EndSpawn("Default values", "93.5 59 -2.5 90 0", createComment("Sets the end, where the HCF end are.")),
+    NetherName("Default values", "world_nether", createComment("Sets the nether, where the HCF nether are.")),
     DeathbanEnable("Default values", false, createComment("Sets the death-ban.", "Only 'true' or 'false' are accepted!")),
     SpawnLocation("Default values", "0 64 0 0 0", createComment("Sets the world spawn-point!", "Order: X,Y,Z,Pitch,Yaw (Separation with SPACE instead comma)")),
 
@@ -73,6 +77,11 @@ public enum Config {
     DTRSymbolFreeze("Faction DTR", "&c■"),
     DTRSymbolRegenerating("Faction DTR", "&a▲"),
     DTRSymbolNormal("Faction DTR", "&a◀"),
+    PointStart("Faction Points",0),
+    PointPerKill("Faction Points",1),
+    PointPerKoth("Faction Points",10),
+    EnablePointDecreaseOnDeath("Faction Points",true),
+    PointDecreaseOnDeath("Faction Points",1),
 
 
     //DeathDTR("Faction DTR", 1, createComment("The DTR will be decreased by this number, when a member die.")),
@@ -88,6 +97,13 @@ public enum Config {
     EnableLeaveFriendly("Faction Settings",false),
     MaxMembers("Faction Settings", 7, createComment("Maximum member per faction.")),
     MaxAllies("Faction Settings", 2, createComment("Maximum allies per faction.")),
+    MinNameLength("Faction Settings",3),
+    MaxNameLength("Faction Settings",12),
+    DisabledCharactersInName("Faction Settings",Arrays.asList(
+            "meow",
+            "uwu",
+            "kawaii"
+    )),
 
     MustBeConnected("Faction Claim",true),
     MaxClaims("Faction Claim",5),
@@ -107,6 +123,7 @@ public enum Config {
     BlackListedNames(Arrays.asList(
             "dick", "tit", "boobs", "b00bs", "bo0bs", "fuck", "gay"
     ), createComment("These words are blocked in names (Faction, rank etc.)", "No case-sensitive and it will be blocked when the word contains one of them!")),
+
 
     StatTrakEnable("StatTrak", true, createComment("Should we enable weapons stattrak?")),
     StatTrakKillFormat("StatTrak", "&6&lKills&7: &b%kills%", createComment("Stattrak kills counter format")),

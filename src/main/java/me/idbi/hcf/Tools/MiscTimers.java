@@ -6,7 +6,6 @@ import me.idbi.hcf.Classes.ClassSelector;
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.SubClasses.Bard;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.HCF_Rules;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.AdminScoreboard;
@@ -19,7 +18,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -29,98 +27,39 @@ import static me.idbi.hcf.Koth.Koth.GLOBAL_TIME;
 import static me.idbi.hcf.Koth.Koth.stopKoth;
 
 public class MiscTimers {
-    private final HashMap<HCFPlayer,BukkitTask> warmup_tasks = new HashMap<>();
+    private final HashMap<HCFPlayer, BukkitTask> warmup_tasks = new HashMap<>();
     Bard bard = new Bard();
-//    public void checkArmors() {
-//
-//        new BukkitRunnable() {
-//            @Override
-//            public void run() {
-//
-//                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-//                    ClassSelector.addClassToPlayer(player);
-//                    HCFPlayer hcf = HCFPlayer.getPlayer(player);
-//
-//                    //Shapes.Crossing(new Location(player.getWorld(),10,64,16),new Location(player.getWorld(),-21,64,-5),Effect.HEART,10);
-//                }
-//            }
-//        }.runTaskTimer(Main.getPlugin(Main.class), 0, 60);
-//    }
     public void addClassToPlayer(Player player) {
         HCFPlayer p = HCFPlayer.getPlayer(player);
-        if(p.isClassWarmup()) return;
+        bard.useSimpleBardEffect(player);
+        if (p.isClassWarmup()) return;
         BukkitTask task;
         task = new BukkitRunnable() {
             @Override
             public void run() {
-                if(!ClassSelector.isPlayerWearingValidClass(player))
+                if (!ClassSelector.isPlayerWearingValidClass(player))
                     cancel();
 
-                else 
+                else
                     ClassSelector.addClassToPlayer(player);
                 p.setClassWarmup(false);
                 Timers.CLASS_WARMUP.remove(p);
-                System.out.println("EVENT HAPPEND");
             }
-        }.runTaskLater(Main.getPlugin(Main.class),60);
+        }.runTaskLater(Main.getPlugin(Main.class), 60);
         warmup_tasks.put(p, task);
     }
-
-    /*public static void addBardEffects() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                    if (!playertools.HasMetaData(player, "class")) continue;
-                    if (playertools.getMetadata(player, "class").equalsIgnoreCase("bard")){
-                        Bard.ApplyBardEffectOnActionBar(player);
-
-                    }
-                }
-            }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 90);
-    }*/
-    /*public static void PvpTag() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Map.Entry<LivingEntity, Long> entry : Main.saved_players.entrySet()) {
-                    LivingEntity key = entry.getKey();
-                    long val = entry.getValue();
-                    if (val <= 0) {
-                        key.remove();
-                        Main.saved_players.remove(key);
-                        Main.saved_items.remove(key);
-                    } else {
-                        Main.saved_players.put(key, val - 1000);
-                    }
-                }
-
-            }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
-    }*/
     public void DTRTimer() {
         new BukkitRunnable() {
             @Override
             public void run() {
-//                HashMap<Integer, Long> dtrRegen = Main.DTRREGEN;
-//                for (Map.Entry<Integer, Long> entry : dtrRegen.entrySet()) {
-//                    int key = entry.getKey();
-//                    long val = entry.getValue();
-//                    Faction f = Main.factionCache.get(key);
-//                    // 4000+10000 <= 4000
-//                    if (val <= System.currentTimeMillis()) {
-//                        Main.DTRREGEN.remove(key);
-//                        if (Main.debug)
-//                            Main.sendCmdMessage("DTR REGEN finished: ");
-//                        f.setDTR(f.getDTR_MAX());
-//                    } //DTR regen: 0 Minutes 10 Seconds
-//                    f.setDTR_TIMEOUT(val - System.currentTimeMillis());
-//                }
-                for(Faction f : Main.factionCache.values()){
-                    if(f.getDTR_TIMEOUT() <= System.currentTimeMillis() && f.getDTR() != f.getDTR_MAX() && f.isDTRRegenEnabled()) {
-                        f.setDTR_TIMEOUT(0L);
-                        f.setDTR(f.getDTR_MAX());
+                for (Faction f : Main.factionCache.values()) {
+                    if(f.isDTRRegenEnabled()) {
+                        if(f.getDTR() != f.getDTR_MAX()) {
+                            if (f.getDTR_TIMEOUT() <= System.currentTimeMillis()){
+                                f.setDTR_TIMEOUT(0L);
+                                f.setDTR(f.getDTR_MAX());
+                            }
+                        }
                     }
                 }
 
@@ -161,130 +100,17 @@ public class MiscTimers {
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 20);
     }
 
-    //LEc see
-    //2Tick
-    //                    if (hcf.getPlayerClass() == Classes.BARD) {
-    //                        new BukkitRunnable() {
-    //                            @Override
-    //                            public void run(){
-    //                                bard.useSimpleBardEffect(onlines);
-    //                            }
-    //
-    //                        }.runTaskLater(Main.getPlugin(Main.class),40);
-    //                    }
     public void mainRefresher() {
         new BukkitRunnable() {
             @Override
             public void run() {
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-
-                    boolean shouldRefresh = false;
-                    //Stuck Time
-                    if (Timers.STUCK.nowExpire(player)) {
-                        shouldRefresh = true;
-                        //Scoreboards.refresh(player);
-                        Location loc = HCF_Claiming.ReturnSafeSpot(player.getLocation());
-                        if (loc != null) {
-                            player.teleport(loc);
-                            player.sendMessage(Messages.stuck_finished.queue()); // Ez igy mi tell me ez a kukim same bro
-                        }
-                    }
-                    //Stuck Time
-                    if (Timers.HOME.nowExpire(player)) {
-                        shouldRefresh = true;
-                        //Scoreboards.refresh(player);
-                        Faction faction = Playertools.getPlayerFaction(player);
-                        if(faction != null) {
-                            if (faction.getHomeLocation() != null) {
-                                player.teleport(faction.getHomeLocation());
-                                player.sendMessage(Messages.successfully_home_teleport.queue());
-                            }
-                        }
-                    }
-
-                    //Combat Time
-                    if (Timers.COMBAT_TAG.has(player)) {
-                        shouldRefresh = true;
-                    }
-                    //Scoreboards.refresh(player);
-                    //Ep time
-                    if (Timers.ENDER_PEARL.has(player)) {
-                        shouldRefresh = true;
-                        //Scoreboards.refresh(player);
-                    }
-                    //Golden Apple
-                    if (Timers.APPLE.has(player)) {
-                        shouldRefresh = true;
-                        //Scoreboards.refresh(player);
-                    }
-                    //OP Golden Apple
-                    if (Timers.GAPPLE.has(player)) {
-                        shouldRefresh = true;
-                        //Scoreboards.refresh(player);
-                    }
-                    //PvPTimer
-                    if (Timers.PVP_TIMER.has(player)) {
-                        shouldRefresh = true;
-                    }
-//                    if (HCF_Timer.getPvPTimerCoolDownSpawn(player) != 0) {
-//                        shouldRefresh = true;
-//                    }
-                    if (Timers.LOGOUT.has(player)) {
-                        shouldRefresh = true;
-                    }
-                    if (Timers.SOTW.has(player) || Timers.EOTW.has(player)) {
-                        shouldRefresh = true;
-                    }
                     HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
-                    if (hcfPlayer.isInDuty()) {
-                        AdminScoreboard.refresh(player);
-                    }
-                    if (!(hcfPlayer.getBardEnergy() >= bard.maxBardEnergy))
-                        shouldRefresh = true;
-                    if (!Timers.PVP_TIMER.has(player) && !Timers.COMBAT_TAG.has(player)) {
-                        //DeleteWallsForPlayer(player);
-                    }
-                    if (!Timers.CLASS_WARMUP.has(player)) {
-                        shouldRefresh = true;
-                        //DeleteWallsForPlayer(player);
-                    }
-                    if (shouldRefresh)
-                        Scoreboards.refresh(player);
-                        //Scoreboards.refresh(player);
-                    //Class selector
-                    //HCFPlayer hcf = HCFPlayer.getPlayer(player);
-//                    if(hcfPlayer.getPlayerClass())
-                    //Detect armor change
-                    if(!hcfPlayer.getPlayerClass().equals(ClassSelector.getPlayerWearingClass(player))) {
-                        if(hcfPlayer.getPlayerClass().equals(Classes.NONE)
-                                && !ClassSelector.getPlayerWearingClass(player).equals(Classes.NONE)
-                                && !hcfPlayer.isClassWarmup()) {
-                            //Add
-                            addClassToPlayer(player);
-                            hcfPlayer.setClassWarmup(true);
-                            Timers.CLASS_WARMUP.add(hcfPlayer);
-                        } else if(ClassSelector.getPlayerWearingClass(player).equals(Classes.NONE) && !hcfPlayer.getPlayerClass().equals(Classes.NONE)) {
-                            //Remove
-                            ClassSelector.addClassToPlayer(player);
-                            hcfPlayer.setClassWarmup(false);
-                            Timers.CLASS_WARMUP.remove(hcfPlayer);
-                            if(warmup_tasks.containsKey(hcfPlayer))
-                                warmup_tasks.get(hcfPlayer).cancel();
-                        }
-                        if(ClassSelector.getPlayerWearingClass(player).equals(Classes.NONE) && hcfPlayer.isClassWarmup()){
-                            hcfPlayer.setClassWarmup(false);
-                            Timers.CLASS_WARMUP.remove(hcfPlayer);
-                            if(warmup_tasks.containsKey(hcfPlayer))
-                                warmup_tasks.get(hcfPlayer).cancel();
-                        }
-                    }else {
-                        if(ClassSelector.getPlayerWearingClass(player).equals(Classes.NONE) && hcfPlayer.isClassWarmup()){
-                            hcfPlayer.setClassWarmup(false);
-                            Timers.CLASS_WARMUP.remove(hcfPlayer);
-                            if(warmup_tasks.containsKey(hcfPlayer))
-                                warmup_tasks.get(hcfPlayer).cancel();
-                        }
-                    }
+
+                    runNowExpires(player);
+                    executeClassWarmup(player);
+                    refreshScoreboard(player);
+
                     if (hcfPlayer.getPlayerClass() != Classes.BARD) continue;
                     if (!(hcfPlayer.getBardEnergy() >= bard.maxBardEnergy)) {
                         hcfPlayer.addBardEnergy(0.1 * bard.bardEnergyMultiplier);
@@ -320,26 +146,7 @@ public class MiscTimers {
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
     }
 
-
-//    public void potionLimiter() {
-//        new BukkitRunnable() {
-//            @Override
-//            public void run() {
-//                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-//                    for (PotionEffect effect : player.getActivePotionEffects()) {
-//                        if (HCF_Rules.potionLimits.containsKey(effect.getType())) {
-//                            if (effect.getAmplifier() > HCF_Rules.potionLimits.get(effect.getType())) {
-//                                player.removePotionEffect(effect.getType());
-//                                player.addPotionEffect(new PotionEffect(effect.getType(), effect.getDuration(), HCF_Rules.potionLimits.get(effect.getType()), false, false));
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
-//    }
-
-    public void cleanupFakeWalls() {
+    public void createFakeWalls() {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -351,133 +158,50 @@ public class MiscTimers {
                     try {
                         while (it.hasNext()) {
                             Location loc = it.next();
-                            if(loc.distance(player.getLocation()) > 12) {
+                            if (loc.distance(player.getLocation()) > 12) {
                                 player.sendBlockChange(loc, Material.AIR, (byte) 0);
                                 it.remove();
                             }
                         }
-                    }catch (Exception ignored){}
-
-//                    try {
-//
-//                        for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
-//                            Location loc = it.next();
-//
-//
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-
+                    } catch (Exception ignored) {
+                        ignored.printStackTrace();
+                    }
                 }
 
             }
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 1);
     }
-
-    public void archerTagEffect() {
-        /*
+    public void removeFakeWalls(Player player) {
         new BukkitRunnable() {
             @Override
             public void run() {
 
-                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                    if (playertools.getPlayerFaction(player) != null) {
-                        if (HCF_Claiming.startpositions.containsKey(playertools.getPlayerFaction(player).id) && HCF_Claiming.endpositions.containsKey(playertools.getPlayerFaction(player).id)) {
-                            HCF_Claiming.Point bottom_left = HCF_Claiming.startpositions.get(playertools.getPlayerFaction(player).id);
-                            HCF_Claiming.Point top_right = HCF_Claiming.endpositions.get(playertools.getPlayerFaction(player).id);
-                            HCF_Claiming.Point top_left = new HCF_Claiming.Point(top_right.x, bottom_left.z);
-                            HCF_Claiming.Point bottom_right = new HCF_Claiming.Point(bottom_left.x, top_right.z);
-                            int width = getDistanceBetweenPoints2D(bottom_left, top_left)+1;
-
-                            int height = getDistanceBetweenPoints2D(bottom_left, bottom_right)+1;
-
-                            for (int x = bottom_left.x; x <= bottom_left.x+width; x++) {
-                                player.playEffect(
-                                        new Location(
-                                            player.getWorld(),x,player.getLocation().getBlockY(),bottom_left.z
-                                        ),Effect.HAPPY_VILLAGER,Effect.HAPPY_VILLAGER.getId()
-                                );
-                                //System.out.println(""+x+" "+(player.getLocation().getBlockY())+"  "+bottom_left.z);
-                                player.playEffect(
-                                        new Location(
-                                                player.getWorld(),x,player.getLocation().getBlockY(),height-1
-                                        ),Effect.HAPPY_VILLAGER,Effect.HAPPY_VILLAGER.getId()
-                                );
-                                //System.out.println(""+x+" "+(player.getLocation().getBlockY())+"  "+bottom_left.z+(height-1));
-                                /*if(FindPoint_old(l1.x, l1.z, r1.x, r1.z, x, bottom_left.z)) {
-                                    return true;
-                                }
-                                if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, x, height-1)) {
-                                    return true;
-                                }
-
-                                //Main.sendCmdMessage("");
-                            }
-                            for (int y = bottom_left.z; y <= bottom_left.z+height; y++) {
-                                player.playEffect(
-                                        new Location(
-                                                player.getWorld(),bottom_left.x,player.getLocation().getBlockY(),y
-                                        ),Effect.HAPPY_VILLAGER,Effect.HAPPY_VILLAGER.getId()
-                                );
-                                player.playEffect(
-                                        new Location(
-                                                player.getWorld(),width-1,player.getLocation().getBlockY(),y
-                                        ),Effect.HAPPY_VILLAGER,Effect.HAPPY_VILLAGER.getId()
-                                );
-                                /*if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, minX, y)) {
-                                    return true;
-                                }
-                                if(FindPoint_old(l2.x, l2.z, r2.x, r2.z, width-1, y)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0, 20L);*/
-    }
-
-    public void DeleteWallsForPlayer(Player player) {
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
                 if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) return;
                 ListIterator<Location> it = Main.playerBlockChanges.get(player.getUniqueId()).listIterator();
-                while (it.hasNext()) {
-                    Location loc = it.next();
-                    if(loc.distance(player.getLocation()) > 12) {
-                        player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                        it.remove();
-                    }
+                try {
+                    while (it.hasNext())
+                        player.sendBlockChange(it.next(), Material.AIR, (byte) 0);
+                } catch (Exception ignored) {
+                    ignored.printStackTrace();
                 }
+
             }
         }.runTaskAsynchronously(Main.getPlugin(Main.class));
     }
-
-//    public long getTimeOfEOTW() {
-//        long current = System.currentTimeMillis();
-//        //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
-//        return Main.EOTWStarted - current;
-//    }
-//
-//    public long getTimeOfSOTW() {
-//        //int timeInSeconds = Integer.parseInt(ConfigLibrary.EOTW_time.getValue()) * 60;
-//        return Main.SOTWStarted - System.currentTimeMillis();
-//    }
 
     public void autoSave() {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Main.saveAll();
+                try {
+                    Main.saveAll();
+                } catch (Exception asd){
+                    asd.printStackTrace();
+                }
                 Runtime runtime = Runtime.getRuntime();
                 long totalMemory = runtime.totalMemory();
                 long freeMemory = runtime.freeMemory();
 
-                //System.out.println("Memory: Used=" + (totalMemory - freeMemory) + " Total=" + totalMemory + " Free=" + freeMemory);
 
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 6000, 6000);
