@@ -33,11 +33,15 @@ public class PlayerDeath implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         Player damager = e.getEntity().getKiller();
         Player victim = e.getEntity().getPlayer();
+
         Faction faction = Playertools.getPlayerFaction(victim);
         HCFPlayer hcfVictim = HCFPlayer.getPlayer(victim);
+
         hcfVictim.createRollback(victim.getLastDamageCause().getCause(), Rollback.RollbackLogType.DEATH);
         hcfVictim.addDeaths();
         hcfVictim.takeMoney(hcfVictim.getMoney());
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> victim.setFireTicks(0), 1);
 
         e.setDeathMessage("");
         if (faction != null) {
@@ -64,7 +68,7 @@ public class PlayerDeath implements Listener {
                 player.sendMessage(Messages.kill_message_broadcast.language(player).setVictimWithKills(victim, damager).queue());
             if (faction != null) {
                 for (Player member : faction.getOnlineMembers()) {
-                    member.sendMessage(Messages.kill_message_faction.language(member).setDeath(victim, damager).setDTR(faction.getDTR()).queue());
+                    member.sendMessage(Messages.kill_message_faction.language(member).setDeath(victim, damager).setDTR(faction).queue());
                 }
             }
             Faction damagerFaction = hcfDamager.getFaction();

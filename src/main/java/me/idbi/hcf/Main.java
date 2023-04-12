@@ -3,6 +3,8 @@ package me.idbi.hcf;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteStreams;
 import com.keenant.tabbed.Tabbed;
 import lombok.Getter;
 import me.idbi.hcf.Bossbar.Bossbar;
@@ -23,7 +25,6 @@ import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
 import me.idbi.hcf.Scoreboard.BoardManager;
-import me.idbi.hcf.TabManager.TabAPIv2.TabAPI;
 import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
@@ -43,6 +44,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.sql.Connection;
 import java.util.*;
@@ -79,6 +81,8 @@ public final class Main extends JavaPlugin implements Listener {
     public static boolean abilitiesLoaded = false;
     public static boolean customEnchantsLoaded = false;
     public static boolean discordLogLoaded = false;
+    public static World endWorld;
+    public static World netherWorld;
     public static HashMap<String, CustomTimers> customSBTimers;
     public static LinkedHashMap<Integer, Faction> factionCache = new LinkedHashMap<>();
     public static LinkedHashMap<String, HCF_Claiming.Faction_Claim> kothCache = new LinkedHashMap<>();
@@ -90,6 +94,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static ArrayList<UUID> deathWaitClear = new ArrayList<>();
     public static ArrayList<String> availableLanguages = new ArrayList<>();
     public static HashMap<UUID, List<Location>> playerBlockChanges = new HashMap<>();
+    public static HashMap<UUID, List<Location>> factionMapBlockChanges = new HashMap<>();
     //public static HashMap<Faction, Scoreboard> teams = new HashMap<>();
     public static ArrayList<UUID> kothRewardsGUI;
     public static HashMap<UUID, String> currentLanguages;
@@ -109,9 +114,9 @@ public final class Main extends JavaPlugin implements Listener {
     @Getter private Tabbed tabbed;
     @Getter
     private TabManager tabManager;
-    @Getter private TabAPI tabAPI;
     @Getter private BoardManager scoreboardManager;
-
+    @Getter private BungeeChanneling bungeeChanneling;
+    public static String lobbyName;
 
     // Egyszerű SQL Connection getter
     public static Connection getConnection() {
@@ -129,7 +134,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static void savePlayers() {
         for (Map.Entry<UUID, HCFPlayer> value : playerCache.entrySet()) {
             HCFPlayer hcf = value.getValue();
-            hcf.save();
+            hcf.save(); // nem lehet sync mert ez auto save azaz 6000 ticknél mindig fagyna a szero!
 
             // ToDo: HCFPlayer edited
 
@@ -157,8 +162,12 @@ public final class Main extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEnable() {
         instance = this;
-        tabbed = new Tabbed(this);
+        bungeeChanneling = new BungeeChanneling();
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", bungeeChanneling);
+        bungeeChanneling.getLobby();
 
+        tabbed = new Tabbed(this);
         /*if (!setupEconomy() ) {
             Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
@@ -167,6 +176,11 @@ public final class Main extends JavaPlugin implements Listener {
         economyImplementer = new HCFEconomy();
         vaultHook = new VaultHook();
         vaultHook.hook();
+
+        System.out.println(lobbyName);
+
+        endWorld = Bukkit.getWorld(Config.EndName.asStr());
+        netherWorld = Bukkit.getWorld(Config.NetherName.asStr());
 
         long deltatime = System.currentTimeMillis();
         kothRewardsGUI = new ArrayList<>();
@@ -179,14 +193,6 @@ public final class Main extends JavaPlugin implements Listener {
         boards = new HashMap<>();
         FactionSetHomeCommand.teleportPlayers = new ArrayList<Player>();
 
-        //MessagesFile.setup();
-        //DiscordFile.setup();
-        // if (!new File(getDataFolder(), "config.yml").exists()) saveResource("config.yml", true);
-        // ConfigManager.getManager().setup();
-//        DiscordFile.getDiscord().options().copyDefaults(true);
-//        DiscordFile.saveDiscord();
-//        saveDefaultConfig();
-
         configManager = new ConfigManager(this);
         configManager.setup();
 
@@ -196,20 +202,10 @@ public final class Main extends JavaPlugin implements Listener {
         blacklistedRankNames = Config.BlackListedNames.asStrList();
         miscTimers = new MiscTimers();
 
-        System.out.println("KÖZELSEM");
-
         BoardFile.setup();
 
         this.scoreboardManager = new BoardManager(this);
-        this.scoreboardManager.setup();
-
-        System.out.println("IGEN");
-
-        // Messages
-        /*this.manager = new SimpleConfigManager(this);
-
-        this.config = manager.getNewConfig("config.yml", new String[]{" ", "Plugin created by Idbi, koba1" , " "});
-        //this.messages = manager.getNewConfig("messages/messages_en.yml");*/
+        this.scoreboardManager.setup();;
 
         // Setup variables
 
@@ -255,8 +251,6 @@ public final class Main extends JavaPlugin implements Listener {
         ReclaimFile.setup();
         TabFile.setup();
         this.tabManager = new TabManager(this);
-        this.tabAPI = new TabAPI();
-        tabAPI.setup();
 
         // setup classes
         //SetupBot.setup();
@@ -283,7 +277,7 @@ public final class Main extends JavaPlugin implements Listener {
         miscTimers.mainRefresher();
         miscTimers.autoSave();
         miscTimers.KOTHCountdown();
-        miscTimers.cleanupFakeWalls();
+        miscTimers.createFakeWalls();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
 
         SpeedModifiers.asyncCacheBrewingStands();
@@ -398,6 +392,9 @@ public final class Main extends JavaPlugin implements Listener {
     public void onDisable() {
         // Adatbázis kapcsolat leállítása
         //SaveAll();
+
+        this.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+        this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
         vaultHook.unhook();
         try {
             for (HCFPlayer hcf : playerCache.values()) {
@@ -433,8 +430,6 @@ public final class Main extends JavaPlugin implements Listener {
         } catch (Exception ignored) {
             ignored.printStackTrace();
         }
-
     }
-
 
 }

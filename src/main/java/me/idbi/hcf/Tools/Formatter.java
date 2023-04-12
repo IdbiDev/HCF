@@ -39,8 +39,20 @@ public class Formatter {
         if(faction.getDTR_TIMEOUT() != 0) {
             suffix = Config.DTRSymbolRegenerating.asStr();
         }
+        if(!faction.isDTRRegenEnabled()) {
+            suffix = Config.DTRSymbolFreeze.asStr();
+        }
 
-        return color + String.format("#.1f", dtr) + suffix;
+        return color + formatter.format(dtr) + suffix;
+    }
+
+    public static String formatDtr(double dtr) {
+        DecimalFormat formatter = new DecimalFormat("0.0");
+        String prefix = "";
+        if(dtr <= 0) {
+            prefix = Config.DTRColorRaidable.asStr();
+        }
+        return prefix + formatter.format(dtr);
     }
 
     /**

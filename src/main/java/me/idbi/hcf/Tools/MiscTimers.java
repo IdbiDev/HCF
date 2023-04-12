@@ -5,6 +5,7 @@ import me.idbi.hcf.Bossbar.BossbarTools;
 import me.idbi.hcf.Classes.ClassSelector;
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.SubClasses.Bard;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
@@ -151,9 +152,10 @@ public class MiscTimers {
             @Override
             public void run() {
 
-                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    System.out.println(player.getName());
                     SpawnShield.CalcWall(player);
-                    if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) return;
+                    if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
                     ListIterator<Location> it = Main.playerBlockChanges.get(player.getUniqueId()).listIterator();
                     try {
                         while (it.hasNext()) {
@@ -205,6 +207,89 @@ public class MiscTimers {
 
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 6000, 6000);
+    }
+
+    private void executeClassWarmup(Player player) {
+        HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
+        if (hcfPlayer.getPlayerClass() == ClassSelector.getPlayerWearingClass(player)) {
+            if (ClassSelector.getPlayerWearingClass(player).equals(Classes.NONE) && hcfPlayer.isClassWarmup()) {
+                hcfPlayer.setClassWarmup(false);
+                Timers.CLASS_WARMUP.remove(hcfPlayer);
+                if (warmup_tasks.containsKey(hcfPlayer))
+                    warmup_tasks.get(hcfPlayer).cancel();
+            }
+            return;
+        }
+
+        boolean armorClass = ClassSelector.getPlayerWearingClass(player) == Classes.NONE;
+        boolean hasClass = hcfPlayer.getPlayerClass() == Classes.NONE;
+
+        if (hasClass && !armorClass && !hcfPlayer.isClassWarmup()) {
+            //Add
+            addClassToPlayer(player);
+            hcfPlayer.setClassWarmup(true);
+            Timers.CLASS_WARMUP.add(hcfPlayer);
+        } else if (armorClass && !hasClass) {
+            //Remove
+            ClassSelector.addClassToPlayer(player);
+            removeWarmup(hcfPlayer);
+        }
+
+        if (armorClass && hcfPlayer.isClassWarmup()) {
+            removeWarmup(hcfPlayer);
+        }
+    }
+
+    private void removeWarmup(HCFPlayer hcfPlayer) {
+        hcfPlayer.setClassWarmup(false);
+        Timers.CLASS_WARMUP.remove(hcfPlayer);
+        if (warmup_tasks.containsKey(hcfPlayer))
+            warmup_tasks.get(hcfPlayer).cancel();
+    }
+
+    private void refreshScoreboard(Player player) {
+        HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
+        if(hcfPlayer.isInDuty()) AdminScoreboard.refresh(player);
+        boolean hasTimer = Arrays.stream(Timers.values()).anyMatch(timer -> timer.has(player));
+        if (
+                hasTimer
+                || hcfPlayer.getBardEnergy() < bard.maxBardEnergy
+        ) {
+            Scoreboards.refresh(player);
+        }
+    }
+
+    private void runNowExpires(Player p) {
+        HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
+        if (Timers.STUCK.nowExpire(hcfPlayer)) {
+            Location loc = HCF_Claiming.ReturnSafeSpot(p.getLocation());
+            if (loc != null) {
+                p.teleport(loc);
+                p.sendMessage(Messages.stuck_finished.queue());
+            }
+        }
+        //Stuck Time
+        if (Timers.HOME.nowExpire(hcfPlayer)) {
+            Faction faction = Playertools.getPlayerFaction(p);
+            if (faction != null) {
+                if (faction.getHomeLocation() != null) {
+                    p.teleport(faction.getHomeLocation());
+                    p.sendMessage(Messages.successfully_home_teleport.queue());
+                }
+            }
+        }
+        //Stuck Time
+        if (Timers.LOGOUT.nowExpire(hcfPlayer)) {
+            if(Config.BungeeCord.asBoolean()) {
+                BungeeChanneling.getInstance().sendToLobby(p);
+                p.sendMessage(Messages.logout_kick_message.language(p).queue());
+            } else {
+                p.kickPlayer(Messages.logout_kick_message.language(p).queue());
+            }
+        }
+        if(Timers.PVP_TIMER.nowExpire(hcfPlayer)) {
+            removeFakeWalls(p);
+        }
     }
 }
 

@@ -41,7 +41,7 @@ public class PlayerLeft implements Listener {
         //if(board != null) board.delete();
 
         HCFPlayer player = HCFPlayer.getPlayer(e.getPlayer());
-        player.createRollback(e.getPlayer().getLastDamageCause().getCause(), Rollback.RollbackLogType.QUIT);
+        player.createRollback(e.getPlayer().getLastDamageCause() == null ? null : e.getPlayer().getLastDamageCause().getCause(), Rollback.RollbackLogType.QUIT);
 
         player.setOnline(false);
         if (player.inFaction()) {

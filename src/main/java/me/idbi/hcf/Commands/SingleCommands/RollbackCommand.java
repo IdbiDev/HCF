@@ -23,6 +23,13 @@ import org.bukkit.event.player.PlayerTeleportEvent;
         syntax = "/rollback <player> [id]")
 public class RollbackCommand extends HCFCommand {
 
+
+
+    @Override
+    public int getCooldown() {
+        return 0;
+    }
+
     @Override
     public void execute(Player p, String[] args) {
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
@@ -45,6 +52,7 @@ public class RollbackCommand extends HCFCommand {
                 }
             }
             p.openInventory(PlayerRollbackListInventory.inv(p, target.getPlayer(), hcfPlayer.getLastRollback()));
+            addCooldown(p);
         } else
             p.sendMessage(Messages.not_found_player.language(p).queue());
     }

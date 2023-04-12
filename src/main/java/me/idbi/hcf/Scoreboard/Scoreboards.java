@@ -31,6 +31,7 @@ public class Scoreboards {
             HCFPlayer.getPlayer(p).createScoreboard(p);
         }
         HCFPlayer.getPlayer(p).getScoreboard().update();
+        TabManager.getManager().refresh(p);
         /*TabManager.getManager().refresh(p);
         if (Playertools.isInStaffDuty(p)) {
             AdminScoreboard.refresh(p);

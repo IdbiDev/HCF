@@ -70,15 +70,11 @@ public class FactionShowCommand extends SubCommand {
         Faction faction = Playertools.getPlayerFaction(p);
         if(args.length == 2) {
             OfflinePlayer offline = Bukkit.getOfflinePlayer(args[1]);
-            if(offline.hasPlayedBefore()) {
-                if(HCFPlayer.getPlayer(offline.getUniqueId()).inFaction()) {
+            if (offline.hasPlayedBefore()) {
+                if (HCFPlayer.getPlayer(offline.getUniqueId()).inFaction()) {
                     faction = HCFPlayer.getPlayer(offline.getUniqueId()).getFaction();
                 }
             } else {
-                if(args[0].equalsIgnoreCase("who")) {
-                    p.sendMessage(Messages.not_found_player.language(p).queue());
-                    return;
-                }
                 faction = Playertools.getFactionByName(args[1]);
             }
         }
@@ -106,11 +102,16 @@ public class FactionShowCommand extends SubCommand {
                         faction.getDeaths() + "",
                         homeLoc.getBlockX() + ", " + homeLoc.getBlockZ(),
                         Formatter.formatDtr(faction),
-                        ((faction.getDTR() == faction.getDTR_MAX()) ? "-" : Playertools.convertLongToTime(faction.getDTR_TIMEOUT())),
-                        faction.getDTR_MAX() + "",
+                        faction.isDTRRegenEnabled()
+                                ? faction.getDTR() == faction.getDTR_MAX()
+                                    ? "-"
+                                    : Playertools.convertLongToTime(faction.getDTR_TIMEOUT() - System.currentTimeMillis())
+                                : "-",
+                        Formatter.formatDtr(faction.getDTR_MAX()),
                         Playertools.getOnlineSize(faction) + "",
                         faction.getMemberCount() + "",
-                        (faction.getDTR() <= 0 ? "true" : "false")
+                        (faction.getDTR() <= 0 ? "true" : "false"),
+                String.valueOf(faction.getPoints())
 
                 )
                 .setMembers(Playertools.getRankPlayers(faction),

@@ -32,11 +32,6 @@ public class FactionUnclaimCommand extends SubCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "factions.commands."+getName();
-    }
-
-    @Override
     public boolean hasPermission(Player p) {
         return p.hasPermission(getName());
     }

@@ -60,49 +60,69 @@ public class FactionDemoteCommand extends SubCommand {
     public void perform(Player p, String[] args) {
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         HCFPlayer hcfTarget = HCFPlayer.getPlayer(args[1]);
-        if(hcfPlayer.inFaction()) {
-            if(hcfPlayer.getRank().hasPermission(FactionRankManager.Permissions.MANAGE_RANKS)) {
-                if(hcfTarget != null) {
-                    if(!hcfPlayer.equals(hcfTarget)) {
-                        if(hcfPlayer.getFaction().equals(hcfTarget.getFaction())){
-                            if(hcfTarget.getRank().getPriority() < hcfPlayer.getRank().getPriority()) {
-                                Faction f = hcfTarget.getFaction();
-                                ArrayList<FactionRankManager.Rank> ranks = f.getRanks();
-                                FactionRankManager.Rank rank = hcfTarget.getRank();
-                                FactionRankManager.Rank nextRank;
-                                try {
-                                    nextRank = ranks.get(ranks.indexOf(rank)-1);
-                                }catch (IndexOutOfBoundsException ignored) {
-                                    p.sendMessage(Messages.no_permission_in_faction.language(hcfPlayer).queue());
-                                    return;
-                                }
-                                hcfTarget.setRank(nextRank);
-                                Player target = Bukkit.getPlayer(hcfTarget.getUUID());
-                                if(target != null)
-                                    target.sendMessage(Messages.demote_message.language(target).setExecutor(p).setRank(nextRank.getName()).queue());
-                                p.sendMessage(Messages.executor_demote_message.language(target).setPlayer(hcfTarget).setRank(nextRank.getName()).queue());
-                                for(HCFPlayer _player : f.getMembers()) {
-                                    Player _player_  = Bukkit.getPlayer(_player.getUUID());
-                                    if(_player_ != null)
-                                        _player_.sendMessage(Messages.executor_demote_broadcast_message.language(_player).setExecutor(hcfPlayer).setPlayer(hcfTarget).setRank(nextRank.getName()).queue());
-                                }
-                            } else {
-                                p.sendMessage(Messages.no_permission_in_faction.language(p).queue());
-                            }
-                        } else {
-                            p.sendMessage(Messages.not_found_player.language(p).queue());
-                        }
-                    } else {
-                        p.sendMessage(Messages.player_cant_self_demote.language(p).queue());
-                    }
-                } else {
-                    p.sendMessage(Messages.not_found_player.language(p).queue());
-                }
-            } else {
-                p.sendMessage(Messages.no_permission.language(p).queue());
-            }
-        } else {
+        if (!hcfPlayer.inFaction()) {
             p.sendMessage(Messages.not_in_faction.language(p).queue());
+            return;
+        }
+
+        if (!hcfPlayer.getRank().hasPermission(FactionRankManager.Permissions.MANAGE_RANKS)) {
+            p.sendMessage(Messages.no_permission.language(p).queue());
+            return;
+        }
+
+        if (hcfTarget == null) {
+            p.sendMessage(Messages.not_found_player.language(p).queue());
+            return;
+        }
+
+        if (hcfPlayer.equals(hcfTarget)) {
+            p.sendMessage(Messages.player_cant_self_demote.language(p).queue());
+            return;
+        }
+
+        if (!hcfPlayer.getFaction().equals(hcfTarget.getFaction())) {
+            p.sendMessage(Messages.not_found_player.language(p).queue());
+            return;
+        }
+
+        if (hcfTarget.getRank().getPriority() >= hcfPlayer.getRank().getPriority()) {
+            p.sendMessage(Messages.no_permission_in_faction.language(p).queue());
+            return;
+        }
+
+        Faction f = hcfTarget.getFaction();
+        ArrayList<FactionRankManager.Rank> ranks = f.getRanks();
+        FactionRankManager.Rank rank = hcfTarget.getRank();
+
+        int index = ranks.indexOf(rank);
+        if (index == -1) {
+            p.sendMessage(Messages.not_found_player.language(p).queue());
+            return;
+        }
+
+        FactionRankManager.Rank nextRank = null;
+        try {
+            nextRank = ranks.get(index - 1);
+        } catch (IndexOutOfBoundsException ignored) {
+            p.sendMessage(Messages.no_permission_in_faction.language(hcfPlayer).queue());
+            return;
+        }
+
+        hcfTarget.setRank(nextRank);
+
+        Player target = Bukkit.getPlayer(hcfTarget.getUUID());
+        if (target != null) {
+            target.sendMessage(Messages.demote_message.language(target).setExecutor(p).setRank(nextRank.getName()).queue());
+        }
+
+        p.sendMessage(Messages.executor_demote_message.language(target).setPlayer(hcfTarget).setRank(nextRank.getName()).queue());
+
+        for (HCFPlayer _player : f.getMembers()) {
+            Player _player_ = Bukkit.getPlayer(_player.getUUID());
+            if (_player_ != null) {
+                _player_.sendMessage(Messages.executor_demote_broadcast_message.language(_player)
+                        .setExecutor(hcfPlayer).setPlayer(hcfTarget).setRank(nextRank.getName()).queue());
+            }
         }
     }
 }

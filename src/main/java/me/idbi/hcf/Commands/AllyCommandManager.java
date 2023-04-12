@@ -1,9 +1,6 @@
 package me.idbi.hcf.Commands;
 
-import me.idbi.hcf.Commands.AllyCommands.AllyAcceptCommand;
-import me.idbi.hcf.Commands.AllyCommands.AllyDeclineCommand;
-import me.idbi.hcf.Commands.AllyCommands.AllyInviteCommand;
-import me.idbi.hcf.Commands.AllyCommands.AllyResolveCommand;
+import me.idbi.hcf.Commands.AllyCommands.*;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,6 +19,7 @@ public class AllyCommandManager implements CommandExecutor {
         subcommands.add(new AllyDeclineCommand());
         subcommands.add(new AllyInviteCommand());
         subcommands.add(new AllyResolveCommand());
+        subcommands.add(new AllyUninviteCommand());
 
         for (SubCommand command : subcommands) {
             SubCommand.commandCooldowns.put(command, new HashMap<>());

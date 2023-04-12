@@ -6,6 +6,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.CustomFiles.MessagesTool;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.SQL_Connection;
@@ -69,5 +70,6 @@ public class AdminReloadCommand extends SubCommand {
         Main.getInstance().getTabManager().reload();
         ConfigManager.getConfigManager().setup();
         Scoreboards.RefreshAll();
+        TabManager.getManager().reload();
     }
 }

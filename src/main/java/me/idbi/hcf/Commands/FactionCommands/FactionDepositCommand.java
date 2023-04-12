@@ -115,7 +115,7 @@ public class FactionDepositCommand extends SubCommand {
             int SQLAmount = player.getMoney();
             if (amount > SQLAmount) {
                 transaction = false;
-                p.sendMessage(Messages.not_enough_slot.language(p).queue());
+                p.sendMessage(Messages.faction_bank_not_enough.language(p).queue());
                 return this;
             }
 

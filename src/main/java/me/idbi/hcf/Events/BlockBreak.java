@@ -46,21 +46,22 @@ public class BlockBreak implements Listener {
                 // System.out.println("MAU");
                 e.setCancelled(true);
                 Faction f = Playertools.getPlayerFaction(p);
-                if (f == null) return;
-                if (!f.hasAllyPermission(baszogatottFaction, Permissions.BREAK_BLOCK)) {
+                if (f != null) {
+                    if (!f.hasAllyPermission(baszogatottFaction, Permissions.BREAK_BLOCK)) {
 
-                    // System.out.println("uwuwuwwuuwuuwuuwuw");
-                    e.setCancelled(true);
-                    p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, bx, bz)).queue());
-                } else if (HCF_Rules.usableBlacklist.contains(e.getBlock().getType())) {
-                    if (!f.hasAllyPermission(baszogatottFaction, Permissions.INVENTORY_ACCESS)) {
+                        // System.out.println("uwuwuwwuuwuuwuuwuw");
                         e.setCancelled(true);
                         p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, bx, bz)).queue());
+                    } else if (HCF_Rules.usableBlacklist.contains(e.getBlock().getType())) {
+                        if (!f.hasAllyPermission(baszogatottFaction, Permissions.INVENTORY_ACCESS)) {
+                            e.setCancelled(true);
+                            p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, bx, bz)).queue());
+                        } else {
+                            e.setCancelled(false);
+                        }
                     } else {
                         e.setCancelled(false);
                     }
-                } else {
-                    e.setCancelled(false);
                 }
             } else {
                 // System.out.println("ODA KELL asd MÁ AFDőpédfklőpsdkfglpdfkgpldfkglőéfgkőlpdgl,");

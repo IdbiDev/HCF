@@ -68,6 +68,7 @@ public class Faction {
         this.members = new ArrayList<HCFPlayer>();
         this.DTR_MAX = Config.MaxDTR.asDouble();
         this.DTR = this.getDTR_MAX();
+        this.isDTRRegenEnabled = true;
 
     }
     

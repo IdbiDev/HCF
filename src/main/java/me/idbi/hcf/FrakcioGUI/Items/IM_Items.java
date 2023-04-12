@@ -1,6 +1,7 @@
 package me.idbi.hcf.FrakcioGUI.Items;
 
 import me.idbi.hcf.CustomFiles.GUIMessages.GUIMessages;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -36,12 +37,12 @@ public class IM_Items {
         return is;
     }
 
-    public static ItemStack invitedPlayer(Player p) {
+    public static ItemStack invitedPlayer(Player p, String name) {
         ItemStack is = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
         SkullMeta im = (SkullMeta) is.getItemMeta();
-        im.setOwner(p.getName());
-        im.setDisplayName(GUIMessages.faction_uninvite_player.language(p).setPlayerName(p).getName());
-        im.setLore(GUIMessages.faction_invited_players.language(p).setPlayerName(p).getLore());
+        im.setOwner(name);
+        im.setDisplayName(GUIMessages.faction_uninvite_player.language(p).setPlayerName(name).getName());
+        im.setLore(GUIMessages.faction_invited_players.language(p).setPlayerName(name).getLore());
         is.setItemMeta(im);
         return is;
     }

@@ -27,6 +27,7 @@ import me.idbi.hcf.MessagesEnums.SignShop.InteractShopSign;
 import me.idbi.hcf.SubClaims.SubClaimBreakListener;
 import me.idbi.hcf.SubClaims.SubClaimListener;
 import me.idbi.hcf.SubClaims.SubClaimSignListener;
+import me.idbi.hcf.factionlistgui.listeners.FactionTopListener;
 import org.bukkit.plugin.PluginManager;
 
 import static org.bukkit.Bukkit.getServer;
@@ -139,6 +140,8 @@ public class SetupEvents {
         // Command events
         pm.registerEvents(new RollbackInventoryClick(), Main.getPlugin(Main.class));
         pm.registerEvents(new PlayerWorldChange(), Main.getPlugin(Main.class));
+
+        pm.registerEvents(new FactionTopListener(), Main.getPlugin(Main.class));
 
     }
 }

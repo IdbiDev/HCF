@@ -45,46 +45,37 @@ public class PlayerInteract implements Listener {
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             Block block = e.getClickedBlock();
             HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(block.getX(), block.getZ());
-            if (claim == null) {
-                return;
-            }
-            if (claim.getFaction() == null) {
-                Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
-                Bukkit.getPluginManager().disablePlugin(Main.getPlugin(Main.class));
-            }
-            Faction baszogatottFaction = claim.getFaction();
+            if (claim != null) {
+                if (claim.getFaction() == null) {
+                    Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
+                    Bukkit.getPluginManager().disablePlugin(Main.getPlugin(Main.class));
+                }
+                Faction baszogatottFaction = claim.getFaction();
 
-            Faction f = Playertools.getPlayerFaction(p);
-            if (f != null) {
-                if (HCF_Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).hasAllyPermission(baszogatottFaction, Permissions.INTERACT)) {
-                    if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType())) {
-                        e.setCancelled(true);
-                        p.sendMessage(Messages.no_permission.language(p).queue());
+                Faction f = Playertools.getPlayerFaction(p);
+                if (f != null) {
+                    if (HCF_Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).hasAllyPermission(baszogatottFaction, Permissions.INTERACT)) {
+                        if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType())) {
+                            e.setCancelled(true);
+                            p.sendMessage(Messages.no_permission.language(p).queue());
+                        }
                     }
-                }
-                if (HCF_Rules.usableBlacklist.contains(e.getClickedBlock().getType())) {
-                    if (HCF_Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).hasAllyPermission(baszogatottFaction, Permissions.INVENTORY_ACCESS)) {
-                        e.setCancelled(true);
-                        p.sendMessage(Messages.no_permission.language(p).queue());
+                    if (HCF_Rules.usableBlacklist.contains(e.getClickedBlock().getType())) {
+                        if (HCF_Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).hasAllyPermission(baszogatottFaction, Permissions.INVENTORY_ACCESS)) {
+                            e.setCancelled(true);
+                            p.sendMessage(Messages.no_permission.language(p).queue());
+                        }
                     }
-                }
 
-            } else {
-                if (HCF_Claiming.isEnemyClaim(p, claim)) {
-                    e.setCancelled(true);
-                    if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType())) {
+                } else {
+                    if (HCF_Claiming.isEnemyClaim(p, claim)) {
                         e.setCancelled(true);
-                        p.sendMessage(Messages.no_permission.language(p).queue());
+                        if (HCF_Rules.blacklistedBlocks.contains(e.getClickedBlock().getType())) {
+                            e.setCancelled(true);
+                            p.sendMessage(Messages.no_permission.language(p).queue());
+                        }
                     }
                 }
-                /*else{
-                if (HCF_Rules.usableBlacklist.contains(e.getClickedBlock().getType())) {
-                    if(!Objects.requireNonNull(f).HaveAllyPermission(baszogatottFaction, Permissions.VIEWITEMS)){
-                        e.setCancelled(true);
-                        p.sendMessage(Messages.no_permission.language(p).queue());
-                    }
-                }
-            }*/
             }
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
@@ -99,12 +90,7 @@ public class PlayerInteract implements Listener {
         }
         ///Bard
         HCFPlayer player = HCFPlayer.getPlayer(p);
-        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null) {
-            if (player.getPlayerClass() == Classes.BARD) {
-                bard.OhLetsBreakItDown(e.getPlayer());
-            }
-        }
-        else if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null) {
+        if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR)) && e.getItem() != null) {
             if (player.getPlayerClass() == Classes.BARD) {
                 bard.OhLetsBreakItDown(e.getPlayer());
             }

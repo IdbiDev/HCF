@@ -11,6 +11,7 @@ import java.util.List;
 
 public enum Config {
 
+    BungeeCord(true),
     DefaultLanguage("Language", "en", createComment("Sets the default language to the players.")),
     Timezone("Timezone", "Europe/Budapest", createComment("Sets the default timezone on the server. ", "Please use this website if you don't understand the timezone format:","https://code2care.org/pages/java-timezone-list-utc-gmt-offset")),
     Host("Database", "mysqlgame.clans.hu"),

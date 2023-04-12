@@ -1,6 +1,7 @@
 package me.idbi.hcf.Commands;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,6 +18,8 @@ public class Command_test implements CommandExecutor {
                 if (command.getName().equalsIgnoreCase("deleteconfig")) {
                     //new File(Main.getInstance().getDataFolder(), "config.yml").delete();
                     new File(Main.getInstance().getDataFolder(), "scoreboard.yml").delete();
+                } else if (command.getName().equalsIgnoreCase("balance")) {
+                    p.sendMessage("§7[§2§o$§7] §aBalance: §c" + HCFPlayer.getPlayer(p).getMoney());
                 }
             }
         }

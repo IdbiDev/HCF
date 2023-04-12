@@ -45,6 +45,12 @@ commands:
     description: reclaim lol
   rollback:
   deleteconfig:
+  balance:
+    aliases: [ money, balance, bal ]
+  lookingforfaction:
+    aliases: [ lff, lookingfaction, lffaction, lforf, lforfaction, lookingff, lookforfaction, lookingffaction, lookingfaction ]
+  pvp:
+  coordinates:
 
 
 permissions:

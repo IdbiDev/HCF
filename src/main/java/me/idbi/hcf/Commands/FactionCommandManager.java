@@ -29,15 +29,19 @@ public class FactionCommandManager implements CommandExecutor, TabCompleter {
         subcommands.add(new FactionJoinCommand());
         subcommands.add(new FactionKickCommand());
         subcommands.add(new FactionLeaveCommand());
+        subcommands.add(new FactionListCommand());
         subcommands.add(new FactionManageCommand());
+        subcommands.add(new FactionMapCommand());
         subcommands.add(new FactionRallyCommand());
         subcommands.add(new FactionSetHomeCommand());
         subcommands.add(new FactionShowCommand());
         subcommands.add(new FactionStatsCommand());
         subcommands.add(new FactionStuckCommand());
         subcommands.add(new FactionTeamFocusCommand());
+        subcommands.add(new FactionTopCommand());
         subcommands.add(new FactionTransferCommand());
         subcommands.add(new FactionUnclaimCommand());
+        subcommands.add(new FactionUninviteCommand());
         subcommands.add(new FactionUnrallyCommand());
         subcommands.add(new FactionUnteamFocusCommand());
         subcommands.add(new FactionWithdrawCommand());
@@ -55,39 +59,38 @@ public class FactionCommandManager implements CommandExecutor, TabCompleter {
         if (command.getName().equalsIgnoreCase("faction")) {
             if (sender instanceof Player p) {
 
-                if (args.length > 0) {
-                    for (int i = 0; i < getSubcommands().size(); i++) {
-                        try {
-                            SubCommand cmd = getSubcommands().get(i);
-                            if (cmd.isCommand(args[0])) {
-                                if (cmd.hasPermission(p)) {
-                                    if(!cmd.hasCooldown(p)) {
-                                        cmd.perform(p, args);
-                                    } else {
-                                        long cooldown = SubCommand.commandCooldowns.get(cmd).get(p);
-                                        p.sendMessage(Messages.command_cooldown.language(p)
-                                                .setTime((cooldown / 1000 - System.currentTimeMillis() / 1000) + "").queue());
-                                    }
-                                } else {
-                                    p.sendMessage(Messages.no_permission.language(p).queue());
-                                }
-                            }
-                        } catch (IndexOutOfBoundsException e) {
-                            p.sendMessage("§cUsage: " + getSubcommands().get(i).getSyntax());
-                            p.sendMessage(Messages.missing_argument.language(p).queue());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            p.sendMessage(Messages.error_while_executing.language(p).queue());
-                        }
-                    }
-                } else if (args.length == 0) {
-                    p.sendMessage("--------------------------------");
-                    for (int i = 0; i < getSubcommands().size(); i++) {
-                        p.sendMessage(getSubcommands().get(i).getSyntax() + " - " + getSubcommands().get(i).getDescription());
-                    }
-                    p.sendMessage("--------------------------------");
+                if (args.length == 0) {
+                    showSubcommands(p);
+                    return true;
                 }
 
+                for (int i = 0; i < getSubcommands().size(); i++) {
+                    try {
+                        SubCommand cmd = getSubcommands().get(i);
+                        if (cmd.isCommand(args[0])) {
+                            if (!cmd.hasPermission(p)) {
+                                p.sendMessage(Messages.no_permission.language(p).queue());
+                                return true;
+                            }
+
+                            if (cmd.hasCooldown(p)) {
+                                long cooldown = SubCommand.commandCooldowns.get(cmd).get(p);
+                                p.sendMessage(Messages.command_cooldown.language(p)
+                                        .setTime((cooldown / 1000 - System.currentTimeMillis() / 1000) + "").queue());
+                                return true;
+                            }
+
+                            cmd.perform(p, args);
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        p.sendMessage("§cUsage: " + getSubcommands().get(i).getSyntax());
+                        e.printStackTrace();
+                        p.sendMessage(Messages.missing_argument.language(p).queue());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        p.sendMessage(Messages.error_while_executing.language(p).queue());
+                    }
+                }
             }
         }
         return true;
@@ -109,5 +112,13 @@ public class FactionCommandManager implements CommandExecutor, TabCompleter {
             }
         }
         return null;
+    }
+
+    private void showSubcommands(Player player) {
+        player.sendMessage("--------------------------------");
+        for (SubCommand cmd : getSubcommands()) {
+            player.sendMessage(cmd.getSyntax() + " - " + cmd.getDescription());
+        }
+        player.sendMessage("--------------------------------");
     }
 }

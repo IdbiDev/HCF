@@ -31,7 +31,6 @@ public class PlayerRespawn implements Listener {
         e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
         e.getPlayer().setFoodLevel(20);
         e.getPlayer().setFallDistance(0);
-        e.getPlayer().setFireTicks(0);
         // Bukkit.broadcastMessage("Shut up nigger");
         Timers.PVP_TIMER.add(e.getPlayer());
     }

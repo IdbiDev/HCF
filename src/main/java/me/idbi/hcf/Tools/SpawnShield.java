@@ -101,6 +101,92 @@ public class SpawnShield {
     }
 
 
+    /*
+    CHAT GPT USEDDD
+     */
+    public static void calcWall(Player player) {
+        Faction playerFaction = Playertools.getPlayerFaction(player);
+        HCF_Claiming.Point playerPoint = new HCF_Claiming.Point(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
+
+        for (Faction faction : Main.factionCache.values()) {
+            for (HCF_Claiming.Faction_Claim claim : faction.getClaims()) {
+                if (!player.getWorld().equals(claim.getWorld())) {
+                    continue;
+                }
+
+                boolean shouldBuildWall = false;
+                if (pvpCooldown(player) && claim.getAttribute() != HCF_Claiming.ClaimAttributes.PROTECTED) {
+                    shouldBuildWall = true;
+                } else if (Main.SOTWEnabled && claim.getAttribute() == HCF_Claiming.ClaimAttributes.NORMAL && claim.getFaction().getId() != (playerFaction != null ? playerFaction.getId() : 0)) {
+                    shouldBuildWall = true;
+                } else if (Timers.COMBAT_TAG.has(player) && claim.getAttribute() == HCF_Claiming.ClaimAttributes.PROTECTED) {
+                    shouldBuildWall = true;
+                }
+
+                if (!shouldBuildWall) {
+                    continue;
+                }
+
+                HCF_Claiming.Point bottomLeft = new HCF_Claiming.Point(claim.getStartX(), claim.getStartZ());
+                HCF_Claiming.Point topRight = new HCF_Claiming.Point(claim.getEndX(), claim.getEndZ());
+                HCF_Claiming.Point topLeft = new HCF_Claiming.Point(topRight.getX(), bottomLeft.getZ());
+                HCF_Claiming.Point bottomRight = new HCF_Claiming.Point(bottomLeft.getX(), topRight.getZ());
+
+                int width = getDistanceBetweenPoints2D(bottomLeft, topLeft) + 1;
+                int height = getDistanceBetweenPoints2D(bottomLeft, bottomRight) + 1;
+                int minX = Math.min(topRight.getX(), bottomLeft.getX());
+                int minZ = Math.min(topRight.getZ(), bottomLeft.getZ());
+                int record = 9999;
+                HCF_Claiming.Point recordPoint = new HCF_Claiming.Point(0, 0);
+
+                for (int x = minX; x < minX + width; x++) {
+                    int distance = getDistanceBetweenPoints2D(new HCF_Claiming.Point(x, minZ), playerPoint);
+
+                    if (distance < record) {
+                        record = distance;
+                        recordPoint.setX(x);
+                        recordPoint.setZ(minZ);
+                    }
+
+                    distance = getDistanceBetweenPoints2D(new HCF_Claiming.Point(x, minZ + height - 1), playerPoint);
+
+                    if (distance < record) {
+                        record = distance;
+                        recordPoint.setX(x);
+                        recordPoint.setZ(minZ + height - 1);
+                    }
+                }
+
+                for (int z = minZ; z < minZ + height; z++) {
+                    int distance = getDistanceBetweenPoints2D(new HCF_Claiming.Point(minX, z), playerPoint);
+
+                    if (distance < record) {
+                        record = distance;
+                        recordPoint.setX(minX);
+                        recordPoint.setZ(z);
+                    }
+
+                    distance = getDistanceBetweenPoints2D(new HCF_Claiming.Point(minX + width - 1, z), playerPoint);
+
+                    if (distance < record) {
+                        record = distance;
+                        recordPoint.setX(minX + width - 1);
+                        recordPoint.setZ(z);
+                    }
+                }
+
+                if (getDistanceBetweenPoints2D(recordPoint, playerPoint) > 10) {
+                    continue;
+                }
+
+                String side = bottomLeft.getZ() == recordPoint.getZ() || topRight.getZ() == recordPoint.getZ() ? "x" : "z";
+
+                placeWall(player, new Location(player.getWorld(), recordPoint.getX(), player.getLocation().getBlockY(), recordPoint.getZ()), side, claim);
+            }
+        }
+    }
+
+
     public static void placeWall(Player p, Location loc, String side, HCF_Claiming.Faction_Claim claim) {
 
         if (side.equals("x")) {

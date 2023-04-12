@@ -89,6 +89,7 @@ public class HCF_Claiming {
                     //if (f.claims.isEmpty()) continue;
 
                     for (HCF_Claiming.Faction_Claim val : f.getClaims()) {
+                        if(!val.getWorld().equals(p.getWorld())) continue;
 
                         Point start_this = new Point(Math.min(val.getStartX(), val.getEndX()), Math.min(val.getStartZ(), val.getEndZ()));
                         Point end_this = new Point(Math.max(val.getStartX(), val.getEndX()), Math.max(val.getStartZ(), val.getEndZ()));
@@ -114,6 +115,7 @@ public class HCF_Claiming {
 
                 if(!f.getClaims().isEmpty() && Config.MustBeConnected.asBoolean()) {
                     for(Faction_Claim claim : f.getClaims()) {
+                        if(!claim.getWorld().equals(p.getWorld())) continue;
                         if (isClaimConnected(new Faction_Claim(startX,endX,startZ,endZ,1,ClaimAttributes.NORMAL,"UwU"),claim)) {
                             validClaim = true;
                         }
@@ -368,7 +370,7 @@ public class HCF_Claiming {
     public static HCF_Claiming.Faction_Claim getPlayerArea(Player p) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
-
+                if(!val.getWorld().equals(p.getWorld())) continue;
                 int x = p.getLocation().getBlockX();
                 int z = p.getLocation().getBlockZ();
 
@@ -390,6 +392,7 @@ public class HCF_Claiming {
     public static boolean isAreaNeutral(Location loc) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
+                if(!loc.getWorld().equals(val.getWorld())) continue;
                 if (FindPoint_old(val.getStartX(), val.getStartZ(), val.getEndX(), val.getEndZ(), loc.getBlockX(), loc.getBlockZ())) {
                     return false;
                 }
@@ -401,6 +404,7 @@ public class HCF_Claiming {
     public static String sendFactionTerretoryByXZ(Player p, int x, int z) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (HCF_Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
+                if(!p.getWorld().equals(val.getWorld())) continue;
                 if (FindPoint_old(val.getStartX(), val.getStartZ(), val.getEndX(), val.getEndZ(), x, z)) {
                     return Config.EnemyColor.asStr() + thisFaction.getValue().getName();
                 }
@@ -618,7 +622,6 @@ public class HCF_Claiming {
             if (this.world == null) {
                 this.world = Bukkit.getWorld(Config.WorldName.asStr());
             }
-
         }
     }
 

@@ -2,6 +2,7 @@ package me.idbi.hcf.TabManager;
 
 import com.keenant.tabbed.item.TabItem;
 import com.keenant.tabbed.item.TextTabItem;
+import com.keenant.tabbed.tablist.TableTabList;
 import me.idbi.hcf.CustomFiles.TabFile;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
@@ -75,11 +76,11 @@ public class TabManager {
     public void reload() {
         TabFile.reload();
         enabled = TabFile.get().getBoolean("enabled");
-        factionInfo_startSlot = TabFile.get().getInt("faction_info.start_slot");
+        factionInfo_startSlot = TabFile.get().getInt("faction_info.start_slot") - 1;
         factionInfo_noFaction = translate(TabFile.get().getStringList("faction_info.no_faction"));
         factionInfo_inFaction = translate(TabFile.get().getStringList("faction_info.in_faction"));
 
-        playerInfo_startSlot = TabFile.get().getInt("player_list.start_slot");
+        playerInfo_startSlot = TabFile.get().getInt("player_list.start_slot") - 1;
         playerInfo_factionNameColor = translate(TabFile.get().getString("player_list.faction_name_color"));
         playerInfo_playerColor = translate(TabFile.get().getString("player_list.player_color"));
     }
@@ -101,18 +102,14 @@ public class TabManager {
     }
 
     public void refresh(Player p) {
-      /*  if(p == null) return;
-        TabAPI.setTabString(Main.getInstance(), p, 1, 1, "BUZIII");
-        TabAPI.setPriority(Main.getInstance(), p, 2);*/
-        /*TableTabList tab;
+        if(p == null) return;
+        TableTabList tab;
         try {
-            tab = Main.getInstance().getTabbed().newTableTabList(p, 3);
+            tab = Main.getInstance().getTabbed().newTableTabList(p, 4);
         } catch (IllegalArgumentException e) {
             tab = (TableTabList) Main.getInstance().getTabbed().getTabList(p);
         }
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
-
-        System.out.println("rows: " + tab.getRows());
 
         TableTabList.TableBox left = new TableTabList.TableBox(new TableTabList.TableCell(0, 0), new TableTabList.TableCell(0, 19));
         tab.fill(left, formatColumn(p, getLeft()), TableTabList.TableCorner.TOP_LEFT, TableTabList.FillDirection.VERTICAL);
@@ -140,11 +137,11 @@ public class TabManager {
         if(hcfPlayer.inFaction()) {
             tab.set(this.playerInfo_startSlot, new TextTabItem(translate(this.playerInfo_factionNameColor) + hcfPlayer.getFaction().getName()));
 
-            for (Player player : hcfPlayer.getFaction().getMembers()) {
+            for (HCFPlayer player : hcfPlayer.getFaction().getMembers()) {
                 tab.set(this.playerInfo_startSlot + c, new TextTabItem(translate(this.playerInfo_playerColor) + player.getName()));
                 c++;
-            }*/
-        //}
+            }
+        }
     }
 
     private ArrayList<TabItem> formatColumn(Player p, ArrayList<String> list) {

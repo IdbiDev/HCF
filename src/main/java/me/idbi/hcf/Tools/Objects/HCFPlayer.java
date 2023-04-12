@@ -75,6 +75,7 @@ public class HCFPlayer {
         try {
             this.uuid = uuid;
             this.name = Bukkit.getOfflinePlayer(this.uuid).getName();
+            System.out.println("buzi vagy de mélgsem : " + this.name);
             this.money = money;
             Main.getInstance().playerBank.put(uuid, (double) money);
             this.faction = faction;
@@ -138,7 +139,7 @@ public class HCFPlayer {
 
     public static HCFPlayer getPlayer(String name) {
         for (HCFPlayer p : Main.playerCache.values()){
-            if(p.name.equalsIgnoreCase(name)){
+            if(p.getName().equalsIgnoreCase(name)){
                 return p;
             }
         }
@@ -399,10 +400,13 @@ public class HCFPlayer {
             Player p = Bukkit.getPlayer(this.uuid);
             if(p != null) {
                 p.setHealth(p.getMaxHealth());
+
                 p.setFoodLevel(20);
                 p.setFallDistance(0);
+
                 p.getInventory().clear();
                 p.getInventory().setArmorContents(null);
+
                 Timers.PVP_TIMER.add(p);
                 this.isDeathBanned = false;
                 this.deathTime = 0L;
@@ -417,7 +421,12 @@ public class HCFPlayer {
         } else {
             Player p = Bukkit.getPlayer(this.uuid);
             if(this.online || p != null) {
-                p.kickPlayer(Messages.deathban_kick.language(p).setFormattedTime((int) ((Main.deathbanTime / 1000))).queue());
+                if(Config.BungeeCord.asBoolean()) {
+                    BungeeChanneling.getInstance().sendToLobby(p);
+                    p.sendMessage(Messages.deathban_kick.language(p).setFormattedTime((int) ((Main.deathbanTime / 1000))).queue());
+                } else {
+                    p.kickPlayer(Messages.deathban_kick.language(p).setFormattedTime((int) ((Main.deathbanTime / 1000))).queue());
+                }
             }
            BanHandler.banPlayerInHCF(this);
         }
@@ -449,7 +458,7 @@ public class HCFPlayer {
                 return Config.EnemyColor.asStr() + currentArea.getFaction().getName();
             }
         }
-        return null;
+        return "-";
     }
 
     public void sendChat(String message, ChatTypes chatTypes) {

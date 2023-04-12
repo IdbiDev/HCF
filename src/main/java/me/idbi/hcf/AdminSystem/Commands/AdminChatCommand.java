@@ -70,7 +70,7 @@ public class AdminChatCommand extends SubCommand {
         }
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("chat")) {
+            if (isCommand(args[0])) {
                 if (!player.hasStaffChat()) {
                     player.setChatType(ChatTypes.STAFF);
                     p.sendMessage(Messages.chat_channel_changed.language(p).setChat(p).queue());
@@ -81,7 +81,7 @@ public class AdminChatCommand extends SubCommand {
             }
             AdminScoreboard.refresh(p);
         } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("chat")) {
+            if (isCommand(args[0])) {
                 HCFPlayer hcf = HCFPlayer.getPlayer(p);
                 if (args[1].equalsIgnoreCase("on")) {
                     player.setChatType(ChatTypes.STAFF);

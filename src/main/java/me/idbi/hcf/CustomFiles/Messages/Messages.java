@@ -3,6 +3,7 @@ package me.idbi.hcf.CustomFiles.Messages;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
 import me.idbi.hcf.CustomFiles.MessagesTool;
+import me.idbi.hcf.Tools.Formatter;
 import me.idbi.hcf.Tools.Objects.ChatTypes;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
@@ -56,7 +57,7 @@ public enum Messages {
 
     uninvite_target("Factions","%prefix% &2&o%player%&c canceled your invitation!"),
     uninvite_executor("Factions","%prefix% &cYou canceled to invite &2&o%player%&c!"),
-    already_invited("Factions","%prefix% &cThis player is already invited"),
+    already_invited("Factions","%prefix% &cThis player is already invited!"),
     not_invited("Factions","%prefix% &cYou are not invited to this faction!"),
 
     no_faction_exists("Factions","%prefix% &cThis faction does not exists!"),
@@ -141,6 +142,8 @@ public enum Messages {
     faction_player_position("Factions","%prefix% &7-> &6&o%player%'s &eposition: &6&o%location_x%&e, &6&o%location_y%&e, &6&o%location_z%"),
     faction_dont_have_claim("Claims","%prefix% &4Your faction does not have a claim yet!"),
 
+    looking_for_faction("Factions", "&2&o%player% &alooking for faction!"),
+
     // reclaim
     reclaim_claimed("Reclaim","%prefix% &aYou successfully reclaimed!"),
     reclaim_already_claimed("Reclaim","%prefix% &aYou already reclaimed!"),
@@ -200,6 +203,17 @@ public enum Messages {
     member_list_design_online("&a%member% &f[&7%member_kill%&f]"),
     member_list_design_offline("&7%member% &f[&7%member_kill%&f]"),
 
+    faction_list_title("&7&m--- &6Faction List by %type% &7&m---"),
+    faction_list("&7%number%. &e%faction_name% &6-- &7[&a%online%&7] [%dtr%&7]"),
+
+    faction_top_title("&7&m--- &6Faction Top by %type% &7&m---"),
+    faction_top("&7%number%. &e%faction_name% &6-- &e%value%"),
+    faction_top_list_gui_prefix("&7#%number% "),
+
+    faction_chat_page("Page", "&2Page %page%"),
+    faction_chat_page_previous("Page", "&a<<< "),
+    faction_chat_page_next("Page", " &a>>>"),
+
     // Sign Shop message
     sign_shop_bought("%prefix% &aYou bought &2&o%amount%x %item% &afor &2&o$%price%&a."),
     sign_shop_sold("%prefix% &aYou sold &2&o%amount%x %item% &afor &2&o$%price%&a."),
@@ -234,10 +248,13 @@ public enum Messages {
     teammate_damage("%prefix% &cYou can't damage your teammate!"),
 
     deathban_kick("Server","&cYou are deathbanned for %format_time%"),
+    pvp_timer_enable("%prefix% &aYou no longer have any pvp protection."),
+    pvp_timer_already_enable("%prefix% &cYou do not have any timers active."),
 
     logout_timer_started("%prefix% &4&lLogout timer&r&4 started! Don't move!"),
     logout_timer_interrupted("%prefix% &4Logout interrupted!"),
     logout_timer_already_started("%prefix% &4You are already started to logout!"),
+    logout_kick_message("&aYou have been logged out safely!"),
 
     kill_message_broadcast("&4&l%killer%&f[%killer_kills%] slained &4&l%victim%&f[%victim_kills%] using [&b&o%killer_weapon%&f]"),
 
@@ -347,6 +364,13 @@ public enum Messages {
     god_enable_other("godmode", "%prefix% &aGod mode enabled for %player%!"),
     god_disable_other("godmode", "%prefix% &cGod mode disabled for %player%!"),
 
+    coordinates_command(Arrays.asList(
+            " ",
+            "&7&m-----&2&o Coordinates &7&m-----",
+            "&aGlowstone: &f500, 250",
+            "&aEnd Portal: &f1000, 1000",
+            " "
+    )),
 
     faction_show(Arrays.asList(
             "&8&m        &c %faction_name% &f[%faction_status%&f] &8&m        ",
@@ -360,6 +384,7 @@ public enum Messages {
             "&7│ &eDTR: &a%faction_dtr%&7/&a%faction_max_dtr% &eRaidable: &a%faction_raidable%",
             "&7│ &eDTR Regenerating: %faction_dtr_regen",
             "&7│ &eHome Location: &a%faction_pos%",
+            "&7│ &ePoints: &a%faction_points%",
             "&7├ &eKills: &a%faction_kills%",
             "&7├ &eDeaths: &a%faction_deaths%",
             "&7└─"
@@ -604,6 +629,11 @@ public enum Messages {
         return this;
     }
 
+    public Messages setNumber(int number) {
+        playerMessage = playerMessage.replace("%number%", number + "");
+        return this;
+    }
+
     public Messages setRank(String rank) {
         playerMessage = playerMessage.replace("%rank%", rank);
         return this;
@@ -614,12 +644,18 @@ public enum Messages {
         return this;
     }
 
-    public Messages setDTR(double dtr) {
-        if(dtr < 0) {
-            playerMessage = playerMessage.replace("%dtr%", "§c" + dtr + "");
-        } else {
-            playerMessage = playerMessage.replace("%dtr%", dtr + "");
-        }
+    public Messages setType(String type) {
+        playerMessage = playerMessage.replace("%type%", type);
+        return this;
+    }
+
+    public Messages setValue(int value) {
+        playerMessage = playerMessage.replace("%value%", value + "");
+        return this;
+    }
+
+    public Messages setDTR(Faction faction) {
+        playerMessage = playerMessage.replace("%dtr%", Formatter.formatDtr(faction));
         return this;
     }
 
@@ -726,12 +762,19 @@ public enum Messages {
         playerMessage = playerMessage.replace("%price%", String.valueOf(price));
         return this;
     }
-    public Messages setNumber(int number) {
+
+    public Messages setPage(int page) {
+        playerMessage = playerMessage.replace("%page%", String.valueOf(page));
+        return this;
+    }
+
+    public Messages setNumber(double number) {
         playerMessage = playerMessage.replace("%number%", String.valueOf(number));
         return this;
     }
-    public Messages setNumber(double number) {
-        playerMessage = playerMessage.replace("%number%", String.valueOf(number));
+
+    public Messages setOnlines(int count) {
+        playerMessage = playerMessage.replace("%online%", count + "");
         return this;
     }
 
@@ -971,7 +1014,7 @@ public enum Messages {
     public Messages setupShow(
             String factionName, String factionStatus, String leaderName, String factionBalance, String factionKills, String factionDeaths,
             String factionPos, String factionDtr, String factionDtrRegen, String dtrMax, String onlinesMembers,
-            String totalMembers, String isRaidable) {
+            String totalMembers, String isRaidable, String points) {
         List<String> lines = new ArrayList<>();
         for (String line : playerListMessages) {
             lines.add(line
@@ -985,6 +1028,7 @@ public enum Messages {
                     .replace("%faction_max_dtr%", dtrMax)
                     .replace("%faction_dtr_regen", factionDtrRegen)
                     .replace("%faction_dtr%", factionDtr)
+                    .replace("%faction_points%", points)
                     .replace("%members_online%", onlinesMembers)
                     .replace("%members_count%", totalMembers)
                     .replace("%faction_raidable%", isRaidable)

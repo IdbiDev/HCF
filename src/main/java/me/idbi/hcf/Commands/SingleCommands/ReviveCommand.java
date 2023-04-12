@@ -27,7 +27,6 @@ public class ReviveCommand implements CommandExecutor {
                             targetPlayer.setDeathTime(0);
                             SQL_Connection.dbExecute(con, "DELETE FROM deathbans WHERE uuid='?'", targetPlayer.getUUID().toString());
                             //Todo: cooldown
-
                         } else {
                             //Todo: Not deathbanned
                         }

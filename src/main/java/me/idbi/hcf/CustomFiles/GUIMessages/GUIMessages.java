@@ -42,6 +42,10 @@ public enum GUIMessages {
     rank_manager_toggle_button("&eRank Manager", Arrays.asList("&5", "&7Click here to to go back!")),
     rank_priority_selected("", Arrays.asList("&5", "&aSELECTED!", "&7Click on another rank to swap their order!")),
 
+    faction_toplist_page("&7Current Page: &c&o%page%", Arrays.asList()),
+    faction_toplist_next("&cNext Page", Arrays.asList()),
+    faction_toplist_previous("&cPrevious Page", Arrays.asList()),
+
     rollback_information("&e%player% &6#%id%", Arrays.asList(
             "&5",
             "&eDate &8» &6%date%",
@@ -59,6 +63,7 @@ public enum GUIMessages {
             "&7│ &aDTR &7/ &aMax DTR: &f%faction_dtr% &7/ &f%faction_dtr_max%",
             "&7│ &aDTR Regen: &f%faction_dtr_regen%",
             "&7│ &aBalance: &f$%faction_balance%",
+            "&7│ &aPoints: &f%faction_points%",
             "&7│ &aMember Count: &f%faction_member_online%&7/&f%faction_member_count%",
             "&7│ &aHome Location: &f%faction_home%",
             "&7├──",
@@ -128,6 +133,12 @@ public enum GUIMessages {
         return this;
     }
 
+    public GUIMessages setPoints(int points) {
+        this.tempName = this.tempName.replace("%faction_points%", points + "");
+        this.tempLore = replaceLore("%faction_points%", points + "");
+        return this;
+    }
+
     public GUIMessages setRank(String rankName) {
         this.tempName = this.tempName.replace("%rank%", rankName);
         this.tempLore = replaceLore("%rank%", rankName);
@@ -163,6 +174,12 @@ public enum GUIMessages {
     public GUIMessages setEXPLevel(String level) {
         this.tempName = this.tempName.replace("%exp_level%", level);
         this.tempLore = replaceLore("%exp_level%", level);
+        return this;
+    }
+
+    public GUIMessages setPage(int page) {
+        this.tempName = this.tempName.replace("%page%", page + "");
+        this.tempLore = replaceLore("%page%", page + "");
         return this;
     }
 
@@ -264,7 +281,7 @@ public enum GUIMessages {
     public GUIMessages setupShow(
             String factionName, String factionStatus, String leaderName, String factionBalance, String factionKills, String factionDeaths,
             String factionPos, String factionDtr, String factionDtrRegen, String dtrMax, String onlinesMembers,
-            String totalMembers, String isRaidable) {
+            String totalMembers, String isRaidable, String points) {
         List<String> lines = new ArrayList<>();
         for (String line : this.tempLore) {
             lines.add(line
@@ -278,6 +295,7 @@ public enum GUIMessages {
                     .replace("%faction_dtr_max%", dtrMax)
                     .replace("%faction_dtr_regen%", factionDtrRegen)
                     .replace("%faction_dtr%", factionDtr)
+                    .replace("%faction_points%", points)
                     .replace("%faction_member_online%", onlinesMembers)
                     .replace("%faction_member_count%", totalMembers)
                     .replace("%faction_raidable%", isRaidable)

@@ -15,7 +15,6 @@ public class BanHandler {
         SQL_Connection.dbExecute(con, "INSERT INTO deathbans SET uuid='?',time='?'",p.getUUID().toString(), String.valueOf(System.currentTimeMillis() + (Main.deathbanTime)));
         p.setDeathBanned(true);
         p.setDeathTime(System.currentTimeMillis() + (Main.deathbanTime));
-
     }
 
     public static boolean isPlayerBannedFromHCF(UUID uuid) {

@@ -9,6 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.util.UUID;
+
 public class InviteManagerInventory {
 
     public static Inventory inv(Player p) {
@@ -43,7 +45,7 @@ public class InviteManagerInventory {
         for (HCFPlayer invitedPlayer : faction.getInvites().getInvitedPlayers()) {
             if (invitedPlayer == null) continue;
 
-            inv.addItem(IM_Items.invitedPlayer(invitedPlayer));
+            inv.addItem(IM_Items.invitedPlayer(p, invitedPlayer.getName()));
         }
 
         inv.setItem(31, GUI_Items.back(p));

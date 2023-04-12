@@ -90,7 +90,8 @@ public class GUI_Items {
                 String.valueOf(faction.getDTR_MAX()),
                 String.valueOf(Playertools.getOnlineSize(faction)),
                 String.valueOf(faction.getMembers().size()),
-                (faction.getDTR() <= 0 ? "true" : "false")
+                (faction.getDTR() <= 0 ? "true" : "false"),
+                String.valueOf(faction.getPoints())
 
         ).getLore());
         is.setItemMeta(im);

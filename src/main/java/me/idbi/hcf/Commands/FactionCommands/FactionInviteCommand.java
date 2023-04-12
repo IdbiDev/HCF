@@ -66,8 +66,7 @@ public class FactionInviteCommand extends SubCommand {
     public void perform(Player p, String[] args) {
         if (Playertools.getPlayerFaction(p) != null) {
             if (!Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_INVITE)) {
-                //Todo nincs jog
-                p.sendMessage(Messages.no_permission.language(p).queue());
+                p.sendMessage(Messages.no_permission_in_faction.language(p).queue());
                 return;
             }
             Player target = Bukkit.getPlayer(args[1]);
@@ -113,7 +112,7 @@ public class FactionInviteCommand extends SubCommand {
                 p.sendMessage(Messages.not_found_player.language(p).queue());
             }
         } else {
-            p.sendMessage(Messages.not_invited.language(p).queue());
+            p.sendMessage(Messages.not_in_faction.language(p).queue());
         }
     }
 }
