@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Rogue implements HCF_Class, Listener {
-    private final HashMap<PotionEffectType, Integer> effect = new HashMap<>() {{
+    private final HashMap<PotionEffectType, Integer> effect = new HashMap<PotionEffectType, Integer>() {{
         put(PotionEffectType.SPEED, 2);
         put(PotionEffectType.DAMAGE_RESISTANCE, 2);
     }};
@@ -84,8 +84,10 @@ public class Rogue implements HCF_Class, Listener {
         if (e.isCancelled()) return;
         if(!backstabEnabled) return;
 
-        if (e.getDamager() instanceof Player damager) {
-            if (e.getEntity() instanceof Player victim) {
+        if (e.getDamager() instanceof Player) {
+            Player damager = (Player) e.getDamager();
+            if (e.getEntity() instanceof Player) {
+                Player victim = (Player) e.getEntity();
                 HCFPlayer hcf = HCFPlayer.getPlayer(damager);
                 if (hcf.getPlayerClass() == Classes.ROGUE && ((Player) e.getDamager()).getItemInHand().getType() == Material.GOLD_SWORD) {
                     Location playerLoc = damager.getLocation();

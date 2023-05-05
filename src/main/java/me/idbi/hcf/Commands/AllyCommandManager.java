@@ -29,7 +29,8 @@ public class AllyCommandManager implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("ally")) {
-            if (sender instanceof Player p) {
+            if (sender instanceof Player) {
+                Player p = (Player) sender;
 
                 if (args.length > 0) {
                     for (int i = 0; i < getSubcommands().size(); i++) {

@@ -17,7 +17,8 @@ public class LogoutCommand implements CommandExecutor, Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // /revive <player>
-        if (sender instanceof Player p) {
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
             if (!HCFPermissions.logout.check(p)) return false;
             if (Timers.LOGOUT.has(p)) {
                 // Todo: Already logging out

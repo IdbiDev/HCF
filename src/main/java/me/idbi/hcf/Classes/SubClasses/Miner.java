@@ -21,7 +21,7 @@ public class Miner implements HCF_Class {
     public final boolean invisibleEnable = ClassConfig.MinerInvisibleEnabled.asBoolean();
     public static HashMap<Player, Integer> diamonds = new HashMap<>();
 
-    private final HashMap<PotionEffectType, Integer> effect = new HashMap<>() {{
+    private final HashMap<PotionEffectType, Integer> effect = new HashMap<PotionEffectType, Integer>() {{
         put(PotionEffectType.SPEED, 1);
         put(PotionEffectType.DAMAGE_RESISTANCE, 1);
         put(PotionEffectType.NIGHT_VISION, 0);

@@ -168,7 +168,8 @@ public class HistoryEvent implements Listener {
 
         if (e.getClickedInventory() != e.getView().getTopInventory()) return;
 
-        if (!(e.getWhoClicked() instanceof Player p)) return;
+        if (!(e.getWhoClicked() instanceof Player)) return;
+        Player p = (Player) e.getWhoClicked();
         Faction f = Playertools.getPlayerFaction(p);
         if (f == null) return;
 

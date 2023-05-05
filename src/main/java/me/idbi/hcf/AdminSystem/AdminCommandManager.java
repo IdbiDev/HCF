@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AdminCommandManager implements CommandExecutor {
 
@@ -39,12 +40,17 @@ public class AdminCommandManager implements CommandExecutor {
 
         // Ennek itt kell lennie!!!44!!
         subcommands.add(new AdminItemsCommand());
+
+        for (SubCommand command : subcommands) {
+            SubCommand.commandCooldowns.put(command, new HashMap<>());
+        }
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("admin")) {
-            if (sender instanceof Player p) {
+            if (sender instanceof Player) {
+                Player p = (Player) sender;
 
                 if (args.length > 0) {
                     AdminItemsCommand items = new AdminItemsCommand();

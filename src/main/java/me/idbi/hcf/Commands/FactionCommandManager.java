@@ -57,7 +57,8 @@ public class FactionCommandManager implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("faction")) {
-            if (sender instanceof Player p) {
+            if (sender instanceof Player) {
+                Player p = (Player) sender;
 
                 if (args.length == 0) {
                     showSubcommands(p);

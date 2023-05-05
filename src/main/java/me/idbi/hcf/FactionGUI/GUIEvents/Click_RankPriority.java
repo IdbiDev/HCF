@@ -126,7 +126,8 @@ public class Click_RankPriority implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) return;
         if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        if (!(e.getWhoClicked() instanceof Player p)) return;
+        if (!(e.getWhoClicked() instanceof Player)) return;
+        Player p = (Player) e.getWhoClicked();
 
         if (e.getCurrentItem().isSimilar(RP_Items.cancel(((Player) e.getWhoClicked())))) {
             p.openInventory(MainInventory.mainInv(p));

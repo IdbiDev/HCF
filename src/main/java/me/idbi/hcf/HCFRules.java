@@ -224,10 +224,10 @@ public class HCFRules {
             //Math.random() * (max - min + 1) + min
             int lvl = (int) (Math.random() * (2 - 1 + 1) + 1);
             switch (c) {
-                case 0 -> enchant_obj = new EnchantClass(Enchantment.PROTECTION_ENVIRONMENTAL, lvl);
-                case 1 -> enchant_obj = new EnchantClass(Enchantment.DAMAGE_ALL, lvl);
-                case 2 -> enchant_obj = new EnchantClass(Enchantment.PROTECTION_FALL, lvl);
-                case 3 -> enchant_obj = new EnchantClass(Enchantment.getById(100), lvl);
+                case 0: enchant_obj = new EnchantClass(Enchantment.PROTECTION_ENVIRONMENTAL, lvl); break;
+                case 1: enchant_obj = new EnchantClass(Enchantment.DAMAGE_ALL, lvl); break;
+                case 2: enchant_obj = new EnchantClass(Enchantment.PROTECTION_FALL, lvl); break;
+                case 3: enchant_obj = new EnchantClass(Enchantment.getById(100), lvl); break;
             }
         }
         return enchant_obj;

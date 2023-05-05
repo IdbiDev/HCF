@@ -50,7 +50,7 @@ public class MessagesTool {
     }*/
 
     public static void updateMessageFiles() {
-        File[] files = new File(m.getDataFolder() + "\\messages").listFiles();
+        File[] files = new File(m.getDataFolder(), "messages").listFiles();
 
         for (File file : files) {
             //if (file.getName().equalsIgnoreCase("messages_en.yml")) continue;
@@ -68,7 +68,7 @@ public class MessagesTool {
     }
 
     public static void updateGuiMessageFiles() {
-        File[] files = new File(m.getDataFolder() + "\\gui_messages").listFiles();
+        File[] files = new File(m.getDataFolder(), "gui_messages").listFiles();
 
         for (File file : files) {
             //if (file.getName().equalsIgnoreCase("guimessages_en.yml")) continue;

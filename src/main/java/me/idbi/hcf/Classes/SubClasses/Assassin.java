@@ -185,8 +185,10 @@ public class Assassin implements HCF_Class, Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent e) {
         if (e.isCancelled()) return;
-        if (e.getDamager() instanceof Player damager) {
-            if (e.getEntity() instanceof Player victim) {
+        if (e.getDamager() instanceof Player) {
+            Player damager = (Player) e.getDamager();
+            if (e.getEntity() instanceof Player) {
+                Player victim = (Player) e.getEntity();
                 HCFPlayer hcfVictim = HCFPlayer.getPlayer(victim);
                 HCFPlayer hcfDamager = HCFPlayer.getPlayer(damager);
 

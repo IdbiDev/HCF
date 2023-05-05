@@ -99,8 +99,9 @@ public class EntDamageByEnt implements Listener {
     }
     @EventHandler
     public void onDmg(EntityDamageEvent e) {
-        if(e.getEntity() instanceof Player player) {
-            if(Timers.SOTW.has(player))
+        if(e.getEntity() instanceof Player) {
+            Player p = (Player) e.getEntity();
+            if(Timers.SOTW.has(p))
                 e.setCancelled(true);
         }
     }

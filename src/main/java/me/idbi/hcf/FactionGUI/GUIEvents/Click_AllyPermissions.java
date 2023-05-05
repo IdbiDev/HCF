@@ -46,15 +46,15 @@ public class Click_AllyPermissions implements Listener {
     }
 
     public static Permissions getPermission(int level) {
-        return switch (level) {
-            case 1 -> Permissions.FRIENDLY_FIRE;
-            case 2 -> Permissions.INTERACT;
-            case 3 -> Permissions.PLACE_BLOCK;
-            case 4 -> Permissions.BREAK_BLOCK;
-            case 5 -> Permissions.INVENTORY_ACCESS;
-            //default -> Faction_Rank_Manager.Permissions.MANAGE_MONEY;
-            default -> throw new IllegalStateException("Unexpected value: " + level);
-        };
+        switch (level) {
+            case 1: return Permissions.FRIENDLY_FIRE;
+            case 2: return Permissions.INTERACT;
+            case 3: return Permissions.PLACE_BLOCK;
+            case 4: return Permissions.BREAK_BLOCK;
+            case 5: return Permissions.INVENTORY_ACCESS;
+            //default: Faction_Rank_Manager.Permissions.MANAGE_MONEY;
+            default: throw new IllegalStateException("Unexpected value: " + level);
+        }
     }
 
     public static boolean getStatus(ItemStack is) {

@@ -97,7 +97,8 @@ public class SignPlace implements Listener {
 
 
             BlockState state = block.getState();
-            if (state instanceof Sign sign) {
+            if (state instanceof Sign) {
+                Sign sign = (Sign) state;
                 List<String> lore = event.getItem().getItemMeta().getLore();
                 if (lore == null) return;
                 if (lore.isEmpty()) return;

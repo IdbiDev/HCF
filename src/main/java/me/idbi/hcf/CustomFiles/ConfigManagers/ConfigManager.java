@@ -97,8 +97,8 @@ public class ConfigManager {
         classes = manager.getNewConfig("classes.yml");
         this.setupClasses();
 
-        File[] files = new File(plugin.getDataFolder() + "\\messages").listFiles();
-        File[] guiFiles = new File(plugin.getDataFolder() + "\\gui_messages").listFiles();
+        File[] files = new File(plugin.getDataFolder(), "messages").listFiles();
+        File[] guiFiles = new File(plugin.getDataFolder(), "gui_messages").listFiles();
 
         for (File file : files) {
             if (file.getName().startsWith("messages_") && file.getName().endsWith(".yml")) {

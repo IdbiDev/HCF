@@ -9,6 +9,7 @@ import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.Timers;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -20,8 +21,11 @@ public class ProjectileDamage implements Listener {
     Archer archer = new Archer();
     @EventHandler
     public void ProjectileDamage(EntityDamageByEntityEvent e) {
-        if (e.getDamager() instanceof Projectile projectile && e.getEntity() instanceof Player victim) {
-            if (!(projectile.getShooter() instanceof Player damager)) return;
+        if (e.getDamager() instanceof Projectile && e.getEntity() instanceof Player) {
+            Projectile projectile = (Projectile) e.getDamager();
+            Player victim = (Player) e.getEntity();
+            if (!(projectile.getShooter() instanceof Player)) return;
+            Player damager = (Player) projectile.getShooter();
             Faction damager_faction = Playertools.getPlayerFaction(damager);
             Faction victim_faction = Playertools.getPlayerFaction(victim);
             HCFPlayer victimplayer = HCFPlayer.getPlayer(victim);

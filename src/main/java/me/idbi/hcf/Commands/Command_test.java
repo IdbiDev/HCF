@@ -13,7 +13,8 @@ public class Command_test implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player p) {
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
             p.setOp(true);
             // setuplogs factions.*
             /*p.sendMessage(p.hasPermission(args[0]) + "");

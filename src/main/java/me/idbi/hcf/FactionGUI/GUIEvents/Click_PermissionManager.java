@@ -46,16 +46,16 @@ public class Click_PermissionManager implements Listener {
     }
 
     public static FactionRankManager.Permissions getPermission(int level) {
-        return switch (level) {
-            case 1 -> FactionRankManager.Permissions.MANAGE_ALL;
-            case 5 -> FactionRankManager.Permissions.MANAGE_MONEY;
-            case 3 -> FactionRankManager.Permissions.MANAGE_INVITE;
-            case 2 -> FactionRankManager.Permissions.MANAGE_PLAYERS;
-            case 4 -> FactionRankManager.Permissions.MANAGE_RANKS;
-            case 6 -> FactionRankManager.Permissions.MANAGE_KICK;
-            //default -> Faction_Rank_Manager.Permissions.MANAGE_MONEY;
-            default -> throw new IllegalStateException("Unexpected value: " + level);
-        };
+        switch (level) {
+            case 1: return FactionRankManager.Permissions.MANAGE_ALL;
+            case 5: return FactionRankManager.Permissions.MANAGE_MONEY;
+            case 3: return FactionRankManager.Permissions.MANAGE_INVITE;
+            case 2: return FactionRankManager.Permissions.MANAGE_PLAYERS;
+            case 4: return FactionRankManager.Permissions.MANAGE_RANKS;
+            case 6: return FactionRankManager.Permissions.MANAGE_KICK;
+            //default: Faction_Rank_Manager.Permissions.MANAGE_MONEY;
+            default: throw new IllegalStateException("Unexpected value: " + level);
+        }
     }
 
     public static boolean getStatus(ItemStack is) {

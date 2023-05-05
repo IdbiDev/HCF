@@ -37,7 +37,7 @@ public class Bard implements HCF_Class {
     public final boolean enableEffects = ClassConfig.UseEffects.asBoolean();
 
 
-    private final ArrayList<Bard_Item> bard_items = new ArrayList<>() {{
+    private final ArrayList<Bard_Item> bard_items = new ArrayList<Bard_Item>() {{
         //todo: Effects enable - disable using config
         add(new Bard_Item(Material.BLAZE_POWDER, PotionEffectType.INCREASE_DAMAGE, 2));
         add(new Bard_Item(Material.SUGAR, PotionEffectType.SPEED, 2));
@@ -48,7 +48,7 @@ public class Bard implements HCF_Class {
         add(new Bard_Item(Material.GHAST_TEAR, PotionEffectType.ABSORPTION, 2));
         add(new Bard_Item(Material.GOLD_INGOT, PotionEffectType.FAST_DIGGING, 2));
     }};
-    private final HashMap<PotionEffectType, Integer> effect = new HashMap<>() {{
+    private final HashMap<PotionEffectType, Integer> effect = new HashMap<PotionEffectType, Integer>() {{
         put(PotionEffectType.SPEED, 0);
         put(PotionEffectType.REGENERATION, 0);
         put(PotionEffectType.DAMAGE_RESISTANCE, 0);

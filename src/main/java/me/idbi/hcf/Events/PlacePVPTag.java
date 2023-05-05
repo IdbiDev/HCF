@@ -18,7 +18,9 @@ public class PlacePVPTag implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlaceTag(EntityDamageByEntityEvent e) {
         if (e.isCancelled()) return;
-        if (e.getDamager() instanceof Player damager && e.getEntity() instanceof Player victim) {
+        if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
+            Player damager = (Player) e.getDamager();
+            Player victim = (Player) e.getEntity();
             HCFPlayer victimplayer = HCFPlayer.getPlayer(victim);
             HCFPlayer damagerplayer = HCFPlayer.getPlayer(damager);
 

@@ -17,11 +17,11 @@ import java.util.List;
 
 public enum GUIMessages {
 
-    back_button("&cBack", List.of()),
+    back_button("&cBack", new ArrayList<>()),
     leave_button("&cLeave", Arrays.asList(" ", "&7Click here to close the menu!")),
     save_button("&aSave All Changes", Arrays.asList(" ", "&7Click here to save the changes!")),
     discard_button("&cDiscard All Changes", Arrays.asList(" ", "&7Click here to discard the changes!")),
-    member_head("&e%player%", List.of()),
+    member_head("&e%player%", new ArrayList<>()),
     faction_rename("&eRename Faction", Arrays.asList("&5", "&7Click here to rename your faction!")),
     faction_histories("&eFaction Histories", Arrays.asList("&5", "&7Click here to see the histories!")),
     faction_member_manager("&eManage Players", Arrays.asList("&5", "&7Click here to manage members!")),
@@ -37,7 +37,7 @@ public enum GUIMessages {
     rename_rank("&eRename Rank", Arrays.asList("&5", "&7Click here to rename rank!")),
     rank_permission_manager("&ePermission Manager", Arrays.asList("&5", "&7Click here to manage permissions!")),
     delete_rank("&cDelete Rank", Arrays.asList("&5", "&7Click here to delete rank!")),
-    faction_ranks("&a%rank%", List.of()),
+    faction_ranks("&a%rank%", new ArrayList<>()),
     priority_toggle_button("&ePriority Manage", Arrays.asList("&5", "&7Click here to change the order!")),
     rank_manager_toggle_button("&eRank Manager", Arrays.asList("&5", "&7Click here to to go back!")),
     rank_priority_selected("", Arrays.asList("&5", "&aSELECTED!", "&7Click on another rank to swap their order!")),

@@ -33,7 +33,8 @@ public class FactionTopListener implements Listener {
             type = "Balance";
         }
 
-        if(!(e.getWhoClicked() instanceof Player p)) return;
+        if(!(e.getWhoClicked() instanceof Player)) return;
+        Player p = (Player) e.getWhoClicked();
         if(FactionToplistItems.previousPage(p, page).isSimilar(e.getCurrentItem())) {
             p.openInventory(FactionToplistInventory.topInv(p, factions, type, Math.max(1, page - 1)));
         }
@@ -58,7 +59,8 @@ public class FactionTopListener implements Listener {
             type = "DTR";
         }
 
-        if(!(e.getWhoClicked() instanceof Player p)) return;
+        if(!(e.getWhoClicked() instanceof Player)) return;
+        Player p = (Player) e.getWhoClicked();
         if(FactionToplistItems.previousPage(p, page).isSimilar(e.getCurrentItem())) {
             p.openInventory(FactionToplistInventory.listInv(p, factions, type, Math.max(1, page - 1)));
         }

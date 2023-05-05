@@ -50,10 +50,10 @@ public class CustomTimerCommand implements CommandExecutor {
                 } else if (args[0].equalsIgnoreCase("help")) {
                     if (args.length == 2) {
                         switch (args[1]) {
-                            case "create" -> p.sendMessage("§cUsage: /customtimer create <name> <time>h|m <text_with_underline>");
-                            case "delete" -> p.sendMessage("§cUsage: /customtimer delete <name>");
-                            case "settext" -> p.sendMessage("§cUsage: /customtimer settext <name> <text>");
-                            case "settime" -> p.sendMessage("§cUsage: /customtimer settime <name> <time>h|m");
+                            case "create": p.sendMessage("§cUsage: /customtimer create <name> <time>h|m <text_with_underline>"); break;
+                            case "delete": p.sendMessage("§cUsage: /customtimer delete <name>"); break;
+                            case "settext": p.sendMessage("§cUsage: /customtimer settext <name> <text>"); break;
+                            case "settime": p.sendMessage("§cUsage: /customtimer settime <name> <time>h|m"); break;
                         }
                     } else if (args.length == 1) {
                         p.sendMessage("§cCommands:");

@@ -80,6 +80,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static World endWorld;
     public static World netherWorld;
     public static Location spawnLocation;
+    public static Location endSpawnLocation;
     public static HashMap<String, CustomTimers> customSBTimers;
     public static LinkedHashMap<Integer, Faction> factionCache = new LinkedHashMap<>();
     public static LinkedHashMap<String, Claiming.Faction_Claim> kothCache = new LinkedHashMap<>();
@@ -258,6 +259,8 @@ public final class Main extends JavaPlugin implements Listener {
         SetupEvents.setupEvents();
         SetupCommands.setupCommands();
 
+        HCFServer server = new HCFServer();
+
         // playertools
         Playertools.setFactionCache();
         Playertools.cacheFactionClaims();
@@ -317,7 +320,8 @@ public final class Main extends JavaPlugin implements Listener {
             Bukkit.getServer().shutdown();
         }
         World world = Bukkit.getWorld(Config.WorldName.asStr());
-        spawnLocation = world.getSpawnLocation();
+        //Double[] dbs = Playertools.getDoubles(Config.SpawnLocation.asStr().split(" "));
+        spawnLocation = Playertools.parseLoc(world, Config.SpawnLocation.asStr());
         System.out.println("\n" + startMessage + "\n" + startMessage2);
         System.out.println(startMessageInfo);
 

@@ -9,9 +9,11 @@ import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdminChatCommand extends SubCommand {
     @Override
@@ -90,7 +92,7 @@ public class AdminChatCommand extends SubCommand {
                     player.setChatType(ChatTypes.PUBLIC);
                     p.sendMessage(Messages.chat_channel_changed.language(p).setChat(p).queue());
                 } else {
-                    List<String> argsList = Arrays.stream(args).toList();
+                    List<String> argsList = Arrays.stream(args).collect(Collectors.toList());
                     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                         if (hasPermission(p)) {
                             onlinePlayer.sendMessage(
@@ -105,7 +107,7 @@ public class AdminChatCommand extends SubCommand {
             }
             AdminScoreboard.refresh(p);
         } else {
-            List<String> argsList = Arrays.stream(args).toList();
+            List<String> argsList = Arrays.stream(args).collect(Collectors.toList());
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (hasPermission(p)) {
                     onlinePlayer.sendMessage(Messages.staff_chat.language(onlinePlayer).setPlayer(p).setMessage(getMessage(argsList)).queue());

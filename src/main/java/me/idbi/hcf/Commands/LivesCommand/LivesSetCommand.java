@@ -47,7 +47,8 @@ public class LivesSetCommand extends SubCommand {
             if(Playertools.isInt(args[2])) {
                 int lives = Integer.parseInt(args[2]);
                 hcfPlayer.setLives(lives);
-                if(cs instanceof Player p) {
+                if(cs instanceof Player) {
+                    Player p = (Player) cs;
                     p.sendMessage(Messages.lives_set_executor.language(p).setPlayer(target).setLives(lives).setLeftLives(hcfPlayer.getLives()).queue());
                     target.sendMessage(Messages.lives_set_player.language(target).setExecutor(p).setLives(lives).setLeftLives(hcfPlayer.getLives()).queue());
                 } else {
@@ -56,10 +57,12 @@ public class LivesSetCommand extends SubCommand {
                 }
             }
         } else {
-            if(cs instanceof Player p)
+            if(cs instanceof Player) {
+                Player p = (Player) cs;
                 p.sendMessage(Messages.not_found_player.language(p).queue());
-            else
+            } else {
                 cs.sendMessage(Messages.not_found_player.queue());
+            }
         }
     }
 }

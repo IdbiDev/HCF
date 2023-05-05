@@ -276,24 +276,19 @@ public class HCFPlayer {
     }
 
     public String getFormattedChatType() {
-        if(Bukkit.getPlayer(this.uuid) == null) return "";
+        if (Bukkit.getPlayer(this.uuid) == null) return "";
         Player p = Bukkit.getPlayer(this.uuid);
         switch (this.chatType) {
-            case ALLY -> {
+            case ALLY:
                 return Messages.ally_chat_channel.language(p).queue();
-            }
-            case LEADER -> {
+            case LEADER:
                 return Messages.leader_chat_channel.language(p).queue();
-            }
-            case STAFF -> {
+            case STAFF:
                 return Messages.staff_chat_channel.language(p).queue();
-            }
-            case FACTION -> {
+            case FACTION:
                 return Messages.faction_chat_channel.language(p).queue();
-            }
-            default -> {
+            default:
                 return Messages.public_chat_channel.language(p).queue();
-            }
         }
     }
 

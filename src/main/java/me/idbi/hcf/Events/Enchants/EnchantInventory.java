@@ -77,7 +77,7 @@ Power
 Efficiency
 Punch
 Silk Touch*/
-        ArrayList<Enchantment> enchantmentArrayList = new ArrayList<>() {{
+        ArrayList<Enchantment> enchantmentArrayList = new ArrayList<Enchantment>() {{
             add(Enchantment.PROTECTION_ENVIRONMENTAL);
             add(Enchantment.DAMAGE_ALL);
             add(Enchantment.FIRE_ASPECT);
