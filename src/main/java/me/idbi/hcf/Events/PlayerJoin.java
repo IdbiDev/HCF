@@ -20,10 +20,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PlayerJoin implements Listener {
     private final Main m = Main.getPlugin(Main.class);
@@ -76,9 +73,11 @@ public class PlayerJoin implements Listener {
             Timers.SOTW.add(p, Main.SOTWStarted - System.currentTimeMillis());
         }
         e.setJoinMessage("");
-        List<Player> list = new ArrayList<>(AdminTools.InvisibleManager.getInvisedAdmins());
-        for (Player admins : list) {
-            AdminTools.InvisibleManager.hidePlayer(admins);
+        List<UUID> list = new ArrayList<>(AdminTools.InvisibleManager.getInvisedAdmins());
+        for (UUID admins : list) {
+            Player player = Bukkit.getPlayer(admins);
+            if(player == null) continue;
+            AdminTools.InvisibleManager.hidePlayer(player);
         }
 
 

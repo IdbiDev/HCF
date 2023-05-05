@@ -71,7 +71,7 @@ public class FactionChatCommand extends SubCommand {
                 }
                 ChatTypes newChat = ChatTypes.getByName(args[1]);
                 if(newChat == null) {
-                    // ToDo Message: This chat channel is not available!
+
                     p.sendMessage("");
                     return;
                 }

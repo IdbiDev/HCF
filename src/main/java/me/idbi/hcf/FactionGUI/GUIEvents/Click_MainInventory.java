@@ -2,14 +2,14 @@ package me.idbi.hcf.FactionGUI.GUIEvents;
 
 import me.idbi.hcf.AnvilGUI.AnvilItems;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.FrakcioGUI.GUI_Sound;
-import me.idbi.hcf.FrakcioGUI.Items.Ally_Items;
-import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
-import me.idbi.hcf.FrakcioGUI.Items.IM_Items;
-import me.idbi.hcf.FrakcioGUI.Menus.Alley_MainInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.InviteManagerInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.MemberListInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.RankMenuInventory;
+import me.idbi.hcf.FactionGUI.GUISound;
+import me.idbi.hcf.FactionGUI.Items.Ally_Items;
+import me.idbi.hcf.FactionGUI.Items.GUI_Items;
+import me.idbi.hcf.FactionGUI.Items.IM_Items;
+import me.idbi.hcf.FactionGUI.Menus.Ally_MainInventory;
+import me.idbi.hcf.FactionGUI.Menus.InviteManagerInventory;
+import me.idbi.hcf.FactionGUI.Menus.MemberListInventory;
+import me.idbi.hcf.FactionGUI.Menus.RankMenuInventory;
 import me.idbi.hcf.HistoryGUI.History.FactionHistoryInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.FactionRankManager;
@@ -115,8 +115,8 @@ public class Click_MainInventory implements Listener {
                 GUISound.playSound(p, GUISound.HCFSounds.ERROR);
                 return;
             }
-            GUI_Sound.playSound(p, GUI_Sound.HCFSounds.CLICK);
-            p.openInventory(Alley_MainInventory.inv(((Player) e.getWhoClicked())));
+            GUISound.playSound(p, GUISound.HCFSounds.CLICK);
+            p.openInventory(Ally_MainInventory.inv(((Player) e.getWhoClicked())));
         }
     }
 }

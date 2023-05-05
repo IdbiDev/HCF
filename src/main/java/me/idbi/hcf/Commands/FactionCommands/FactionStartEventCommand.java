@@ -1,6 +1,7 @@
 package me.idbi.hcf.Commands.FactionCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.WorldModes.Deathmatch;
 import me.idbi.hcf.WorldModes.EOTW;
@@ -70,18 +71,24 @@ public class FactionStartEventCommand extends SubCommand {
         if (args[1].equalsIgnoreCase("start")) {
             if (args[2].equalsIgnoreCase("sotw")) {
                 this.sotw.enable();
+                p.sendMessage(Messages.enable_sotw.language(p).queue());
             } else if (args[2].equalsIgnoreCase("eotw")) {
                 this.eotw.enable();
+                p.sendMessage(Messages.enable_eotw.language(p).queue());
             } else if (args[2].equalsIgnoreCase("deathmatch")) {
                 this.deathmatch.enable();
+                p.sendMessage(Messages.enable_deathmatch.language(p).queue());
             }
         } else if (args[1].equalsIgnoreCase("stop")) {
             if (args[2].equalsIgnoreCase("sotw")) {
                 this.sotw.disable();
+                p.sendMessage(Messages.disable_sotw.language(p).queue());
             } else if (args[2].equalsIgnoreCase("eotw")) {
                 this.eotw.disable();
+                p.sendMessage(Messages.disable_eotw.language(p).queue());
             } else if (args[2].equalsIgnoreCase("deathmatch")) {
                 this.deathmatch.disable();
+                p.sendMessage(Messages.disable_deathmatch.language(p).queue());
             }
         }
     }

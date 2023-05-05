@@ -80,7 +80,6 @@ public class AdminDutyCommand extends SubCommand {
             AdminScoreboard.refresh(p);
             p.sendMessage(Messages.admin_duty_on.language(p).queue());
         } else {
-            p.setGameMode(GameMode.SURVIVAL);
 
             hcf.setInDuty(false);
             NameChanger.refresh(p);

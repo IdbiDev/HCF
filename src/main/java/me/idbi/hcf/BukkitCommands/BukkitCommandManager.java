@@ -1,9 +1,6 @@
 package me.idbi.hcf.BukkitCommands;
 
-import me.idbi.hcf.Commands.SingleCommands.CoordinatesCommand;
-import me.idbi.hcf.Commands.SingleCommands.LookingFactionCommand;
-import me.idbi.hcf.Commands.SingleCommands.PvpTimerCommand;
-import me.idbi.hcf.Commands.SingleCommands.RollbackCommand;
+import me.idbi.hcf.Commands.SingleCommands.*;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -18,10 +15,13 @@ public class BukkitCommandManager {
     private static List<HCFCommand> cmds = new ArrayList<HCFCommand>();
 
     public BukkitCommandManager() {
-        cmds.add(new RollbackCommand());
+        /*cmds.add(new RollbackCommand());
         cmds.add(new LookingFactionCommand());
         cmds.add(new PvpTimerCommand());
         cmds.add(new CoordinatesCommand());
+        cmds.add(new MountainCommand());
+        cmds.add(new WaypointCommand());
+        cmds.add(new SlotsCommand());*/
     }
 
     public static List<HCFCommand> getCommands() {

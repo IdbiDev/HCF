@@ -20,7 +20,7 @@ public class BasicClaim implements Listener {
         if (!e.getItem().isSimilar(Claiming.Wands.claimWand())) {
             return;
         }
-        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.FACTION) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 
             Claiming.setEndPosition(player.getFaction().getId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             e.setCancelled(true);
@@ -37,7 +37,7 @@ public class BasicClaim implements Listener {
                 //e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: $"+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
             }
         }
-        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.FACTION) {
+        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 
             e.setCancelled(true);
             Claiming.setStartPosition(player.getFaction().getId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());

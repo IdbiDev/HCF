@@ -19,7 +19,7 @@ public class SetupCommands {
         m.getCommand("fc").setExecutor(new FactionPositionCommand());
         m.getCommand("koth").setExecutor(new KothCommandManager());
         m.getCommand("setuplogs").setExecutor(new Command_test());
-        m.getCommand("customtimer").setExecutor(new Command_customtimer());
+        m.getCommand("customtimer").setExecutor(new CustomTimerCommand());
         m.getCommand("revive").setExecutor(new ReviveCommand());
         m.getCommand("reclaim").setExecutor(new ReclaimCommand());
         m.getCommand("logout").setExecutor(new LogoutCommand());
@@ -27,6 +27,14 @@ public class SetupCommands {
         m.getCommand("balance").setExecutor(new Command_test());
         m.getCommand("pvp").setExecutor(new PvpTimerCommand());
         m.getCommand("coordinates").setExecutor(new CoordinatesCommand());
+        m.getCommand("mountain").setExecutor(new MountainCommand());
+        m.getCommand("waypoint").setExecutor(new WaypointCommand());
+        m.getCommand("language").setExecutor(new LanguageCommand());
+        m.getCommand("customclaim").setExecutor(new CustomClaimCommandManager());
+        m.getCommand("lives").setExecutor(new LivesCommandManager());
+        m.getCommand("rollback").setExecutor(new RollbackCommand());
+        m.getCommand("slots").setExecutor(new SlotsCommand());
+        m.getCommand("lookingforfaction").setExecutor(new LookingFactionCommand());
 
 
         CommandRegistry.register(BukkitCommandManager.getCommands());

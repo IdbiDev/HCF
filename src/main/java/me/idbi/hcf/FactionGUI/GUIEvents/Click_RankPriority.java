@@ -46,7 +46,7 @@ public class Click_RankPriority implements Listener {
 
             String name = ChatColor.stripColor(is.getItemMeta().getDisplayName());
             assert f != null;
-            FactionRankManager.Rank rank = f.FindRankByName(name);
+            FactionRankManager.Rank rank = f.getRankByName(name);
             if (rank == null) continue;
 
             rank.setPriority(-9998 + inv.first(is));
@@ -65,7 +65,7 @@ public class Click_RankPriority implements Listener {
         Faction f = Playertools.getPlayerFaction(p);
 
         assert f != null;
-        return !(f.FindRankByName(name).isDefault() || f.FindRankByName(name).isLeader());
+        return !(f.getRankByName(name).isDefault() || f.getRankByName(name).isLeader());
     }
 
     public static int getSelectedSlot(Inventory inv) {

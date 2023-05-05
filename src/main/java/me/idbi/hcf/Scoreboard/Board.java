@@ -109,12 +109,17 @@ public class Board {
         if(hcfPlayer.isInDuty()) {
             List<String> list = new ArrayList<>(BoardManager.get().getStaffModeLines());
             list.replaceAll(s -> s
-                    .replace("%vanished%", Playertools.upperFirst(AdminTools.InvisibleManager.getInvisedAdmins().contains(this.player) + ""))
+                    .replace("%vanished%", Playertools.upperFirst(AdminTools.InvisibleManager.getInvisedAdmins().contains(this.player.getUniqueId()) + ""))
                     .replace("%players%", Bukkit.getOnlinePlayers().size() + "")
                     .replace("%staff%", Playertools.getStaffs().size() + "")
                     .replace("%chat%", Playertools.upperFirst(hcfPlayer.getChatType().name()))
                     .replace("%tps%", "21"));
             boardList.addAll(list);
+        }
+
+        if(BoardManager.get().getFaction() != null) {
+            if(hcfPlayer.inFaction())
+                boardList.add(BoardManager.get().getFaction() + hcfPlayer.getFaction().getName());
         }
 
         if(BoardManager.get().getLocation() != null) {

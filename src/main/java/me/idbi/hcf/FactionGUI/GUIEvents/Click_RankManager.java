@@ -88,7 +88,7 @@ public class Click_RankManager implements Listener {
 
         if (e.getCurrentItem().isSimilar(RM_Items.deleteRank(((Player) e.getWhoClicked())))) {
             assert f != null;
-            FactionRankManager.Rank rank = f.FindRankByName(rankName);
+            FactionRankManager.Rank rank = f.getRankByName(rankName);
             if (rank.isLeader()) {
                 return;
             } else if (rank.isDefault()) {

@@ -20,15 +20,16 @@ public class ProtectedClaim implements Listener {
         Player p = e.getPlayer();
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if(e.getItem() == null) return;
-        if (!e.getItem().isSimilar(HCF_Claiming.Wands.claimWand())) {
+        if(player.getClaimType() != Claiming.ClaimTypes.PROTECTED) return;
+        if (!e.getItem().isSimilar(Claiming.Wands.claimWand())) {
             return;
         }
-        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.PROTECTED) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             p.sendMessage(Messages.claim_pos_end.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
             Claiming.setEndPosition(player.getClaimID(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             e.setCancelled(true);
         }
-        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.PROTECTED) {
+        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             p.sendMessage(Messages.claim_pos_start.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
             e.setCancelled(true);
             Claiming.setStartPosition(player.getClaimID(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());

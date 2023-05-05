@@ -14,7 +14,7 @@ public class KothRewardsFile {
     private static FileConfiguration file;
 
     public static void setup() {
-        cfg = new File(m.getDataFolder(), "\\koth_rewards.yml"); //
+        cfg = new File(m.getDataFolder(), "koth_rewards.yml"); //
         if (!cfg.exists()) {
             //.saveResource("koth_rewards.yml", false);
             try {

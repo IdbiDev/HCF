@@ -2,63 +2,133 @@ package me.idbi.hcf;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import lombok.Getter;
+import me.idbi.hcf.CustomFiles.LimitsFile;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class HCF_Rules {
-    public final static ArrayList<Material> blacklistedBlocks = new ArrayList<Material>() {{
-        add(Material.LEVER);
-        add(Material.STONE_BUTTON);
-        add(Material.WOODEN_DOOR);
-        add(Material.WOOD_BUTTON);
-        add(Material.WOOD_DOOR);
-        add(Material.TRAP_DOOR);
-        add(Material.FENCE_GATE);
-        add(Material.BIRCH_FENCE_GATE);
-        add(Material.BIRCH_DOOR);
-        add(Material.SPRUCE_DOOR);
-        add(Material.SPRUCE_FENCE_GATE);
-        add(Material.JUNGLE_DOOR);
-        add(Material.JUNGLE_FENCE_GATE);
-        add(Material.ACACIA_DOOR);
-        add(Material.ACACIA_FENCE_GATE);
-        add(Material.DARK_OAK_DOOR);
-        add(Material.DARK_OAK_FENCE_GATE);
-        add(Material.CHEST);
-        add(Material.TRAPPED_CHEST);
-        add(Material.ENDER_CHEST);
-        add(Material.HOPPER);
-        add(Material.BREWING_STAND);
-        add(Material.FURNACE);
-        add(Material.BURNING_FURNACE);
-    }};
-    public final static ArrayList<Material> usableBlacklist = new ArrayList<Material>() {{
-        add(Material.CHEST);
-        add(Material.TRAPPED_CHEST);
-        add(Material.FURNACE);
-        add(Material.BURNING_FURNACE);
-    }};
+public class HCFRules {
+    @Getter
+    private static HCFRules rules;
 
-    public final static HashMap<Enchantment, Integer> allowedLevels = new HashMap<>() {{
-        put(Enchantment.ARROW_INFINITE, 1);
-        put(Enchantment.ARROW_KNOCKBACK, 2);
-        put(Enchantment.ARROW_DAMAGE, -1);
-        put(Enchantment.ARROW_FIRE, -1);
-        put(Enchantment.DURABILITY, -1);
-        put(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-        put(Enchantment.DAMAGE_ALL, 2);
-        put(Enchantment.FIRE_ASPECT, 1);
-        put(Enchantment.KNOCKBACK, 2);
-        put(Enchantment.DIG_SPEED, -1);
-        put(Enchantment.PROTECTION_FALL, 3);
-        put(Enchantment.SILK_TOUCH, -1);
-        // put(CustomEnchants.COMBO, -1);
-    }};
+    @Getter private ArrayList<Material> blacklistedBlocks;
+    @Getter private ArrayList<Material> allyBlocks;
+    @Getter private HashMap<Enchantment, Integer> enchantLevels;
+    @Getter private HashMap<PotionEffectType, Integer> potionLimit;
+    @Getter private HashMap<PotionEffectType, Boolean> potionExtendable;
+    @Getter private HashMap<EntityType, Boolean> entityLimiter;
+
+    public HCFRules() {
+        this.rules = this;
+        this.blacklistedBlocks = new ArrayList<>();
+        this.allyBlocks = new ArrayList<>();
+        this.enchantLevels = new HashMap<>();
+        this.potionLimit = new HashMap<>();
+        this.potionExtendable = new HashMap<>();
+        this.entityLimiter = new HashMap<>();
+        setupAllowedLevels();
+        setupPotions();
+        setupBlacklistedBlocks();
+        setupAlly();
+        setupEntities();
+    }
+
+    private void setupAllowedLevels() {
+        for (String key : LimitsFile.get().getConfigurationSection("ENCHANTMENT_LIMITER").getKeys(false)) {
+            int level = LimitsFile.get().getInt(key);
+            Enchantment enc = Enchantment.getByName(key.toUpperCase());
+            if(enc == null) continue;
+            enchantLevels.put(enc, level);
+        }
+    }
+
+    private void setupEntities() {
+        for (String key : LimitsFile.get().getConfigurationSection("ENTITY_LIMITER").getKeys(false)) {
+            boolean limited = LimitsFile.get().getBoolean(key);
+            EntityType type = null;
+            try {
+                type = EntityType.valueOf(key.toUpperCase());
+            } catch (Exception e) {
+                continue;
+            }
+            if(type == null) continue;
+            entityLimiter.put(type, limited);
+        }
+    }
+
+    private void setupBlacklistedBlocks() {
+        for (String block : LimitsFile.get().getStringList("BLACKLISTED_BLOCKS")) {
+            Material material = Material.getMaterial(block.toUpperCase());
+            if(material == null) continue;
+            blacklistedBlocks.add(material);
+        }
+    }
+
+    private void setupAlly() {
+        for (String block : LimitsFile.get().getStringList("ALLY")) {
+            Material material = Material.getMaterial(block.toUpperCase());
+            if(material == null) continue;
+            allyBlocks.add(material);
+        }
+    }
+
+    private void setupPotions() {
+        for (String key : LimitsFile.get().getConfigurationSection("POTION_LIMITER").getKeys(false)) {
+            int level = LimitsFile.get().getInt(key + ".LEVEL");
+            boolean extendable = LimitsFile.get().getBoolean(key + ".EXTENDED");
+            PotionEffectType type = PotionEffectType.getByName(key.toUpperCase());
+            if(type == null) continue;
+            potionLimit.put(type, level);
+            potionExtendable.put(type, extendable);
+        }
+    }
+
+    public boolean isAlly(Block block) {
+        if(this.allyBlocks.contains(block.getType())) return true;
+        return false;
+    }
+
+    public boolean isAlly(Material material) {
+        if(this.allyBlocks.contains(material)) return true;
+        return false;
+    }
+
+    public boolean isEntityLimited(Entity ent) {
+        if(!this.entityLimiter.containsKey(ent.getType())) return false;
+        return this.entityLimiter.get(ent.getType());
+    }
+
+    public boolean isBlacklistedBlock(Block block) {
+        return this.blacklistedBlocks.contains(block.getType());
+    }
+
+    public boolean isBlacklistedBlock(Material material) {
+        return this.blacklistedBlocks.contains(material);
+    }
+
+    public int getMaxLevel(PotionEffectType type) {
+        if(!this.potionLimit.containsKey(type)) return -1;
+        return this.potionLimit.get(type);
+    }
+
+    public int getMaxLevel(Enchantment enchantment) {
+        if(!this.enchantLevels.containsKey(enchantment)) return -1;
+        return this.enchantLevels.get(enchantment);
+    }
+
+    public boolean isExtendable(PotionEffectType type) {
+        if(!this.potionExtendable.containsKey(type)) return false;
+        return this.potionExtendable.get(type);
+    }
+
     public static final String startMessage = " _    _   _____  ______        _                        _            _ \n" +
             "| |  | | / ____||  ____| _    | |                      | |          | |\n" +
             "| |__| || |     | |__  _| |_  | |      ___    __ _   __| |  ___   __| |\n" +

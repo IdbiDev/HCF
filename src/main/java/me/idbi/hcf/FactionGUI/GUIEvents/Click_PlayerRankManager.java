@@ -7,6 +7,7 @@ import me.idbi.hcf.FactionGUI.Menus.MemberListInventory;
 import me.idbi.hcf.FactionGUI.Menus.MemberManageInventory;
 import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -43,23 +44,29 @@ public class Click_PlayerRankManager implements Listener {
 
                 String rankName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
 
+                Player p = (Player) e.getWhoClicked();
+                HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
                 OfflinePlayer offline = Bukkit.getOfflinePlayer(playerName);
+                if(offline.getUniqueId() == e.getWhoClicked().getUniqueId()) return;
 
 //                Faction faction = playertools.getPlayerFaction((Player) e.getWhoClicked());
 
                 Faction f = Playertools.getPlayerFaction((Player) e.getWhoClicked());
                 assert f != null;
-                FactionRankManager.Rank rank = f.FindRankByName(rankName);
+                if(hcfPlayer.getRank().isLeader()) return;
+                FactionRankManager.Rank rank = f.getRankByName(rankName);
+
                 if (rank != null)
                     if (rank.isLeader())
                         return;
 
                 if (offline.isOnline())
-                    f.ApplyPlayerRank(offline.getPlayer(), rankName);
+                    f.applyPlayerRank(offline.getPlayer(), rankName);
                 else
-                    f.ApplyPlayerRank(offline, rankName);
+                    f.applyPlayerRank(offline, rankName);
 
-                e.getWhoClicked().closeInventory();
+
+                p.openInventory(MemberManageInventory.manage(p, playerName));
                 e.getWhoClicked().sendMessage(Messages.gui_rank_change.language(((Player) e.getWhoClicked())).setRank(rankName).queue().replace("%player%", offline.getName()));
                 GUISound.playSound((Player) e.getWhoClicked(), GUISound.HCFSounds.SUCCESS);
             } else {

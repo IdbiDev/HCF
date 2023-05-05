@@ -9,6 +9,7 @@ import me.idbi.hcf.Elevator.ElevatorCreate;
 import me.idbi.hcf.Elevator.ElevatorInteract;
 import me.idbi.hcf.Events.Claim.*;
 import me.idbi.hcf.Events.*;
+import me.idbi.hcf.Events.Enchants.Anvil.AnvilEvent;
 import me.idbi.hcf.Events.Enchants.EnchantInventory;
 import me.idbi.hcf.Events.Enchants.TableEvent;
 import me.idbi.hcf.Events.Enchants.TableInteract;
@@ -33,6 +34,7 @@ import org.bukkit.plugin.PluginManager;
 import static org.bukkit.Bukkit.getServer;
 
 public class SetupEvents {
+    private static Main m = Main.getInstance();
     public static void setupEvents() {
         //xd
         //getServer().getPluginManager().registerEvents(new Assassin(), m);

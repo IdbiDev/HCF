@@ -90,9 +90,10 @@ public enum GUIMessages {
         String configMessage = MessagesTool.getGUILanguageMessages(language).getString(this + ".name");
         if (configMessage != null) {
             this.tempName = ChatColor.translateAlternateColorCodes('&', configMessage);
-            return this;
-        } else
-            MessagesTool.updateGuiMessageFiles();
+            //System.out.println(this.tempName);
+            //return this;
+        } else {}
+           // MessagesTool.updateGuiMessageFiles();
 
         List<String> returnList = new ArrayList<>();
         List<String> configList = MessagesTool.getGUILanguageMessages(language).getStringList(this + ".lore");
@@ -104,7 +105,7 @@ public enum GUIMessages {
                 );
             }
         } else {
-            MessagesTool.updateGuiMessageFiles();
+            //MessagesTool.updateGuiMessageFiles();
             for (String message : this.lore) {
                 returnList.add(
                         ChatColor.translateAlternateColorCodes('&', message)

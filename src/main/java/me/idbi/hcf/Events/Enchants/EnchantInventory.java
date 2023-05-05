@@ -152,8 +152,9 @@ Silk Touch*/
 
             if (e.getCurrentItem().isSimilar(confirm())) {
                 Player p = (Player) e.getWhoClicked();
-                if (p.getLevel() < 20) {
-                    //p.sendMessage(Messages.ENCHANT_NOT_ENOUGH_XP.queue());
+                if (p.getLevel() < Config.EnchantCost.asInt()) {
+                    p.sendMessage(Messages.enchant_not_enough_xp.language(p).queue());
+                    return;
                 }
 
                 ItemStack item = e.getView().getTopInventory().getItem(13);
@@ -175,7 +176,7 @@ Silk Touch*/
                 if (Main.abilitiesLoaded) {
                     // item = Utils.updateLore(item);
                 }
-                p.setLevel(p.getLevel() - 20);
+                p.setLevel(p.getLevel() - Config.EnchantCost.asInt());
 
                 e.getWhoClicked().getInventory().addItem(item).values().forEach(itemstack ->
                         e.getWhoClicked().getWorld().dropItemNaturally(e.getWhoClicked().getLocation(), itemstack));

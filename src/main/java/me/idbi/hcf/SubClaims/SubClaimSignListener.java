@@ -26,6 +26,9 @@ public class SubClaimSignListener implements Listener {
         HCFPlayer player = HCFPlayer.getPlayer(e.getPlayer());
         Faction faction = player.getFaction();
         if(faction == null) return;
+        if(player.getCurrentArea() == null) return;
+        boolean onOwnClaim = player.getCurrentArea().getFaction() == faction;
+        if(!onOwnClaim) return;
         String configValue = ChatColor.stripColor(Config.SubClaimTitle.asStr());
         if (line0 != null) {
             if (line0.equalsIgnoreCase(configValue) || ChatColor.stripColor(line0.replace("&", "§")).equalsIgnoreCase(configValue)) {
@@ -62,10 +65,12 @@ public class SubClaimSignListener implements Listener {
                     } else {
                         e.getPlayer().sendMessage(Messages.subclaim_lower_rank.language(e.getPlayer()).queue());
                         e.setCancelled(true);
+                        return;
                     }
                 } else {
                     e.setLine(1, player.getRank().getName());
                 }
+                player.sendMessage(Messages.subclaim_created);
             }
         }
     }

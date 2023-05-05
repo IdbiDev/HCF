@@ -6,6 +6,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.SpawnShield;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Location;
@@ -40,8 +41,7 @@ public class PlayerMove implements Listener {
                 }
             }
         }
-
-        HCF_Claiming.Faction_Claim c = HCF_Claiming.getPlayerArea(e.getPlayer());
+        Claiming.Faction_Claim c = Playertools.getUpperClaim(p);
         if (player.getCurrentArea() != c) {
 
             String wilderness = Messages.wilderness.language(p).queue();

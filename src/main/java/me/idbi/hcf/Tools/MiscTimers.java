@@ -11,8 +11,10 @@ import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.AdminScoreboard;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Objects.MountainEvent;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -105,12 +107,18 @@ public class MiscTimers {
         new BukkitRunnable() {
             @Override
             public void run() {
+                if(MountainEvent.getInstance().isReset()) {
+                    MountainEvent.getInstance().reset();
+                }
+
                 for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                     HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
 
                     runNowExpires(player);
                     executeClassWarmup(player);
                     refreshScoreboard(player);
+
+                    NameChanger.refresh(player);
 
                     if (hcfPlayer.getPlayerClass() != Classes.BARD) continue;
                     if (!(hcfPlayer.getBardEnergy() >= bard.maxBardEnergy)) {
@@ -153,21 +161,18 @@ public class MiscTimers {
             public void run() {
 
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    System.out.println(player.getName());
                     SpawnShield.CalcWall(player);
                     if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
-                    ListIterator<Location> it = Main.playerBlockChanges.get(player.getUniqueId()).listIterator();
-                    try {
-                        while (it.hasNext()) {
-                            Location loc = it.next();
-                            if (loc.distance(player.getLocation()) > 12) {
-                                player.sendBlockChange(loc, Material.AIR, (byte) 0);
-                                it.remove();
-                            }
+                    ArrayList<Location> it = new ArrayList<>(Main.playerBlockChanges.get(player.getUniqueId()));
+                    ArrayList<Location> it2 = new ArrayList<>(Main.playerBlockChanges.get(player.getUniqueId()));
+                    //ListIterator<Location> it = Main.playerBlockChanges.get(player.getUniqueId()).listIterator();
+                    for (Location loc : it) {
+                        if (loc.distance(player.getLocation()) > 12) {
+                            player.sendBlockChange(loc, Material.AIR, (byte) 0);
+                            it2.remove(loc);
                         }
-                    } catch (Exception ignored) {
-                        ignored.printStackTrace();
                     }
+                    Main.playerBlockChanges.put(player.getUniqueId(), it2);
                 }
 
             }
@@ -179,10 +184,11 @@ public class MiscTimers {
             public void run() {
 
                 if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) return;
-                ListIterator<Location> it = Main.playerBlockChanges.get(player.getUniqueId()).listIterator();
+                ArrayList<Location> it = new ArrayList<>(Main.playerBlockChanges.get(player.getUniqueId()));
                 try {
-                    while (it.hasNext())
-                        player.sendBlockChange(it.next(), Material.AIR, (byte) 0);
+                    for (Location location : it) {
+                        player.sendBlockChange(location, Material.AIR, (byte) 0);
+                    }
                 } catch (Exception ignored) {
                     ignored.printStackTrace();
                 }

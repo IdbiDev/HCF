@@ -7,6 +7,7 @@ import me.idbi.hcf.CustomFiles.TabFile;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -102,13 +103,11 @@ public class TabManager {
     }
 
     public void refresh(Player p) {
-        if(p == null) return;
+        if (p == null) return;
         TableTabList tab;
-        try {
-            tab = Main.getInstance().getTabbed().newTableTabList(p, 4);
-        } catch (IllegalArgumentException e) {
-            tab = (TableTabList) Main.getInstance().getTabbed().getTabList(p);
-        }
+        tab = Main.getInstance().getTabbed().getTabList(p) == null
+                ? Main.getInstance().getTabbed().newTableTabList(p, 4)
+                : (TableTabList) Main.getInstance().getTabbed().getTabList(p);
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
 
         TableTabList.TableBox left = new TableTabList.TableBox(new TableTabList.TableCell(0, 0), new TableTabList.TableCell(0, 19));
@@ -121,7 +120,7 @@ public class TabManager {
         tab.fill(right, formatColumn(p, getRight()), TableTabList.TableCorner.TOP_LEFT, TableTabList.FillDirection.VERTICAL);
 
         int c = 0;
-        if(hcfPlayer.inFaction()) {
+        if (hcfPlayer.inFaction()) {
             for (String s : this.factionInfo_inFaction) {
                 tab.set(this.factionInfo_startSlot + c, new TextTabItem(formatLine(p, s)));
                 c++;
@@ -134,7 +133,7 @@ public class TabManager {
         }
 
         c = 0;
-        if(hcfPlayer.inFaction()) {
+        if (hcfPlayer.inFaction()) {
             tab.set(this.playerInfo_startSlot, new TextTabItem(translate(this.playerInfo_factionNameColor) + hcfPlayer.getFaction().getName()));
 
             for (HCFPlayer player : hcfPlayer.getFaction().getMembers()) {

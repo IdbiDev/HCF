@@ -32,55 +32,7 @@ public class Scoreboards {
         }
         HCFPlayer.getPlayer(p).getScoreboard().update();
         TabManager.getManager().refresh(p);
-        /*TabManager.getManager().refresh(p);
-        if (Playertools.isInStaffDuty(p)) {
-            AdminScoreboard.refresh(p);
-            return;
-        }
-
-        List<String> mainScoreboard = new ArrayList<>();
-        for (String s : Config.DefaultScoreboard.asStrList()) {
-            mainScoreboard.add(ChatColor.translateAlternateColorCodes('&', s));
-        }
-
-        List<String> replacedList = new ArrayList<>();
-        for (String line : mainScoreboard) {
-            if (line.contains("%customtimers%")) {
-                for (Map.Entry<String, CustomTimers> customTimers : Main.customSBTimers.entrySet()) {
-                    if (customTimers.getValue().isActive()) {
-                        replacedList.add(line.replace("%customtimers%", replaceVariables(customTimers.getValue().getFormatted(), p)));
-                    }
-                }
-                continue;
-            }
-            if(isContinue(p, line)) continue;
-
-            replacedList.add(replaceVariables(line, p));
-        }
-
-        if(replacedList.get(replacedList.size() - 1).equals("") || replacedList.get(replacedList.size() - 1).equalsIgnoreCase(" ")) {
-            replacedList = replacedList.subList(0, replacedList.size() - 1);
-        }
-
-        ArrayList<String> newReplacedList = new ArrayList<>();
-        for (String s : replacedList) {
-            if(s.length() > 30) {
-                newReplacedList.add(s.substring(0, 30));
-                continue;
-            }
-            newReplacedList.add(s);
-        }
-
-        FastBoard board = Main.boards.get(p.getUniqueId());
-        board.updateTitle(Config.DefaultScoreboardTitle.asStr());
-        if(board == null) {
-            FastBoard newBoard = new FastBoard(p);
-            newBoard.updateTitle(Config.DefaultScoreboardTitle.asStr());
-            newBoard.updateLines(newReplacedList);
-            Main.boards.put(p.getUniqueId(), newBoard);
-            return;
-        }
-        board.updateLines(newReplacedList);*/
+        NameChanger.refresh(p);
     }
 
     public static void RefreshAll() {

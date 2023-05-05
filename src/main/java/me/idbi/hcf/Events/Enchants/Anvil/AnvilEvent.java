@@ -90,6 +90,7 @@ public class AnvilEvent implements Listener {
     }
 
     public static boolean isAllowed(ItemStack is) {
+        HCFRules rules = HCFRules.getRules();
         for (Map.Entry<Enchantment, Integer> enc : is.getEnchantments().entrySet()) {
             int value = rules.getMaxLevel(enc.getKey());
             int enchantLevel = enc.getValue();

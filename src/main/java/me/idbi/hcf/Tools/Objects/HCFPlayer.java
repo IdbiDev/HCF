@@ -45,7 +45,7 @@ public class HCFPlayer {
     @Getter @Setter private double bardEnergy;
     @Getter @Setter private Claiming.Faction_Claim currentArea;
     @Getter @Setter private int assassinState;
-    @Getter @Setter private boolean inDuty;
+    @Setter private boolean inDuty;
     @Getter @Setter private Location stuckLocation;
     @Getter @Setter private ChatTypes chatType;
     @Getter @Setter private int claimID;
@@ -58,7 +58,8 @@ public class HCFPlayer {
     @Getter private Board scoreboard;
     @Getter @Setter private boolean isClassWarmup;
     @Getter @Setter private boolean viewMap;
-    @Getter private List<HCF_Claiming.Point> factionViewMapLocations;
+    @Getter private List<Claiming.Point> factionViewMapLocations;
+    @Getter private WaypointPlayer waypointPlayer;
 
     public HCFPlayer(UUID uuid,
                      int deaths,
@@ -74,7 +75,6 @@ public class HCFPlayer {
         try {
             this.uuid = uuid;
             this.name = Bukkit.getOfflinePlayer(this.uuid).getName();
-            System.out.println("buzi vagy de mélgsem : " + this.name);
             this.money = money;
             Main.getInstance().playerBank.put(uuid, (double) money);
             this.faction = faction;
@@ -97,6 +97,7 @@ public class HCFPlayer {
             this.playerStatistic.kills = kills;
             this.playerStatistic.deaths = deaths;
             this.online = false;
+
             if(deathTime != 0) {
                 this.isDeathBanned = true;
                 this.deathTime = deathTime;
@@ -107,6 +108,7 @@ public class HCFPlayer {
             this.rollbacks = new TreeMap<>();
             this.timers = new HashMap<>();
             this.isClassWarmup = false;
+            this.waypointPlayer = new WaypointPlayer(this);
             /*
             SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',money='?'",
                     this.name, this.uuid.toString(), Config.default_balance.asInt() + "");*/
@@ -134,6 +136,13 @@ public class HCFPlayer {
         }
 
         return getPlayer(p);
+    }
+
+    public boolean isInDuty() {
+       /* Player p = Bukkit.getPlayer(this.uuid);
+        if(p == null)
+            return inDuty;*/
+        return inDuty;// || p.isOp();
     }
 
     public static HCFPlayer getPlayer(String name) {
@@ -201,6 +210,7 @@ public class HCFPlayer {
     }
 
     public void join() {
+        this.waypointPlayer = new WaypointPlayer(this);
         this.playerClass = Classes.NONE;
         this.isClassWarmup = false;
         this.claimType = Claiming.ClaimTypes.NONE;
@@ -209,7 +219,12 @@ public class HCFPlayer {
         this.viewMap = false;
         this.inDuty = false;
         this.bardEnergy = 0D;
-        this.kothId = 0;
+        this.claimID = 0;
+        this.waypointPlayer.showDefault();
+        if(inFaction()) {
+            this.faction.setFocusedTeam(this.faction.getFocusedTeam());
+            this.faction.setRallyPosition(this.faction.getRallyPosition());
+        }
     }
 
     /**
@@ -284,7 +299,7 @@ public class HCFPlayer {
 
     public void setLanguage(String newLang) {
         this.language = newLang;
-        Main.currentLanguages.put(this.uuid, newLang);
+       // Main.currentLanguages.put(this.uuid, newLang);
     }
 
     public Rollback getLastRollback() {
@@ -321,7 +336,8 @@ public class HCFPlayer {
     }
 
     public void removeFaction() {
-        setChatType(ChatTypes.PUBLIC);
+        if(this.chatType == ChatTypes.FACTION || this.chatType == ChatTypes.ALLY || this.chatType == ChatTypes.LEADER)
+            setChatType(ChatTypes.PUBLIC);
         this.faction.removeMember(this);
         this.faction = null;
         this.rank = null;
@@ -341,6 +357,14 @@ public class HCFPlayer {
 
     public void setDeaths(int deaths) {
         this.playerStatistic.deaths = deaths;
+    }
+
+    public boolean giveWand(Player p) {
+        if (p.getInventory().firstEmpty() != -1) {
+            p.getInventory().setItem(p.getInventory().firstEmpty(), Claiming.Wands.claimWand());
+            return true;
+        }
+        return false;
     }
 
     public Rollback createRollback(EntityDamageEvent.DamageCause damageCause, Rollback.RollbackLogType logType) {
@@ -381,6 +405,13 @@ public class HCFPlayer {
     }
     public void addLives(int amount) {
         this.lives += amount;
+    }
+
+    public void sendMessage(Messages msg) {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.uuid);
+        if(offlinePlayer.isOnline()) {
+            offlinePlayer.getPlayer().sendMessage(msg.language(offlinePlayer.getPlayer()).queue());
+        }
     }
 
     public void banHCFPlayer() {
@@ -442,11 +473,18 @@ public class HCFPlayer {
                 return Messages.wilderness.language(offline.getPlayer()).queue();
             }
             boolean friendly = currentArea.getFaction() == faction;
+            boolean isWarzone = currentArea.getFaction().getId() == 2;
+            boolean isSpawn = currentArea.getFaction().getId() == 1;
             boolean isAlly = false;
             if (!friendly) {
                 if (faction != null)
                     isAlly = currentArea.getFaction().isAlly(faction);
             }
+            if(isSpawn)
+                return Messages.spawn.language(offline.getPlayer()).queue();
+            if(isWarzone)
+                return Messages.warzone.language(offline.getPlayer()).queue();
+
             if (friendly) {
                 //return Messages.zone_friendly.language(offline.getPlayer()).setZone(currentArea.faction.name).queue();
                 return Config.TeammateColor.asStr() + currentArea.getFaction().getName();
@@ -590,6 +628,10 @@ public class HCFPlayer {
                 this.lives+"",
                 this.uuid.toString());
         saveStatsSync();
+    }
+
+    public void takeLives(int lives) {
+        this.lives = Math.max(0, this.lives - lives);
     }
 
     public void saveStats() {

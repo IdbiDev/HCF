@@ -74,7 +74,7 @@ public class PlayerRankManagerInventory {
         HashMap<String, Object> map = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid='?'", p.getUniqueId().toString());
 
         for (Map.Entry<Integer, FactionRankManager.Rank> rank : Playertools.sortByPriority(Playertools.getPlayerFaction(p)).entrySet()) {
-            if (faction.FindRankByName(map.get("rank").toString()).getName().equalsIgnoreCase(rank.getValue().getName())) {
+            if (faction.getRankByName(map.get("rank").toString()).getName().equalsIgnoreCase(rank.getValue().getName())) {
                 inv.addItem(rank(rank.getValue().getName(), true));
                 continue;
             }
@@ -116,7 +116,7 @@ public class PlayerRankManagerInventory {
 
         HashMap<String, Object> map = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid='?'", target.getUniqueId().toString());
         assert faction != null;
-        FactionRankManager.Rank rank = faction.FindRankByName(map.get("rank").toString());
+        FactionRankManager.Rank rank = faction.getRankByName(map.get("rank").toString());
 
         im.setDisplayName("§7Active Rank: §a§o" + rank.getName());
 

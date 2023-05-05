@@ -4,6 +4,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Location;
@@ -31,10 +32,7 @@ public class FactionPositionCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player p) {
-            if(!p.hasPermission("factions.commands.factioncall")) {
-                p.sendMessage(Messages.no_permission.language(p).queue());
-                return false;
-            }
+            if(!HCFPermissions.faction_call.check(p)) return false;
             if (Playertools.getPlayerFaction(p) == null) {
                 p.sendMessage(Messages.not_in_faction.language(p).queue());
                 return false;

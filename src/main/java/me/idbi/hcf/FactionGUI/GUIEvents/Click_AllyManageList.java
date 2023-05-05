@@ -1,9 +1,9 @@
 package me.idbi.hcf.FactionGUI.GUIEvents;
 
-import me.idbi.hcf.FrakcioGUI.GUI_Sound;
-import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
-import me.idbi.hcf.FrakcioGUI.Menus.Alley_MainInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.Ally_ManageAlly;
+import me.idbi.hcf.FactionGUI.GUISound;
+import me.idbi.hcf.FactionGUI.Items.GUI_Items;
+import me.idbi.hcf.FactionGUI.Menus.Ally_MainInventory;
+import me.idbi.hcf.FactionGUI.Menus.Ally_ManageAlly;
 import me.idbi.hcf.Tools.Objects.AllyFaction;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
@@ -29,8 +29,8 @@ public class Click_AllyManageList implements Listener {
         if (!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
         if (e.getCurrentItem().isSimilar(GUI_Items.back(((Player) e.getWhoClicked())))) {
-            e.getWhoClicked().openInventory(Alley_MainInventory.inv(((Player) e.getWhoClicked())));
-            GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.BACK);
+            e.getWhoClicked().openInventory(Ally_MainInventory.inv(((Player) e.getWhoClicked())));
+            GUISound.playSound((Player) e.getWhoClicked(), GUISound.HCFSounds.BACK);
             return;
         }
 

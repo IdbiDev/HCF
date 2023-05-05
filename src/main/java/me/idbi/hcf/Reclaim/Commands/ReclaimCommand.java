@@ -2,6 +2,7 @@ package me.idbi.hcf.Reclaim.Commands;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Reclaim.ReclaimConfig;
+import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -19,17 +20,16 @@ public class ReclaimCommand implements Listener, CommandExecutor {
         if(cmd.getName().equalsIgnoreCase("reclaim")) {
             if(sender instanceof Player) {
                 Player p = (Player) sender;
-                if(args.length == 0) {
-                    if(p.hasPermission("factions.commands.reclaim")) {
-                        if(ReclaimConfig.isClaimed(p)) {
-                            p.sendMessage(Messages.reclaim_already_claimed.language(p).queue());
-                            return false;
-                        }
-                        reclaim(p);
-                        p.sendMessage(Messages.reclaim_claimed.language(p).queue());
-                    } else {
-                        p.sendMessage(Messages.no_permission.language(p).queue());
+                if (args.length == 0) {
+                    if (!HCFPermissions.reclaim.check(p)) return false;
+                    if (ReclaimConfig.isClaimed(p)) {
+                        p.sendMessage(Messages.reclaim_already_claimed.language(p).queue());
+                        return false;
                     }
+                    reclaim(p);
+                    p.sendMessage(Messages.reclaim_claimed.language(p).queue());
+                } else {
+                    p.sendMessage(Messages.no_permission.language(p).queue());
                 }
             }
         }
@@ -38,10 +38,11 @@ public class ReclaimCommand implements Listener, CommandExecutor {
 
     public static void reclaim(Player p) {
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
+        if(ReclaimConfig.getRankName(p) == null) return;
         hcfPlayer.addLives(ReclaimConfig.getLives(p));
         List<String> commands = ReclaimConfig.getCommands(p);
-        p.sendMessage("Kaptál életet: " + ReclaimConfig.getLives(p));
-        p.sendMessage("Új életeid száma: " + hcfPlayer.getLives());
+        /*p.sendMessage("Kaptál életet: " + ReclaimConfig.getLives(p));
+        p.sendMessage("Új életeid száma: " + hcfPlayer.getLives());*/
 
         for (String cmd : commands) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%" , p.getName()));

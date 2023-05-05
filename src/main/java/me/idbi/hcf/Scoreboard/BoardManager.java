@@ -51,6 +51,7 @@ public class BoardManager {
 
    @Getter private String minerInvis;
    @Getter private String minerDiamonds;
+   @Getter private String faction;
 
    @Getter private boolean rallyEnabled;
    @Getter private List<String> rallyLines;

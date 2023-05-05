@@ -9,13 +9,10 @@ import me.idbi.hcf.Bossbar.Bossbar;
 import me.idbi.hcf.BukkitCommands.BukkitCommandManager;
 import me.idbi.hcf.Commands.FactionCommands.FactionSetHomeCommand;
 import me.idbi.hcf.Commands.SubCommand;
-import me.idbi.hcf.CustomFiles.BoardFile;
+import me.idbi.hcf.CustomFiles.*;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.Configs.Config;
-import me.idbi.hcf.CustomFiles.KothRewardsFile;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.CustomFiles.ReclaimFile;
-import me.idbi.hcf.CustomFiles.TabFile;
 import me.idbi.hcf.Economy.HCFEconomy;
 import me.idbi.hcf.Economy.VaultHook;
 import me.idbi.hcf.Koth.AutoKoth;
@@ -29,6 +26,7 @@ import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Lag;
+import me.idbi.hcf.Tools.Objects.MountainEvent;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
@@ -57,6 +55,7 @@ public final class Main extends JavaPlugin implements Listener {
 
 
     // Beállítások configba
+    public static int serverSlot;
     public static int worldBorderRadius;
     public static boolean deathban;
     public static long deathbanTime;
@@ -80,6 +79,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static boolean discordLogLoaded = false;
     public static World endWorld;
     public static World netherWorld;
+    public static Location spawnLocation;
     public static HashMap<String, CustomTimers> customSBTimers;
     public static LinkedHashMap<Integer, Faction> factionCache = new LinkedHashMap<>();
     public static LinkedHashMap<String, Claiming.Faction_Claim> kothCache = new LinkedHashMap<>();
@@ -94,7 +94,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static HashMap<UUID, List<Location>> factionMapBlockChanges = new HashMap<>();
     //public static HashMap<Faction, Scoreboard> teams = new HashMap<>();
     public static ArrayList<UUID> kothRewardsGUI;
-    public static HashMap<UUID, String> currentLanguages;
+   // public static HashMap<UUID, String> currentLanguages;
     public static List<String> blacklistedRankNames;
     public static ProtocolManager protocolManager;
     public static HashMap<UUID, Inventory> inventoryRollbacks;
@@ -107,13 +107,14 @@ public final class Main extends JavaPlugin implements Listener {
     public final HashMap<UUID, Double> playerBank = new HashMap<>();
     public static HCFEconomy economyImplementer;
     private VaultHook vaultHook;
-    private static Main instance = null;
+    @Getter private static Main instance = null;
     @Getter private Tabbed tabbed;
     @Getter
     private TabManager tabManager;
     @Getter private BoardManager scoreboardManager;
     @Getter private BungeeChanneling bungeeChanneling;
     public static String lobbyName;
+    @Getter private HCFRules rules;
 
     // Egyszerű SQL Connection getter
     public static Connection getConnection() {
@@ -174,7 +175,7 @@ public final class Main extends JavaPlugin implements Listener {
         vaultHook = new VaultHook();
         vaultHook.hook();
 
-        System.out.println(lobbyName);
+        serverSlot = Bukkit.getServer().getMaxPlayers();
 
         endWorld = Bukkit.getWorld(Config.EndName.asStr());
         netherWorld = Bukkit.getWorld(Config.NetherName.asStr());
@@ -185,7 +186,7 @@ public final class Main extends JavaPlugin implements Listener {
         blacklistedRankNames = new ArrayList<>();
         SubCommand.commandCooldowns = new HashMap<>();
         Bossbar.bars = new HashMap<>();
-        currentLanguages = new HashMap<>();
+        //currentLanguages = new HashMap<>();
         inventoryRollbacks = new HashMap<>();
         boards = new HashMap<>();
         FactionSetHomeCommand.teleportPlayers = new ArrayList<Player>();
@@ -200,6 +201,9 @@ public final class Main extends JavaPlugin implements Listener {
         miscTimers = new MiscTimers();
 
         BoardFile.setup();
+        LimitsFile.setup();
+
+        HCFRules rules = new HCFRules();
 
         this.scoreboardManager = new BoardManager(this);
         this.scoreboardManager.setup();;
@@ -277,6 +281,8 @@ public final class Main extends JavaPlugin implements Listener {
         miscTimers.createFakeWalls();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
 
+        MountainEvent.create();
+
         SpeedModifiers.asyncCacheBrewingStands();
         SpeedModifiers.speedBoost();
 
@@ -307,7 +313,9 @@ public final class Main extends JavaPlugin implements Listener {
         WorldBorder border = world.getWorldBorder();
         border.setSize(Config.WorldBorderSize.asInt());
 
-        border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+        Location spawnLoc = new Location(world, coords[0], coords[1], coords[2]);
+        spawnLocation = spawnLoc;
+        border.setCenter(spawnLoc);
         autoKoth.startAutoKoth();
         if (Config.WarzoneSize.asInt() != 0 && !Main.factionCache.get(1).getClaims().isEmpty()) {
             //System.out.println("Bro van warzone");
@@ -330,12 +338,11 @@ public final class Main extends JavaPlugin implements Listener {
         /*HCF_Claiming.Faction_Claim spawnClaim = null;
         autoKoth.startAutoKoth();
         SOTW.EnableSOTW();*/
-
     }
 
-    public static Main getInstance() {
-        return instance;
-    }
+   //public static Main getInstance() {
+     /*   return instance;
+    *///}
 
     private static Economy econ = null;
 
@@ -355,7 +362,6 @@ public final class Main extends JavaPlugin implements Listener {
     public static Economy getEconomy() {
         return economyImplementer;
     }
-
     @EventHandler
     public void onDisableEvent(PluginDisableEvent e) {
         if (e.getPlugin().equals(this)) {
@@ -367,7 +373,7 @@ public final class Main extends JavaPlugin implements Listener {
 //                for (Player player : Bukkit.getOnlinePlayers()) {
 //                    if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
 //                    List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
-//                    for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
+//                    for (Iterator<Location> it = copy.iteratoar(); it.hasNext(); ) {
 //                        Location loc = it.next();
 //                        player.sendBlockChange(loc, Material.AIR, (byte) 0);
 //                        if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {

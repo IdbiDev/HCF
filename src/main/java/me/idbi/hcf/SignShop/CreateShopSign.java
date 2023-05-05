@@ -1,7 +1,10 @@
 package me.idbi.hcf.SignShop;
 
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +21,9 @@ public class CreateShopSign implements Listener {
         add("end_portal_frame");
         add("end_portal_fram");
     }};
+
+    private String sellName = Config.SignShopTitle_Sell.asStr();
+    private String buyName = Config.SignShopTitle_Buy.asStr();
 
     private static boolean successfullySign(String line2) {
         Material material;
@@ -42,13 +48,11 @@ public class CreateShopSign implements Listener {
     public void onSignPlace(SignChangeEvent e) {
         String line0 = e.getLine(0);
 
+        if(!Config.SignShopEnabled.asBoolean()) return;
         if (line0 != null) {
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(e.getPlayer());
-            if (line0.equalsIgnoreCase("[buy]")) {
-                if (!hcfPlayer.isInDuty()) {
-                    e.getPlayer().sendMessage(Messages.no_permission.language(e.getPlayer()).queue());
-                    return;
-                }
+            if (line0.equalsIgnoreCase(ChatColor.stripColor(buyName)) || line0.equalsIgnoreCase(buyName)) {
+                if(!HCFPermissions.signshop_create.check(e.getPlayer())) return;
                 if (!successfullySign(e.getLine(1))) {
                     e.setCancelled(true);
                     return;
@@ -65,14 +69,11 @@ public class CreateShopSign implements Listener {
                     e.setLine(3, "$" + e.getLine(3));
                     return;
                 }
-                e.setLine(0, "§a[Buy]");
+                e.setLine(0, buyName);
             }
-            if (line0.equalsIgnoreCase("[sell]")) {
-                if (!hcfPlayer.isInDuty()) {
-                    e.getPlayer().sendMessage(Messages.no_permission.language(e.getPlayer()).queue());
-                    return;
-                }
-                e.setLine(0, "§c[Sell]");
+            if (line0.equalsIgnoreCase(ChatColor.stripColor(sellName)) || line0.equalsIgnoreCase(sellName)) {
+                if(!HCFPermissions.signshop_create.check(e.getPlayer())) return;
+                e.setLine(0, sellName);
                 if (!e.getLine(1).matches("^[0-9]+$")) {
                     e.setCancelled(true);
                     return;

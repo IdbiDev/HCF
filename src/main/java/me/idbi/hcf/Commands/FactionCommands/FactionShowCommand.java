@@ -83,6 +83,18 @@ public class FactionShowCommand extends SubCommand {
             p.sendMessage(Messages.no_faction_exists.language(p).queue());
             return;
         }
+        if(faction.getLeader() == null) {
+            p.sendMessage(Messages.no_faction_exists.language(p).queue());
+            return;
+        }
+        if(faction.getLeader().equals("null")) {
+            p.sendMessage(Messages.no_faction_exists.language(p).queue());
+            return;
+        }
+        if(faction.getLeader().equals("")) {
+            p.sendMessage(Messages.no_faction_exists.language(p).queue());
+            return;
+        }
 
         String factionStatus = (Playertools.isFactionOnline(faction)
                 ? Messages.status_design_online.language(p).queue()

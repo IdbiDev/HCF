@@ -16,8 +16,7 @@ public class SpawnShield {
     }
 
     public static void CalcWall(Player p) {
-        System.out.println(pvpCooldown(p) + " " + p.getName());
-        HCF_Claiming.Point player_point = new HCF_Claiming.Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
+        Claiming.Point player_point = new Claiming.Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
         Faction player_faction = Playertools.getPlayerFaction(p);
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (Claiming.Faction_Claim claim : thisFaction.getValue().getClaims()) {

@@ -108,7 +108,6 @@ public class FactionLeaveCommand extends SubCommand {
                 f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(p.getName(), "leaved", new Date().getTime()));
                 NameChanger.refresh(p);
             } else {
-                //Todo: Faction leader is a fucking retarded bc he wanna leave the faction. Use /f disband
                 p.sendMessage(Messages.leader_leaving_faction.language(p).setFaction(f).queue());
             }
         } else {

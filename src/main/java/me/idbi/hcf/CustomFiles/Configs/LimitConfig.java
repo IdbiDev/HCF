@@ -9,7 +9,7 @@ import java.util.List;
 
 public enum LimitConfig {
 
-    Speed("Potion Limits", 2,createComment("Set this to 0 to disable the effect.")),
+    /*Speed("Potion Limits", 2,createComment("Set this to 0 to disable the effect.")),
     Jump("Potion Limits", 2,createComment("Set this to 0 to disable the effect.")),
     Strength("Potion Limits", 1,createComment("Set this to 0 to disable the effect.")),
     Regen("Potion Limits", 2,createComment("Set this to 0 to disable the effect.")),
@@ -127,5 +127,5 @@ public enum LimitConfig {
             config.set(section + "." + this, this.value);
 
         config.saveConfig();
-    }
+    }*/
 }

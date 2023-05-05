@@ -43,7 +43,7 @@ public class AllyDeclineCommand extends SubCommand {
 
     @Override
     public boolean hasCooldown(Player p) {
-        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
+        if (!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
         return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
     }
 

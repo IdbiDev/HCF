@@ -3,6 +3,7 @@ package me.idbi.hcf.SubClaims;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.FactionRankManager;
+import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

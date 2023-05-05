@@ -1,5 +1,7 @@
 package me.idbi.hcf.Commands;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -44,4 +46,8 @@ public abstract class SubCommand {
 
     //code for the subcommand
     public abstract void perform(Player p, String[] args);
+
+    public void perform(CommandSender cs, String[] args) {
+
+    }
 }

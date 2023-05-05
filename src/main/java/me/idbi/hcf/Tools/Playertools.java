@@ -8,6 +8,7 @@ import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Objects.Permissions;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -28,8 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static me.idbi.hcf.Main.maxDTR;
-import static me.idbi.hcf.Main.ranks;
+import static me.idbi.hcf.Main.*;
 
 
 public class Playertools {
@@ -117,7 +117,7 @@ public class Playertools {
         HCFPlayer hcf = HCFPlayer.getPlayer(player);
         assert hcf != null;
         hcf.createScoreboard(player);
-        hcf.setCurrentArea(HCF_Claiming.getPlayerArea(player));
+        hcf.setCurrentArea(getUpperClaim(player));
         hcf.setOnline(true);
         hcf.join();
         Main.playerCache.put(hcf.getUUID(), hcf);
@@ -413,7 +413,7 @@ public class Playertools {
                     continue;
                 Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(rs.getString("home")));
                 Location loc = new Location(
-                        Bukkit.getWorld(Config.WarzoneSize.asStr()),
+                        Bukkit.getWorld(Config.WorldName.asStr()),
                         Integer.parseInt(map.get("X").toString()),
                         Integer.parseInt(map.get("Y").toString()),
                         Integer.parseInt(map.get("Z").toString()),
@@ -727,6 +727,20 @@ public class Playertools {
         return false;
     }
 
+    public static boolean isInWarzone(Location loc) {
+        Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(loc.getWorld(), loc.getBlockX(), loc.getBlockZ());
+        if(claim == null) return false;
+        if(claim.getFaction() == null) return false;
+        return claim.getFaction().getId() == 2;
+    }
+
+    public static boolean isInWarzone(Player p) {
+        Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockZ());
+        if(claim == null) return false;
+        if(claim.getFaction() == null) return false;
+        return claim.getFaction().getId() == 2;
+    }
+
     public static void cancelSpawnClaim(Player admin) {
         HCFPlayer player = HCFPlayer.getPlayer(admin);
         player.setClaimType(Claiming.ClaimTypes.NONE);
@@ -851,7 +865,53 @@ public class Playertools {
         );
     }
 
+    /**
+     *
+     * @param str (x y z)
+     * @return
+     */
+    public static Location parseLoc2(World world, String str) {
+        Integer[] ints = getInts(str.split(" "));
+        return new Location(world,
+                ints[0],
+                ints[1],
+                ints[2]
+        );
+    }
+
     public static boolean isInt(String value) {
         return value.matches("^[0-9]+$");
+    }
+
+    public static boolean canDmg(Player victim, Player damager) {
+        HCFPlayer hcfVictim = HCFPlayer.getPlayer(victim);
+        HCFPlayer hcfDamager = HCFPlayer.getPlayer(damager);
+        if (Timers.PVP_TIMER.has(victim)) {
+            damager.sendMessage(Messages.cant_damage_while_pvptimer_victim.language(damager).queue());
+            return false;
+        }
+        if (Timers.PVP_TIMER.has(damager)) {
+            damager.sendMessage(Messages.cant_damage_while_pvptimer.language(damager).queue());
+            return false;
+        }
+        if (hcfDamager.getFaction() != null && hcfVictim.getFaction() != null) {
+            Faction vicFac = hcfVictim.getFaction();
+            Faction damFac = hcfDamager.getFaction();
+            if (damFac.isAlly(vicFac)) {
+                if (!vicFac.hasAllyPermission(damFac, Permissions.FRIENDLY_FIRE) || !damFac.hasAllyPermission(vicFac, Permissions.FRIENDLY_FIRE)) {
+                    damager.sendMessage(Messages.teammate_damage.language(damager).queue());
+                    return false;
+                }
+            }
+        }
+        if (isTeammate(damager, victim) && damager != victim) {
+            damager.sendMessage(Messages.teammate_damage.language(damager).queue());
+            return false;
+        }
+        return true;
+    }
+
+    public static Faction getWarzone() {
+        return factionCache.get(2);
     }
 }

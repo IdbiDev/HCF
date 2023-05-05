@@ -1,11 +1,11 @@
 package me.idbi.hcf.FactionGUI.GUIEvents;
 
-import me.idbi.hcf.FrakcioGUI.GUI_Sound;
-import me.idbi.hcf.FrakcioGUI.Items.Ally_Items;
-import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
-import me.idbi.hcf.FrakcioGUI.Menus.Alley_ManageRequests;
-import me.idbi.hcf.FrakcioGUI.Menus.Ally_AllyListInventory;
-import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
+import me.idbi.hcf.FactionGUI.GUISound;
+import me.idbi.hcf.FactionGUI.Items.Ally_Items;
+import me.idbi.hcf.FactionGUI.Items.GUI_Items;
+import me.idbi.hcf.FactionGUI.Menus.Ally_ManageRequests;
+import me.idbi.hcf.FactionGUI.Menus.Ally_AllyListInventory;
+import me.idbi.hcf.FactionGUI.Menus.MainInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,8 +30,8 @@ public class Click_AllyMain implements Listener {
         }
 
         if (e.getCurrentItem().isSimilar(Ally_Items.manageRequests())) {
-            e.getWhoClicked().openInventory(Alley_ManageRequests.inv(((Player) e.getWhoClicked())));
-            GUI_Sound.playSound((Player) e.getWhoClicked(), GUI_Sound.HCFSounds.CLICK);
+            e.getWhoClicked().openInventory(Ally_ManageRequests.inv(((Player) e.getWhoClicked())));
+            GUISound.playSound((Player) e.getWhoClicked(), GUISound.HCFSounds.CLICK);
             return;
         }
 

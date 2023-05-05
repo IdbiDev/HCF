@@ -1,5 +1,7 @@
 package me.idbi.hcf.Elevator;
 
+import me.idbi.hcf.CustomFiles.Configs.Config;
+import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -29,7 +31,8 @@ public class ElevatorInteract implements Listener {
                     if (sign.getLine(0) == null) continue;
                     if (sign.getLine(1) == null) continue;
 
-                    if (sign.getLine(0).equalsIgnoreCase("§9[elevator]")) {
+                    String title = Config.ElevatorTitle.asStr();
+                    if (sign.getLine(0).equalsIgnoreCase(title)) {
 
                         Location returnLoc = null;
                         if (sign.getLine(1).equalsIgnoreCase("down")) {
@@ -83,7 +86,8 @@ public class ElevatorInteract implements Listener {
                     if (sign.getLine(0) == null) continue;
                     if (sign.getLine(1) == null) continue;
 
-                    if (sign.getLine(0).equalsIgnoreCase("§9[elevator]")) {
+                    String title = Config.ElevatorTitle.asStr();
+                    if (sign.getLine(0).equalsIgnoreCase(title)) {
                         if (sign.getLine(1).equalsIgnoreCase("up")) {
                             Location returnLoc = null;
                             if (wallsign) {
@@ -133,7 +137,10 @@ public class ElevatorInteract implements Listener {
             String line0 = sign.getLine(0);
             String line1 = sign.getLine(1);
 
-            if (line0.equals("§9[Elevator]")) {
+            if(!Config.ElevatorEnabled.asBoolean()) return;
+            String title = Config.ElevatorTitle.asStr();
+            if (line0.equals(title)) {
+                if(!HCFPermissions.elevator_use.check(e.getPlayer())) return;
                 try {
                     if (line1.equalsIgnoreCase("up")) {
                         p.teleport(getUpperLoc(b).add(0.5, 0, 0.5));

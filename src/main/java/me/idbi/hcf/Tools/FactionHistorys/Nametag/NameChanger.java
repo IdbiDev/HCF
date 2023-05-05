@@ -53,33 +53,40 @@ public class NameChanger implements Listener {
         //World player
         //refreshTeams(player);
         for (final Player forWhom : Bukkit.getOnlinePlayers()) {
-            if ((!player.getUniqueId().equals(forWhom.getUniqueId()) && player.getWorld().equals(forWhom.getWorld())) || forWhom.canSee(player)) {
-                if (Playertools.isInStaffDuty(player)) {
-                    forWhom.hidePlayer(player);
-                    fakeNames.put(player.getUniqueId(), Config.StaffModeColor.asStr() + player.getName());
-                    forWhom.showPlayer(player);
-                    continue;
-                }
+            if(forWhom == player) continue;
+            if(!forWhom.getWorld().equals(player.getWorld())) continue;
+            if (forWhom.canSee(player)) {
+                String fakeName = "";
 
-                if (Timers.ARCHER_TAG.has(player)) {
-                    forWhom.hidePlayer(player);
-                    fakeNames.put(player.getUniqueId(), Config.ArcherTagColor.asStr() + player.getName());
-                    forWhom.showPlayer(player);
-                    return;
-                }
-
-                forWhom.hidePlayer(player);
                 if (Playertools.isTeammate(player, forWhom))
-                    fakeNames.put(player.getUniqueId(), Config.TeammateColor.asStr() + player.getName());
+                    fakeName = Config.TeammateColor.asStr() + player.getName();
                 else {
                     if (Playertools.isAlly(player, forWhom)) {
-                        fakeNames.put(player.getUniqueId(), Config.AllyColor.asStr() + player.getName());
+                        fakeName = Config.AllyColor.asStr() + player.getName();
                     } else {
-                        fakeNames.put(player.getUniqueId(), Config.EnemyColor.asStr() + player.getName());
+                        if (Timers.ARCHER_TAG.has(player)) {
+                            fakeName =  Config.ArcherTagColor.asStr() + player.getName();
+                        } else {
+                            fakeName = Config.EnemyColor.asStr() + player.getName();
+                        }
                     }
                 }
 
-                forWhom.showPlayer(player);
+                if (Playertools.isInStaffDuty(player)) {
+                    fakeName = Config.StaffModeColor.asStr() + player.getName();
+                }
+
+                if(!fakeNames.containsKey(player.getUniqueId())) {
+                    forWhom.hidePlayer(player);
+                    fakeNames.put(player.getUniqueId(), fakeName);
+                    forWhom.showPlayer(player);
+                } else {
+                    if (!fakeNames.get(player.getUniqueId()).equalsIgnoreCase(fakeName)) {
+                        forWhom.hidePlayer(player);
+                        fakeNames.put(player.getUniqueId(), fakeName);
+                        forWhom.showPlayer(player);
+                    }
+                }
             }
         }
         if(AdminTools.InvisibleManager.invisedAdmins.contains(player)) {

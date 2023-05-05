@@ -1,7 +1,9 @@
 package me.idbi.hcf.SignShop;
 
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 import me.idbi.hcf.Tools.Playertools;
@@ -33,6 +35,9 @@ public class InteractShopSign implements Listener {
         return amount;
     }
 
+    private String sellName = Config.SignShopTitle_Sell.asStr();
+    private String buyName = Config.SignShopTitle_Buy.asStr();
+
     @EventHandler
     public void onSignClick(PlayerInteractEvent e) {
         Block b = e.getClickedBlock();
@@ -45,7 +50,9 @@ public class InteractShopSign implements Listener {
 
             String line0 = sign.getLine(0);
 
-            if (line0.equals("§a[Buy]")) {
+            if(!Config.SignShopEnabled.asBoolean()) return;
+            if (line0.equals(buyName)) {
+                if(!HCFPermissions.signshop_use.check(e.getPlayer())) return;
                 String line1 = sign.getLine(1); // amount
                 if (line1.matches("^[0-9]+$")) {
 
@@ -118,7 +125,8 @@ public class InteractShopSign implements Listener {
                 }
             }
             //
-            else if (line0.equals("§c[Sell]")) {
+            else if (line0.equals(sellName)) {
+                if(!HCFPermissions.signshop_use.check(e.getPlayer())) return;
                 String line1 = sign.getLine(1); // amount
                 if (line1.matches("^[0-9]+$")) {
 

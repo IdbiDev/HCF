@@ -4,6 +4,7 @@ import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.SubClasses.Archer;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Permissions;
@@ -30,32 +31,8 @@ public class ProjectileDamage implements Listener {
             HCFPlayer damagerplayer = HCFPlayer.getPlayer(damager);
             /*int damager_faction = Integer.parseInt(playertools.getMetadata(damager, "factionid"));
             int victim_faction = Integer.parseInt(playertools.getMetadata(victim, "factionid"));*/
-            if (Timers.PVP_TIMER.has(victimplayer)) {
-                damager.sendMessage(Messages.cant_damage_while_pvptimer_victim.language(damager).queue());
-                e.setCancelled(true);
+            if(!Playertools.canDmg(victim, damager))
                 return;
-            }
-            if (Timers.PVP_TIMER.has(damagerplayer)) {
-                damager.sendMessage(Messages.cant_damage_while_pvptimer.language(damager).queue());
-                e.setCancelled(true);
-                return;
-            }
-            if (damagerplayer.getFaction() != null && victimplayer.getFaction() != null) {
-                Faction vicFac = victimplayer.getFaction();
-                Faction damFac = damagerplayer.getFaction();
-                if (damFac.isAlly(vicFac)) {
-                    if (!vicFac.hasAllyPermission(damFac, Permissions.FRIENDLY_FIRE) || !damFac.hasAllyPermission(vicFac, Permissions.FRIENDLY_FIRE)) {
-                        damager.sendMessage(Messages.teammate_damage.language(damager).queue());
-                        e.setCancelled(true);
-                        return;
-                    }
-                }
-            }
-            if (isTeammate(damager, victim) && damager != victim) {
-                damager.sendMessage(Messages.teammate_damage.language(damager).queue());
-                e.setCancelled(true);
-                return;
-            }
             //Add combatTimer
 
             if (e.getCause() != EntityDamageEvent.DamageCause.FALL) {

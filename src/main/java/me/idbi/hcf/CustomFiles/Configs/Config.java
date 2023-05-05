@@ -125,6 +125,16 @@ public enum Config {
             "dick", "tit", "boobs", "b00bs", "bo0bs", "fuck", "gay"
     ), createComment("These words are blocked in names (Faction, rank etc.)", "No case-sensitive and it will be blocked when the word contains one of them!")),
 
+    MountainEventReset("MountainEvent", 3600, createComment("Set Mountain event reset time", "Must be in seconds")),
+    MountainEventMaterial("MountainEvent", Material.GLOWSTONE.name(), createComment("Set Mountain event block type")),
+    MountainEventLocation1("MountainEvent", "3 69 -11", createComment("Select 2 location of the o")),
+    MountainEventLocation2("MountainEvent", "6 73 -7", createComment("Set Mountain event block type")),
+
+    LunarWaypoints("Waypoints", Arrays.asList(
+            "Spawn; world; -39, 60, -9; #FF0000",
+            "End; world; -39, 60, -13; #FFFFFF",
+            "End Exit; world_the_end; -39, 60, -17; #FFFFFF"
+    ), createComment("Syntax: 'name; world; x, y, z; #hexcode'")),
 
     StatTrakEnable("StatTrak", true, createComment("Should we enable weapons stattrak?")),
     StatTrakKillFormat("StatTrak", "&6&lKills&7: &b%kills%", createComment("Stattrak kills counter format")),
@@ -146,6 +156,13 @@ public enum Config {
     CrowbarSpawnerUses("Crowbar", 1),
     CrowbarPortalUses("Crowbar", 6),
     CrowbarDisabledInWarzone("Crowbar", false),
+
+    SignShopEnabled("SignShop", true),
+    SignShopTitle_Buy("SignShop", "&a[Buy]"),
+    SignShopTitle_Sell("SignShop", "&c[Sell]"),
+
+    ElevatorEnabled("Elevator", true),
+    ElevatorTitle("Elevator", "&9[Elevator]"),
 
     SubClaimTitle("SubClaim", "&b[Subclaim]"),
     SubClaimAllowLowerRank("SubClaim", true, createComment("Allows player which have lower ranks to open chests"));
@@ -209,6 +226,9 @@ public enum Config {
     public String asStr() {
         return ChatColor.translateAlternateColorCodes('&', this.value.toString());
     }
+    public Material asMaterial() {
+        return Material.getMaterial(this.value.toString());
+    }
 
     public boolean asBoolean() {
         return (boolean) this.value;
@@ -243,6 +263,7 @@ public enum Config {
             save();
             return;
         }
+        //save();
 
         this.value = config.get((this.section == null ? "" : this.section + ".") + this);
     }

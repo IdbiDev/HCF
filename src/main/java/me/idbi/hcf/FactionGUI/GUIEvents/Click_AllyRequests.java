@@ -29,6 +29,7 @@ public class Click_AllyRequests implements Listener {
                     if (Playertools.isValidName(text)) {
                         GUISound.playSound(player, GUISound.HCFSounds.SUCCESS);
                         AllyInviteCommand.invite(p, text);
+                        p.openInventory(Ally_ManageRequests.inv(p));
                         return AnvilGUI.Response.close();
                     } else {
                         GUISound.playSound(player, GUISound.HCFSounds.ERROR);

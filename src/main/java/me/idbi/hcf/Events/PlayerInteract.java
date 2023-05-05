@@ -52,6 +52,7 @@ public class PlayerInteract implements Listener {
                 }
                 Faction baszogatottFaction = claim.getFaction();
 
+                HCFRules rules = HCFRules.getRules();
                 Faction f = Playertools.getPlayerFaction(p);
                 if (f != null) {
                     if (Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).hasAllyPermission(baszogatottFaction, Permissions.INTERACT)) {

@@ -102,6 +102,7 @@ public class FactionJoinCommand extends SubCommand {
                 //NameChanger.refresh(p);
 
                 NameChanger.refresh(p);
+                NameChanger.refreshTeams(p);
 
 
             } else {

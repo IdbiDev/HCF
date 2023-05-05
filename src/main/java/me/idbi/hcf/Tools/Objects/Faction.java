@@ -43,7 +43,7 @@ public class Faction {
 
     @Getter @Setter private ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
     @Getter @Setter private ArrayList<HCFPlayer> members = new ArrayList<>();
-    @Getter @Setter private Faction focusedTeam;
+    @Getter private Faction focusedTeam;
     @Getter @Setter private Location rallyPosition;
     @Getter @Setter private boolean isDTRRegenEnabled;
 
@@ -122,6 +122,25 @@ public class Faction {
         this.members.add(hcfPlayer);
         this.refreshDTR();
     }
+
+    public void setRallyPosition(Location loc) {
+        for (Player member : getOnlineMembers()) {
+            HCFPlayer hcfPlayer = HCFPlayer.getPlayer(member);
+            WaypointPlayer waypointPlayer = hcfPlayer.getWaypointPlayer();
+            waypointPlayer.createWaypoint(loc);
+        }
+        this.rallyPosition = loc;
+    }
+
+    public void setFocusedTeam(Faction faction) {
+        for (Player member : getOnlineMembers()) {
+            HCFPlayer hcfPlayer = HCFPlayer.getPlayer(member);
+            WaypointPlayer waypointPlayer = hcfPlayer.getWaypointPlayer();
+            waypointPlayer.updateWaypoint(faction);
+        }
+        this.focusedTeam = faction;
+    }
+
     public void removeMember(HCFPlayer hcfPlayer) {
         this.members.remove(hcfPlayer);
     }
@@ -263,7 +282,7 @@ public class Faction {
         return getDefaultRank();
     }
 
-    public void ApplyPlayerRank(OfflinePlayer p, String name) {
+    public void applyPlayerRank(OfflinePlayer p, String name) {
         for (FactionRankManager.Rank rank : ranks) {
             if (Objects.equals(rank.getName(), name)) {
                 HCFPlayer hcf = HCFPlayer.getPlayer(p.getUniqueId());
@@ -274,7 +293,7 @@ public class Faction {
         }
     }
 
-    public FactionRankManager.Rank FindRankByName(String name) {
+    public FactionRankManager.Rank getRankByName(String name) {
         for (FactionRankManager.Rank rank : ranks) {
             if (rank.getName().equalsIgnoreCase(name)) {
                 return rank;

@@ -65,7 +65,7 @@ public class FactionRankManager {
 //    }
 
     public static boolean rename(Faction faction, String oldName, String newName) {
-        Rank rank = faction.FindRankByName(oldName);
+        Rank rank = faction.getRankByName(oldName);
         if (oldName.equalsIgnoreCase(newName))
             return false;
         rank.setName(newName);
@@ -77,7 +77,7 @@ public class FactionRankManager {
     }
 
     public static void delete(Faction faction, String name) {
-        Rank rank = faction.FindRankByName(name);
+        Rank rank = faction.getRankByName(name);
         for (Player player : faction.getOnlineMembers()) {
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
             if (hcfPlayer.getRank().getName().equalsIgnoreCase(rank.getName())) {

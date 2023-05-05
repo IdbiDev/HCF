@@ -81,6 +81,7 @@ public enum Messages {
 
     faction_rally("Factions","%prefix% &2&o%player% &ahas set a rally point at &2&o%location% &a(&2&o%world%&a)"),
     faction_unrally("Factions","%prefix% &eYour factions rally point has been removed!"),
+    faction_rally_waypoint_name("Factions", "Rally"),
 
     // Commands
     faction_creation("Factions","%prefix% &2&o%faction_name% &awas created by &2&o%player%&a!"),
@@ -136,6 +137,8 @@ public enum Messages {
     //    zone_friendly("&a%zone%"),
 //    zone_enemy("&c%zone%"),
     wilderness("Claims","&2Wilderness"),
+    warzone("Claims","&4Warzone"),
+    spawn("Claims","&aSpawn"),
     cant_find_page("Server","&cThis page does not exists!"),
 
     // Faction messages
@@ -275,10 +278,12 @@ public enum Messages {
     error_while_executing("Server","%prefix% &4&lAn error occurred while running the command! Please check the LOG file, and report it!"),
     kill_message_faction("Factions","&4&l%killer%&f killed &4&l%victim%&f. &7[&eNew DTR: &a&l%dtr%&7]"),
 
-    enchant_confirm_button("&aConfirm"),
-    enchant_cancel_button("&cCancel"),
-    enchant_not_enough_xp("%prefix% &cYou don't have enough exp!"),
-    confirm_button_lore("&6Costs: &e&n%xp_level% level"),
+    server_is_full("Server", "&cThe server is full!"),
+
+    enchant_confirm_button("Enchant","&aConfirm"),
+    enchant_cancel_button("Enchant","&cCancel"),
+    enchant_not_enough_xp("Enchant","%prefix% &cYou don't have enough exp!"),
+    confirm_button_lore("Enchant","&6Costs: &e&n%xp_level% level"),
 
     bard_dont_have_enough_energy("Classes","%prefix% &cYou don't have enough energy to activate this. &4&l[Required %amount%]"),
 
@@ -293,6 +298,9 @@ public enum Messages {
 
     claim_pos_start("Claims","%prefix% &bClaim start position: &a&n%location%"),
     claim_pos_end("Claims","%prefix% &bClaim end position: &a&n%location%"),
+
+    waypoint_enabled("Waypoints", "%prefix% &aYou successfully enabled waypoints!"),
+    waypoint_disabled("Waypoints", "%prefix% &cYou successfully disabled waypoints!"),
 
     // KOTH SOTW EOTW
     enable_eotw("Eotw","%prefix% &aEOTW started!"),
@@ -315,7 +323,15 @@ public enum Messages {
     koth_start_subtitle("Koth","&6&o%faction_name%"),
     koth_failed_not_valid_claim("Koth","%prefix% &cThis faction does not have a valid KOTH claim!"),
 
-    warzone_no_permission("Factions","%prefix% &eYou can't do this in the Warzone!"),
+    lives_get("Lives", "%prefix% &2&o%player% &ahas &2&o%lives%&a lives."),
+    lives_take_executor("Lives", "%prefix% &aYou removed from &2&o%player% &2&o%lives% &alives. Player has &2&o%leftlives%&a lives left!"),
+    lives_take_player("Lives", "%prefix% &2&o%executor%&a removed &2&o%lives%&a from you. &alives. You have &2&o%leftlives%&a lives left!"),
+    lives_give_executor("Lives", "%prefix% &aYou gave &2&o%lives% &alives to &2&o%player%&a. Player has &2&o%leftlives%&a lives now."),
+    lives_give_player("Lives", "%prefix% &2&o%executor%&a gave you &2&o%lives% &alive. You have &2&o%leftlives% &alive now!"),
+    lives_set_executor("Lives", "%prefix% &aYou set &2&o%player%&a lives to &2&o%lives%&a."),
+    lives_set_player("Lives", "%prefix% &2&o%executor%&a set your lives to &2&o%lives%&a."),
+
+    warzone_no_permission("Server","%prefix% &eYou can't do this in the Warzone!"),
 
     // GUI
     gui_rank_created("Gui","%prefix% &bYou have successfully created rank: &b&o%rank%!"),
@@ -352,6 +368,10 @@ public enum Messages {
     vanish_enabled("Admin","%prefix% &aVanish enabled!"),
     vanish_disable("Admin","%prefix% &cVanish disabled!"),
     not_in_duty("Admin","%prefix% &cYou are not in staff duty!"),
+
+    // Mountain
+    mountain_respawned("Mountain","%prefix% &eRespawned all the blocks for &cMountain&e!"),
+    mountain_remaining("Mountain","%prefix% &cMountain&e respawn in %time%!"),
 
     // Custom timers
     customt_created("CustomTimers","%prefix% §aCustom timer successfully created!"),
@@ -537,10 +557,10 @@ public enum Messages {
     }
 
     public Messages language(Player p) {
-        String language = MessagesTool.getPlayerLanguage(p);
+        String language = HCFPlayer.getPlayer(p).getLanguage();
         String prefix = MessagesTool.getLanguageMessages(language).getString("prefix");
         if (this.isString()) {
-            String configMessage = MessagesTool.getLanguageMessages(language).getString(this.toString());
+            String configMessage = MessagesTool.getLanguageMessages(language).getString(getPath());
             if (configMessage != null) {
                 this.playerMessage = ChatColor.translateAlternateColorCodes('&', configMessage.replace("%prefix%", prefix));
                 return this;
@@ -548,7 +568,7 @@ public enum Messages {
                 //MessagesTool.updateMessageFiles();
         } else {
             List<String> returnList = new ArrayList();
-            List<String> configList = MessagesTool.getLanguageMessages(language).getStringList(this.toString());
+            List<String> configList = MessagesTool.getLanguageMessages(language).getStringList(getPath());
 
             if (!configList.isEmpty()) {
                 for (String message : configList) {
@@ -572,18 +592,18 @@ public enum Messages {
         return this;
     }
     public Messages language(HCFPlayer hcfPlayer) {
-        String language = MessagesTool.getPlayerLanguage(hcfPlayer);
+        String language = hcfPlayer.getLanguage();
         String prefix = MessagesTool.getLanguageMessages(language).getString("prefix");
         if (this.isString()) {
-            String configMessage = MessagesTool.getLanguageMessages(language).getString(this.toString());
+            String configMessage = MessagesTool.getLanguageMessages(language).getString(getPath());
             if (configMessage != null) {
                 this.playerMessage = ChatColor.translateAlternateColorCodes('&', configMessage.replace("%prefix%", prefix));
                 return this;
             } else {}
             //MessagesTool.updateMessageFiles();
         } else {
-            List<String> returnList = new ArrayList();
-            List<String> configList = MessagesTool.getLanguageMessages(language).getStringList(this.toString());
+            List<String> returnList = new ArrayList<String>();
+            List<String> configList = MessagesTool.getLanguageMessages(language).getStringList(getPath());
 
             if (!configList.isEmpty()) {
                 for (String message : configList) {
@@ -651,6 +671,16 @@ public enum Messages {
         return this;
     }
 
+    public Messages setLives(int lives) {
+        playerMessage = playerMessage.replace("%lives%", lives + "");
+        return this;
+    }
+
+    public Messages setLeftLives(int lives) {
+        playerMessage = playerMessage.replace("%leftlives%", lives + "");
+        return this;
+    }
+
     public Messages setTime(String time) {
         playerMessage = playerMessage.replace("%time%", time);
         return this;
@@ -701,6 +731,11 @@ public enum Messages {
 
     public Messages setItem(ItemStack item) {
         playerMessage = playerMessage.replace("%item%", (item.getType().name().charAt(0) + item.getType().name().substring(1).toLowerCase()).replace("_", " "));
+        return this;
+    }
+
+    public Messages setItem(String item) {
+        playerMessage = playerMessage.replace("%item%", item);
         return this;
     }
 
@@ -798,6 +833,10 @@ public enum Messages {
         playerMessage = playerMessage.replace("%executor%", executor.getName());
         return this;
     }
+    public Messages setExecutor(String executor) {
+        playerMessage = playerMessage.replace("%executor%", executor);
+        return this;
+    }
 
     public Messages setDeath(Player victim, Player killer) {
         playerMessage = playerMessage.replace("%victim%", victim.getName()).replace("%killer%", killer.getName());
@@ -857,14 +896,9 @@ public enum Messages {
 
             if (this.section == null) {
                 if (this.comments == null)
-                    msgs.set(this.toString(), obj);
+                    msgs.set(getPath(), obj);
                 else
-                    msgs.set(this.toString(), obj, this.comments);
-            } else {
-                if (this.comments == null)
-                    msgs.set(section + "." + this, obj);
-                else
-                    msgs.set(section + "." + this, obj, this.comments);
+                    msgs.set(getPath(), obj, this.comments);
             }
 
             save();
@@ -872,9 +906,16 @@ public enum Messages {
             return;
         }
 
-        this.message = msgs.getString((this.section == null ? "" : this.section + ".") + this);
+        this.message = msgs.getString(getPath());
 
         this.thisPrefix = msgs.getString("prefix");
+    }
+
+    private String getPath() {
+        if(this.section == null)
+            return this.toString();
+        else
+            return this.section + "." + this;
     }
 
     public void loadOthers(SimpleConfig config) {

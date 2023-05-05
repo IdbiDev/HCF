@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public class Alley_MainInventory {
+public class Ally_MainInventory {
 
     public static Inventory inv(Player p) {
         Inventory inv = Bukkit.createInventory(null, 3 * 9, "§8Manage Allies");

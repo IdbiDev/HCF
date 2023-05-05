@@ -21,22 +21,22 @@ public class SpawnClaim implements Listener {
         if (!e.getItem().isSimilar(Claiming.Wands.claimWand())) {
             return;
         }
-        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.SPAWN) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             p.sendMessage(Messages.claim_pos_end.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
             Claiming.setEndPosition(1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             e.setCancelled(true);
         }
-        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.SPAWN) {
+        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             p.sendMessage(Messages.claim_pos_start.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
             e.setCancelled(true);
             Claiming.setStartPosition(1, e.getClickedBlock().getX(), e.getClickedBlock().getZ());
         }
         // Elvetés
-        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking() && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.SPAWN) {
+        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking()) {
             Playertools.cancelSpawnClaim(p);
         }
         // Elfogadás
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking() && player.getClaimType() == HCF_Claiming.ClaimTypes.SPAWN) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getPlayer().isSneaking()) {
             Playertools.finishSpawn(p);
 //                if (HCF_Claiming.FinishClaiming(player.faction.id, e.getPlayer(), HCF_Claiming.ClaimAttributes.NORMAL)) {
 //                    e.getPlayer().sendMessage(Messages.faction_claim_accept.language(p).queue());

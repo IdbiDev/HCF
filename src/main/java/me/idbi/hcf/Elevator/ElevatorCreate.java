@@ -1,5 +1,8 @@
 package me.idbi.hcf.Elevator;
 
+import me.idbi.hcf.CustomFiles.Configs.Config;
+import me.idbi.hcf.Tools.Objects.HCFPermissions;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
@@ -15,9 +18,12 @@ public class ElevatorCreate implements Listener {
 //            return;
 //        }
 
+        if(!Config.ElevatorEnabled.asBoolean()) return;
+        String title = Config.ElevatorTitle.asStr();
         if (line0 != null) {
-            if (line0.equalsIgnoreCase("[elevator]")) {
-                e.setLine(0, "§9[Elevator]");
+            if(!HCFPermissions.elevator_create.check(e.getPlayer())) return;
+            if (line0.equalsIgnoreCase(ChatColor.stripColor(title)) || line0.equalsIgnoreCase(title)) {
+                e.setLine(0, title);
             }
 
             if (line1.equalsIgnoreCase("up")) {

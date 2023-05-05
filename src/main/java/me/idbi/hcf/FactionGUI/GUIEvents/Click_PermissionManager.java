@@ -99,7 +99,7 @@ public class Click_PermissionManager implements Listener {
             Faction f = Playertools.getPlayerFaction((Player) e.getWhoClicked());
 
             assert f != null;
-            FactionRankManager.Rank rank = f.FindRankByName(rankName);
+            FactionRankManager.Rank rank = f.getRankByName(rankName);
 
             for (Map.Entry<FactionRankManager.Permissions, Boolean> hashMap : getPermissions(e.getInventory()).entrySet()) {
                 rank.setPermission(hashMap.getKey(), hashMap.getValue());

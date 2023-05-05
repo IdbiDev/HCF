@@ -56,6 +56,7 @@ public class KickConfirm implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) return;
 
         if (e.getCurrentItem().isSimilar(confirm())) {
+            Player p = (Player) e.getWhoClicked();
             String name = e.getView().getTitle().substring(7);
 
             FactionKickCommand.kick((Player) e.getWhoClicked(), name);

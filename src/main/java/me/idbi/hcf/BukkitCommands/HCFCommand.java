@@ -50,7 +50,7 @@ public abstract class HCFCommand implements CommandExecutor {
             }
 
         } catch (ArrayIndexOutOfBoundsException e) {
-            sender.sendMessage("§cUsage: " + getCommandInfo().syntax());
+            printUsage(sender);
         }
         return true;
     }
@@ -77,5 +77,9 @@ public abstract class HCFCommand implements CommandExecutor {
             return cds.get(p) > System.currentTimeMillis();
         }
         return false;
+    }
+
+    public void printUsage(CommandSender p) {
+        p.sendMessage("§cUsage: " + getCommandInfo().syntax());
     }
 }

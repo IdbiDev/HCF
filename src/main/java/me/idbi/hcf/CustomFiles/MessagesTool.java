@@ -33,7 +33,7 @@ public class MessagesTool {
         //return ConfigManager.getSimpleConfigManager().getNewConfig("gui_messages/messages_" + language + ".yml");
     }
 
-    public static String getPlayerLanguage(Player p) {
+    /*public static String getPlayerLanguage(Player p) {
         if(Main.currentLanguages.containsKey(p.getUniqueId())) {
             return Main.currentLanguages.get(p.getUniqueId());
         }
@@ -44,13 +44,13 @@ public class MessagesTool {
             return Main.currentLanguages.get(hcfPlayer.getUUID());
         }
         return Config.DefaultLanguage.asStr();
-    }
+    }*/
 
-    public static void setPlayerLanguage(Player p, String language) {
+    /*public static void setPlayerLanguage(Player p, String language) {
         if (Main.availableLanguages.contains(language)) {
             Main.currentLanguages.put(p.getUniqueId(), language);
         }
-    }
+    }*/
 
     public static void updateMessageFiles() {
         File[] files = new File(m.getDataFolder() + "\\messages").listFiles();
