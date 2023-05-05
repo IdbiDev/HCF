@@ -1,5 +1,6 @@
 package me.idbi.hcf.Commands.LivesCommand;
 
+import com.comphenix.protocol.PacketType;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
@@ -44,14 +45,16 @@ public class LivesGetCommand extends SubCommand {
         if(target != null) {
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(target.getUniqueId());
             int currentLives = hcfPlayer.getLives();
-            if(cs instanceof Player p) {
+            if(cs instanceof Player) {
+                Player p = (Player) cs;
                 p.sendMessage(Messages.lives_get.language(p).setPlayer(target).setLives(currentLives).queue());
             } else {
                 cs.sendMessage(Messages.lives_get.setPlayer(target).setLives(currentLives).queue());
             }
 
         } else {
-            if(cs instanceof Player p) {
+            if(cs instanceof Player) {
+                Player p = (Player) cs;
                 p.sendMessage(Messages.not_found_player.language(p).queue());
             } else {
                 cs.sendMessage(Messages.not_found_player.queue());

@@ -9,6 +9,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
+import java.util.Objects;
+
 public class SubClaimBreakListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -30,8 +32,8 @@ public class SubClaimBreakListener implements Listener {
         } else if(e.getBlock().getType() == Material.WALL_SIGN) {
             Sign sign = (Sign) e.getBlock().getState();
             if(SubClaimTool.isSubClaim(sign)) {
-                if(sign.getLine(0).isBlank()) return;
-                if(sign.getLine(1).isBlank()) return;
+                if(Objects.equals(sign.getLine(0), "")) return;
+                if(Objects.equals(sign.getLine(1), "")) return;
                 Claiming.Faction_Claim c = Claiming.sendClaimByXZ(e.getPlayer().getWorld(),e.getBlock().getX(),e.getBlock().getZ());
                 if(!SubClaimTool.hasAccess(e.getPlayer(), sign.getLine(1),c.getFaction())) {
                     e.setCancelled(true);

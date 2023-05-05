@@ -23,11 +23,13 @@ public class AnvilEvent implements Listener {
         if (!e.isCancelled()) {
 
 // not really necessary
-            if (e.getWhoClicked() instanceof Player player) {
+            if (e.getWhoClicked() instanceof Player) {
+                Player player = (Player) e.getWhoClicked();
                 Inventory inv = e.getInventory();
 
 // see if we are talking about an anvil here
-                if (inv instanceof AnvilInventory anvil) {
+                if (inv instanceof AnvilInventory) {
+                    AnvilInventory anvil = (AnvilInventory) inv;
                     InventoryView view = e.getView();
                     int rawSlot = e.getRawSlot();
 
@@ -68,7 +70,8 @@ public class AnvilEvent implements Listener {
 // meta data could be null
                                         if (meta != null) {
                                             // get the repairable interface to obtain the repair cost
-                                            if (meta instanceof Repairable repairable) {
+                                            if (meta instanceof Repairable) {
+                                                Repairable repairable = (Repairable) meta;
                                                 int repairCost = repairable.getRepairCost();
 
 // can the player afford to repair the item

@@ -25,7 +25,7 @@ public class PlayerRespawn implements Listener {
                 Integer.parseInt(str.split(" ")[3]),
                 Integer.parseInt(str.split(" ")[4])
         );*/
-        e.getPlayer().teleport(Main.spawnLocation);
+        e.getPlayer().teleport(Main.getSpawnLocation());
         e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
         e.getPlayer().setFoodLevel(20);
         e.getPlayer().setFallDistance(0);

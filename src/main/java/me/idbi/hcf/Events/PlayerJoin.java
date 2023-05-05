@@ -62,7 +62,7 @@ public class PlayerJoin implements Listener {
                     Integer.parseInt(str.split(" ")[3]),
                     Integer.parseInt(str.split(" ")[4])
             );*/
-            e.getPlayer().teleport(Main.spawnLocation);
+            e.getPlayer().teleport(Main.getSpawnLocation());
             //pvpTimer
             if(!Main.SOTWEnabled)
                 Timers.PVP_TIMER.add(e.getPlayer());

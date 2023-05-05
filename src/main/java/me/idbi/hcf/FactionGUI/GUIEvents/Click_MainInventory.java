@@ -62,8 +62,8 @@ public class Click_MainInventory implements Listener {
         if (e.getCurrentItem() == null) return;
         if (!e.getCurrentItem().hasItemMeta()) return;
 
-        if (!(e.getWhoClicked() instanceof Player p)) return;
-
+        if (!(e.getWhoClicked() instanceof Player)) return;
+        Player p = (Player) e.getWhoClicked();
         //Player p = (Player) e.getWhoClicked();
 
         if (e.getCurrentItem().isSimilar(GUI_Items.rankManager(((Player) e.getWhoClicked())))) {

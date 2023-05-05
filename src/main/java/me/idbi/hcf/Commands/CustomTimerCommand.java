@@ -21,7 +21,8 @@ public class CustomTimerCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("customtimer")) {
-            if (sender instanceof Player p) {
+            if (sender instanceof Player) {
+                Player p = (Player) sender;
                 if (!HCFPermissions.admin_customtimer.check(p)) return false;
 
                 if (args[0].equalsIgnoreCase("create")) {

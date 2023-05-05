@@ -44,14 +44,16 @@ public class LivesCommandManager implements CommandExecutor, TabCompleter {
                     try {
                         SubCommand cmd = getSubcommands().get(i);
                         if (!cmd.isCommand(args[0])) continue;
-                        if(sender instanceof Player p) {
+                        if(sender instanceof Player) {
+                            Player p = (Player) sender;
                             if (!cmd.hasPermission(p)) {
                                 p.sendMessage(Messages.no_permission.language(p).queue());
                                 return true;
                             }
                         }
 
-                        if(sender instanceof Player p) {
+                        if(sender instanceof Player) {
+                            Player p = (Player) sender;
                             if (cmd.hasCooldown(p)) {
                                 long cooldown = SubCommand.commandCooldowns.get(cmd).get(p);
                                 p.sendMessage(Messages.command_cooldown.language(p)
@@ -65,14 +67,19 @@ public class LivesCommandManager implements CommandExecutor, TabCompleter {
                     } catch (IndexOutOfBoundsException e) {
                         sender.sendMessage("§cUsage: " + getSubcommands().get(i).getSyntax());
                         e.printStackTrace();
-                        if(sender instanceof Player p)
+                        if(sender instanceof Player){
+                            Player p = (Player) sender;
                             sender.sendMessage(Messages.missing_argument.language(p).queue());
+                        }
                         else
                             sender.sendMessage(Messages.missing_argument.queue());
                     } catch (Exception e) {
                         e.printStackTrace();
-                        if(sender instanceof Player p)
+                        if(sender instanceof Player){
+                            Player p = (Player) sender;
                             sender.sendMessage(Messages.error_while_executing.language(p).queue());
+                        }
+
                         else sender.sendMessage(Messages.error_while_executing.queue());
                     }
                 }

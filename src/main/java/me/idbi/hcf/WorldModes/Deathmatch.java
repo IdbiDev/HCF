@@ -26,7 +26,7 @@ public class Deathmatch implements Gamemode {
         WorldBorder border = world.getWorldBorder();
         border.setSize(Config.WorldBorderSize.asInt());
         int EOTWTIME = Config.EOTWDuration.asInt() * 1000;
-        border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.spawnLocation);
+        border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.getSpawnLocation());
         Claiming.Faction_Claim spawnClaim = null;
         try {
             spawnClaim = Main.factionCache.get(1).getClaims().get(0);
@@ -79,7 +79,7 @@ public class Deathmatch implements Gamemode {
 
             WorldBorder border = world.getWorldBorder();
             //border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
-            border.setCenter(Main.spawnLocation);
+            border.setCenter(Main.getSpawnLocation());
             border.setSize(Config.WorldBorderSize.asInt());
 
 

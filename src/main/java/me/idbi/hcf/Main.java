@@ -301,6 +301,16 @@ public final class Main extends JavaPlugin implements Listener {
             Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
             Bukkit.getServer().shutdown();
         }
+        if (Bukkit.getWorld(Config.EndName.asStr()) == null) {
+            Main.sendCmdMessage(ChatColor.DARK_RED + "End not found!");
+            Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
+            Bukkit.getServer().shutdown();
+        }
+        if (Bukkit.getWorld(Config.NetherName.asStr()) == null) {
+            Main.sendCmdMessage(ChatColor.DARK_RED + "Nether not found!");
+            Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
+            Bukkit.getServer().shutdown();
+        }
         if (Bukkit.getWorld(Config.WorldName.asStr()) == null) {
             Main.sendCmdMessage(ChatColor.DARK_RED + "World not found!");
             Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
@@ -346,6 +356,10 @@ public final class Main extends JavaPlugin implements Listener {
 
     private static Economy econ = null;
 
+    public static Location getSpawnLocation(){
+        World world = Bukkit.getWorld(Config.WorldName.asStr());
+        return world.getSpawnLocation();
+    }
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;

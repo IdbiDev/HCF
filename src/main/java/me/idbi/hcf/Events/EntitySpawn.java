@@ -9,7 +9,7 @@ public class EntitySpawn implements Listener {
     @EventHandler
     public static void onEntitySpawn(CreatureSpawnEvent e) {
         //e.getEntityType().name()
-        if(HCFRules.getRules().isEntityLimited(e.getEntity())) {
+        if(HCFRules.getRules().isEntityLimited(e.getEntity(),e.getEntity().getWorld())) {
             e.setCancelled(true);
         }
     }

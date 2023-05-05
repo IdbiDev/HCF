@@ -29,7 +29,7 @@ public class EOTW implements Gamemode {
         WorldBorder border = world.getWorldBorder();
         border.setSize(Config.WorldBorderSize.asInt());
 
-        border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.spawnLocation);
+        border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.getSpawnLocation());
         Claiming.Faction_Claim spawnClaim = null;
         try {
             spawnClaim = Main.factionCache.get(1).getClaims().get(0);
@@ -88,7 +88,7 @@ public class EOTW implements Gamemode {
             WorldBorder border = world.getWorldBorder();
             border.setSize(Config.WorldBorderSize.asInt());
 
-            border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.spawnLocation);
+            border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.getSpawnLocation());
             Claiming.Faction_Claim spawnClaim = null;
             try {
                 spawnClaim = Main.factionCache.get(1).getClaims().get(0);

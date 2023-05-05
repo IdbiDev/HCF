@@ -14,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.material.Directional;
 
+import java.util.Objects;
+
 public class SubClaimSignListener implements Listener {
 
     @EventHandler
@@ -21,7 +23,7 @@ public class SubClaimSignListener implements Listener {
         String line0 = e.getLine(0);
         String line1 = e.getLine(1);
 
-        if(!e.getLine(2).isBlank() || !e.getLine(3).isBlank()) return;
+        if(!Objects.equals(e.getLine(2), "") || !(Objects.equals(e.getLine(3), ""))) return;
 
         HCFPlayer player = HCFPlayer.getPlayer(e.getPlayer());
         Faction faction = player.getFaction();
@@ -58,7 +60,7 @@ public class SubClaimSignListener implements Listener {
 
 
                 e.setLine(0, Config.SubClaimTitle.asStr());
-                if(line1 != null && !line1.isBlank()) {
+                if(line1 != null && !(line1=="")) {
                     FactionRankManager.Rank signRank = faction.getRank(line1);
                     if(signRank.getPriority() <= player.getRank().getPriority()) {
                         e.setLine(1, signRank.getName());

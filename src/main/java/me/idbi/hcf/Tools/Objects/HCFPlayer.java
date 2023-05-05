@@ -443,7 +443,7 @@ public class HCFPlayer {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        p.teleport(Main.spawnLocation);
+                        p.teleport(Main.getSpawnLocation());
                     }
                 }.runTaskLater(Main.getPlugin(Main.class), 2L);
             }

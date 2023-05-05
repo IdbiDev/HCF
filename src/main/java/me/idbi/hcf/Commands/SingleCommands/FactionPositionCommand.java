@@ -24,7 +24,8 @@ public class FactionPositionCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (sender instanceof Player p) {
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
             if(!HCFPermissions.faction_call.check(p)) return false;
             if (Playertools.getPlayerFaction(p) == null) {
                 p.sendMessage(Messages.not_in_faction.language(p).queue());

@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import lombok.Getter;
 import me.idbi.hcf.CustomFiles.LimitsFile;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -27,7 +28,7 @@ public class HCFRules {
     @Getter private HashMap<EntityType, Boolean> entityLimiter;
 
     public HCFRules() {
-        this.rules = this;
+        rules = this;
         this.blacklistedBlocks = new ArrayList<>();
         this.allyBlocks = new ArrayList<>();
         this.enchantLevels = new HashMap<>();
@@ -101,11 +102,14 @@ public class HCFRules {
         return false;
     }
 
-    public boolean isEntityLimited(Entity ent) {
-        if(!this.entityLimiter.containsKey(ent.getType())) return false;
-        return this.entityLimiter.get(ent.getType());
+//    public boolean isEntityLimited(Entity ent) {
+//        if(!this.entityLimiter.containsKey(ent.getType())) return false;
+//        return this.entityLimiter.get(ent.getType());
+//    }
+    public boolean isEntityLimited(Entity ent, World world) {
+        HCFMap map = HCFServer.getServer().getMap(world);
+        return map.getEntityLimiter().get(ent.getType());
     }
-
     public boolean isBlacklistedBlock(Block block) {
         return this.blacklistedBlocks.contains(block.getType());
     }
@@ -182,11 +186,21 @@ public class HCFRules {
             //Flame 4
             c = new Random().nextInt(5);
             switch (c) {
-                case 0 -> enchant_obj = new EnchantClass(Enchantment.ARROW_INFINITE, 1);
-                case 1 -> enchant_obj = new EnchantClass(Enchantment.FIRE_ASPECT, 1);
-                case 2 -> enchant_obj = new EnchantClass(Enchantment.SILK_TOUCH, 1);
-                case 3 -> enchant_obj = new EnchantClass(Enchantment.ARROW_FIRE, 1);
-                case 4 -> enchant_obj = new EnchantClass(Enchantment.getById(100), 1);
+                case 0:
+                    enchant_obj = new EnchantClass(Enchantment.ARROW_INFINITE, 1);
+                    break;
+                case 1:
+                    enchant_obj = new EnchantClass(Enchantment.FIRE_ASPECT, 1);
+                    break;
+                case 2:
+                    enchant_obj = new EnchantClass(Enchantment.SILK_TOUCH, 1);
+                    break;
+                case 3:
+                    enchant_obj = new EnchantClass(Enchantment.ARROW_FIRE, 1);
+                    break;
+                case 4:
+                    enchant_obj = new EnchantClass(Enchantment.getById(100), 1);
+                    break;
             }
         } else if (a <= 0.5) {
             //Efficiency
@@ -195,12 +209,12 @@ public class HCFRules {
             c = new Random().nextInt(6);
             int lvl = (int) (Math.random() * (2 - 1 + 1) + 1);
             switch (c) {
-                case 0 -> enchant_obj = new EnchantClass(Enchantment.DIG_SPEED, lvl);
-                case 1 -> enchant_obj = new EnchantClass(Enchantment.ARROW_DAMAGE, lvl);
-                case 2 -> enchant_obj = new EnchantClass(Enchantment.KNOCKBACK, lvl);
-                case 3 -> enchant_obj = new EnchantClass(Enchantment.ARROW_KNOCKBACK, lvl);
-                case 4 -> enchant_obj = new EnchantClass(Enchantment.DURABILITY, lvl);
-                case 5 -> enchant_obj = new EnchantClass(Enchantment.getById(100), lvl);
+                case 0: enchant_obj = new EnchantClass(Enchantment.DIG_SPEED, lvl); break;
+                case 1: enchant_obj = new EnchantClass(Enchantment.ARROW_DAMAGE, lvl); break;
+                case 2: enchant_obj = new EnchantClass(Enchantment.KNOCKBACK, lvl); break;
+                case 3: enchant_obj = new EnchantClass(Enchantment.ARROW_KNOCKBACK, lvl); break;
+                case 4: enchant_obj = new EnchantClass(Enchantment.DURABILITY, lvl); break;
+                case 5: enchant_obj = new EnchantClass(Enchantment.getById(100), lvl); break;
             }
         } else {
             //Protection

@@ -25,7 +25,7 @@ public class SOTW implements Gamemode {
         border.setSize(Config.WorldBorderSize.asInt());
 
         //border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
-        border.setCenter(Main.spawnLocation);
+        border.setCenter(Main.getSpawnLocation());
         Main.sendCmdMessage("&1&bSOTW STARTED Successfully!");
         Main.SOTWStarted = System.currentTimeMillis() + SOTWTime;
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -58,7 +58,7 @@ public class SOTW implements Gamemode {
 
             WorldBorder border = world.getWorldBorder();
             //border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
-            border.setCenter(Main.spawnLocation);
+            border.setCenter(Main.getSpawnLocation());
             border.setSize(Config.WorldBorderSize.asInt());
 
 

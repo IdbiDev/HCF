@@ -10,6 +10,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+
 public class SubClaimTool {
 
     public static boolean hasAccess(Player p, String rankName, Faction faction) {
@@ -32,12 +34,10 @@ public class SubClaimTool {
         String line2 = sign.getLine(2);
         String line3 = sign.getLine(3);
 
-        if(!line2.isBlank() || !line3.isBlank()) return false;
+        if(!(Objects.equals(line2, "")) || !(Objects.equals(line3, ""))) return false;
 
-        if(!line0.isBlank()) {
-            if (line0.replace("&", "§").equalsIgnoreCase(Config.SubClaimTitle.asStr())) {
-                return true;
-            }
+        if(!(Objects.equals(line0, ""))) {
+            return line0.replace("&", "§").equalsIgnoreCase(Config.SubClaimTitle.asStr());
         }
         return false;
     }

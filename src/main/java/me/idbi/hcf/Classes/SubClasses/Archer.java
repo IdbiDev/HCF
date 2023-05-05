@@ -20,7 +20,7 @@ public class Archer implements HCF_Class {
     public final boolean archerTagEnabled = ClassConfig.ArcherTagEnabled.asBoolean();
     public final int maxArcherInFaction = ClassConfig.MaxArcherInFaction.asInt();
 
-    private final HashMap<PotionEffectType, Integer> effect = new HashMap<>() {{
+    private final HashMap<PotionEffectType, Integer> effect = new HashMap<PotionEffectType,Integer>() {{
         put(PotionEffectType.SPEED, 2);
         put(PotionEffectType.REGENERATION, 0);
         put(PotionEffectType.DAMAGE_RESISTANCE, 2);

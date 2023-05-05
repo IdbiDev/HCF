@@ -17,7 +17,10 @@ public class EntDamageByEnt implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent e) {
-        if (e.getDamager() instanceof Player damager && e.getEntity() instanceof Player victim) {
+
+        if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
+            Player damager = (Player) e.getDamager();
+            Player victim = (Player) e.getEntity();
             // Check Friendly Fire
             HCFPlayer damagerplayer = HCFPlayer.getPlayer(damager);
             HCFPlayer victimplayer = HCFPlayer.getPlayer(victim);
