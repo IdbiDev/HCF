@@ -15,8 +15,6 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.Metadatable;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -36,10 +34,10 @@ public class Playertools {
     private static final Connection con = Main.getConnection();
 
 
-    public static void LoadPlayer(Player player) {
+   /* public static void LoadPlayer(Player player) {
 
         // Loading player From SQL
-        /*HashMap<String, Object> playerMap = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid = '?'", player.getUniqueId().toString());
+        HashMap<String, Object> playerMap = SQL_Connection.dbPoll(con, "SELECT * FROM members WHERE uuid = '?'", player.getUniqueId().toString());
         if (!playerMap.isEmpty()) {
             Main.player_cache.put(player.getUniqueId(), new PlayerObject());
             setMetadata(player, "factionid", playerMap.get("faction"));
@@ -90,9 +88,9 @@ public class Playertools {
             PlayerStatistic m = new PlayerStatistic(jsonComp);
             m.save(player);
             //SQL_Connection.dbExecute(con, "INSERT INTO playerstatistics SET uuid='?',StartDate='?',LastLogin='?'", player.getUniqueId().toString(), new Date().toInstant().toString(),new Date().toInstant().toString());
-            LoadPlayer(player);*/
+            LoadPlayer(player);
         // }
-    }
+    }*/
 
     //OnJoin
     public static void loadOnlinePlayer(Player player) {
@@ -104,14 +102,6 @@ public class Playertools {
             loadOnlinePlayer(player);
             return;
         }
-//        AsyncSQL.dbPollAsync(con,"SELECT * FROM members WHERE uuid='?'",player.getUniqueId().toString()).thenAcceptAsync(value -> {
-//            System.out.println("Empty!1231231321");
-//            if(value.isEmpty()) {
-//                System.out.println("Empty!");
-//                SQL_Connection.dbExecute(con, "INSERT INTO members SET name='?',uuid='?',money='?'", player.getName(), player.getUniqueId().toString(),Config.default_balance.asInt() + "");
-//                //HCFPlayer.createPlayer(player);
-//            }
-//        });
 
 
         HCFPlayer hcf = HCFPlayer.getPlayer(player);
@@ -194,22 +184,22 @@ public class Playertools {
     }
 
     //Reload / Restart / Mindig létezik
-    public static void cachePlayer(UUID uuid) {
-        SQL_Async.dbPollAsync(con, "SELECT * FROM members WHERE uuid='?'", uuid.toString()).thenAcceptAsync(playerMap -> {
-            if (!playerMap.isEmpty()) {
-                HCFPlayer hcf = new HCFPlayer(
-                        uuid,
-                        (int) playerMap.get("kills"),
-                        (int) playerMap.get("deaths"),
-                        Main.factionCache.get((int) playerMap.get("faction")),
-                        (int) playerMap.get("money"),
-                        new PlayerStatistic(new JSONObject(playerMap.get("statistics").toString())),
-                        playerMap.get("rank").toString(),
-                        playerMap.get("language").toString(),0
-                );
-            }
-        });
-    }
+//    public static void cachePlayer(UUID uuid) {
+//        SQL_Async.dbPollAsync(con, "SELECT * FROM members WHERE uuid='?'", uuid.toString()).thenAcceptAsync(playerMap -> {
+//            if (!playerMap.isEmpty()) {
+//                HCFPlayer hcf = new HCFPlayer(
+//                        uuid,
+//                        (int) playerMap.get("kills"),
+//                        (int) playerMap.get("deaths"),
+//                        Main.factionCache.get((int) playerMap.get("faction")),
+//                        (int) playerMap.get("money"),
+//                        new PlayerStatistic(new JSONObject(playerMap.get("statistics").toString())),
+//                        playerMap.get("rank").toString(),
+//                        playerMap.get("language").toString(),0
+//                );
+//            }
+//        });
+//    }
 
     public static List<Player> getPlayersInDistance(Player p, double distance) {
         List<Player> players = new ArrayList<>();
@@ -307,16 +297,6 @@ public class Playertools {
     public static void setPlayerBalance(Player p, int amount) {
         HCFPlayer.getPlayer(p).setMoney(amount);
     }
-
-
-    public static void setEntityData(Metadatable entity, String key, Object value) {
-        entity.setMetadata(key, new FixedMetadataValue(Main.getPlugin(Main.class), value));
-    }
-
-    public static String getEntityData(Metadatable entity, String key) {
-        return entity.getMetadata(key).get(0).asString();
-    }
-
 
     public static void cacheFactionClaims() {
         try {
@@ -510,9 +490,7 @@ public class Playertools {
     }
 
     public static Location getSpawn() {
-        String[] spawnLocs = Config.SpawnLocation.asStr().split(" ");
-        Integer[] ints = getInts(spawnLocs);
-        return new Location(Bukkit.getWorld(Config.WorldName.asStr()), ints[0], ints[1], ints[2], ints[3], ints[4]);
+        return spawnLocation;
     }
 
     public static Integer[] getInts(String[] string) {
@@ -611,7 +589,7 @@ public class Playertools {
             sortedMap.put(rank.getPriority(), rank);
         }
 
-        return new TreeMap<Integer, FactionRankManager.Rank>(sortedMap);
+        return new TreeMap<>(sortedMap);
     }
 
     public static boolean isTeammate(Player p, Player p2) {
@@ -622,17 +600,17 @@ public class Playertools {
         return Objects.equals(f1.getId(), f2.getId());
     }
 
-    private static Map<String, FactionRankManager.Rank> sortbykey(HashMap map) {
-        // TreeMap to store values of HashMap
-        Map<String, FactionRankManager.Rank> sorted = new TreeMap<>(map);
-
-        // Copy all data from hashMap into TreeMap
-        sorted.putAll(map);
-
-        // Display the TreeMap which is naturally sorted
-        //  hashMap
-        return sorted;
-    }
+//    private static Map<String, FactionRankManager.Rank> sortbykey(HashMap map) {
+//        // TreeMap to store values of HashMap
+//        Map<String, FactionRankManager.Rank> sorted = new TreeMap<>(map);
+//
+//        // Copy all data from hashMap into TreeMap
+//        sorted.putAll(map);
+//
+//        // Display the TreeMap which is naturally sorted
+//        //  hashMap
+//        return sorted;
+//    }
 
     public static boolean isAlly(Player player1, Player player2) {
         HCFPlayer hcf1 = HCFPlayer.getPlayer(player1);
@@ -773,7 +751,7 @@ public class Playertools {
 
     /**
      *
-     * @param loc
+     * @param loc Location
      * @return {x}, {y}, {z}
      */
     public static String formatLocation(Location loc) {
@@ -852,7 +830,7 @@ public class Playertools {
     /**
      *
      * @param str (x y z yaw pitch)
-     * @return
+     * @return Location
      */
     public static Location parseLoc(World world, String str) {
         Double[] ints = getDoubles(str.split(" "));

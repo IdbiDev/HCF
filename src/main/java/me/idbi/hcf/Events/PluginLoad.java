@@ -1,7 +1,6 @@
 package me.idbi.hcf.Events;
 
 import me.idbi.hcf.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginEnableEvent;

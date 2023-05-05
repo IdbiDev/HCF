@@ -1,6 +1,5 @@
 package me.idbi.hcf.Commands.AllyCommands;
 
-import me.idbi.hcf.ClickableMessages.Clickable_Join;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.FactionRankManager;

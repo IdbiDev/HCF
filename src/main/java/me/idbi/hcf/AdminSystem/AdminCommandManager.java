@@ -10,8 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class AdminCommandManager implements CommandExecutor {
 

@@ -11,7 +11,6 @@ import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
-import java.util.HashMap;
 
 public class FactionWithdrawCommand extends SubCommand {
     boolean transaction;

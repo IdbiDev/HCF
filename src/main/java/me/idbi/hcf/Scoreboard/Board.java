@@ -1,9 +1,7 @@
 package me.idbi.hcf.Scoreboard;
 
-import com.comphenix.protocol.PacketType;
 import lombok.Getter;
 import lombok.Setter;
-import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.SubClasses.Miner;
 import me.idbi.hcf.CustomFiles.BoardFile;
 import me.idbi.hcf.Main;

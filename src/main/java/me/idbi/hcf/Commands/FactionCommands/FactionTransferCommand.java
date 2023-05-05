@@ -11,7 +11,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
-import java.util.HashMap;
 
 public class FactionTransferCommand extends SubCommand {
     public static Connection con = Main.getConnection();

@@ -1,12 +1,9 @@
 package me.idbi.hcf.Events;
 
 
-import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.Timers;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;

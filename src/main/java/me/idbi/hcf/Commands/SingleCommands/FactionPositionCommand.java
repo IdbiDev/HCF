@@ -11,15 +11,8 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.conversations.BooleanPrompt;
-import org.bukkit.conversations.Conversable;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
-import java.sql.Connection;
-import java.util.HashMap;
 import java.util.Map;
 
 public class FactionPositionCommand implements CommandExecutor {

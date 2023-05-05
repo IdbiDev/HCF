@@ -24,7 +24,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static me.idbi.hcf.Koth.Koth.GLOBAL_TIME;
 import static me.idbi.hcf.Koth.Koth.stopKoth;
@@ -295,9 +298,11 @@ public class MiscTimers {
             }
         }
         if(Timers.PVP_TIMER.nowExpire(hcfPlayer)) {
+            System.out.println("Expired PVP_TIMER");
             removeFakeWalls(p);
         }
-        if(Timers..nowExpire(hcfPlayer)) {
+        if(Timers.COMBAT_TAG.nowExpire(hcfPlayer)) {
+            System.out.println("Expired combat");
             removeFakeWalls(p);
         }
     }

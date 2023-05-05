@@ -1,15 +1,14 @@
 package me.idbi.hcf.BukkitCommands;
 
-import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Objects;
 
 public abstract class HCFCommand implements CommandExecutor {
 

@@ -2,7 +2,6 @@ package me.idbi.hcf.Commands.AllyCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;

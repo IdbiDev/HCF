@@ -1,7 +1,6 @@
 package me.idbi.hcf.SignShop;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
-import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.ChatColor;

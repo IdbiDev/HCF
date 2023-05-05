@@ -9,8 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import java.text.SimpleDateFormat;
-
 public class PlayerRollbackItems {
     /*
                 "&eDate &8» &6%date%",

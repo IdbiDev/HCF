@@ -2,7 +2,6 @@ package me.idbi.hcf.Tools.Objects;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class AllyTools {

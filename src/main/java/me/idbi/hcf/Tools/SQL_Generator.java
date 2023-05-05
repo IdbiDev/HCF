@@ -4,7 +4,10 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
 
 public class SQL_Generator {
     private static final Connection con = Main.getConnection();

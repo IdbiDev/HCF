@@ -14,8 +14,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.idbi.hcf.Tools.Playertools.getDistanceBetweenPoints2D;
-
 public class FactionMapCommand extends SubCommand {
 
     @Override

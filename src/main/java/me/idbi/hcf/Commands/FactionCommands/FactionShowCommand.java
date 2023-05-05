@@ -1,6 +1,5 @@
 package me.idbi.hcf.Commands.FactionCommands;
 
-import com.comphenix.protocol.PacketType;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;

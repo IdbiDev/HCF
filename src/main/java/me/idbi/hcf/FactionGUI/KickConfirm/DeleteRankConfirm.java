@@ -2,7 +2,6 @@ package me.idbi.hcf.FactionGUI.KickConfirm;
 
 import me.idbi.hcf.FactionGUI.GUISound;
 import me.idbi.hcf.FactionGUI.Items.GUI_Items;
-import me.idbi.hcf.FactionGUI.Menus.MemberManageInventory;
 import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;

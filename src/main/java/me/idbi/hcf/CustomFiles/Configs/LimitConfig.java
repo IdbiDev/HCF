@@ -1,12 +1,5 @@
 package me.idbi.hcf.CustomFiles.Configs;
 
-import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
-import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
-import org.bukkit.ChatColor;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public enum LimitConfig {
 
     /*Speed("Potion Limits", 2,createComment("Set this to 0 to disable the effect.")),

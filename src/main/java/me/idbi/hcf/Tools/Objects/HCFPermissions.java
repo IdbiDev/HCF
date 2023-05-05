@@ -1,6 +1,5 @@
 package me.idbi.hcf.Tools.Objects;
 
-import lombok.Getter;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import org.bukkit.entity.Player;
 

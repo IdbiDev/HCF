@@ -1,6 +1,5 @@
 package me.idbi.hcf.Commands;
 
-import me.idbi.hcf.Commands.FactionCommands.*;
 import me.idbi.hcf.Commands.KothCommands.*;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import org.bukkit.command.Command;
@@ -10,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class KothCommandManager implements CommandExecutor {
 

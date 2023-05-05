@@ -1,19 +1,18 @@
 package me.idbi.hcf.Tools;
 
 import com.lunarclient.bukkitapi.LunarClientAPI;
-import com.lunarclient.bukkitapi.nethandler.LCPacket;
-import com.lunarclient.bukkitapi.nethandler.client.LCPacketCooldown;
 import com.lunarclient.bukkitapi.object.LCWaypoint;
 import lombok.Getter;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class WaypointPlayer {

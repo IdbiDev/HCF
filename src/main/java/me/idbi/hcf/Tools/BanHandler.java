@@ -2,8 +2,6 @@ package me.idbi.hcf.Tools;
 
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import org.bukkit.entity.Player;
-
 
 import java.sql.Connection;
 import java.util.UUID;

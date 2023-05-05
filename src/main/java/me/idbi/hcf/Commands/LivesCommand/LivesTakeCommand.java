@@ -6,7 +6,6 @@ import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class LivesTakeCommand extends SubCommand {

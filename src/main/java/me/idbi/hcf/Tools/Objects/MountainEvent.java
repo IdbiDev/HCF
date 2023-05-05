@@ -6,11 +6,9 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.Tools.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class MountainEvent {

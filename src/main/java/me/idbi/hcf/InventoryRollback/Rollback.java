@@ -1,19 +1,13 @@
 package me.idbi.hcf.InventoryRollback;
 
-import com.avaje.ebeaninternal.server.transaction.log.LogTime;
 import lombok.Getter;
-import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 public class Rollback {

@@ -2,12 +2,9 @@ package me.idbi.hcf.CustomFiles;
 
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
-import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.GUIMessages.GUIMessages;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 

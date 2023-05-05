@@ -5,8 +5,6 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-
 public class FactionUnrallyCommand extends SubCommand {
 
 

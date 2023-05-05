@@ -1,9 +1,5 @@
 package me.idbi.hcf.Commands;
 
-import me.idbi.hcf.Commands.CustomClaimCommands.CustomClaimClaimCommand;
-import me.idbi.hcf.Commands.CustomClaimCommands.CustomClaimCreateCommand;
-import me.idbi.hcf.Commands.CustomClaimCommands.CustomClaimDeleteCommand;
-import me.idbi.hcf.Commands.CustomClaimCommands.CustomClaimUnclaimCommand;
 import me.idbi.hcf.Commands.LivesCommand.LivesGetCommand;
 import me.idbi.hcf.Commands.LivesCommand.LivesGiveCommand;
 import me.idbi.hcf.Commands.LivesCommand.LivesSetCommand;

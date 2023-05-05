@@ -6,8 +6,6 @@ import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-
 public class AdminDTRFreezeCommand extends SubCommand {
     @Override
     public String getName() {

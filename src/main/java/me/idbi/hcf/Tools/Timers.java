@@ -2,7 +2,6 @@ package me.idbi.hcf.Tools;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

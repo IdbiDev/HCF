@@ -1,7 +1,6 @@
 package me.idbi.hcf.Scoreboard;
 
 import me.idbi.hcf.Classes.Classes;
-import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.TabManager.TabManager;
@@ -11,15 +10,11 @@ import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 public class Scoreboards {
     private static final Main m = Main.getPlugin(Main.class);

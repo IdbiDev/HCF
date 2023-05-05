@@ -3,9 +3,9 @@ package me.idbi.hcf.Commands.FactionCommands;
 import me.idbi.hcf.ClickableMessages.ClickableFactions;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.FactionListGUI.FactionToplistInventory;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.FactionListGUI.FactionToplistInventory;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

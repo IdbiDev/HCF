@@ -7,7 +7,6 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import me.idbi.hcf.Tools.Objects.Permissions;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.entity.Player;
@@ -16,8 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-
-import static me.idbi.hcf.Tools.Playertools.isTeammate;
 
 public class ProjectileDamage implements Listener {
     Archer archer = new Archer();

@@ -17,9 +17,9 @@ import me.idbi.hcf.Economy.HCFEconomy;
 import me.idbi.hcf.Economy.VaultHook;
 import me.idbi.hcf.Koth.AutoKoth;
 import me.idbi.hcf.Koth.Koth;
+import me.idbi.hcf.Scoreboard.BoardManager;
 import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
-import me.idbi.hcf.Scoreboard.BoardManager;
 import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
@@ -306,6 +306,8 @@ public final class Main extends JavaPlugin implements Listener {
             Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
             Bukkit.getServer().shutdown();
         }
+        World world = Bukkit.getWorld(Config.WorldName.asStr());
+        spawnLocation = world.getSpawnLocation();
         System.out.println("\n" + startMessage + "\n" + startMessage2);
         System.out.println(startMessageInfo);
         World world = Bukkit.getWorld(Config.WorldName.asStr());
@@ -313,9 +315,8 @@ public final class Main extends JavaPlugin implements Listener {
         WorldBorder border = world.getWorldBorder();
         border.setSize(Config.WorldBorderSize.asInt());
 
-        Location spawnLoc = new Location(world, coords[0], coords[1], coords[2]);
-        spawnLocation = spawnLoc;
-        border.setCenter(spawnLoc);
+
+        border.setCenter(spawnLocation);
         autoKoth.startAutoKoth();
         if (Config.WarzoneSize.asInt() != 0 && !Main.factionCache.get(1).getClaims().isEmpty()) {
             //System.out.println("Bro van warzone");

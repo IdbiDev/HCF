@@ -1,22 +1,16 @@
 package me.idbi.hcf.Scoreboard;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
 import me.idbi.hcf.Tools.AdminTools;
 import me.idbi.hcf.Tools.MiscTimers;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Lag;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class AdminScoreboard {
 

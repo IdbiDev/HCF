@@ -1,7 +1,5 @@
 package me.idbi.hcf.Tools.Objects;
 
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 

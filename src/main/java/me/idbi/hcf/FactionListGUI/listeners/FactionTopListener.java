@@ -1,9 +1,9 @@
 package me.idbi.hcf.FactionListGUI.listeners;
 
-import me.idbi.hcf.Tools.Objects.Faction;
-import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.FactionListGUI.FactionToplistInventory;
 import me.idbi.hcf.FactionListGUI.FactionToplistItems;
+import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

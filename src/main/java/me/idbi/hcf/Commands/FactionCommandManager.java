@@ -1,6 +1,5 @@
 package me.idbi.hcf.Commands;
 
-import io.netty.handler.codec.redis.ArrayRedisMessage;
 import me.idbi.hcf.Commands.FactionCommands.*;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import org.bukkit.command.Command;
@@ -10,7 +9,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 

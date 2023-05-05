@@ -1,6 +1,5 @@
 package me.idbi.hcf.Events;
 
-import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.TabManager.TabManager;
@@ -13,7 +12,6 @@ import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -1,13 +1,14 @@
 package me.idbi.hcf.Tools;
 
-import java.text.*;
-
 import me.idbi.hcf.CustomFiles.Configs.Config;
-import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.Faction;
-import org.apache.commons.lang.time.*;
-import java.util.concurrent.*;
-import java.util.*;
+import org.apache.commons.lang.time.DurationFormatUtils;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class Formatter {
 
