@@ -10,14 +10,19 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.conversations.BooleanPrompt;
+import org.bukkit.conversations.Conversable;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class FactionPositionCommand implements CommandExecutor {
 
-    private static final Connection con = Main.getConnection();
 
     public static String convertLocation(Player p, Location loc) {
         return Messages.faction_player_position.language(p).setPlayer(p).setCoords(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).queue();

@@ -1,7 +1,7 @@
 package me.idbi.hcf.Events.Claim;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,21 +16,22 @@ public class BasicClaim implements Listener {
         //SIMA CLAIM
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if (e.getItem() == null) return;
-        if (!e.getItem().isSimilar(HCF_Claiming.Wands.claimWand())) {
+        if(player.getClaimType() != Claiming.ClaimTypes.FACTION) return;
+        if (!e.getItem().isSimilar(Claiming.Wands.claimWand())) {
             return;
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.FACTION) {
 
-            HCF_Claiming.setEndPosition(player.getFaction().getId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+            Claiming.setEndPosition(player.getFaction().getId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             e.setCancelled(true);
             p.sendMessage(Messages.claim_pos_end.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
 
-            if (HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
+            if (Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
 
                 e.getPlayer().sendMessage(Messages.faction_claim_price
                         .language(p)
-                        .setPrice(HCF_Claiming.calcMoneyOfArea(e.getPlayer()))
-                        .replace("%blocks%", String.valueOf(HCF_Claiming.calcBlocks(e.getPlayer())))
+                        .setPrice(Claiming.calcMoneyOfArea(e.getPlayer()))
+                        .replace("%blocks%", String.valueOf(Claiming.calcBlocks(e.getPlayer())))
                         .queue()
                 );
                 //e.getPlayer().sendMessage(Main.servername+ ChatColor.GREEN+"Fizetendő: $"+HCF_Claiming.calcMoneyOfArea(e.getPlayer()));
@@ -39,14 +40,14 @@ public class BasicClaim implements Listener {
         if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.FACTION) {
 
             e.setCancelled(true);
-            HCF_Claiming.setStartPosition(player.getFaction().getId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+            Claiming.setStartPosition(player.getFaction().getId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             p.sendMessage(Messages.claim_pos_start.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
-            if (HCF_Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
+            if (Claiming.calcMoneyOfArea(e.getPlayer()) != -1) {
 
                 e.getPlayer().sendMessage(Messages.faction_claim_price
                         .language(p)
-                        .setPrice(HCF_Claiming.calcMoneyOfArea(e.getPlayer()))
-                        .replace("%blocks%", String.valueOf(HCF_Claiming.calcBlocks(e.getPlayer())))
+                        .setPrice(Claiming.calcMoneyOfArea(e.getPlayer()))
+                        .replace("%blocks%", String.valueOf(Claiming.calcBlocks(e.getPlayer())))
                         .queue()
                 );
 
@@ -54,14 +55,15 @@ public class BasicClaim implements Listener {
             }
         }
         // Elvetés
-        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking() && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.FACTION) {
-            HCF_Claiming.removeClaiming(player.getFaction().getId());
+        if(!e.getPlayer().isSneaking()) return;
+        if (e.getAction().equals(Action.LEFT_CLICK_AIR)) {
+            Claiming.removeClaiming(player.getFaction().getId());
             e.getPlayer().getInventory().remove(e.getItem());
             e.getPlayer().sendMessage(Messages.faction_claim_decline.language(p).queue());
         }
         // Elfogadás
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking() && player.getClaimType() == HCF_Claiming.ClaimTypes.FACTION) {
-            if (HCF_Claiming.FinishClaiming(player.getFaction().getId(), e.getPlayer(), HCF_Claiming.ClaimAttributes.NORMAL)) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
+            if (Claiming.FinishClaiming(player.getFaction().getId(), e.getPlayer(), Claiming.ClaimAttributes.NORMAL)) {
                 e.getPlayer().sendMessage(Messages.faction_claim_accept.language(p).queue());
                 e.getPlayer().getInventory().remove(e.getItem());
             } else {

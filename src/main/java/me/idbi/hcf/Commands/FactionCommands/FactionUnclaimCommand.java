@@ -2,8 +2,7 @@ package me.idbi.hcf.Commands.FactionCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Tools.FactionRankManager;
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.entity.Player;
 
@@ -61,7 +60,7 @@ public class FactionUnclaimCommand extends SubCommand {
         if(player.inFaction()) {
             if(player.getRank().isLeader()) {
                 if(!player.getFaction().getClaims().isEmpty()) {
-                    double backmoney = HCF_Claiming.calculateMoneyFromClaim(player.getFaction());
+                    double backmoney = Claiming.calculateMoneyFromClaim(player.getFaction());
                     player.addMoney(Math.toIntExact(Math.round(backmoney)));
                     player.getFaction().clearClaims(); // done
                     Messages.success_unclaim.language(p).queue();

@@ -88,8 +88,7 @@ public class FactionChatCommand extends SubCommand {
             if (args[0].equalsIgnoreCase("chat")) {
                 ChatTypes newChat = ChatTypes.getByName(args[1]);
                 if (newChat == null) {
-                    // ToDo Message: This chat channel is not available!
-                    p.sendMessage("Nem elérhető a channel!");
+                    p.sendMessage(Messages.chat_unavailable.language(p).queue());
                     return;
                 }
 
@@ -124,7 +123,7 @@ public class FactionChatCommand extends SubCommand {
                 ChatTypes newChat = ChatTypes.getByName(args[1]);
                 if (newChat == null) {
                     // ToDo Message: This chat channel is not available!
-                    p.sendMessage("Nem elérhető a channel!");
+                    p.sendMessage(Messages.chat_unavailable.language(p).queue());
                     return;
                 }
 

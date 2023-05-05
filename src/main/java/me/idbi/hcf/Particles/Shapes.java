@@ -1,6 +1,6 @@
 package me.idbi.hcf.Particles;
 
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -70,10 +70,10 @@ public class Shapes {
 
     public static void Crossing(Location start, Location end, Effect effect, int res) {
 
-        HCF_Claiming.Point bottom_left = new HCF_Claiming.Point(start.getBlockX(), start.getBlockZ());
-        HCF_Claiming.Point top_right = new HCF_Claiming.Point(end.getBlockX(), end.getBlockZ());
-        HCF_Claiming.Point top_left = new HCF_Claiming.Point(top_right.getX(), bottom_left.getZ());
-        HCF_Claiming.Point bottom_right = new HCF_Claiming.Point(bottom_left.getX(), top_right.getZ());
+        Claiming.Point bottom_left = new Claiming.Point(start.getBlockX(), start.getBlockZ());
+        Claiming.Point top_right = new Claiming.Point(end.getBlockX(), end.getBlockZ());
+        Claiming.Point top_left = new Claiming.Point(top_right.getX(), bottom_left.getZ());
+        Claiming.Point bottom_right = new Claiming.Point(bottom_left.getX(), top_right.getZ());
 
         int width = getDistanceBetweenPoints2D(bottom_left, top_left) + 1;
         int height = getDistanceBetweenPoints2D(bottom_left, bottom_right) + 1;

@@ -71,9 +71,17 @@ public class ProjectileDamage implements Listener {
             }
 
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(damager);
+            if (Timers.ARCHER_TAG.has(victimplayer)) {
+                double dmg = e.getDamage();
+                e.setDamage(dmg + (dmg * archer.archerTagDamageAmplifier / 100));
+                System.out.println(dmg + (dmg * archer.archerTagDamageAmplifier / 100));
+            }
             if (!Timers.ARCHER_TAG.has(victimplayer) && hcfPlayer.getPlayerClass() == Classes.ARCHER && archer.archerTagEnabled) {
                 Timers.ARCHER_TAG.add(victimplayer);
+                NameChanger.refresh(victim);
+                System.out.println("Archer tag added");
             }
+
         }
     }
 }

@@ -15,13 +15,13 @@ import org.bukkit.material.Directional;
 
 public class SubClaimTool {
 
-    public static boolean hasAccess(Player p, String rankName) {
+    public static boolean hasAccess(Player p, String rankName, Faction faction) {
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         if(hcfPlayer.getFaction() == null) return false;
         if(hcfPlayer.getRank() == null) return false;
 
         FactionRankManager.Rank signRank = hcfPlayer.getFaction().getRank(rankName);
-        if(signRank.getPriority() <= hcfPlayer.getRank().getPriority()) {
+        if(signRank.getPriority() <= hcfPlayer.getRank().getPriority() && faction == hcfPlayer.getFaction()) {
             System.out.println("Van jogod! " + signRank.getName() + " " + hcfPlayer.getRank().getName());
             return true;
         }

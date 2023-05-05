@@ -1,7 +1,6 @@
 package me.idbi.hcf.InventoryRollback.GUI;
 
-import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
-import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
+import me.idbi.hcf.FactionGUI.Items.GUI_Items;
 import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.Bukkit;

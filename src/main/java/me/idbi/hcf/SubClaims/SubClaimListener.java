@@ -1,20 +1,14 @@
 package me.idbi.hcf.SubClaims;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Tools.Claiming;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.Attachable;
-import org.bukkit.material.Directional;
-
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Set;
 
 public class SubClaimListener implements Listener {
 
@@ -39,7 +33,8 @@ public class SubClaimListener implements Listener {
                 if(sign == null) return;
             }
             String signRankName = sign.getLine(1);
-            if(!SubClaimTool.hasAccess(e.getPlayer(), signRankName)) {
+            Claiming.Faction_Claim c = Claiming.sendClaimByXZ(e.getPlayer().getWorld(),e.getClickedBlock().getX(),e.getClickedBlock().getZ());
+            if(!SubClaimTool.hasAccess(e.getPlayer(), signRankName,c.getFaction())) {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(Messages.subclaim_no_access.language(e.getPlayer()).queue());
             }

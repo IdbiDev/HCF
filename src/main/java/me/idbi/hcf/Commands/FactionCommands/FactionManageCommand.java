@@ -1,12 +1,12 @@
 package me.idbi.hcf.Commands.FactionCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
-import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.FactionGUI.Menus.MainInventory;
 import me.idbi.hcf.Main;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
-import java.util.HashMap;
 
 public class FactionManageCommand  extends SubCommand {
     private static final Connection con = Main.getConnection();

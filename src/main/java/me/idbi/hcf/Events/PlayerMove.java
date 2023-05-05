@@ -4,7 +4,7 @@ import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.SubClasses.Miner;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.SpawnShield;
 import me.idbi.hcf.Tools.Timers;
@@ -24,9 +24,9 @@ public class PlayerMove implements Listener {
                 || e.getFrom().getBlockY() != e.getTo().getBlockY()
                 || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
 
-            HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(e.getTo().getBlockX(), e.getTo().getBlockZ());
+            Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(e.getTo().getWorld(),e.getTo().getBlockX(), e.getTo().getBlockZ());
             if (claim != null) {
-                if (HCF_Claiming.FindPoint_old(claim.getStartX(), claim.getStartZ(), claim.getEndX(), claim.getEndZ(), e.getTo().getBlockX(), e.getTo().getBlockZ()) && ((SpawnShield.pvpCooldown(e.getPlayer()) && claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.NORMAL) || (Timers.COMBAT_TAG.has(p) && claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.PROTECTED))))) {
+                if (Claiming.FindPoint_old(claim.getStartX(), claim.getStartZ(), claim.getEndX(), claim.getEndZ(), e.getTo().getBlockX(), e.getTo().getBlockZ()) && ((SpawnShield.pvpCooldown(e.getPlayer()) && claim.getAttribute().equals(Claiming.ClaimAttributes.NORMAL) || (Timers.COMBAT_TAG.has(p) && claim.getAttribute().equals(Claiming.ClaimAttributes.PROTECTED))))) {
                     Location loc = new Location(
                             e.getPlayer().getWorld(),
                             e.getFrom().getBlockX(),

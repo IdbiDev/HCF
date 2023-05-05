@@ -79,7 +79,10 @@ public class FactionDemoteCommand extends SubCommand {
             p.sendMessage(Messages.player_cant_self_demote.language(p).queue());
             return;
         }
-
+        if (hcfTarget.getRank().isLeader() || hcfTarget.getRank().isDefault() ) {
+            p.sendMessage(Messages.cant_demote.language(p).setPlayer(hcfTarget).queue());
+            return;
+        }
         if (!hcfPlayer.getFaction().equals(hcfTarget.getFaction())) {
             p.sendMessage(Messages.not_found_player.language(p).queue());
             return;

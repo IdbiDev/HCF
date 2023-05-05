@@ -33,7 +33,7 @@ public class AdminTakeMoneyCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command.admin." + getName();
+        return "factions.commands.admin." + getName();
     }
 
     @Override

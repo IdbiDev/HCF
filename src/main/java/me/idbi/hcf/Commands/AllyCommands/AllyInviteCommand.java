@@ -33,7 +33,7 @@ public class AllyInviteCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command.ally." + getName();
+        return "factions.commands.ally." + getName();
     }
 
     @Override
@@ -70,31 +70,14 @@ public class AllyInviteCommand extends SubCommand {
         Faction playerFaction = Playertools.getPlayerFaction(p);
         if (playerFaction != null) {
             if (!Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_ALL)) {
-                //Todo nincs jog
                 p.sendMessage(Messages.no_permission.language(p).queue());
                 return;
             }
             if (target != null && target != playerFaction) {
                 if (Playertools.isFactionOnline(target)) {
-                    //Faction faction = Main.faction_cache.get(Integer.valueOf(playertools.getMetadata(p, "factionid")));
-
                     if (!playerFaction.isFactionAllyInvited(target) && !playerFaction.isAlly(target)) {
                         playerFaction.inviteFactionAlly(target);
-                        // Broadcast both player the invite successfully
-
-                        // p.sendMessage(Messages.invited_player.language(p).setPlayer(target).queue());
-
-                        /*Clickable_Join.sendMessage(target,
-                                "/f join " + faction.name,
-                                Messages.invited_by.language(p).setPlayer(p).queue(),
-                                Messages.hover_join.language(p).queue());
-
-
-                        for (Player member : faction.getMembers()) {
-                            member.sendMessage(Messages.faction_invite_broadcast.language(member).setExecutor(p).setPlayer(target).queue());
-                        }*/
                         for (Player member : Playertools.getFactionOnlineMembers(target)) {
-
                             Clickable_Join.sendMessage(member,
                                     "/ally accept " + playerFaction.getName(),
                                     Messages.faction_invited_ally.language(member).setFaction(playerFaction).setPlayer(p).queue(),

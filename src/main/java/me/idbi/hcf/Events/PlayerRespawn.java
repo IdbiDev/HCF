@@ -15,6 +15,9 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 public class PlayerRespawn implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
+        System.out.println("RESP");
+        System.out.println(e.getRespawnLocation());
+
         if (Main.debug)
             System.out.println("Respawning player.. Loading it ");
         Playertools.loadOnlinePlayer(e.getPlayer());

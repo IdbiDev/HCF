@@ -26,7 +26,7 @@ public class AdminDTRFreezeCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command.admin." + getName();
+        return "factions.commands.admin." + getName();
     }
 
     @Override
@@ -40,10 +40,13 @@ public class AdminDTRFreezeCommand extends SubCommand {
         if(faction != null) {
             try {
                 faction.setDTRRegenEnabled(!Boolean.parseBoolean(args[2]));
+                if(!faction.isDTRRegenEnabled())
+                    p.sendMessage(Messages.admin_freeze_dtr_enable.language(p).setFaction(faction).setDTR(faction).queue());
+                else
+                    p.sendMessage(Messages.admin_freeze_dtr_disable.language(p).queue());
             } catch (Exception e) {
                 p.sendMessage(Messages.not_a_number.language(p).queue());
             }
-            //Todo: Messages
         }else {
             p.sendMessage(Messages.not_found_faction.language(p).queue());
         }

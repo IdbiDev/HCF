@@ -33,7 +33,7 @@ public class AllyResolveCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command.ally." + getName();
+        return "factions.commands.ally." + getName();
     }
 
     @Override
@@ -72,10 +72,11 @@ public class AllyResolveCommand extends SubCommand {
                         addCooldown(p);
                         for (Player member : Playertools.getFactionOnlineMembers(allyFaction)) {
                             NameChanger.refresh(member);
+                            member.sendMessage(Messages.faction_ally_resolve_target.language(member).setFaction(playerFaction).queue());
                         }
+                        p.sendMessage(Messages.faction_ally_resolve_success.language(p).setFaction(allyFaction).queue());
                     } else {
-                        p.sendMessage("no alli(Hard code uwu)");
-                        //TOdo: Message: no ally yet
+                        p.sendMessage(Messages.faction_not_ally.language(p).setFaction(allyFaction).queue());
                     }
                 } else {
                     p.sendMessage(Messages.no_permission.language(p).queue());

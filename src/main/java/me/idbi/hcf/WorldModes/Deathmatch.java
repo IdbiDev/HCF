@@ -3,7 +3,7 @@ package me.idbi.hcf.WorldModes;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.Timers;
@@ -25,7 +25,7 @@ public class Deathmatch implements Gamemode {
         border.setSize(Config.WorldBorderSize.asInt());
         int EOTWTIME = Config.EOTWDuration.asInt() * 1000;
         border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
-        HCF_Claiming.Faction_Claim spawnClaim = null;
+        Claiming.Faction_Claim spawnClaim = null;
         try {
             spawnClaim = Main.factionCache.get(1).getClaims().get(0);
         } catch (Exception ignored) {
@@ -37,8 +37,8 @@ public class Deathmatch implements Gamemode {
 
         border.setSize(
                 getDistanceBetweenPoints2D(
-                        new HCF_Claiming.Point(spawnClaim.getStartX(), spawnClaim.getStartZ()),
-                        new HCF_Claiming.Point(spawnClaim.getEndX(), spawnClaim.getEndZ())),
+                        new Claiming.Point(spawnClaim.getStartX(), spawnClaim.getStartZ()),
+                        new Claiming.Point(spawnClaim.getEndX(), spawnClaim.getEndZ())),
                 EOTWTIME);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -49,14 +49,11 @@ public class Deathmatch implements Gamemode {
             p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
             Timers.EOTW.add(p);
         }
-        //Todo: EOTW Koth
 
         for(Faction f : Main.factionCache.values()) {
-            if(f.getId() != 1) {
-                f.setDTR(-9.9D);
-                for (HCF_Claiming.Faction_Claim claim : f.getClaims()) {
-                    claim.setAttribute(HCF_Claiming.ClaimAttributes.NORMAL);
-                }
+            f.setDTR(-9.9D);
+            for (Claiming.Faction_Claim claim : f.getClaims()) {
+                claim.setAttribute(Claiming.ClaimAttributes.NORMAL);
             }
         }
         Main.EOTWENABLED = true;
@@ -83,10 +80,10 @@ public class Deathmatch implements Gamemode {
             border.setSize(Config.WorldBorderSize.asInt());
 
 
-            HCF_Claiming.Faction_Claim spawnClaim = null;
+            Claiming.Faction_Claim spawnClaim = null;
             try {
                 spawnClaim = Main.factionCache.get(1).getClaims().get(0);
-                spawnClaim.setAttribute(HCF_Claiming.ClaimAttributes.PROTECTED);
+                spawnClaim.setAttribute(Claiming.ClaimAttributes.PROTECTED);
             } catch (Exception ignored) {
                 return;
             }

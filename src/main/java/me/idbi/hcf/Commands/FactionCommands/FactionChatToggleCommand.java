@@ -69,8 +69,7 @@ public class FactionChatToggleCommand extends SubCommand {
         } else {
             ChatTypes newChat = ChatTypes.getByName(args[1]);
             if (newChat == null) {
-                // ToDo Message: This chat channel is not available!
-                p.sendMessage("Nem elérhető a channel!");
+                p.sendMessage(Messages.chat_unavailable.language(p).queue());
                 return;
             }
             boolean chat = hcfPlayer.toggleChat(newChat);

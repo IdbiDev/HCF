@@ -23,34 +23,34 @@ public enum Messages {
     prefix("&8[&2HCF&a+&8] &7>"),
     prefix_cmd("&r[&2HCF&a+&r] &r"),
     reload("Server","%prefix% &aSuccessfully reloaded configuration files!"),
-    cant_start_eotw("%prefix% &ceotw start failed! (No spawn location defined! Please use &n/a spawnclaim&f&c)"),
+    invalid_type("Server","Invalid Type! Check the command description for more details"),
+    cant_start_eotw("Server","%prefix% &ceotw start failed! (No spawn location defined! Please use &n/a spawnclaim&f&c)"),
     chat_prefix_faction("Factions","&8[&6%faction_name%&8] &e%player% &f> &7%message%"),
     chat_prefix_without_faction("Factions","&e%player% &f> &7%message%"),
     // Errors
-    no_permission("%prefix% &cYou don't have permission!"),
+    no_permission("Server","%prefix% &cYou don't have permission!"),
     no_permission_in_faction("Factions","%prefix% &cYou need a higher rank to use this command!"),
     you_cant_do("Factions","%prefix% &eYou can't do this at &c&o%faction_name%'s &eplace!"),
-    not_enough_slot("%prefix% &cYou don't have enough space!"),
-    not_found_player("%prefix% &cCan't find this player!"),
-    not_found_faction("Factions","%prefix% &cCan't find this faction!"),
+    not_enough_slot("Server","%prefix% &cYou don't have enough space!"),
+    not_found_player("Server","%prefix% &cCan't find this player!"),
+    not_found_faction("Server","%prefix% &cCan't find this faction!"),
     command_cooldown("Server","%prefix% &cYou must wait &e%time%s &cbetween uses!"),
-
-    unknown_command("Server","%prefix% &cUnknown command. Use &c&o/faction &ccommand to see the commands!"),
-    //TOO_MANY_ARGS("%prefix% &cToo many arguments!"),
     not_a_number("Server","%prefix% &cPlease use a valid number"),
+    not_a_valid_name("Server","%prefix% &cPlease use a valid name"),
+    server_slot_amount("Server","%prefix% &aThe server has currently &2&o%number% &aslots!"),
+    server_slot_set("Server","%prefix% &aYou have successfully set the slots to: &2&o%number%&a!"),
 
     cant_demote("Factions","%prefix% &cYou can't demote &c&o%player%"),
-    cant_promote("Factions","%prefix% &cYou can't promote &c&o%player%"),
+    chat_unavailable("Server","%prefix% &cThis chat-channel is not available!"),
 
-    not_file("Server","%prefix% &cCan't find this file!"),
-
-    dont_have_item("%prefix% &cYou don't have enough items in your inventory!"),
+    dont_have_item("Server","%prefix% &cYou don't have enough items in your inventory!"),
+    custom_item_give_executor("Server", "&aYou gave &2&o%item%&a to &2&o%player%&a."),
+    custom_item_give_player("Server", "&aYou got &2&o%item%&a."),
 
     // Errors - faction
     exists_faction_name("Factions","%prefix% &cThis faction name already exists!"),
     you_already_in_faction("Factions","%prefix% &cYou are already in faction!"),
     not_in_faction("Factions","%prefix% &cYou are not in a faction!"),
-    target_not_in_faction("Factions","%prefix% &cThis player does not in a faction!"),
     player_in_faction("Factions","%prefix% &cThis player is already in a faction!"),
     player_cant_self_promote("Factions","%prefix% &c&nNice try&r&c, but you cant promote yourself :("),
     player_cant_self_demote("Factions","%prefix% &c&nNice try&r&c, but you cant demote yourself :("),
@@ -62,13 +62,20 @@ public enum Messages {
 
     no_faction_exists("Factions","%prefix% &cThis faction does not exists!"),
 
-    already_invited_ally("Factions","%prefix% &cThis faction is already invited to your ally."),
-    not_invited_ally("Factions","%prefix% &cThis faction didnt invited you to their ally."),
+    already_invited_ally("Ally","%prefix% &cThis faction is already invited to your ally."),
+    not_invited_ally("Ally","%prefix% &cThis faction didn't invited you to their ally."),
     //
-    faction_invited_ally("Factions","%prefix% &2&o%faction_name% &awas invited to join this faction ally."),
-    joined_ally("Factions","%prefix% &2&o%faction_name% &anow is your ally!"),
+    faction_invited_ally("Ally","%prefix% &2&o%faction_name% &awas invited to join this faction ally."),
+    faction_not_ally("Ally","%prefix% &2&o%faction_name% &c is not your ally!"),
+    joined_ally("Ally","%prefix% &2&o%faction_name% &anow is your ally!"),
+    faction_decline_ally_target("Ally","%prefix% &2&o%faction_name% &chad declined the alliance!"),
+    faction_decline_ally_success("Ally","%prefix% &aYou have successfully declined &2&o%faction_name%&a alliance!"),
+    faction_uninvite_ally_target("Ally","%prefix% &2&o%faction_name% &chas withdrawn the ally invitation!"),
+    faction_uninvite_ally_success("Ally","%prefix% &aYou successfully uninvited &2&o%faction_name%&a from your allies!"),
+    faction_ally_resolve_target("Ally","%prefix% &2&o%faction_name%&a had dissolved the alliance!"),
+    faction_ally_resolve_success("Ally","%prefix% &aYou have successfully dissolved the alliance with &2&o%faction_name%&a!"),
 
-    faction_team_focused("Factions","%prefix% &2&o%faction_name% &ahas been focused by &2&o%player%!"),
+    faction_team_focused("Factions","%prefix% &2&o%faction_name% &ahas been focused by &2&o%player%&a!"),
     faction_team_unfocused("Factions","%prefix% &eYour team focus has been cleared!"),
     faction_own_team_focus("Factions","%prefix% &cYou can't focus your faction!"),
 
@@ -77,7 +84,9 @@ public enum Messages {
 
     // Commands
     faction_creation("Factions","%prefix% &2&o%faction_name% &awas created by &2&o%player%&a!"),
+    faction_create_success("Factions","%prefix% &aYou have successfully created the &2&o%faction_name%&a faction!"),
     faction_disband("Factions","%prefix% &2&o%faction_name% &awas disbanded by &2&o%player%&a!"),
+    faction_delete_success("Factions","%prefix% &aYou have successfully deleted the &2&o%faction_name%&a faction!"),
     faction_claim_price("Claims","%prefix% &aPrice: &2&o$%price% &afor &2&o%blocks%"),
 
     //Claim actions
@@ -113,6 +122,8 @@ public enum Messages {
     faction_bank_not_enough("Factions","%prefix% &cYour faction doesn't have enough money!"),
     faction_bank_number_error("Factions","%prefix% &cPlease enter a valid number!"),
     not_enough_money("Factions","%prefix% &cYou don't have enough money!"),
+    faction_transfer_leader("Factions","%prefix% &aYou have successfully transferred the leadership to &6&o%player%&a!"),
+    faction_transfer_leader_target("Factions","%prefix% &6&o%player%&a transferred the leadership to you!"),
 
     // Server broadcasts
     // FACTION_CREATED("&6&o%faction_name% &esuccessfully created by &6&o%player%&e!"), // Sexy lesz :D azám :D
@@ -129,6 +140,7 @@ public enum Messages {
 
     // Faction messages
     kick_message("Factions","&%prefix% &a%executor% &ekicked &a%player%&e from the faction!"),
+    kick_message_target("Factions","&%prefix% &cYou have been kicked from the faction!"),
     /*withdraw_message("%prefix% &eYou withdrew &6&o$%amount% &efrom faction bank!"),
     deposit_message("%prefix% &eYou deposited &6&o$%amount% &eto faction bank!"),
     executor_invite_message("&eYou invited &6&o%player% &eto your faction!"),
@@ -154,12 +166,11 @@ public enum Messages {
     sethome_message("Factions","%prefix% &aSuccessfully set home of your faction to your location!"),
     sethome_update_faction("Factions","%prefix% &7&l%player% &f&echanged the faction's home location! &7[&6&o%location_x%&e, &6&o%location_y%&e, &6&o%location_z%&7]"),
     teleport_to_home("Factions","%prefix% &eTeleportation in &6&o%time% seconds&e. &cDo not move!"),
-    successfully_home_teleport("Factions","%prefix% &aSuccessfully teleportation!"),
     already_home_teleporting("Factions","%prefix% &cTeleportation canceled!"),
-    successfully_teleport("Factions","%prefix% &eSuccessfully teleported to your faction's home!"),
+    successfully_home_teleport("Factions","%prefix% &eSuccessfully teleported to your faction's home!"),
     teleport_cancel("Factions","%prefix% &cYou moved, teleportation cancelled!"),
     no_home("Factions","%prefix% &cYour faction doesn't have a home set!"),
-    not_deathbanned("%prefix% &cThis player is not deathbanned!"),
+    not_deathbanned("Server","%prefix% &cThis player is not deathbanned!"),
 
     // Faction chat
     staff_chat("Chat","&8[&eStaffChat&8] &b%player%&7: &e%message%"),
@@ -178,7 +189,6 @@ public enum Messages {
     ally_chat_channel("Chat","Ally"),
     leader_chat_channel("Chat","Leader"),
 
-    // Faction permissions messages // ToDo: valamit kezdeni vele
     promote_message("Factions","%prefix% &6&o%executor% &epromoted you to &6&o%rank%&e!"),
     demote_message("Factions","%prefix% &6&o%executor% &edemoted you to &6&o%rank%&e!"),
 //
@@ -197,68 +207,68 @@ public enum Messages {
 //    sign_shop_material("Server","§cInvalid material in the sign shop."),
 
     // Designs
-    status_design_online("&aOnline"),
-    status_design_offline("&cOffline"),
-    category_design("&7&l» &6%category%:"),
-    member_list_design_online("&a%member% &f[&7%member_kill%&f]"),
-    member_list_design_offline("&7%member% &f[&7%member_kill%&f]"),
+    status_design_online("Design","&aOnline"),
+    status_design_offline("Design","&cOffline"),
+    category_design("Design","&7&l» &6%category%:"),
+    member_list_design_online("Design","&a%member% &f[&7%member_kill%&f]"),
+    member_list_design_offline("Design","&7%member% &f[&7%member_kill%&f]"),
 
-    faction_list_title("&7&m--- &6Faction List by %type% &7&m---"),
-    faction_list("&7%number%. &e%faction_name% &6-- &7[&a%online%&7] [%dtr%&7]"),
+    faction_list_title("Design","&7&m--- &6Faction List by %type% &7&m---"),
+    faction_list("Design","&7%number%. &e%faction_name% &6-- &7[&a%online%&7] [%dtr%&7]"),
 
-    faction_top_title("&7&m--- &6Faction Top by %type% &7&m---"),
-    faction_top("&7%number%. &e%faction_name% &6-- &e%value%"),
-    faction_top_list_gui_prefix("&7#%number% "),
+    faction_top_title("Design","&7&m--- &6Faction Top by %type% &7&m---"),
+    faction_top("Design","&7%number%. &e%faction_name% &6-- &e%value%"),
+    faction_top_list_gui_prefix("Design","&7#%number% "),
 
     faction_chat_page("Page", "&2Page %page%"),
     faction_chat_page_previous("Page", "&a<<< "),
     faction_chat_page_next("Page", " &a>>>"),
 
     // Sign Shop message
-    sign_shop_bought("%prefix% &aYou bought &2&o%amount%x %item% &afor &2&o$%price%&a."),
-    sign_shop_sold("%prefix% &aYou sold &2&o%amount%x %item% &afor &2&o$%price%&a."),
+    sign_shop_bought("Shop","%prefix% &aYou bought &2&o%amount%x %item% &afor &2&o$%price%&a."),
+    sign_shop_sold("Shop","%prefix% &aYou sold &2&o%amount%x %item% &afor &2&o$%price%&a."),
 
     // Admin Duty
-    admin_duty_on("%prefix% &aDuty mode: &2&oon"),
-    admin_duty_off("%prefix% &cDuty mode: &4&ooff"),
-    freeze_player_on("%prefix% &aYou got frozen by &2&o%executor%"),
-    freeze_player_off("%prefix% &cYou got unfrozen by &4&o%executor%"),
-    freeze_executor_on("%prefix% &aYou froze &2&o%player%"),
-    freeze_executor_off("%prefix% &cYou unfroze &4&o%player%"),
-    admin_staff_chat("&aStaff Chat"),
-    admin_global_chat("&bGlobal Chat"),
+    admin_duty_on("Admin","%prefix% &aDuty mode: &2&oon"),
+    admin_duty_off("Admin","%prefix% &cDuty mode: &4&ooff"),
+    freeze_player_on("Admin","%prefix% &aYou got frozen by &2&o%executor%"),
+    freeze_player_off("Admin","%prefix% &cYou got unfrozen by &4&o%executor%"),
+    freeze_executor_on("Admin","%prefix% &aYou froze &2&o%player%"),
+    freeze_executor_off("Admin","%prefix% &cYou unfroze &4&o%player%"),
+    admin_freeze_dtr_enable("Admin","%prefix% &aYou froze &2&o%faction_name%&a's DTR to: &o%dtr%"),
+    admin_freeze_dtr_disable("Admin","%prefix% &aYou unfroze &2&o%faction_name%&a's DTR"),
 
     spawn_claim_success("Claims","%prefix% &bYou successfully claimed the spawn!"),
 
-    faction_admin_withdraw("%prefix% &c&l%executor% &cdeposited &c&l%amount% &cinto the faction's bank!"),
-    faction_admin_deposit("%prefix% &c&l%executor% &cwithdrew &c&l%amount% &cfrom the faction's bank!"),
-    admin_set_playerfaction("%prefix%&1 You successfully put &6&o%player% in the %faction_name% faction"),
-    set_faction_name("%prefix% &eFaction's name changed by &6&o%executor% &eto &6&o%faction_name%&e!"),
-    admin_set_dtr("%prefix% &eYou have successfully set the DTR of &6&o%faction_name%&e faction to &6&o%new_dtr%"),
-    admin_set_faction_name("%prefix% &1You have successfully changed the name of the faction to &e%faction_name%"),
-    give_money("%prefix% &eYou got &6&o%amount% &efrom &6&o%executor%&e!"),
-    take_money("%prefix% &6&o%executor%&e took &6&o%amount% &efrom you!"),
+    faction_admin_withdraw("Admin","%prefix% &c&l%executor% &cdeposited &c&l%amount% &cinto the faction's bank!"),
+    faction_admin_deposit("Admin","%prefix% &c&l%executor% &cwithdrew &c&l%amount% &cfrom the faction's bank!"),
+    admin_set_playerfaction("Admin","%prefix%&1 You successfully put &6&o%player% in the %faction_name% faction"),
+    set_faction_name("Admin","%prefix% &eFaction's name changed by &6&o%executor% &eto &6&o%faction_name%&e!"),
+    admin_set_dtr("Admin","%prefix% &eYou have successfully set the DTR of &6&o%faction_name%&e faction to &6&o%new_dtr%"),
+    admin_set_faction_name("Admin","%prefix% &1You have successfully changed the name of the faction to &e%faction_name%"),
+    give_money("Admin","%prefix% &eYou got &6&o%amount% &efrom &6&o%executor%&e!"),
+    take_money("Admin","%prefix% &6&o%executor%&e took &6&o%amount% &efrom you!"),
 
-    set_faction_leader_by_admin("%prefix% &6&o%executor%&e set &6&o%player% &eto faction leader!"),
-    delete_faction_by_admin("%prefix% &6&o%executor%&e deleted the &6&o%faction_name% &efaction!"),
+    set_faction_leader_by_admin("Admin","%prefix% &6&o%executor%&e set &6&o%player% &eto faction leader!"),
+    delete_faction_by_admin("Admin","%prefix% &6&o%executor%&e deleted the &6&o%faction_name% &efaction!"),
 
-    cant_damage_admin("%prefix% &cYou can't attack while you are in duty mode"),
-    cant_damage_protected_area("%prefix% &cYou can't attack while you are in a protected area!"),
-    combat_message("%prefix% &7You are now in combat &a[%sec% sec]"),
-    teammate_damage("%prefix% &cYou can't damage your teammate!"),
+    cant_damage_admin("PvP","%prefix% &cYou can't attack while you are in duty mode"),
+    cant_damage_protected_area("PvP","%prefix% &cYou can't attack while you are in a protected area!"),
+    combat_message("PvP","%prefix% &7You are now in combat &a[%sec% sec]"),
+    teammate_damage("PvP","%prefix% &cYou can't damage your teammate!"),
 
     deathban_kick("Server","&cYou are deathbanned for %format_time%"),
-    pvp_timer_enable("%prefix% &aYou no longer have any pvp protection."),
-    pvp_timer_already_enable("%prefix% &cYou do not have any timers active."),
+    pvp_timer_enable("PvP","%prefix% &aYou no longer have any pvp protection."),
+    pvp_timer_already_enable("PvP","%prefix% &cYou do not have any timers active."),
 
-    logout_timer_started("%prefix% &4&lLogout timer&r&4 started! Don't move!"),
-    logout_timer_interrupted("%prefix% &4Logout interrupted!"),
-    logout_timer_already_started("%prefix% &4You are already started to logout!"),
-    logout_kick_message("&aYou have been logged out safely!"),
+    logout_timer_started("Logout","%prefix% &4&lLogout timer&r&4 started! Don't move!"),
+    logout_timer_interrupted("Logout","%prefix% &4Logout interrupted!"),
+    logout_timer_already_started("Logout","%prefix% &4You are already started to logout!"),
+    logout_kick_message("Logout","&aYou have been logged out safely!"),
 
-    kill_message_broadcast("&4&l%killer%&f[%killer_kills%] slained &4&l%victim%&f[%victim_kills%] using [&b&o%killer_weapon%&f]"),
+    kill_message_broadcast("PvP","&4&l%killer%&f[%killer_kills%] slained &4&l%victim%&f[%victim_kills%] using [&b&o%killer_weapon%&f]"),
 
-    kill_message_broadcast_without_killer("&4&l%victim%&f[%victim_kills%] died"),
+    kill_message_broadcast_without_killer("PvP","&4&l%victim%&f[%victim_kills%] died"),
 
     max_members_reached("Factions","%prefix% &4&lYou can't invite more people to the faction because it's full!"),
 
@@ -270,52 +280,56 @@ public enum Messages {
     enchant_not_enough_xp("%prefix% &cYou don't have enough exp!"),
     confirm_button_lore("&6Costs: &e&n%xp_level% level"),
 
-    bard_dont_have_enough_energy("%prefix% &cYou don't have enough energy to activate this. &4&l[Required %amount%]"),
+    bard_dont_have_enough_energy("Classes","%prefix% &cYou don't have enough energy to activate this. &4&l[Required %amount%]"),
 
-    bard_used_powerup("%prefix% &6You used &b%effect% &6for &b&o%amount%&r&6. [&aBuffed teammates: &b&o%count%&r&6]"),
+    bard_used_powerup("Classes","%prefix% &6You used &b%effect% &6for &b&o%amount%&r&6. [&aBuffed teammates: &b&o%count%&r&6]"),
 
-    cant_damage_while_pvptimer("%prefix% &cYou can't attack while you have a PvP timer on you!"),
-    cant_damage_while_pvptimer_victim("%prefix% &cThis player has a PvP timer!"),
-    cant_damage_while_sotw_timer_active("%prefix% &cThis player has an active SOTW timer!"),
-    stuck_started("Factions","%prefix% &aStuck timer started! You are getting teleported to a safe zone in &o&e%amount%&r&a seconds! Don't move!"),
-    stuck_finished("Factions","%prefix%  &bYou successfully teleported to a safe zone!"),
-    stuck_interrupted("Factions","%prefix% &cYou interrupted the stuck timer!"),
+    cant_damage_while_pvptimer("PvP","%prefix% &cYou can't attack while you have a PvP timer on you!"),
+    cant_damage_while_pvptimer_victim("PvP","%prefix% &cThis player has a PvP timer!"),
+    cant_damage_while_sotw_timer_active("PvP","%prefix% &cThis player has an active SOTW timer!"),
+    stuck_started("Stuck","%prefix% &aStuck timer started! You are getting teleported to a safe zone in &o&e%amount%&r&a seconds! Don't move!"),
+    stuck_finished("Stuck","%prefix%  &bYou successfully teleported to a safe zone!"),
+    stuck_interrupted("Stuck","%prefix% &cYou interrupted the stuck timer!"),
 
     claim_pos_start("Claims","%prefix% &bClaim start position: &a&n%location%"),
     claim_pos_end("Claims","%prefix% &bClaim end position: &a&n%location%"),
 
     // KOTH SOTW EOTW
-    enable_eotw("EOTW","%prefix% &aEOTW started!"),
-    eotw_already_started("EOTW","%prefix%EOTW already started!"),
+    enable_eotw("Eotw","%prefix% &aEOTW started!"),
+    disable_eotw("Eotw","%prefix% &cEOTW disabled!"),
+    eotw_already_started("Eotw","%prefix% &cEOTW already started!"),
+    enable_sotw("Eotw","%prefix% &aSOTW started!"),
+    disable_sotw("Eotw","%prefix% &cSOTW disabled!"),
+    enable_deathmatch("Eotw","%prefix% &aDeathmatch started!"),
+    disable_deathmatch("Eotw","%prefix% &cDeathmatch disabled!"),
 
     // koth
-    updated_koth_rewards("koth","%prefix% &aSuccessfully saved rewards!"),
-    claim_koth_rewards("koth","%prefix% &aYou claimed KOTH rewards!"),
-    koth_invalid_name("koth","%prefix% &cThis KOTH doesn't exits!"),
-    koth_sucess_create("koth","%prefix% &aSuccessfully created the &6&o%faction_name%&a koth!"),
-    koth_created("koth","%prefix% &aYou have successfully created a KOTH named &6&o%faction_name%&a!"),
-    koth_capturing_started("koth","%prefix% &aSomeone started to occupy the &6&o%faction_name%&a KOTH!"),
-    koth_capturing_ended("koth","%prefix% &aThe occupation of KOTH &6&o%faction_name%&a was interrupted!"),
-    koth_capture_timer("koth","%prefix% &aSomeone is capturing &6&o%faction_name%&a (%format_time%)"),
-    koth_start_title("koth","&a&lKOTH &r&aStarted!"),
-    koth_start_subtitle("koth","&6&o%faction_name%"),
-    koth_failed_not_valid_claim("koth","%prefix% &cThis faction does not have a valid KOTH claim!"),
+    updated_koth_rewards("Koth","%prefix% &aSuccessfully saved rewards!"),
+    claim_koth_rewards("Koth","%prefix% &aYou claimed KOTH rewards!"),
+    koth_invalid_name("Koth","%prefix% &cThis KOTH doesn't exits!"),
+    koth_success_create("Koth","%prefix% &aSuccessfully created the &6&o%faction_name%&a koth!"),
+    koth_capturing_started("Koth","%prefix% &aSomeone started to occupy the &6&o%faction_name%&a KOTH!"),
+    koth_capturing_ended("Koth","%prefix% &aThe occupation of KOTH &6&o%faction_name%&a was interrupted!"),
+    koth_capture_timer("Koth","%prefix% &aSomeone is capturing &6&o%faction_name%&a (%format_time%)"),
+    koth_start_title("Koth","&a&lKOTH &r&aStarted!"),
+    koth_start_subtitle("Koth","&6&o%faction_name%"),
+    koth_failed_not_valid_claim("Koth","%prefix% &cThis faction does not have a valid KOTH claim!"),
 
     warzone_no_permission("Factions","%prefix% &eYou can't do this in the Warzone!"),
 
     // GUI
-    gui_rank_created("gui","%prefix% &bYou have successfully created rank: &b&o%rank%!"),
-    gui_rank_change("gui","%prefix% &bYou have successfully changed the rank of &b&o%player%&b to: &b&o%rank%!"),
-    gui_rank_already_have("gui","%prefix% &cThis user already have this rank."),
-    gui_rename_text("gui","Enter rank name"),
-    gui_rename_faction_text("gui","Enter faction name"),
-    gui_invite_player("gui","Enter a player name"),
-    gui_create_rank_text("gui","Enter rank name"),
-    gui_invalid_type_text("gui","Invalid name!"),
-    gui_bad_word("gui","Don't use forbidden words."),
-    gui_priority_saved("gui","%prefix% &aYou successfully saved the changes!"),
-    rename_faction("gui","%prefix% §aSuccessfully renamed faction "), // ToDo:
-    gui_request_ally("gui","Enter ally name"),
+    gui_rank_created("Gui","%prefix% &bYou have successfully created rank: &b&o%rank%!"),
+    gui_rank_change("Gui","%prefix% &bYou have successfully changed the rank of &b&o%player%&b to: &b&o%rank%!"),
+    gui_rank_already_have("Gui","%prefix% &cThis user already have this rank."),
+    gui_rename_text("Gui","Enter rank name"),
+    gui_rename_faction_text("Gui","Enter faction name"),
+    gui_invite_player("Gui","Enter a player name"),
+    gui_create_rank_text("Gui","Enter rank name"),
+    gui_invalid_type_text("Gui","Invalid name!"),
+    gui_bad_word("Gui","Don't use forbidden words."),
+    gui_priority_saved("Gui","%prefix% &aYou successfully saved the changes!"),
+    rename_faction("Gui","%prefix% §aSuccessfully renamed faction "),
+    gui_request_ally("Gui","Enter ally name"),
 
     // Subclaim "Factions",
     subclaim_created("Subclaims","%prefix% &aSubclaim successfully created!"),
@@ -323,46 +337,37 @@ public enum Messages {
     subclaim_no_access("Subclaims","%prefix% &cAccess denied!"),
     subclaim_lower_rank("Subclaims","%prefix% &cYou must type a lower rank or your rank!"),
 
-    rollback_successfully_rollbacked("rollback", "%prefix% &aYou successfully setted %player%'s inventory to this!"),
-    rollback_dont_have_rollback("rollback", "%prefix% &cThis player doesn't have saved inventory!"),
-    rollback_not_found("rollback", "%prefix% &cThis ID does not have rollback!"),
+    rollback_successfully_rollbacked("Rollback", "%prefix% &aYou successfully setted %player%'s inventory to this!"),
+    rollback_dont_have_rollback("Rollback", "%prefix% &cThis player doesn't have saved inventory!"),
+    rollback_not_found("Rollback", "%prefix% &cThis ID does not have rollback!"),
 
     // Hover things
-    hover_join("chat","&7Click here to join!"),
-    hover_accept("chat","&7Click here to accept!"),
+    hover_join("Chat","&7Click here to join!"),
+    hover_accept("Chat","&7Click here to accept!"),
 
     // Staff message
 /*    staff_chat_on("%prefix% &aStaff chat enabled!"),
     staff_chat_off("%prefix% &cStaff chat disabled!"),*/
 
-    vanish_enabled("%prefix% &aVanish enabled!"),
-    vanish_disable("%prefix% &cVanish disabled!"),
-    not_in_duty("%prefix% &cYou are not in staff duty!"),
+    vanish_enabled("Admin","%prefix% &aVanish enabled!"),
+    vanish_disable("Admin","%prefix% &cVanish disabled!"),
+    not_in_duty("Admin","%prefix% &cYou are not in staff duty!"),
 
     // Custom timers
-    customt_created("%prefix% §aCustom timer successfully created!"),
-    customt_deleted("%prefix% §aCustom timer successfully deleted!"),
-    customt_edited("%prefix% §aCustom timer successfully edited!"),
-    customt_no_active_timer("%prefix% §cNo available active timers!"),
-    customt_not_found("%prefix% §cThis timer not found!"),
-    already_created("%prefix% §aThis name already in use!"),
+    customt_created("CustomTimers","%prefix% §aCustom timer successfully created!"),
+    customt_deleted("CustomTimers","%prefix% §aCustom timer successfully deleted!"),
+    customt_edited("CustomTimers","%prefix% §aCustom timer successfully edited!"),
+    customt_no_active_timer("CustomTimers","%prefix% §cNo available active timers!"),
+    customt_not_found("CustomTimers","%prefix% §cThis timer not found!"),
+    already_created("CustomTimers","%prefix% §aThis name already in use!"),
 
 
-    sotw_start_title("SOTW STARTED"),
-    sotw_start_subtitle("Kawaii"),
-    eotw_start_title("EOTW STARTED"),
-    eotw_start_subtitle("UwU"),
-    cant_teleport_to_safezone("Factions","%prefix% &cYou can't teleport to a protected zone while you are in PvP tag"),
+    sotw_start_title("Sotw","SOTW STARTED"),
+    sotw_start_subtitle("Sotw","Kawaii"),
+    eotw_start_title("Eotw","EOTW STARTED"),
+    eotw_start_subtitle("Eotw","UwU"),
+    cant_teleport_to_safezone("PvP","%prefix% &cYou can't teleport to a protected zone while you are in PvP tag"),
     missing_argument("Server","%prefix% &cThis command requires &none or more&f&c argument!"),
-
-    back_successfully("back", "%prefix% &aSuccessfully teleported to the previous position!"),
-    no_last_location("back", "%prefix% &cYou don't have previous position!"),
-    console_no_last_location("back", "%prefix% &cThis player does not have previous position!"),
-    
-    god_enable("godmode", "%prefix% &aGod mode enabled!"),
-    god_disable("godmode", "%prefix% &cGod mode disabled!"),
-    god_enable_other("godmode", "%prefix% &aGod mode enabled for %player%!"),
-    god_disable_other("godmode", "%prefix% &cGod mode disabled for %player%!"),
 
     coordinates_command(Arrays.asList(
             " ",
@@ -406,6 +411,13 @@ public enum Messages {
 
     claim_info_admin(Arrays.asList(
             "%prefix% &6Spawn claiming information:",
+            "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
+            "&7&l» &ePress &6&o[LEFT] &eclick on the ground, to place the other position!", // pos2
+            "&eTo accept the claim, press &bShift + Right Click", // right click
+            "&eTo discard the claim, press &bShift + Left Click" // left click
+    )),
+    claim_info(Arrays.asList(
+            "%prefix% &6Claiming information:",
             "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
             "&7&l» &ePress &6&o[LEFT] &eclick on the ground, to place the other position!", // pos2
             "&eTo accept the claim, press &bShift + Right Click", // right click

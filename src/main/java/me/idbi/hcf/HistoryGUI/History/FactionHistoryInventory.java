@@ -1,6 +1,6 @@
 package me.idbi.hcf.HistoryGUI.History;
 
-import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
+import me.idbi.hcf.FactionGUI.Items.GUI_Items;
 import me.idbi.hcf.Tools.Objects.Faction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

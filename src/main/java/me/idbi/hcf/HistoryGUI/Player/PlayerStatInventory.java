@@ -1,7 +1,7 @@
 package me.idbi.hcf.HistoryGUI.Player;
 
-import me.idbi.hcf.FrakcioGUI.GUI_Sound;
-import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
+import me.idbi.hcf.FactionGUI.GUISound;
+import me.idbi.hcf.FactionGUI.Items.GUI_Items;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -17,7 +17,7 @@ public class PlayerStatInventory {
 
         inv.setItem(11, PlayerHistoryItems.stats(p));
         inv.setItem(15, PlayerHistoryItems.classStats(p));
-        GUI_Sound.playSound(p, GUI_Sound.HCFSounds.SUCCESS);
+        GUISound.playSound(p, GUISound.HCFSounds.SUCCESS);
         return inv;
     }
 }

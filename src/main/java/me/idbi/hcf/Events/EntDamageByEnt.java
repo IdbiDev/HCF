@@ -2,7 +2,7 @@ package me.idbi.hcf.Events;
 
 import me.idbi.hcf.Classes.SubClasses.Archer;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.entity.Player;
@@ -28,29 +28,32 @@ public class EntDamageByEnt implements Listener {
             }
             //String c = ChatColor.stripColor(HCF_Claiming.sendFactionTerritory(victim));
             try {
-                HCF_Claiming.Faction_Claim claim = victimplayer.getCurrentArea();
-                HCF_Claiming.Faction_Claim damagerClaim = damagerplayer.getCurrentArea();
+                Claiming.Faction_Claim claim = victimplayer.getCurrentArea();
+                Claiming.Faction_Claim damagerClaim = damagerplayer.getCurrentArea();
                 if (claim != null && damagerClaim != null) {
-                    if (claim.getAttribute() == HCF_Claiming.ClaimAttributes.PROTECTED || damagerClaim.getAttribute() == HCF_Claiming.ClaimAttributes.PROTECTED) {
+                    if (claim.getAttribute() == Claiming.ClaimAttributes.PROTECTED || damagerClaim.getAttribute() == Claiming.ClaimAttributes.PROTECTED) {
                         e.setCancelled(true);
                         damager.sendMessage(Messages.cant_damage_protected_area.language(damager).queue());
                         return;
                     }
                 } else if (claim == null && damagerClaim != null) {
-                    if (damagerClaim.getAttribute() == HCF_Claiming.ClaimAttributes.PROTECTED) {
+                    if (damagerClaim.getAttribute() == Claiming.ClaimAttributes.PROTECTED) {
                         e.setCancelled(true);
                         damager.sendMessage(Messages.cant_damage_protected_area.language(damager).queue());
                         return;
                     }
                 } else if (claim != null) {
-                    if (claim.getAttribute() == HCF_Claiming.ClaimAttributes.PROTECTED) {
+                    if (claim.getAttribute() == Claiming.ClaimAttributes.PROTECTED) {
                         e.setCancelled(true);
                         damager.sendMessage(Messages.cant_damage_protected_area.language(damager).queue());
                         return;
                     }
                 }
 
-
+                if(Timers.SOTW.has(damagerplayer)) {
+                    damager.sendMessage(Messages.cant_damage_while_pvptimer.language(damager).queue());
+                    e.setCancelled(true);
+                }
                 if(Timers.LOGOUT.has(victimplayer)) {
                     Timers.LOGOUT.remove(victimplayer);
                     victim.sendMessage(Messages.logout_timer_interrupted.language(victim).queue());

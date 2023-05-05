@@ -31,7 +31,7 @@ public class AdminSetDTRCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command.admin." + getName();
+        return "factions.commands.admin." + getName();
     }
 
     @Override
@@ -67,6 +67,7 @@ public class AdminSetDTRCommand extends SubCommand {
                 if(dtr > faction.getDTR_MAX())
                     dtr = faction.getDTR_MAX();
                 faction.setDTR(dtr);
+                p.sendMessage(Messages.admin_set_dtr.language(p).queue());
             }catch (Exception e) {
                 p.sendMessage(Messages.not_a_number.language(p).queue());
             }

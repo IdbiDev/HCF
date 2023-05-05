@@ -158,6 +158,13 @@
             <scope>system</scope>
         </dependency>
         <dependency>
+            <groupId>com.lunarclient</groupId>
+            <artifactId>bukkitapi</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <systemPath>C:\Users\kille\Desktop\HCFPlus\TsipuEgymeleg\plugins\bukkitapi.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+        <dependency>
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
@@ -172,6 +179,7 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>4.8.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

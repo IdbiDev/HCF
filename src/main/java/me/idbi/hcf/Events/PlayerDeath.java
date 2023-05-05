@@ -39,7 +39,7 @@ public class PlayerDeath implements Listener {
 
         hcfVictim.createRollback(victim.getLastDamageCause().getCause(), Rollback.RollbackLogType.DEATH);
         hcfVictim.addDeaths();
-        hcfVictim.takeMoney(hcfVictim.getMoney());
+
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> victim.setFireTicks(0), 1);
 
@@ -61,8 +61,12 @@ public class PlayerDeath implements Listener {
             hcfDamager.addMoney(Config.AddMoneyOnKill.asInt());
             hcfDamager.addKills();
 
-            if(Config.PlayerLoseMoney.asBoolean())
+
+            if(Config.PlayerLoseMoney.asBoolean()) {
                 hcfDamager.addMoney(hcfVictim.getMoney());
+                hcfVictim.setMoney(0);
+            }
+
 
             for (Player player : Bukkit.getOnlinePlayers())
                 player.sendMessage(Messages.kill_message_broadcast.language(player).setVictimWithKills(victim, damager).queue());

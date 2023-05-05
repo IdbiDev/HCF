@@ -34,7 +34,7 @@ public class AllyAcceptCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command.ally." + getName();
+        return "factions.commands.ally." + getName();
     }
 
     @Override

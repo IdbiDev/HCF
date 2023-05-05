@@ -4,6 +4,7 @@ import me.idbi.hcf.Tools.Timers;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerPortal implements Listener {
     @EventHandler

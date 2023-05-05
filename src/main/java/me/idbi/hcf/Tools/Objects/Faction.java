@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.HCF_Rules;
+import me.idbi.hcf.HCFRules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
@@ -29,7 +29,7 @@ public class Faction {
     @Getter @Setter private String name;
     @Getter @Setter private String leader;
     @Setter private int balance;
-    @Getter private ArrayList<HCF_Claiming.Faction_Claim> claims = new ArrayList<>();
+    @Getter private ArrayList<Claiming.Faction_Claim> claims = new ArrayList<>();
     @Getter @Setter private double DTR = 0;
     @Getter @Setter private double DTR_MAX = 0;
     @Getter @Setter private long DTR_TIMEOUT = 0L;
@@ -64,7 +64,7 @@ public class Faction {
         this.allyInvites = new AllyManager();
         this.balance = balance;
         this.ranks = new ArrayList<FactionRankManager.Rank>();
-        this.claims = new ArrayList<HCF_Claiming.Faction_Claim>();
+        this.claims = new ArrayList<Claiming.Faction_Claim>();
         this.members = new ArrayList<HCFPlayer>();
         this.DTR_MAX = Config.MaxDTR.asDouble();
         this.DTR = this.getDTR_MAX();
@@ -95,7 +95,7 @@ public class Faction {
         this.DTR -= dtr;
     }
 
-    public void removeClaim(HCF_Claiming.Faction_Claim claim) {
+    public void removeClaim(Claiming.Faction_Claim claim) {
         this.claims.remove(claim);
     }
 
@@ -173,7 +173,7 @@ public class Faction {
         return new JSONObject(map).toString();
     }
     public void invitePlayer(Player p) {
-        if (getMemberCount() + 1 > maxMembersProFaction || invites.getInvitedPlayers().size() + 1 > HCF_Rules.maxInvitesPerFaction) {
+        if (getMemberCount() + 1 > maxMembersProFaction || invites.getInvitedPlayers().size() + 1 > HCFRules.maxInvitesPerFaction) {
             p.sendMessage(Messages.max_members_reached.language(p).queue());
             return;
         }
@@ -224,7 +224,7 @@ public class Faction {
     }
 
     public void inviteFactionAlly(Faction ally) {
-        if (allies.size() + 1 > maxAlliesProFaction || allyInvites.getInvitedAllies().size() + 1 > HCF_Rules.maxAlliesPerFaction) {
+        if (allies.size() + 1 > maxAlliesProFaction || allyInvites.getInvitedAllies().size() + 1 > HCFRules.maxAlliesPerFaction) {
             return;
         }
         allyInvites.inviteFactionToAlly(ally);
@@ -232,13 +232,13 @@ public class Faction {
     }
 
     public void resolveFactionAlly(Faction ally) {
-        allies.remove(ally.id);
+        this.allies.remove(ally.id);
         ally.allies.remove(this.id);
 
         // Allies.removeIf(allyFaction -> allyFaction.getAllyFaction().id == ally.id);
     }
 
-    public void addClaim(HCF_Claiming.Faction_Claim claimid) {
+    public void addClaim(Claiming.Faction_Claim claimid) {
         try {
             claims.add(claimid);
         } catch (NullPointerException ex) {
@@ -248,7 +248,7 @@ public class Faction {
         }
     }
 
-    public HCF_Claiming.Faction_Claim getFactionClaim(Integer id) {
+    public Claiming.Faction_Claim getFactionClaim(Integer id) {
         return claims.get(id);
     }
 

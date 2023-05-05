@@ -2,12 +2,12 @@ package me.idbi.hcf.Commands.KothCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.entity.Player;
 
 import static me.idbi.hcf.Koth.Koth.getKothFromName;
-import static me.idbi.hcf.Tools.HCF_Claiming.KothPrepare;
+import static me.idbi.hcf.Tools.Claiming.KothPrepare;
 
 public class KothCreateNeutralZoneCommand extends SubCommand {
     @Override
@@ -59,10 +59,10 @@ public class KothCreateNeutralZoneCommand extends SubCommand {
     public void perform(Player p, String[] args) {
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if (getKothFromName(args[1]) != 0) {
-            if (player.getClaimType() != HCF_Claiming.ClaimTypes.SPECIAL) {
+            if (player.getClaimType() != Claiming.ClaimTypes.SPECIAL) {
                 if (KothPrepare(p)) {
-                    player.setClaimType(HCF_Claiming.ClaimTypes.SPECIAL);
-                    player.setKothId(getKothFromName(args[1]));
+                    player.setClaimType(Claiming.ClaimTypes.SPECIAL);
+                    player.setClaimID(getKothFromName(args[1]));
                 }
             }
         } else {

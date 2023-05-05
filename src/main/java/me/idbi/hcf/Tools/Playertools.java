@@ -134,7 +134,17 @@ public class Playertools {
         return list;
 
     }
-
+    public static Claiming.Faction_Claim getUpperClaim(Player p){
+        ArrayList<Claiming.Faction_Claim> originalClaims = Claiming.getPlayerArea(p);
+        ArrayList<Claiming.Faction_Claim> claims = new ArrayList<>(originalClaims);
+        if(originalClaims.size() > 1) {
+            for (Claiming.Faction_Claim claim : originalClaims) {
+                if (claim.getFaction().equals(Main.factionCache.get(2)))
+                    claims.remove(claim);
+            }
+        }
+        return claims.isEmpty() ? null : claims.get(0);
+    }
     public static void cacheAll() {
         ResultSet rs = null;
         try {
@@ -314,15 +324,15 @@ public class Playertools {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 try {
-                    HCF_Claiming.ClaimAttributes at = HCF_Claiming.ClaimAttributes.NORMAL;
+                    Claiming.ClaimAttributes at = Claiming.ClaimAttributes.NORMAL;
                     if (rs.getString("type").equalsIgnoreCase("protected")) {
-                        at = HCF_Claiming.ClaimAttributes.PROTECTED;
+                        at = Claiming.ClaimAttributes.PROTECTED;
                     } else if (rs.getString("type").equalsIgnoreCase("koth")) {
-                        at = HCF_Claiming.ClaimAttributes.KOTH;
+                        at = Claiming.ClaimAttributes.KOTH;
                     }
                     Faction f = Main.factionCache.get(rs.getInt("factionid"));
                     if (f != null) {
-                        HCF_Claiming.Faction_Claim claim = new HCF_Claiming.Faction_Claim(rs.getInt("startX"), rs.getInt("endX"), rs.getInt("startZ"), rs.getInt("endZ"), rs.getInt("factionid"), at, rs.getString("world"));
+                        Claiming.Faction_Claim claim = new Claiming.Faction_Claim(rs.getInt("startX"), rs.getInt("endX"), rs.getInt("startZ"), rs.getInt("endZ"), rs.getInt("factionid"), at, rs.getString("world"));
                         f.addClaim(claim);
                     }
 
@@ -374,7 +384,9 @@ public class Playertools {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM factions");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Faction faction = new Faction(rs.getInt("ID"), rs.getString("name"), rs.getString("leader"), rs.getInt("money"));
+                Faction faction = new Faction(rs.getInt("ID"), rs.getString("name"),
+                        Objects.equals(rs.getString("leader"), "null") ? null :  rs.getString("leader"),
+                        rs.getInt("money"));
                 if (isValidJSON(rs.getString("statistics"))) {
                     faction.loadFactionHistory(new JSONObject(rs.getString("statistics")));
                 } else {
@@ -413,22 +425,6 @@ public class Playertools {
 
             }
             //Check if warzone enabled, and the spawn location is setted
-            if (Config.WarzoneSize.asInt() != 0 && !Main.factionCache.get(1).getClaims().isEmpty()) {
-                String str = Config.SpawnLocation.asStr();
-                Location spawn = new Location(
-                        Bukkit.getWorld(Config.WorldName.asStr()),
-                        Integer.parseInt(str.split(" ")[0]),
-                        Integer.parseInt(str.split(" ")[1]),
-                        Integer.parseInt(str.split(" ")[2]),
-                        Integer.parseInt(str.split(" ")[3]),
-                        Integer.parseInt(str.split(" ")[4])
-                );
-                Faction f = Main.factionCache.get(2);
-                int warzoneSize = Config.WarzoneSize.asInt();
-                HCF_Claiming.Faction_Claim claim;
-                claim = new HCF_Claiming.Faction_Claim(spawn.getBlockX() - warzoneSize, spawn.getBlockX() + warzoneSize, spawn.getBlockZ() - warzoneSize, spawn.getBlockZ() + warzoneSize, 2, HCF_Claiming.ClaimAttributes.SPECIAL, spawn.getWorld().getName());
-                f.addClaim(claim);
-            }
 
             // ToDo: Setup allies!
 
@@ -574,7 +570,7 @@ public class Playertools {
 
     //Koba, ne nyírj ki ha nem működik gec XD
     //Todo: Check + Bugfix ha van
-    public static boolean CheckClaimPlusOne(HCF_Claiming.Point left_c, HCF_Claiming.Point right_c, int diff, HCF_Claiming.Point p1, HCF_Claiming.Point p2) {
+    public static boolean CheckClaimPlusOne(Claiming.Point left_c, Claiming.Point right_c, int diff, Claiming.Point p1, Claiming.Point p2) {
         //Getting the bottom left point
         int minX = Math.min(left_c.getX(), right_c.getX());
         int minZ = Math.min(left_c.getZ(), right_c.getZ());
@@ -584,13 +580,13 @@ public class Playertools {
         int maxZ = Math.max(left_c.getZ(), right_c.getZ());
 
         //Creating the new claim
-        HCF_Claiming.Point new_claim_start = new HCF_Claiming.Point(minX - diff, minZ - diff);
-        HCF_Claiming.Point new_claim_end = new HCF_Claiming.Point(maxX + diff, maxZ + diff);
+        Claiming.Point new_claim_start = new Claiming.Point(minX - diff, minZ - diff);
+        Claiming.Point new_claim_end = new Claiming.Point(maxX + diff, maxZ + diff);
 
-        return HCF_Claiming.doOverlap(new_claim_start, new_claim_end, p1, p2);
+        return Claiming.doOverlap(new_claim_start, new_claim_end, p1, p2);
     }
 
-    public static int getDistanceBetweenPoints2D(HCF_Claiming.Point p1, HCF_Claiming.Point p2) {
+    public static int getDistanceBetweenPoints2D(Claiming.Point p1, Claiming.Point p2) {
         return (Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getZ() - p2.getZ()));
     }
 
@@ -721,11 +717,11 @@ public class Playertools {
 
     public static boolean finishSpawn(Player admin) {
         HCFPlayer player = HCFPlayer.getPlayer(admin);
-        if (HCF_Claiming.ForceFinishClaim(1, admin, HCF_Claiming.ClaimAttributes.PROTECTED)) {
+        if (Claiming.ForceFinishClaim(1, admin, Claiming.ClaimAttributes.PROTECTED)) {
             //Todo: Kurvva sikerült
-            player.setClaimType(HCF_Claiming.ClaimTypes.NONE);
+            player.setClaimType(Claiming.ClaimTypes.NONE);
             admin.sendMessage(Messages.spawn_claim_success.language(admin).queue());
-            admin.getInventory().remove(HCF_Claiming.Wands.claimWand());
+            admin.getInventory().remove(Claiming.Wands.claimWand());
             return true;
         }
         return false;
@@ -733,9 +729,9 @@ public class Playertools {
 
     public static void cancelSpawnClaim(Player admin) {
         HCFPlayer player = HCFPlayer.getPlayer(admin);
-        player.setClaimType(HCF_Claiming.ClaimTypes.NONE);
+        player.setClaimType(Claiming.ClaimTypes.NONE);
         admin.sendMessage(Messages.faction_claim_decline.language(admin).queue());
-        admin.getInventory().remove(HCF_Claiming.Wands.claimWand());
+        admin.getInventory().remove(Claiming.Wands.claimWand());
     }
 
     public static boolean isValidName(String name) {
@@ -798,6 +794,8 @@ public class Playertools {
         f.sort(Comparator.comparingInt(Faction::countOnlineMembers));
         Collections.reverse(f);
         f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), null));
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), "null"));
         return f;
     }
     public static ArrayList<Faction> sortByDTR() {
@@ -805,6 +803,8 @@ public class Playertools {
         f.sort(Comparator.comparingDouble(Faction::getDTR));
         Collections.reverse(f);
         f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), null));
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), "null"));
         return f;
     }
     public static ArrayList<Faction> sortByBalance() {
@@ -812,6 +812,8 @@ public class Playertools {
         f.sort(Comparator.comparingInt(Faction::getBalance));
         Collections.reverse(f);
         f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), null));
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), "null"));
         return f;
     }
     public static ArrayList<Faction> sortByKills() {
@@ -819,6 +821,8 @@ public class Playertools {
         f.sort(Comparator.comparingInt(Faction::getKills));
         Collections.reverse(f);
         f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), null));
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), "null"));
         return f;
     }
     public static ArrayList<Faction> sortByPoints() {
@@ -826,6 +830,8 @@ public class Playertools {
         f.sort(Comparator.comparingInt(Faction::getPoints));
         Collections.reverse(f);
         f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), null));
+        f.removeIf(fac -> Objects.equals(fac.getLeader(), "null"));
         return f;
     }
 

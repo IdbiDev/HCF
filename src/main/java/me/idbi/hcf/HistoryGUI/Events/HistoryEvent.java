@@ -1,7 +1,7 @@
 package me.idbi.hcf.HistoryGUI.Events;
 
-import me.idbi.hcf.FrakcioGUI.Items.GUI_Items;
-import me.idbi.hcf.FrakcioGUI.Menus.MainInventory;
+import me.idbi.hcf.FactionGUI.Items.GUI_Items;
+import me.idbi.hcf.FactionGUI.Menus.MainInventory;
 import me.idbi.hcf.HistoryGUI.GUITools;
 import me.idbi.hcf.HistoryGUI.History.FactionHistoryInventory;
 import me.idbi.hcf.Tools.Objects.Faction;

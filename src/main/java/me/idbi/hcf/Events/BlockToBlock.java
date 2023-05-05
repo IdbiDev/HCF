@@ -1,7 +1,7 @@
 package me.idbi.hcf.Events;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,7 +11,7 @@ public class BlockToBlock implements Listener {
     @EventHandler
     public void BlockToBlockListener(BlockFromToEvent e) {
         Location to = e.getToBlock().getLocation();
-        if(HCF_Claiming.isClaimBorder(to.getBlockX(),to.getBlockZ()) && !Config.EnableFlowingToClaim.asBoolean()){
+        if(Claiming.isClaimBorder(to.getBlockX(),to.getBlockZ()) && !Config.EnableFlowingToClaim.asBoolean()){
             e.setCancelled(true);
         }
     }

@@ -3,8 +3,6 @@ package me.idbi.hcf;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
 import com.keenant.tabbed.Tabbed;
 import lombok.Getter;
 import me.idbi.hcf.Bossbar.Bossbar;
@@ -44,12 +42,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.sql.Connection;
 import java.util.*;
 
-import static me.idbi.hcf.HCF_Rules.*;
+import static me.idbi.hcf.HCFRules.*;
 
 
 public final class Main extends JavaPlugin implements Listener {
@@ -85,7 +82,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static World netherWorld;
     public static HashMap<String, CustomTimers> customSBTimers;
     public static LinkedHashMap<Integer, Faction> factionCache = new LinkedHashMap<>();
-    public static LinkedHashMap<String, HCF_Claiming.Faction_Claim> kothCache = new LinkedHashMap<>();
+    public static LinkedHashMap<String, Claiming.Faction_Claim> kothCache = new LinkedHashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
     public static LinkedHashMap<UUID, HCFPlayer> playerCache = new LinkedHashMap<>();
     public static ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
@@ -312,6 +309,17 @@ public final class Main extends JavaPlugin implements Listener {
 
         border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
         autoKoth.startAutoKoth();
+        if (Config.WarzoneSize.asInt() != 0 && !Main.factionCache.get(1).getClaims().isEmpty()) {
+            //System.out.println("Bro van warzone");
+            String str = Config.SpawnLocation.asStr();
+            Faction f = Main.factionCache.get(2);
+            int warzoneSize = Config.WarzoneSize.asInt();
+            Claiming.Faction_Claim claim;
+            claim = new Claiming.Faction_Claim(spawnLocation.getBlockX() - warzoneSize, spawnLocation.getBlockX() + warzoneSize, spawnLocation.getBlockZ() - warzoneSize, spawnLocation.getBlockZ() + warzoneSize, 2, Claiming.ClaimAttributes.SPECIAL, spawnLocation.getWorld().getName());
+            f.addClaim(claim);
+            claim = new Claiming.Faction_Claim(spawnLocation.getBlockX() - warzoneSize, spawnLocation.getBlockX() + warzoneSize, spawnLocation.getBlockZ() - warzoneSize, spawnLocation.getBlockZ() + warzoneSize, 2, Claiming.ClaimAttributes.SPECIAL, Config.NetherName.asStr());
+            f.addClaim(claim);
+        }
 //        for (int i = 0; i < 100; i++) {
 //            Faction f = Playertools.createCustomFaction("Faction"+i,UUID.randomUUID().toString());
 //            f.addBalance(i);

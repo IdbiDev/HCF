@@ -5,6 +5,7 @@ import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
 import me.idbi.hcf.CustomFiles.MessagesTool;
 import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -85,7 +86,7 @@ public enum GUIMessages {
     }
 
     public GUIMessages language(Player p) {
-        String language = MessagesTool.getPlayerLanguage(p);
+        String language = HCFPlayer.getPlayer(p).getLanguage();
         String configMessage = MessagesTool.getGUILanguageMessages(language).getString(this + ".name");
         if (configMessage != null) {
             this.tempName = ChatColor.translateAlternateColorCodes('&', configMessage);

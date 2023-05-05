@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 public class ConfigManager {
 
-    public static String[] configHeader = {"This is super simple", "And highly customizable", "new and fresh SimpleConfig !"}; // ToDo: Edited
+    public static String[] configHeader = {"HCF+ Config", "Created by", "Idbi & Koba"}; // ToDo: Edited
     public static String[] messagesHeader = {"123", "123", "123"}; // ToDo: Edited
     public static String[] guiHeader = {"GUIGUGIGUI", "GUIGUGIGUI", "GUIGUGIGUI"}; // ToDo: Edited
     private static SimpleConfigManager manager;

@@ -187,6 +187,7 @@ public class MiscTimers {
                     ignored.printStackTrace();
                 }
 
+                Main.playerBlockChanges.put(player.getUniqueId(), new ArrayList<Location>());
             }
         }.runTaskAsynchronously(Main.getPlugin(Main.class));
     }
@@ -262,7 +263,7 @@ public class MiscTimers {
     private void runNowExpires(Player p) {
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         if (Timers.STUCK.nowExpire(hcfPlayer)) {
-            Location loc = HCF_Claiming.ReturnSafeSpot(p.getLocation());
+            Location loc = Claiming.ReturnSafeSpot(p.getLocation());
             if (loc != null) {
                 p.teleport(loc);
                 p.sendMessage(Messages.stuck_finished.queue());
@@ -288,6 +289,9 @@ public class MiscTimers {
             }
         }
         if(Timers.PVP_TIMER.nowExpire(hcfPlayer)) {
+            removeFakeWalls(p);
+        }
+        if(Timers..nowExpire(hcfPlayer)) {
             removeFakeWalls(p);
         }
     }

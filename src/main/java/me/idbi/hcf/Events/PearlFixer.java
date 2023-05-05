@@ -1,10 +1,10 @@
 package me.idbi.hcf.Events;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.HCF_Rules;
+import me.idbi.hcf.HCFRules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Location;
@@ -23,7 +23,7 @@ import java.util.Map;
 public class PearlFixer implements Listener {
     //ESKÜ NEM LOPOTT [Source: PearlFixer.java]
     public PearlFixer() {
-        HCF_Rules.setupPearlGlitch();
+        HCFRules.setupPearlGlitch();
     }
 
     @EventHandler
@@ -39,13 +39,13 @@ public class PearlFixer implements Listener {
         if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL) && !event.isCancelled() && Timers.COMBAT_TAG.has(event.getPlayer())) {
             Location location = event.getTo();
             for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-                for (HCF_Claiming.Faction_Claim claim : thisFaction.getValue().getClaims()) {
+                for (Claiming.Faction_Claim claim : thisFaction.getValue().getClaims()) {
                     if(location.getWorld().equals(claim.getWorld())) continue;
-                    if (claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.PROTECTED)) {
-                        HCF_Claiming.Point claimStart = new HCF_Claiming.Point(claim.getStartX(), claim.getStartZ());
-                        HCF_Claiming.Point claimEnd = new HCF_Claiming.Point(claim.getEndX(), claim.getEndZ());
-                        HCF_Claiming.Point getTo = new HCF_Claiming.Point(location.getBlockX(), location.getBlockZ());
-                        if (HCF_Claiming.FindPoint_old(claimStart.getX(), claimStart.getZ(), claimEnd.getX(), claimEnd.getZ(), getTo.getX(), getTo.getZ())) {
+                    if (claim.getAttribute().equals(Claiming.ClaimAttributes.PROTECTED)) {
+                        Claiming.Point claimStart = new Claiming.Point(claim.getStartX(), claim.getStartZ());
+                        Claiming.Point claimEnd = new Claiming.Point(claim.getEndX(), claim.getEndZ());
+                        Claiming.Point getTo = new Claiming.Point(location.getBlockX(), location.getBlockZ());
+                        if (Claiming.FindPoint_old(claimStart.getX(), claimStart.getZ(), claimEnd.getX(), claimEnd.getZ(), getTo.getX(), getTo.getZ())) {
                             event.setCancelled(true);
                             event.getPlayer().sendMessage(Messages.cant_teleport_to_safezone.language(event.getPlayer()).queue());
                             break;
@@ -74,7 +74,7 @@ public class PearlFixer implements Listener {
     public void onPearlClip(PlayerTeleportEvent event) {
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
             Location to = event.getTo();
-            if (HCF_Rules.blockedPearlTypes.contains(to.getBlock().getType())) {
+            if (HCFRules.blockedPearlTypes.contains(to.getBlock().getType())) {
                 event.setCancelled(true);
                 return;
             }

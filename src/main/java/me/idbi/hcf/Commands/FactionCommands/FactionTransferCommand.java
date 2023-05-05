@@ -65,6 +65,9 @@ public class FactionTransferCommand extends SubCommand {
 
                     targetHCF.setRank(playerFaction.getLeaderRank());
                     playerHCF.setRank(playerFaction.getDefaultRank());
+                    p.sendMessage(Messages.faction_transfer_leader.language(p).setPlayer(targetHCF).queue());
+                    if(targetPlayer.isOnline())
+                        ((Player)targetPlayer).sendMessage(Messages.faction_transfer_leader_target.language(p).setPlayer(playerHCF).queue());
                 }
             } else {
                 p.sendMessage(Messages.no_permission_in_faction.language(p).queue());

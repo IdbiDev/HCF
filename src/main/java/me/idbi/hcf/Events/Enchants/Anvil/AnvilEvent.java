@@ -1,6 +1,6 @@
 package me.idbi.hcf.Events.Enchants.Anvil;
 
-import me.idbi.hcf.HCF_Rules;
+import me.idbi.hcf.HCFRules;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -91,15 +91,12 @@ public class AnvilEvent implements Listener {
 
     public static boolean isAllowed(ItemStack is) {
         for (Map.Entry<Enchantment, Integer> enc : is.getEnchantments().entrySet()) {
-            if (HCF_Rules.allowedLevels.containsKey(enc.getKey())) {
-                int value = HCF_Rules.allowedLevels.get(enc.getKey());
-                int enchantLevel = enc.getValue();
-                // 2  > -1
-                if (value == -1)
-                    return true;
-                if (enchantLevel >= value)
-                    return false;
-            } else
+            int value = rules.getMaxLevel(enc.getKey());
+            int enchantLevel = enc.getValue();
+            // 2  > -1
+            if (value == -1)
+                return true;
+            if (enchantLevel >= value)
                 return false;
         }
         return true;

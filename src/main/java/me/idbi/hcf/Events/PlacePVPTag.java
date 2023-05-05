@@ -17,7 +17,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import static me.idbi.hcf.Tools.Playertools.isTeammate;
 
 public class PlacePVPTag implements Listener {
-Archer archer = new Archer();
+    Archer archer = new Archer();
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlaceTag(EntityDamageByEntityEvent e) {
         if (e.isCancelled()) return;

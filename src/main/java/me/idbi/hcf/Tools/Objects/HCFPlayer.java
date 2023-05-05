@@ -9,7 +9,6 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Board;
-import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.*;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -40,16 +39,16 @@ public class HCFPlayer {
     @Getter private PlayerStatistic playerStatistic;
     @Getter private TreeMap<Integer, Rollback> rollbacks;
     @Getter private TableTabList tabList;
-    @Getter @Setter private HCF_Claiming.ClaimTypes claimType;
+    @Getter @Setter private Claiming.ClaimTypes claimType;
     @Getter @Setter private Classes playerClass;
     @Getter @Setter private boolean freezed;
     @Getter @Setter private double bardEnergy;
-    @Getter @Setter private HCF_Claiming.Faction_Claim currentArea;
+    @Getter @Setter private Claiming.Faction_Claim currentArea;
     @Getter @Setter private int assassinState;
     @Getter @Setter private boolean inDuty;
     @Getter @Setter private Location stuckLocation;
     @Getter @Setter private ChatTypes chatType;
-    @Getter @Setter private int kothId;
+    @Getter @Setter private int claimID;
     @Getter @Setter private FactionRankManager.Rank rank;
     @Getter @Setter private boolean isDeathBanned;
     @Getter @Setter private int lives;
@@ -87,9 +86,9 @@ public class HCFPlayer {
             this.inDuty = false;
             this.currentArea = null;
             this.stuckLocation = null;
-            this.claimType = HCF_Claiming.ClaimTypes.NONE;
+            this.claimType = Claiming.ClaimTypes.NONE;
             this.freezed = false;
-            this.kothId = 0;
+            this.claimID = 0;
             this.toggledChatTypes = new ArrayList<>();
             this.language = language;
             this.factionViewMapLocations = new ArrayList<>();
@@ -204,7 +203,7 @@ public class HCFPlayer {
     public void join() {
         this.playerClass = Classes.NONE;
         this.isClassWarmup = false;
-        this.claimType = HCF_Claiming.ClaimTypes.NONE;
+        this.claimType = Claiming.ClaimTypes.NONE;
         this.toggledChatTypes = new ArrayList<>();
         this.factionViewMapLocations = new ArrayList<>();
         this.viewMap = false;
@@ -248,12 +247,12 @@ public class HCFPlayer {
         this.money =  Math.toIntExact(Math.round(r.balance));
     }
 
-    public void addFactionViewMapLocation(HCF_Claiming.Point loc) {
+    public void addFactionViewMapLocation(Claiming.Point loc) {
         if(!this.factionViewMapLocations.contains(loc))
             this.factionViewMapLocations.add(loc);
     }
 
-    public void removeFactionViewMapLocation(HCF_Claiming.Point loc) {
+    public void removeFactionViewMapLocation(Claiming.Point loc) {
         this.factionViewMapLocations.remove(loc);
     }
 

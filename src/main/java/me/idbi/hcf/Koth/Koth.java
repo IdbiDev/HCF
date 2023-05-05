@@ -5,13 +5,12 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Koth.GUI.KOTHItemManager;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,7 +24,7 @@ import java.util.Random;
 
 public class Koth implements Listener {
 
-    public static HCF_Claiming.Faction_Claim GLOBAL_AREA = null;
+    public static Claiming.Faction_Claim GLOBAL_AREA = null;
     public static Player GLOBAL_PLAYER = null;
     public static int GLOBAL_TIME;
 
@@ -35,13 +34,13 @@ public class Koth implements Listener {
         if (!(e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()))
             return;
         if (GLOBAL_AREA != null) {
-            HCF_Claiming.Point start = new HCF_Claiming.Point(GLOBAL_AREA.getStartX(), GLOBAL_AREA.getStartZ());
-            HCF_Claiming.Point end = new HCF_Claiming.Point(GLOBAL_AREA.getEndX(), GLOBAL_AREA.getEndZ());
-            HCF_Claiming.Point point = new HCF_Claiming.Point(e.getTo().getBlockX(), e.getTo().getBlockZ());
+            Claiming.Point start = new Claiming.Point(GLOBAL_AREA.getStartX(), GLOBAL_AREA.getStartZ());
+            Claiming.Point end = new Claiming.Point(GLOBAL_AREA.getEndX(), GLOBAL_AREA.getEndZ());
+            Claiming.Point point = new Claiming.Point(e.getTo().getBlockX(), e.getTo().getBlockZ());
             Player p = e.getPlayer();
             if (GLOBAL_PLAYER == null) {
                 // ha kothba ment ÉS nem foglalja senki
-                if (GLOBAL_AREA.getAttribute().equals(HCF_Claiming.ClaimAttributes.KOTH) && HCF_Claiming.doOverlap(start, end, point, point)) {
+                if (GLOBAL_AREA.getAttribute().equals(Claiming.ClaimAttributes.KOTH) && Claiming.doOverlap(start, end, point, point)) {
                     HCFPlayer hcf = HCFPlayer.getPlayer(p);
                     if (hcf.inFaction()) {
                         GLOBAL_PLAYER = e.getPlayer();
@@ -51,7 +50,7 @@ public class Koth implements Listener {
                     }
                 }
             } else {
-                if (GLOBAL_AREA.getAttribute().equals(HCF_Claiming.ClaimAttributes.KOTH) && !HCF_Claiming.doOverlap(start, end, point, point)) {
+                if (GLOBAL_AREA.getAttribute().equals(Claiming.ClaimAttributes.KOTH) && !Claiming.doOverlap(start, end, point, point)) {
                     if (GLOBAL_PLAYER == e.getPlayer()) {
                         GLOBAL_PLAYER = null;
                         GLOBAL_TIME = Config.KOTHDuration.asInt() * 60;
@@ -63,8 +62,10 @@ public class Koth implements Listener {
         }
     }
 
-    public static Faction createKoth(String name) {
-        return Playertools.createCustomFaction(name, "");
+    public static Faction createKoth(Player p,String name) {
+        Faction f = Playertools.createCustomFaction(name, null);
+        //p.sendMessage(Messages.koth_created.language(p).setFaction(f).queue());
+        return f;
 //        KOTH.koth_area temp = new KOTH.koth_area(
 //                faction,
 //                new HCF_Claiming.Point(claim.startX,claim.startZ),
@@ -75,10 +76,10 @@ public class Koth implements Listener {
     public static void startKoth(String f) {
         try {
             Faction kothFaction = Playertools.getFactionByName(f);
-            HCF_Claiming.Faction_Claim kothArea = null;
+            Claiming.Faction_Claim kothArea = null;
             if(kothFaction != null) {
-                for(HCF_Claiming.Faction_Claim claim : kothFaction.getClaims()) {
-                    if(claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.KOTH)) {
+                for(Claiming.Faction_Claim claim : kothFaction.getClaims()) {
+                    if(claim.getAttribute().equals(Claiming.ClaimAttributes.KOTH)) {
                         kothArea = claim;
                         break;
                     }
@@ -106,10 +107,10 @@ public class Koth implements Listener {
     public static void startKoth(Player player,String f) {
         try {
             Faction kothFaction = Playertools.getFactionByName(f);
-            HCF_Claiming.Faction_Claim kothArea = null;
+            Claiming.Faction_Claim kothArea = null;
             if(kothFaction != null) {
-                for(HCF_Claiming.Faction_Claim claim : kothFaction.getClaims()) {
-                    if(claim.getAttribute().equals(HCF_Claiming.ClaimAttributes.KOTH)) {
+                for(Claiming.Faction_Claim claim : kothFaction.getClaims()) {
+                    if(claim.getAttribute().equals(Claiming.ClaimAttributes.KOTH)) {
                         kothArea = claim;
                         break;
                     }

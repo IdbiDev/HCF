@@ -51,56 +51,346 @@ commands:
     aliases: [ lff, lookingfaction, lffaction, lforf, lforfaction, lookingff, lookforfaction, lookingffaction, lookingfaction ]
   pvp:
   coordinates:
+  mountain:
+  waypoint:
+    aliases: [ wps, wp, waypoints ]
+  language:
+    aliases: [ lang ]
+  customclaim:
+    aliases: [ customc, cclaim ]
+  lives:
+    aliases: [ live ]
+  slots:
+    aliases: [ slot ]
 
 
 permissions:
-  factions.reload:
+  factions.elevator.use:
+    default: false
+  factions.elevator.create:
+    default: false
+  factions.commands.addenchant:
     default: op
+  factions.commands.removeenchant:
+    default: op
+  factions.commands.enchantinfo:
+    default: op
+  factions.commands.enchantbook:
+    default: op
+  factions.commands.revive:
+    default: false
+  factions.admin.eotwjoin:
+    default: op
+  factions.admin.slotbypass:
+    default: op
+  factions.commands.admin.customtimer:
+    default: op
+  factions.commands.pvptimer:
+    default: false
+  factions.crowbar.use:
+    default: false
+  factions.commands.language:
+    default: false
+  factions.commands.waypoint:
+    default: false
+  factions.signshop.create:
+    default: false
+  factions.signshop.use:
+    default: false
+  factions.admin.deathbanbypass:
+    default: op
+  factions.reclaim.default:
+    default: false
+
+  factions.admin.*:
+    default: op
+    children:
+      factions.commands.faction.*: true
+      factions.commands.koth.*: true
+      factions.commands.lives.*: true
+      factions.commands.customclaim.*: true
+      factions.commands.ally.*: true
+      factions.commands.admin.*: true
+      factions.elevator.create: true
+      factions.signshop.create: true
+      factions.admin.slotbypass: true
+      factions.admin.deathbanbypass: true
+      factions.reclaim.default: true
+  factions.commands.faction.*:
+    default: op
+    children:
+      factions.commands.chat: true
+      factions.commands.togglechat: true
+      factions.commands.claim: true
+      factions.commands.create: true
+      factions.commands.deposit: true
+      factions.commands.disband: true
+      factions.commands.home: true
+      factions.commands.invite: true
+      factions.commands.join: true
+      factions.commands.kick: true
+      factions.commands.leave: true
+      factions.commands.list: true
+      factions.commands.manage: true
+      factions.commands.map: true
+      factions.commands.rally: true
+      factions.commands.sethome: true
+      factions.commands.show: true
+      factions.commands.stats: true
+      factions.commands.stuck: true
+      factions.commands.focus: true
+      factions.commands.top: true
+      factions.commands.transfer: true
+      factions.commands.unclaim: true
+      factions.commands.uninvite: true
+      factions.commands.unrally: true
+      factions.commands.unfocus: true
+      factions.commands.withdraw: true
+      factions.commands.event: true
+      factions.commands.promote: true
+      factions.commands.demote: true
+      factions.commands.rename: true
+      factions.commands.factioncall: true
+      factions.commands.lookingforfaction: true
+      factions.commands.logout: true
+      factions.commands.coordinates: true
+      factions.commands.reclaim: true
+  factions.commands.koth.*:
+    default: op
+    children:
+      factions.commands.koth.createcapturezone: true
+      factions.commands.koth.create: true
+      factions.commands.koth.createneutralzone: true
+      factions.commands.koth.setreward: true
+      factions.commands.koth.start: true
+
+  factions.commands.ally.*:
+    default: op
+    children:
+      factions.commands.ally.accept: true
+      factions.commands.ally.decline: true
+      factions.commands.ally.invite: true
+      factions.commands.ally.resolve: true
+      factions.commands.ally.uninvite: true
+  factions.commands.lives.*:
+    default: op
+    children:
+      factions.commands.lives.give: true
+      factions.commands.lives.set: true
+      factions.commands.lives.take: true
+      factions.commands.lives.get: true
+  factions.commands.customclaim.*:
+    default: op
+    children:
+      factions.commands.customclaim.create: true
+      factions.commands.customclaim.claim: true
+      factions.commands.customclaim.delete: true
+      factions.commands.customclaim.unclaim: true
+
+  factions.commands.admin.*:
+    default: op
+    children:
+      factions.commands.admin.mountain: true
+      factions.commands.admin.rollback: true
+      factions.commands.admin.chat: true
+      factions.commands.admin.deletefaction: true
+      factions.commands.admin.deposit: true
+      factions.commands.admin.duty: true
+      factions.commands.admin.freeze: true
+      factions.commands.admin.givemoney: true
+      factions.commands.admin.help: true
+      factions.commands.admin.removeplayer: true
+      factions.commands.admin.resetreclaim: true
+      factions.commands.admin.reload: true
+      factions.commands.admin.setdtr: true
+      factions.commands.admin.setfactionleader: true
+      factions.commands.admin.setfactionname: true
+      factions.commands.admin.setplayerfaction: true
+      factions.commands.admin.claimspawn: true
+      factions.commands.admin.takemoney: true
+      factions.commands.admin.freezedtr: true
+      factions.commands.admin.vanish: true
+      factions.commands.admin.withdraw: true
+      factions.commands.admin.items: true
+      factions.commands.admin.customtimer: true
+      factions.commands.admin.slots: true
   factions.*:
     default: op
-    children: [
-      factions.reload,
-      factions.admin.teleport.bypass,
-      factions.admin,
-      factions.command.addenchant,
-      factions.command.removeenchant,
-      factions.command.enchantinfo,
-      factions.command.enchantbook,
-      factions.commands.factioncall,
-      factions.command.stats,
-      factions.admin.customtimer,
-      factions.command.revive,
-      factions.commands.resetclaim,
-      factions.commands.admin.rollback,
-      factions.admin.eotwjoin
-    ]
-  factions.admin.teleport.bypass:
-    default: op
-  factions.admin:
-    default: op
-  factions.command.addenchant:
-    default: op
-  factions.command.removeenchant:
-    default: op
-  factions.command.enchantinfo:
-    default: op
-  factions.command.enchantbook:
-    default: op
-  factions.command.stats:
-    default: op
-  factions.admin.customtimer:
-    default: op
-  factions.command.revive:
-    default: op
-  factions.commands.resetclaim:
-    default: op
-  factions.commands.back:
-    default: true
-  factions.commands.back.others:
-    default: true
+    children:
+      factions.commands.admin.*: true
+      factions.commands.customclaim.*: true
+      factions.commands.ally.*: true
+      factions.commands.lives.*: true
+      factions.commands.koth.*: true
+      factions.commands.faction.*: true
+      factions.elevator.use: true
+      factions.elevator.create: true
+      factions.signshop.use: true
+      factions.signshop.create: true
+      factions.crowbar.use: true
+
+  # FACTION COMMANDS
+  factions.commands.reclaim:
+    default: false
+  factions.commands.coordinates:
+    default: false
+  factions.commands.chat:
+    default: false
+  factions.commands.togglechat:
+    default: false
+  factions.commands.claim:
+    default: false
+  factions.commands.create:
+    default: false
+  factions.commands.deposit:
+    default: false
+  factions.commands.disband:
+    default: false
+  factions.commands.home:
+    default: false
+  factions.commands.invite:
+    default: false
+  factions.commands.join:
+    default: false
+  factions.commands.kick:
+    default: false
+  factions.commands.leave:
+    default: false
+  factions.commands.list:
+    default: false
+  factions.commands.manage:
+    default: false
+  factions.commands.map:
+    default: false
+  factions.commands.rally:
+    default: false
+  factions.commands.sethome:
+    default: false
+  factions.commands.show:
+    default: false
+  factions.commands.stats:
+    default: false
+  factions.commands.stuck:
+    default: false
+  factions.commands.focus:
+    default: false
+  factions.commands.top:
+    default: false
+  factions.commands.transfer:
+    default: false
+  factions.commands.unclaim:
+    default: false
+  factions.commands.uninvite:
+    default: false
+  factions.commands.unrally:
+    default: false
+  factions.commands.unfocus:
+    default: false
+  factions.commands.withdraw:
+    default: false
+  factions.commands.event:
+    default: false
+  factions.commands.promote:
+    default: false
+  factions.commands.demote:
+    default: false
+  factions.commands.rename:
+    default: false
   factions.commands.factioncall:
-    default: true
+    default: false
+  factions.commands.lookingforfaction:
+    default: false
+  factions.commands.logout:
+    default: false
+
+  # LIVES COMMANDS
+  factions.commands.lives.give:
+    default: false
+  factions.commands.lives.set:
+    default: false
+  factions.commands.lives.take:
+    default: false
+  factions.commands.lives.get:
+    default: false
+
+# KOTH COMMNADS
+  factions.commands.koth.createcapturezone:
+    default: false
+  factions.commands.koth.create:
+    default: false
+  factions.commands.koth.createneutralzone:
+    default: false
+  factions.commands.koth.setreward:
+    default: false
+  factions.commands.koth.start:
+    default: false
+
+# CUSTOM CLAIMING COMMANDS
+  factions.commands.customclaim.create:
+    default: false
+  factions.commands.customclaim.claim:
+    default: false
+  factions.commands.customclaim.delete:
+    default: false
+  factions.commands.customclaim.unclaim:
+    default: false
+
+# ALLY COMMANDS
+  factions.commands.ally.accept:
+    default: false
+  factions.commands.ally.decline:
+    default: false
+  factions.commands.ally.invite:
+    default: false
+  factions.commands.ally.resolve:
+    default: false
+  factions.commands.ally.uninvite:
+    default: false
+
+# ADMIN COMMANDS
+  factions.commands.admin.slots:
+    default: op
   factions.commands.admin.rollback:
     default: op
-  factions.admin.eotwjoin:
+  factions.commands.admin.chat:
+    default: op
+  factions.commands.admin.mountain:
+    default: op
+  factions.commands.admin.deletefaction:
+    default: op
+  factions.commands.admin.deposit:
+    default: op
+  factions.commands.admin.duty:
+    default: op
+  factions.commands.admin.freeze:
+    default: op
+  factions.commands.admin.givemoney:
+    default: op
+  factions.commands.admin.help:
+    default: op
+  factions.commands.admin.removeplayer:
+    default: op
+  factions.commands.admin.resetreclaim:
+    default: op
+  factions.commands.admin.reload:
+    default: op
+  factions.commands.admin.setdtr:
+    default: op
+  factions.commands.admin.setfactionleader:
+    default: op
+  factions.commands.admin.setfactionname:
+    default: op
+  factions.commands.admin.setplayerfaction:
+    default: op
+  factions.commands.admin.claimspawn:
+    default: op
+  factions.commands.admin.takemoney:
+    default: op
+  factions.commands.admin.freezedtr:
+    default: op
+  factions.commands.admin.vanish:
+    default: op
+  factions.commands.admin.withdraw:
+    default: op
+  factions.commands.admin.items:
     default: op

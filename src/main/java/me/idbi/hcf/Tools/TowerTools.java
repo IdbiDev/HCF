@@ -8,22 +8,19 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class TowerTools {
 
-    public static CompletableFuture<List<HCF_Claiming.Point>> getMapTowers(Player p) {
-        CompletableFuture<List<HCF_Claiming.Point>> result = new CompletableFuture<>();
+    public static CompletableFuture<List<Claiming.Point>> getMapTowers(Player p) {
+        CompletableFuture<List<Claiming.Point>> result = new CompletableFuture<>();
         new BukkitRunnable() {
             @Override
             public void run() {
                 Location pLoc = p.getLocation();
-                List<HCF_Claiming.Point> locs = new ArrayList<>();
+                List<Claiming.Point> locs = new ArrayList<>();
                 for (Faction f : Main.factionCache.values()) {
                     if(f.getClaims().isEmpty()) continue;
                     int minX = Integer.MAX_VALUE;
@@ -31,7 +28,7 @@ public class TowerTools {
 
                     int maxX = -Integer.MAX_VALUE;
                     int maxZ = -Integer.MAX_VALUE;
-                    for (HCF_Claiming.Faction_Claim claim : f.getClaims()) {
+                    for (Claiming.Faction_Claim claim : f.getClaims()) {
                         if(pLoc.distanceSquared(new Location(
                                 claim.getWorld(),
                                 claim.getStartX(), pLoc.getBlockY(), claim.getStartZ())
@@ -51,16 +48,16 @@ public class TowerTools {
                     }
 
 
-                    HCF_Claiming.Point fClaim = new HCF_Claiming.Point(minX, minZ);
+                    Claiming.Point fClaim = new Claiming.Point(minX, minZ);
                     locs.add(fClaim);
 
-                    HCF_Claiming.Point fClaim2 = new HCF_Claiming.Point(minX, maxZ);
+                    Claiming.Point fClaim2 = new Claiming.Point(minX, maxZ);
                     locs.add(fClaim2);
 
-                    HCF_Claiming.Point fClaim3 = new HCF_Claiming.Point(maxX, minZ);
+                    Claiming.Point fClaim3 = new Claiming.Point(maxX, minZ);
                     locs.add(fClaim3);
 
-                    HCF_Claiming.Point fClaim4 = new HCF_Claiming.Point(maxX, maxZ);
+                    Claiming.Point fClaim4 = new Claiming.Point(maxX, maxZ);
                     locs.add(fClaim4);
                 }
                 result.complete(locs);
@@ -71,10 +68,10 @@ public class TowerTools {
         return result;
     }
 
-    public static void createPillar(Player p, List<HCF_Claiming.Point> list) {
+    public static void createPillar(Player p, List<Claiming.Point> list) {
         Tasks.executeAsync(() -> {
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
-            for (HCF_Claiming.Point point : list) {
+            for (Claiming.Point point : list) {
                 hcfPlayer.addFactionViewMapLocation(point);
                 Location loc = new Location(p.getWorld(), point.getX(), p.getLocation().getBlockY(), point.getZ());
                 for (int i = 0; i <= 256; i++) {
@@ -91,11 +88,11 @@ public class TowerTools {
             }
         });
     }
-    public static void removePillar(Player p, List<HCF_Claiming.Point> list) {
+    public static void removePillar(Player p, List<Claiming.Point> list) {
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         Tasks.executeAsync(() -> {
-            List<HCF_Claiming.Point> points = new ArrayList<>(list);
-            for (HCF_Claiming.Point point : points) {
+            List<Claiming.Point> points = new ArrayList<>(list);
+            for (Claiming.Point point : points) {
                 Location loc = new Location(p.getWorld(), point.getX(), 0, point.getZ());
                 for (int i = 0; i <= 256; i++) {
                     loc.setY(i);

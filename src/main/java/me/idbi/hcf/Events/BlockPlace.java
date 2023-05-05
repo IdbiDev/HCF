@@ -2,7 +2,7 @@ package me.idbi.hcf.Events;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Permissions;
@@ -27,7 +27,7 @@ public class BlockPlace implements Listener {
         Player p = e.getPlayer();
         Block block = e.getBlock();
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(block.getX(), block.getZ());
+        Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(block.getWorld(), block.getX(), block.getZ());
         if (claim != null) {
             if (claim.getFaction() == null) {
                 Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
@@ -35,8 +35,8 @@ public class BlockPlace implements Listener {
             }
             Faction baszogatottFaction = claim.getFaction();
 
-            if (Playertools.getDistanceBetweenPoints2D(new HCF_Claiming.Point(block.getX(), block.getZ()),
-                    new HCF_Claiming.Point(Playertools.getSpawn().getBlockX(),
+            if (Playertools.getDistanceBetweenPoints2D(new Claiming.Point(block.getX(), block.getZ()),
+                    new Claiming.Point(Playertools.getSpawn().getBlockX(),
                             Playertools.getSpawn().getBlockZ())) == warzoneSize && !hcf.isInDuty()) {
 
                 p.sendMessage(Messages.warzone_no_permission.language(p).queue());
@@ -60,14 +60,14 @@ public class BlockPlace implements Listener {
             if (hcf.isInDuty()) {
                 // System.out.println("BUZ");
                 e.setCancelled(false);
-            } else if (HCF_Claiming.isEnemyClaim(p, claim)) {
+            } else if (Claiming.isEnemyClaim(p, claim)) {
                 // System.out.println("MAU");
                 e.setCancelled(true);
                 Faction f = Playertools.getPlayerFaction(p);
                 if (f == null) return;
                 if (!f.hasAllyPermission(baszogatottFaction, Permissions.PLACE_BLOCK)) {
                     e.setCancelled(true);
-                    p.sendMessage(Messages.you_cant_do.language(p).setFaction(HCF_Claiming.sendFactionTerretoryByXZ(p, block.getX(), block.getZ())).queue());
+                    p.sendMessage(Messages.you_cant_do.language(p).setFaction(Claiming.sendFactionTerretoryByXZ(p, block.getX(), block.getZ())).queue());
                 } else {
                     e.setCancelled(false);
                 }

@@ -54,7 +54,7 @@ public class KothCreateCommand extends SubCommand {
 
     @Override
     public void perform(Player p, String[] args) {
-        createKoth(args[1]);
-        p.sendMessage(Messages.koth_created.language(p).setFaction(args[1]).queue());
+        createKoth(p,args[1]);
+        p.sendMessage(Messages.koth_success_create.language(p).setFaction(args[1]).queue());
     }
 }

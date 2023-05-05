@@ -2,7 +2,7 @@ package me.idbi.hcf.Events.Enchants;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.HCF_Rules;
+import me.idbi.hcf.HCFRules;
 import me.idbi.hcf.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -157,9 +157,9 @@ Silk Touch*/
                 }
 
                 ItemStack item = e.getView().getTopInventory().getItem(13);
-                HCF_Rules.EnchantClass obj = HCF_Rules.randomEnchant();
+                HCFRules.EnchantClass obj = HCFRules.randomEnchant();
                 while (!obj.getEnchantment().canEnchantItem(item)) {
-                    obj = HCF_Rules.randomEnchant();
+                    obj = HCFRules.randomEnchant();
                     //System.out.println(obj.getEnchantment());
                 }
                 for (Map.Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {

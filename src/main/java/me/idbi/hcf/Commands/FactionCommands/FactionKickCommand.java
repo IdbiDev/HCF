@@ -116,6 +116,7 @@ public class FactionKickCommand extends SubCommand {
                 Scoreboards.RefreshAll();
                 NameChanger.refresh(p);
                 p.sendMessage(Messages.kick_message.language(p).setExecutor(p).setPlayer(hcf).queue());
+                hcf.sendMessage(Messages.kick_message_target);
             } else {
                 p.sendMessage(Messages.no_permission_in_faction.language(p).queue());
             }

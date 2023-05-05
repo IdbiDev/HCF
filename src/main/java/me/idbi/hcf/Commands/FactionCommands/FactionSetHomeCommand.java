@@ -82,7 +82,7 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
             put("PITCH", (int) p.getLocation().getPitch());
         }};
         SQL_Connection.dbExecute(con,"UPDATE factions SET home='?' WHERE ID='?'",new JSONObject(map).toString());
-        HCF_Claiming.Faction_Claim claim = HCF_Claiming.sendClaimByXZ(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
+        Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockZ());
         if (claim != null) {
             if (claim.getFaction().getId() == faction.getId()) {
                 faction.setHomeLocation(p.getLocation());

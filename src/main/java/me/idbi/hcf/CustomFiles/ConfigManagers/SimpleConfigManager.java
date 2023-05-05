@@ -32,9 +32,9 @@ public class SimpleConfigManager {
             }
         }
 
-        Reader reader = new InputStreamReader(this.getConfigContent(filePath));
-        SimpleConfig config = new SimpleConfig(reader, file, this.getCommentsNum(file), plugin);
-        return config;
+        Reader reader = null;
+        reader = new InputStreamReader(this.getConfigContent(filePath));
+        return new SimpleConfig(reader, file, this.getCommentsNum(file), plugin);
 
     }
 

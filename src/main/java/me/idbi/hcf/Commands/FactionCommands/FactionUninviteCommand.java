@@ -5,6 +5,8 @@ import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -61,10 +63,11 @@ public class FactionUninviteCommand extends SubCommand {
                 HCFPlayer hcfPlayer = HCFPlayer.getPlayer(args[1]);
                 if(hcfPlayer != null) {
                     if(player.getFaction().isPlayerInvited(hcfPlayer)) {
+                        OfflinePlayer targetPlayer = Bukkit.getPlayer(args[1]);
                         player.getFaction().unInvitePlayer(hcfPlayer);
-                        p.sendMessage("uninvited");
-                        //Todo: Message
-
+                        p.sendMessage(Messages.uninvite_executor.language(p).setPlayer(hcfPlayer).queue());
+                        if(targetPlayer.isOnline())
+                            ((Player)targetPlayer).sendMessage(Messages.uninvite_target.language(p).setPlayer(player).queue());
                         addCooldown(p);
                     }else {
                         p.sendMessage(Messages.not_invited.language(p).queue());

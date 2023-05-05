@@ -2,7 +2,7 @@ package me.idbi.hcf.Commands.FactionCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.FrakcioGUI.GUI_Sound;
+import me.idbi.hcf.FactionGUI.GUISound;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
@@ -87,7 +87,7 @@ public class FactionCreateCommand extends SubCommand {
                 for (String blacklisted_word : Main.blacklistedRankNames) {
                     if (name.toLowerCase().contains(blacklisted_word.toLowerCase())) {
                         p.sendMessage(Messages.prefix_cmd.language(p).queue() + " " + Messages.gui_bad_word.language(p).queue());
-                        GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
+                        GUISound.playSound(p, GUISound.HCFSounds.ERROR);
                         return;
                     }
                 }
@@ -128,7 +128,7 @@ public class FactionCreateCommand extends SubCommand {
                 // LogLibrary.sendFactionCreate(p, faction.name);
                 faction.addMember(hcf);
                 faction.refreshDTR();
-                GUI_Sound.playSound(p, GUI_Sound.HCFSounds.SUCCESS);
+                GUISound.playSound(p, GUISound.HCFSounds.SUCCESS);
                 PlayerStatistic stat = hcf.getPlayerStatistic();
                 stat.factionHistory.add(0, new FactionHistory(new Date().getTime(), 0L, "", faction.getName(), "Leader", faction.getId()));
 
@@ -141,11 +141,11 @@ public class FactionCreateCommand extends SubCommand {
 
             } else {
                 p.sendMessage(Messages.exists_faction_name.language(p).queue());
-                GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
+                GUISound.playSound(p, GUISound.HCFSounds.ERROR);
             }
         } else {
             p.sendMessage(Messages.you_already_in_faction.language(p).queue());
-            GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
+            GUISound.playSound(p, GUISound.HCFSounds.ERROR);
         }
 
     }

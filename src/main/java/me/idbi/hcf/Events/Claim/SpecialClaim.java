@@ -1,17 +1,16 @@
 package me.idbi.hcf.Events.Claim;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Tools.HCF_Claiming;
+import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import static me.idbi.hcf.Tools.HCF_Claiming.endpositions;
-import static me.idbi.hcf.Tools.HCF_Claiming.startpositions;
+import static me.idbi.hcf.Tools.Claiming.endpositions;
+import static me.idbi.hcf.Tools.Claiming.startpositions;
 
 public class SpecialClaim implements Listener {
 
@@ -25,30 +24,33 @@ public class SpecialClaim implements Listener {
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.SPECIAL) {
             p.sendMessage(Messages.claim_pos_end.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
-            HCF_Claiming.setEndPosition(player.getKothId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+            Claiming.setEndPosition(player.getClaimID(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             e.setCancelled(true);
         }
         if (e.getAction().equals(Action.LEFT_CLICK_BLOCK) && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.SPECIAL) {
             p.sendMessage(Messages.claim_pos_start.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
             e.setCancelled(true);
-            HCF_Claiming.setStartPosition(player.getKothId(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+            Claiming.setStartPosition(player.getClaimID(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
         }
         // Elvetés
-        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking() && e.getItem() != null && player.getClaimType() == HCF_Claiming.ClaimTypes.SPECIAL) {
-            player.setClaimType(HCF_Claiming.ClaimTypes.NONE);
-            player.setKothId(0);
-            endpositions.remove(player.getKothId()); // UwU Mentem <3
-            startpositions.remove(player.getKothId());
-            p.getInventory().remove(Material.IRON_HOE);
+        if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking()) {
+            player.setClaimType(Claiming.ClaimTypes.NONE);
+
+            endpositions.remove(player.getClaimID()); // UwU Mentem <3
+            startpositions.remove(player.getClaimID());
+            p.getInventory().remove(e.getItem());
+            player.setClaimID(0);
         }
         // Elfogadás
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getItem() != null && e.getPlayer().isSneaking() && player.getClaimType() == HCF_Claiming.ClaimTypes.SPECIAL) {
-            HCF_Claiming.ForceFinishClaim(player.getKothId(), p, HCF_Claiming.ClaimAttributes.SPECIAL);
-            player.setClaimType(HCF_Claiming.ClaimTypes.NONE);
-            player.setKothId(0);
-            endpositions.remove(player.getKothId());
-            startpositions.remove(player.getKothId());
-            p.getInventory().remove(Material.IRON_HOE); // cső adrián
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getPlayer().isSneaking()) {
+            Claiming.ForceFinishClaim(player.getClaimID(), p, Claiming.ClaimAttributes.SPECIAL);
+            player.setClaimType(Claiming.ClaimTypes.NONE);
+            endpositions.remove(player.getClaimID());
+            startpositions.remove(player.getClaimID());
+            p.getInventory().remove(e.getItem());
+            player.sendMessage(Messages.faction_claim_accept);
+            player.setClaimID(0);
+            // cső adriá//player.setClaimID(0);
 //                if (HCF_Claiming.FinishClaiming(player.faction.id, e.getPlayer(), HCF_Claiming.ClaimAttributes.NORMAL)) {
 //                    e.getPlayer().sendMessage(Messages.faction_claim_accept.language(p).queue());
 //                    e.getPlayer().getInventory().remove(e.getItem());

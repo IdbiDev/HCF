@@ -33,7 +33,7 @@ public class AllyUninviteCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command.ally." + getName();
+        return "factions.commands.ally." + getName();
     }
 
     @Override
@@ -69,6 +69,9 @@ public class AllyUninviteCommand extends SubCommand {
                 if (Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_ALL)) {
                     if (playerFaction.isFactionAllyInvited(allyFaction)) {
                         playerFaction.unInviteAlly(allyFaction);
+                        p.sendMessage(Messages.faction_uninvite_ally_success.language(p).setFaction(allyFaction).queue());
+                        for (Player _p : allyFaction.getOnlineMembers())
+                            _p.sendMessage(Messages.faction_uninvite_ally_target.language(_p).setFaction(playerFaction).queue());
                     } else {
                         p.sendMessage(Messages.not_invited_ally.language(p).queue());
                     }

@@ -12,9 +12,9 @@ import me.idbi.hcf.Events.*;
 import me.idbi.hcf.Events.Enchants.EnchantInventory;
 import me.idbi.hcf.Events.Enchants.TableEvent;
 import me.idbi.hcf.Events.Enchants.TableInteract;
-import me.idbi.hcf.FrakcioGUI.GUIEvents.*;
-import me.idbi.hcf.FrakcioGUI.KickConfirm.DeleteRankConfirm;
-import me.idbi.hcf.FrakcioGUI.KickConfirm.KickConfirm;
+import me.idbi.hcf.FactionGUI.GUIEvents.*;
+import me.idbi.hcf.FactionGUI.KickConfirm.DeleteRankConfirm;
+import me.idbi.hcf.FactionGUI.KickConfirm.KickConfirm;
 import me.idbi.hcf.HistoryGUI.Events.HistoryEvent;
 import me.idbi.hcf.HistoryGUI.Events.Stats_Inventory;
 import me.idbi.hcf.InventoryRollback.GUI.RollbackGUIEvent.RollbackInventoryClick;
@@ -22,12 +22,12 @@ import me.idbi.hcf.Koth.GUI.KOTHCloseEvent;
 import me.idbi.hcf.Koth.GUI.KOTHInvClickEvent;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.MessagesEnums.SignShop.CreateShopSign;
-import me.idbi.hcf.MessagesEnums.SignShop.InteractShopSign;
+import me.idbi.hcf.SignShop.CreateShopSign;
+import me.idbi.hcf.SignShop.InteractShopSign;
 import me.idbi.hcf.SubClaims.SubClaimBreakListener;
 import me.idbi.hcf.SubClaims.SubClaimListener;
 import me.idbi.hcf.SubClaims.SubClaimSignListener;
-import me.idbi.hcf.factionlistgui.listeners.FactionTopListener;
+import me.idbi.hcf.FactionListGUI.listeners.FactionTopListener;
 import org.bukkit.plugin.PluginManager;
 
 import static org.bukkit.Bukkit.getServer;
@@ -35,113 +35,118 @@ import static org.bukkit.Bukkit.getServer;
 public class SetupEvents {
     public static void setupEvents() {
         //xd
-        //getServer().getPluginManager().registerEvents(new Assassin(), Main.getPlugin(Main.class));
+        //getServer().getPluginManager().registerEvents(new Assassin(), m);
         PluginManager pm = getServer().getPluginManager();
 
-        pm.registerEvents(new PlayerJoin(), Main.getPlugin(Main.class));
+        pm.registerEvents(new AnvilEvent(), m);
+        
+        pm.registerEvents(new PlayerJoin(), m);
 
-        pm.registerEvents(new PlayerLeft(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerLeft(), m);
 
-        pm.registerEvents(new EntDamageByEnt(), Main.getPlugin(Main.class));
+        pm.registerEvents(new EntDamageByEnt(), m);
 
-        pm.registerEvents(new BlockBreak(), Main.getPlugin(Main.class));
+        pm.registerEvents(new BlockBreak(), m);
 
-        pm.registerEvents(new BlockPlace(), Main.getPlugin(Main.class));
+        pm.registerEvents(new BlockPlace(), m);
 
-        pm.registerEvents(new PlayerDeath(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerDeath(), m);
 
-        pm.registerEvents(new PlayerInteract(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerInteract(), m);
 
-        pm.registerEvents(new PlayerMove(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerMove(), m);
 
-        pm.registerEvents(new PlayerRespawn(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerRespawn(), m);
 
-        pm.registerEvents(new PlayerPreJoin(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerPreJoin(), m);
 
-        pm.registerEvents(new BowShoot(), Main.getPlugin(Main.class));
+        pm.registerEvents(new BowShoot(), m);
 
-        pm.registerEvents(new FactionSetHomeCommand(), Main.getPlugin(Main.class));
-        pm.registerEvents(new FactionHomeCommand(), Main.getPlugin(Main.class));
+        pm.registerEvents(new FactionSetHomeCommand(), m);
+        pm.registerEvents(new FactionHomeCommand(), m);
 
-        pm.registerEvents(new InteractShopSign(), Main.getPlugin(Main.class));
+        pm.registerEvents(new InteractShopSign(), m);
 
-        pm.registerEvents(new CreateShopSign(), Main.getPlugin(Main.class));
+        pm.registerEvents(new CreateShopSign(), m);
 
-        pm.registerEvents(new ElevatorCreate(), Main.getPlugin(Main.class));
+        pm.registerEvents(new ElevatorCreate(), m);
 
-        pm.registerEvents(new ElevatorInteract(), Main.getPlugin(Main.class));
+        pm.registerEvents(new ElevatorInteract(), m);
 
-        pm.registerEvents(new PlayerChat(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PlayerChat(), m);
 
-        pm.registerEvents(new ChunkLoad(), Main.getPlugin(Main.class));
+        pm.registerEvents(new ChunkLoad(), m);
 
         // Enchant
-        pm.registerEvents(new TableEvent(), Main.getPlugin(Main.class));
-        pm.registerEvents(new EnchantInventory(), Main.getPlugin(Main.class));
-        pm.registerEvents(new TableInteract(), Main.getPlugin(Main.class));
-        pm.registerEvents(new PluginLoad(), Main.getPlugin(Main.class));
+        pm.registerEvents(new TableEvent(), m);
+        pm.registerEvents(new EnchantInventory(), m);
+        pm.registerEvents(new TableInteract(), m);
+        pm.registerEvents(new PluginLoad(), m);
 
-        pm.registerEvents(new PearlFixer(), Main.getPlugin(Main.class));
+        pm.registerEvents(new PearlFixer(), m);
 
         // KOTH
-        pm.registerEvents(new Koth(), Main.getPlugin(Main.class));
-        pm.registerEvents(new KOTHCloseEvent(), Main.getPlugin(Main.class));
-        pm.registerEvents(new KOTHInvClickEvent(), Main.getPlugin(Main.class));
+        pm.registerEvents(new Koth(), m);
+        pm.registerEvents(new KOTHCloseEvent(), m);
+        pm.registerEvents(new KOTHInvClickEvent(), m);
 
-        pm.registerEvents(new SignPlace(), Main.getPlugin(Main.class));
+        pm.registerEvents(new SignPlace(), m);
 
-        pm.registerEvents(new ConsumeItem(), Main.getPlugin(Main.class));
-        pm.registerEvents(new BasicClaim(), Main.getPlugin(Main.class));
-        pm.registerEvents(new SpawnClaim(), Main.getPlugin(Main.class));
-        pm.registerEvents(new KothClaim(), Main.getPlugin(Main.class));
-        pm.registerEvents(new ProtectedClaim(), Main.getPlugin(Main.class));
-        pm.registerEvents(new SpecialClaim(), Main.getPlugin(Main.class));
+        pm.registerEvents(new ConsumeItem(), m);
+        pm.registerEvents(new BasicClaim(), m);
+        pm.registerEvents(new SpawnClaim(), m);
+        pm.registerEvents(new KothClaim(), m);
+        pm.registerEvents(new ProtectedClaim(), m);
+        pm.registerEvents(new SpecialClaim(), m);
 
-        //pm.registerEvents(new PlacePVPTag(), Main.getPlugin(Main.class));
-        pm.registerEvents(new ProjectileDamage(), Main.getPlugin(Main.class));
+        //pm.registerEvents(new PlacePVPTag(), m);
+        pm.registerEvents(new ProjectileDamage(), m);
 
         // Faction GUI
-        pm.registerEvents(new Click_MainInventory(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_PlayerManage(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_MemberList(), Main.getPlugin(Main.class));
-        pm.registerEvents(new KickConfirm(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_RankManager(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_RankMenu(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_PermissionManager(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_PlayerRankManager(), Main.getPlugin(Main.class));
-        pm.registerEvents(new DeleteRankConfirm(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_InviteManager(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_InvitedPlayers(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_RankPriority(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Stats_Inventory(), Main.getPlugin(Main.class));
-        pm.registerEvents(new HistoryEvent(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_AllyMain(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_AllyRequests(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_AllyManageList(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_AllyUnRequest(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_AllyPermissions(), Main.getPlugin(Main.class));
-        pm.registerEvents(new Click_ManageAlly(), Main.getPlugin(Main.class));
+        pm.registerEvents(new Click_MainInventory(), m);
+        pm.registerEvents(new Click_PlayerManage(), m);
+        pm.registerEvents(new Click_MemberList(), m);
+        pm.registerEvents(new KickConfirm(), m);
+        pm.registerEvents(new Click_RankManager(), m);
+        pm.registerEvents(new Click_RankMenu(), m);
+        pm.registerEvents(new Click_PermissionManager(), m);
+        pm.registerEvents(new Click_PlayerRankManager(), m);
+        pm.registerEvents(new DeleteRankConfirm(), m);
+        pm.registerEvents(new Click_InviteManager(), m);
+        pm.registerEvents(new Click_InvitedPlayers(), m);
+        pm.registerEvents(new Click_RankPriority(), m);
+        pm.registerEvents(new Stats_Inventory(), m);
+        pm.registerEvents(new HistoryEvent(), m);
+        pm.registerEvents(new Click_AllyMain(), m);
+        pm.registerEvents(new Click_AllyRequests(), m);
+        pm.registerEvents(new Click_AllyManageList(), m);
+        pm.registerEvents(new Click_AllyUnrequest(), m);
+        pm.registerEvents(new Click_AllyPermissions(), m);
+        pm.registerEvents(new Click_ManageAlly(), m);
 
-        pm.registerEvents(new Rogue(), Main.getPlugin(Main.class));
-        pm.registerEvents(new BrewPotion(), Main.getPlugin(Main.class));
-        pm.registerEvents(new PlayerPortal(), Main.getPlugin(Main.class));
+        pm.registerEvents(new Rogue(), m);
+        pm.registerEvents(new BrewPotion(), m);
+        pm.registerEvents(new PlayerPortal(), m);
 
-        pm.registerEvents(new CrowbarInteraction(), Main.getPlugin(Main.class));
+        pm.registerEvents(new CrowbarInteraction(), m);
 
-        pm.registerEvents(new SubClaimSignListener(), Main.getPlugin(Main.class));
-        pm.registerEvents(new SubClaimListener(), Main.getPlugin(Main.class));
-        pm.registerEvents(new SubClaimBreakListener(), Main.getPlugin(Main.class));
-        pm.registerEvents(new LogoutCommand(), Main.getPlugin(Main.class));
-        pm.registerEvents(new FactionHomeCommand(), Main.getPlugin(Main.class));
-        pm.registerEvents(new FactionStuckCommand(), Main.getPlugin(Main.class));
-        pm.registerEvents(new BlockToBlock(), Main.getPlugin(Main.class));
-        pm.registerEvents(new PlayerLogin(), Main.getPlugin(Main.class));
+        pm.registerEvents(new SubClaimSignListener(), m);
+        pm.registerEvents(new SubClaimListener(), m);
+        pm.registerEvents(new SubClaimBreakListener(), m);
+        pm.registerEvents(new LogoutCommand(), m);
+        pm.registerEvents(new FactionHomeCommand(), m);
+        pm.registerEvents(new FactionStuckCommand(), m);
+        pm.registerEvents(new BlockToBlock(), m);
+        pm.registerEvents(new PlayerLogin(), m);
 
         // Command events
-        pm.registerEvents(new RollbackInventoryClick(), Main.getPlugin(Main.class));
-        pm.registerEvents(new PlayerWorldChange(), Main.getPlugin(Main.class));
+        pm.registerEvents(new RollbackInventoryClick(), m);
+        pm.registerEvents(new PlayerWorldChange(), m);
 
-        pm.registerEvents(new FactionTopListener(), Main.getPlugin(Main.class));
+        pm.registerEvents(new FactionTopListener(), m);
+        pm.registerEvents(new PlacePVPTag(), m);
+        pm.registerEvents(new EntitySpawn(), m);
+
 
     }
 }

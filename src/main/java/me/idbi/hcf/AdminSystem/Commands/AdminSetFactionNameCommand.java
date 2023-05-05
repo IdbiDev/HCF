@@ -32,7 +32,7 @@ public class AdminSetFactionNameCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "factions.command.admin." + getName();
+        return "factions.commands.admin." + getName();
     }
 
     @Override
@@ -70,7 +70,6 @@ public class AdminSetFactionNameCommand extends SubCommand {
 //        }
         Faction selectedFaction = Main.nameToFaction.get(args[1]);
         selectedFaction.setName(args[2]);
-        //Todo: Broadcast the change
         selectedFaction.saveFactionData();
 
         for (Player member : selectedFaction.getOnlineMembers()) {
@@ -78,6 +77,7 @@ public class AdminSetFactionNameCommand extends SubCommand {
         }
 
         p.sendMessage(Messages.admin_set_faction_name.setFaction(selectedFaction.getName()).queue());
+
         Main.nameToFaction.remove(args[1])  ;
         Main.nameToFaction.put(args[2],selectedFaction);
         Scoreboards.RefreshAll();
