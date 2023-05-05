@@ -52,7 +52,7 @@ public class PlayerJoin implements Listener {
 
 
             Main.deathWaitClear.remove(e.getPlayer().getUniqueId());
-            String str = Config.SpawnLocation.asStr();
+            /*String str = Config.SpawnLocation.asStr();
 
             Location spawn = new Location(
                     Bukkit.getWorld(Config.WorldName.asStr()),
@@ -61,8 +61,8 @@ public class PlayerJoin implements Listener {
                     Integer.parseInt(str.split(" ")[2]),
                     Integer.parseInt(str.split(" ")[3]),
                     Integer.parseInt(str.split(" ")[4])
-            );
-            e.getPlayer().teleport(spawn);
+            );*/
+            e.getPlayer().teleport(Main.spawnLocation);
             //pvpTimer
             if(!Main.SOTWEnabled)
                 Timers.PVP_TIMER.add(e.getPlayer());

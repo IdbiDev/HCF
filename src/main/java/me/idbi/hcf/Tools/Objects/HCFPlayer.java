@@ -418,7 +418,7 @@ public class HCFPlayer {
         this.isDeathBanned = true;
         this.deathTime = System.currentTimeMillis() + Main.deathbanTime;
         if (!Main.deathban) {
-            String str = Config.SpawnLocation.asStr();
+            /*String str = Config.SpawnLocation.asStr();
             Location spawn = new Location(
                     Bukkit.getWorld(Config.WorldName.asStr()),
                     Integer.parseInt(str.split(" ")[0]),
@@ -426,7 +426,7 @@ public class HCFPlayer {
                     Integer.parseInt(str.split(" ")[2]),
                     Integer.parseInt(str.split(" ")[3]),
                     Integer.parseInt(str.split(" ")[4])
-            );
+            );*/
             Player p = Bukkit.getPlayer(this.uuid);
             if(p != null) {
                 p.setHealth(p.getMaxHealth());
@@ -443,7 +443,7 @@ public class HCFPlayer {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        p.teleport(spawn);
+                        p.teleport(Main.spawnLocation);
                     }
                 }.runTaskLater(Main.getPlugin(Main.class), 2L);
             }

@@ -23,13 +23,13 @@ public class EOTW implements Gamemode {
     public void enable() {
         disable();
         World world = Bukkit.getWorld(Config.WorldName.asStr());
-        Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
+        //Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
         int EOTWTIME = Config.EOTWDuration.asInt() * 1000;
 
         WorldBorder border = world.getWorldBorder();
         border.setSize(Config.WorldBorderSize.asInt());
 
-        border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+        border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.spawnLocation);
         Claiming.Faction_Claim spawnClaim = null;
         try {
             spawnClaim = Main.factionCache.get(1).getClaims().get(0);
@@ -83,12 +83,12 @@ public class EOTW implements Gamemode {
             Main.EOTWENABLED = false;
             Koth.stopKoth();
             World world = Bukkit.getWorld(Config.WorldName.asStr());
-            Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
+            //Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
 
             WorldBorder border = world.getWorldBorder();
             border.setSize(Config.WorldBorderSize.asInt());
 
-            border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+            border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.spawnLocation);
             Claiming.Faction_Claim spawnClaim = null;
             try {
                 spawnClaim = Main.factionCache.get(1).getClaims().get(0);

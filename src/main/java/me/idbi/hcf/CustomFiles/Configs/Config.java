@@ -38,12 +38,12 @@ public enum Config {
     //DTRRegen("Cooldowns", 60, createComment("Must be in seconds")),
 
     WorldName("Default values", "world", createComment("Sets the world, where the HCF server are.")),
+    //SpawnLocation("Default values", "0 64 0 0 0", createComment("Sets the world spawn-point!", "Order: X,Y,Z,Pitch,Yaw (Separation with SPACE instead comma)")),
     EndOverworldLocation("Default values", "-9.5 64 -28.5 0 0", createComment("Sets the end, where the HCF end are.")),
     EndName("Default values", "world_the_end", createComment("Sets the end, where the HCF end are.")),
     EndSpawn("Default values", "93.5 59 -2.5 90 0", createComment("Sets the end, where the HCF end are.")),
     NetherName("Default values", "world_nether", createComment("Sets the nether, where the HCF nether are.")),
     DeathbanEnable("Default values", false, createComment("Sets the death-ban.", "Only 'true' or 'false' are accepted!")),
-    SpawnLocation("Default values", "0 64 0 0 0", createComment("Sets the world spawn-point!", "Order: X,Y,Z,Pitch,Yaw (Separation with SPACE instead comma)")),
 
     EnchantCost("Default values", 20, createComment("Enchantment cost. Constant.")),
     DefaultBalance("Default values", 1000, createComment("On the first join, this will be the player money.")),

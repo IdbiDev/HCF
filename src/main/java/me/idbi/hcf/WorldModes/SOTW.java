@@ -18,13 +18,14 @@ public class SOTW implements Gamemode {
     public void enable() {
         disable();
         World world = Bukkit.getWorld(Config.WorldName.asStr());
-        Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
+        //Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
         long SOTWTime = Config.SOTWDuration.asInt() * 1000L;
 
         WorldBorder border = world.getWorldBorder();
         border.setSize(Config.WorldBorderSize.asInt());
 
-        border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+        //border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+        border.setCenter(Main.spawnLocation);
         Main.sendCmdMessage("&1&bSOTW STARTED Successfully!");
         Main.SOTWStarted = System.currentTimeMillis() + SOTWTime;
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -53,10 +54,11 @@ public class SOTW implements Gamemode {
         if(task != null) {
             Main.SOTWEnabled = false;
             World world = Bukkit.getWorld(Config.WorldName.asStr());
-            Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
+            //Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
 
             WorldBorder border = world.getWorldBorder();
-            border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+            //border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+            border.setCenter(Main.spawnLocation);
             border.setSize(Config.WorldBorderSize.asInt());
 
 

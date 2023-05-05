@@ -12,22 +12,20 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 public class PlayerRespawn implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
-        System.out.println("RESP");
-        System.out.println(e.getRespawnLocation());
 
         if (Main.debug)
             System.out.println("Respawning player.. Loading it ");
         Playertools.loadOnlinePlayer(e.getPlayer());
-        String str = Config.SpawnLocation.asStr();
-        Location spawn = new Location(
+        //String str = Config.SpawnLocation.asStr();
+        /*Location spawn = new Location(
                 Bukkit.getWorld(Config.WorldName.asStr()),
                 Integer.parseInt(str.split(" ")[0]),
                 Integer.parseInt(str.split(" ")[1]),
                 Integer.parseInt(str.split(" ")[2]),
                 Integer.parseInt(str.split(" ")[3]),
                 Integer.parseInt(str.split(" ")[4])
-        );
-        e.getPlayer().teleport(spawn);
+        );*/
+        e.getPlayer().teleport(Main.spawnLocation);
         e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
         e.getPlayer().setFoodLevel(20);
         e.getPlayer().setFallDistance(0);

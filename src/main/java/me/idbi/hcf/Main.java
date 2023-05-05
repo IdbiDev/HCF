@@ -310,8 +310,7 @@ public final class Main extends JavaPlugin implements Listener {
         spawnLocation = world.getSpawnLocation();
         System.out.println("\n" + startMessage + "\n" + startMessage2);
         System.out.println(startMessageInfo);
-        World world = Bukkit.getWorld(Config.WorldName.asStr());
-        Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
+
         WorldBorder border = world.getWorldBorder();
         border.setSize(Config.WorldBorderSize.asInt());
 
@@ -320,7 +319,7 @@ public final class Main extends JavaPlugin implements Listener {
         autoKoth.startAutoKoth();
         if (Config.WarzoneSize.asInt() != 0 && !Main.factionCache.get(1).getClaims().isEmpty()) {
             //System.out.println("Bro van warzone");
-            String str = Config.SpawnLocation.asStr();
+            //String str = Config.SpawnLocation.asStr();
             Faction f = Main.factionCache.get(2);
             int warzoneSize = Config.WarzoneSize.asInt();
             Claiming.Faction_Claim claim;

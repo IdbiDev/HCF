@@ -22,11 +22,11 @@ public class Deathmatch implements Gamemode {
     public void enable() {
         disable();
         World world = Bukkit.getWorld(Config.WorldName.asStr());
-        Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
+        //Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
         WorldBorder border = world.getWorldBorder();
         border.setSize(Config.WorldBorderSize.asInt());
         int EOTWTIME = Config.EOTWDuration.asInt() * 1000;
-        border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+        border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.spawnLocation);
         Claiming.Faction_Claim spawnClaim = null;
         try {
             spawnClaim = Main.factionCache.get(1).getClaims().get(0);
@@ -75,10 +75,11 @@ public class Deathmatch implements Gamemode {
         if(task != null) {
             Main.EOTWENABLED = false;
             World world = Bukkit.getWorld(Config.WorldName.asStr());
-            Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
+            //Integer[] coords = Playertools.getInts(Config.SpawnLocation.asStr().split(" "));
 
             WorldBorder border = world.getWorldBorder();
-            border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+            //border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
+            border.setCenter(Main.spawnLocation);
             border.setSize(Config.WorldBorderSize.asInt());
 
 
