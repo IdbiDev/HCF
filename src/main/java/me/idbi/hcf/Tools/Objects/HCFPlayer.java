@@ -220,11 +220,17 @@ public class HCFPlayer {
         this.inDuty = false;
         this.bardEnergy = 0D;
         this.claimID = 0;
-        this.waypointPlayer.showDefault();
-        if(inFaction()) {
-            this.faction.setFocusedTeam(this.faction.getFocusedTeam());
+        Tasks.executeLater(20, () -> {
+            this.waypointPlayer.showDefault();
+            if (inFaction()) {
+                this.waypointPlayer.updateFocus(this.getFaction().getFocusedTeam());
+                this.waypointPlayer.updateHome(this.getFaction().getHomeLocation());
+                this.waypointPlayer.updateRally(this.getFaction().getRallyPosition());
+            /*this.faction.setFocusedTeam(this.faction.getFocusedTeam());
             this.faction.setRallyPosition(this.faction.getRallyPosition());
-        }
+            this.faction.setHomeLocation(this.faction.getHomeLocation());*/
+            }
+        });
     }
 
     /**
@@ -331,11 +337,14 @@ public class HCFPlayer {
     }
 
     public void removeFaction() {
-        if(this.chatType == ChatTypes.FACTION || this.chatType == ChatTypes.ALLY || this.chatType == ChatTypes.LEADER)
-            setChatType(ChatTypes.PUBLIC);
-        this.faction.removeMember(this);
-        this.faction = null;
-        this.rank = null;
+        if(this.inFaction()) {
+            if (this.chatType == ChatTypes.FACTION || this.chatType == ChatTypes.ALLY || this.chatType == ChatTypes.LEADER)
+                setChatType(ChatTypes.PUBLIC);
+            this.faction.removeMember(this);
+            this.faction = null;
+            this.waypointPlayer.clearFactionWaypoints();
+            this.rank = null;
+        }
     }
 
     public int getKills() {
@@ -500,6 +509,7 @@ public class HCFPlayer {
             p.sendMessage(Messages.cant_send_message_to_channel.language(p).queue());
             return;
         }
+        OfflinePlayer player = Bukkit.getOfflinePlayer(this.uuid);
         if(chatTypes == ChatTypes.PUBLIC || message.startsWith("!")) {
             if(message.equalsIgnoreCase("!")) {
                 message = message.substring(1);
@@ -511,7 +521,7 @@ public class HCFPlayer {
                     onlines.sendMessage(Messages.chat_prefix_faction.language(onlines)
                             .setFaction(this.faction.getName())
                             .setMessage(message)
-                            .setPlayer(this).queue());
+                            .setPlayer(this).papi(player).queue());
                 }
             } else {
                 for (Player onlines : Bukkit.getOnlinePlayers()) {
@@ -519,7 +529,7 @@ public class HCFPlayer {
                     if(hcfPlayer.isDisabled(ChatTypes.PUBLIC)) continue;
                     onlines.sendMessage(Messages.chat_prefix_without_faction.language(onlines)
                             .setMessage(message)
-                            .setPlayer(this).queue());
+                            .setPlayer(this).papi(player).queue());
                 }
             }
         }
@@ -530,7 +540,7 @@ public class HCFPlayer {
                 if(onlines.hasPermission("factions.admin")) {
                     onlines.sendMessage(Messages.staff_chat.language(onlines)
                             .setMessage(message)
-                            .setPlayer(this).queue());
+                            .setPlayer(this).papi(player).queue());
                 }
             }
         }
@@ -541,7 +551,13 @@ public class HCFPlayer {
             for (Player member : this.faction.getOnlineMembers()) {
                 HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
                 if(hcfMember.isDisabled(ChatTypes.FACTION)) continue;
-                member.sendMessage(Messages.faction_chat.setFaction(this.faction).setPlayer(this).setMessage(message).setRank(this.faction.getName()).queue());
+                member.sendMessage(Messages.faction_chat
+                        .setFaction(this.faction)
+                        .setPlayer(this)
+                        .setMessage(message)
+                        .setRank(this.faction.getName())
+                        .papi(player)
+                        .queue());
             }
         }
         else if(chatTypes == ChatTypes.LEADER) {
@@ -552,7 +568,7 @@ public class HCFPlayer {
                 HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
                 if(hcfMember.isDisabled(ChatTypes.LEADER)) continue;
                 if(hcfMember.getRank().hasPermission(FactionRankManager.Permissions.MANAGE_ALL) || hcfMember.getRank().isLeader()) {
-                    member.sendMessage(Messages.leader_chat.setPlayer(this).setMessage(message).queue());
+                    member.sendMessage(Messages.leader_chat.setPlayer(this).setMessage(message).papi(player).queue());
                 }
             }
         }
@@ -565,13 +581,13 @@ public class HCFPlayer {
                     for (Player member : value.getAllyFaction().getOnlineMembers()) {
                         HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
                         if (hcfMember.isDisabled(ChatTypes.ALLY)) continue;
-                        member.sendMessage(Messages.ally_chat.setMessage(message).setFaction(this.faction).setPlayer(this).queue());
+                        member.sendMessage(Messages.ally_chat.setMessage(message).setFaction(this.faction).setPlayer(this).papi(player).queue());
                     }
                 }
                 for (Player member : this.faction.getOnlineMembers()) {
                     HCFPlayer hcfMember = HCFPlayer.getPlayer(member);
                     if (hcfMember.isDisabled(ChatTypes.ALLY)) continue;
-                    member.sendMessage(Messages.ally_chat.setMessage(message).setFaction(this.faction).setPlayer(this).queue());
+                    member.sendMessage(Messages.ally_chat.setMessage(message).setFaction(this.faction).setPlayer(this).papi(player).queue());
                 }
             }
         }

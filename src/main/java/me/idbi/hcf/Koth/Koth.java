@@ -45,16 +45,25 @@ public class Koth implements Listener {
                     if (hcf.inFaction()) {
                         GLOBAL_PLAYER = e.getPlayer();
 
-
-                        Bukkit.broadcastMessage(Messages.koth_capturing_started.setFaction(GLOBAL_AREA.getFaction()).queue());
+                        if(Timers.KOTH_ANTI_SPAM.has(GLOBAL_PLAYER))
+                           return;
+                        for (Player _p : Bukkit.getOnlinePlayers()) {
+                            _p.sendMessage(Messages.koth_capturing_started.language(_p).setFaction(GLOBAL_AREA.getFaction()).queue());
+                        }
+                        Timers.KOTH_ANTI_SPAM.add(GLOBAL_PLAYER);
                     }
                 }
             } else {
                 if (GLOBAL_AREA.getAttribute().equals(Claiming.ClaimAttributes.KOTH) && !Claiming.doOverlap(start, end, point, point)) {
                     if (GLOBAL_PLAYER == e.getPlayer()) {
                         GLOBAL_PLAYER = null;
-                        GLOBAL_TIME = Config.KOTHDuration.asInt() * 60;
-                        Bukkit.broadcastMessage(Messages.koth_capturing_ended.language(p).setFaction(GLOBAL_AREA.getFaction()).queue());
+                        GLOBAL_TIME = Config.KOTHDuration.asInt() ;
+                        if(Timers.KOTH_ANTI_SPAM.has(GLOBAL_PLAYER))
+                            return;
+                        for (Player loopP : Bukkit.getOnlinePlayers()) {
+                            loopP.sendMessage(Messages.koth_capturing_ended.language(loopP).setFaction(GLOBAL_AREA.getFaction()).queue());
+                        }
+                        Timers.KOTH_ANTI_SPAM.add(GLOBAL_PLAYER);
                     }
                 }
             }

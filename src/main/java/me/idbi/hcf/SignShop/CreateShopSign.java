@@ -1,6 +1,7 @@
 package me.idbi.hcf.SignShop;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.ChatColor;
@@ -46,6 +47,7 @@ public class CreateShopSign implements Listener {
     @EventHandler
     public void onSignPlace(SignChangeEvent e) {
         String line0 = e.getLine(0);
+        String line1 = e.getLine(1);
 
         if(!Config.SignShopEnabled.asBoolean()) return;
         if (line0 != null) {
@@ -57,10 +59,12 @@ public class CreateShopSign implements Listener {
                     return;
                 }
 
-                if (!e.getLine(1).matches("^[0-9]+$")) {
+                if(!line1.matches("^[0-9]+$")) {
+                    hcfPlayer.sendMessage(Messages.not_a_number);
                     e.setCancelled(true);
                     return;
                 }
+
                 if (list.contains(e.getLine(2).toLowerCase())) {
                     e.setLine(2, "120");
                 }
@@ -72,8 +76,13 @@ public class CreateShopSign implements Listener {
             }
             if (line0.equalsIgnoreCase(ChatColor.stripColor(sellName)) || line0.equalsIgnoreCase(sellName)) {
                 if(!HCFPermissions.signshop_create.check(e.getPlayer())) return;
+                if (!successfullySign(e.getLine(1))) {
+                    e.setCancelled(true);
+                    return;
+                }
                 e.setLine(0, sellName);
-                if (!e.getLine(1).matches("^[0-9]+$")) {
+                if(!line1.matches("^[0-9]+$")) {
+                    hcfPlayer.sendMessage(Messages.not_a_number);
                     e.setCancelled(true);
                     return;
                 }

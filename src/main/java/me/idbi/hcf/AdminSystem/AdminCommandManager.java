@@ -68,22 +68,23 @@ public class AdminCommandManager implements CommandExecutor {
                     for (int i = 0; i < getSubcommands().size(); i++) {
                         try {
                             SubCommand cmd = getSubcommands().get(i);
-                            if (cmd.isCommand(args[0])) {
-                                if (cmd.hasPermission(p)) {
-                                    if (cmd.getName().equalsIgnoreCase("chat")
-                                            || cmd.getName().equalsIgnoreCase("duty")) {
-                                        cmd.perform(p, args);
-                                    } else {
-                                        if (!Playertools.isInStaffDuty(p)) {
-                                            p.sendMessage(Messages.not_in_duty.language(p).queue());
-                                            return false;
-                                        }
-                                        cmd.perform(p, args);
-                                    }
-                                } else {
-                                    p.sendMessage(Messages.no_permission.language(p).queue());
-                                }
+                            if (!cmd.isCommand(args[0])) continue;
+                            if (!cmd.hasPermission(p)) {
+                                p.sendMessage(Messages.no_permission.language(p).queue());
+                                continue;
                             }
+                            if (cmd.getName().equalsIgnoreCase("chat")
+                                    || cmd.getName().equalsIgnoreCase("duty")
+                                    || cmd.getName().equalsIgnoreCase("reload")
+                            ) {
+                                cmd.perform(p, args);
+                                continue;
+                            }
+                            if (!Playertools.isInStaffDuty(p)) {
+                                p.sendMessage(Messages.not_in_duty.language(p).queue());
+                                continue;
+                            }
+                            cmd.perform(p, args);
                         } catch (IndexOutOfBoundsException e) {
                             p.sendMessage("§cUsage: " + getSubcommands().get(i).getSyntax());
                             p.sendMessage(Messages.missing_argument.language(p).queue());

@@ -27,7 +27,7 @@ public class BlockPlace implements Listener {
         Player p = e.getPlayer();
         Block block = e.getBlock();
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(block.getWorld(), block.getX(), block.getZ());
+        Claiming.Faction_Claim claim = Playertools.getUpperClaim(block.getLocation());
         if (claim != null) {
             if (claim.getFaction() == null) {
                 Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");

@@ -1,5 +1,7 @@
 package me.idbi.hcf.CustomFiles;
 
+import me.idbi.hcf.HCFRules;
+import me.idbi.hcf.HCFServer;
 import me.idbi.hcf.Main;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -42,5 +44,6 @@ public class LimitsFile {
 
     public static void reload() {
         file = YamlConfiguration.loadConfiguration(cfg);
+
     }
 }

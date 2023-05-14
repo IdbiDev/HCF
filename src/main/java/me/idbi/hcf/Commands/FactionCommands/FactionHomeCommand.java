@@ -3,7 +3,9 @@ package me.idbi.hcf.Commands.FactionCommands;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Location;
@@ -82,6 +84,11 @@ public class FactionHomeCommand extends SubCommand implements Listener {
 
         Location loc = faction.getHomeLocation();
         if(loc != null) {
+            if (HCFPermissions.home_bypass.check(p) || Main.SOTWEnabled) {
+                p.teleport(faction.getHomeLocation());
+                p.sendMessage(Messages.successfully_home_teleport.queue());
+                return;
+            }
             p.sendMessage(Messages.teleport_to_home.language(p).setTime(Config.TeleportHome.asStr()).queue());
             //p.sendMessage(Messages.teleport_cancel.language(p).queue().replace("%time%", Config.TeleportHome.asStr()));
             Timers.HOME.add(p);

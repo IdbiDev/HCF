@@ -148,7 +148,7 @@ public class Claiming {
                 Claiming.Faction_Claim claim;
                 claim = new Claiming.Faction_Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
                 f.addClaim(claim);
-                Scoreboards.RefreshAll();
+                Scoreboards.refreshAll();
                 return true;
             }
             return false;
@@ -181,7 +181,7 @@ public class Claiming {
                 Faction f = Main.factionCache.get(faction);
                 Claiming.Faction_Claim claim = new Claiming.Faction_Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
                 f.addClaim(claim);
-                Scoreboards.RefreshAll();
+                Scoreboards.refreshAll();
 
 
                 return true;
@@ -433,7 +433,7 @@ public class Claiming {
     public static Faction_Claim sendClaimByXZ(World world, int x, int z) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
-                if(!val.getWorld().equals(world.getName())) continue;
+                if(!val.getWorld().getName().equals(world.getName())) continue;
                 Point playerPoint = new Point(x, z);
                 Point claimrc = new Point(val.getStartX(), val.getStartZ());
                 Point claimlc = new Point(val.getEndX(), val.getEndZ());

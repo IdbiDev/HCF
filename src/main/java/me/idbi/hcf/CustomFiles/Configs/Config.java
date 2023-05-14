@@ -137,6 +137,9 @@ public enum Config {
             "End; world; -39, 60, -13; #FFFFFF",
             "End Exit; world_the_end; -39, 60, -17; #FFFFFF"
     ), createComment("Syntax: 'name; world; x, y, z; #hexcode'")),
+    HomeWaypoint("Waypoints", "Home; #0000FF"),
+    RallyWaypoint("Waypoints", "Rally; #FF0000"),
+    FocusWaypointColor("Waypoints", "#00FF00"),
 
     StatTrakEnable("StatTrak", true, createComment("Should we enable weapons stattrak?")),
     StatTrakKillFormat("StatTrak", "&6&lKills&7: &b%kills%", createComment("Stattrak kills counter format")),

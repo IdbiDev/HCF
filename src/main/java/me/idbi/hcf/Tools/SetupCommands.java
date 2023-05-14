@@ -37,8 +37,6 @@ public class SetupCommands {
         m.getCommand("lookingforfaction").setExecutor(new LookingFactionCommand());
         m.getCommand("setspawn").setExecutor(new SetspawnCommand());
         m.getCommand("spawn").setExecutor(new SpawnCommand());
-        m.getCommand("endspawn").setExecutor(new EndspawnCommand());
-        m.getCommand("netherspawn").setExecutor(new NetherspawnCommand());
 
 
         CommandRegistry.register(BukkitCommandManager.getCommands());

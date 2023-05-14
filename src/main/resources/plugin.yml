@@ -64,12 +64,8 @@ commands:
     aliases: [ slot ]
   setspawn:
     permission: factions.commands.admin.setspawn
-  endspawn:
-    permission: factions.commands.endspawn
   spawn:
     permission: factions.commands.spawn
-  netherspawn:
-    permission: factions.commands.netherspawn
 
 
 permissions:
@@ -111,11 +107,9 @@ permissions:
     default: false
   factions.commands.spawn:
     default: false
-  factions.commands.netherspawn:
-    default: false
-  factions.commands.endspawn:
-    default: false
   factions.commands.admin.setspawn:
+    default: op
+  factions.admin.homebypass:
     default: op
 
   factions.admin.*:
@@ -133,8 +127,6 @@ permissions:
       factions.admin.deathbanbypass: true
       factions.reclaim.default: true
       factions.commands.spawn: true
-      factions.commands.endspawn: true
-      factions.commands.netherspawn: true
   factions.commands.faction.*:
     default: op
     children:

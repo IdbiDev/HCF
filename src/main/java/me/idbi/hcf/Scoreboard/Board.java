@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.idbi.hcf.Classes.SubClasses.Miner;
 import me.idbi.hcf.CustomFiles.BoardFile;
+import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
 import me.idbi.hcf.Tools.AdminTools;
@@ -125,6 +126,12 @@ public class Board {
         }
 
         // ToDo: Koth
+        if(BoardManager.get().getKoth() != null) {
+            if(Koth.GLOBAL_AREA != null) {
+                boardList.add(BoardManager.get().getKoth().replace("%koth%", Koth.GLOBAL_AREA.getFaction().getName()) + Formatter.formatMMSS(Koth.GLOBAL_TIME * 1000));
+            }
+        }
+
         if(BoardManager.get().getActiveClass() != null) {
             boardList.add(BoardManager.get().getActiveClass() + Playertools.upperFirst(hcfPlayer.getPlayerClass().name()));
             switch (hcfPlayer.getPlayerClass()) {

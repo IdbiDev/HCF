@@ -16,6 +16,7 @@ public enum HCFPermissions {
     reclaim("factions.commands.reclaim"),
     crowbar_use("factions.crowbar.use"),
     deathban_bypass("factions.admin.deathbanbypass"),
+    home_bypass("factions.admin.homebypass"),
     faction_call("factions.commands.factioncall");
 
     private String permission;

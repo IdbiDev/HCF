@@ -16,7 +16,7 @@ public class CustomTimers {
         this.text = text;
         Main.customSBTimers.put(name, this);
         AdminScoreboard.RefreshAll();
-        Scoreboards.RefreshAll();
+        Scoreboards.refreshAll();
     }
 
     public static void refreshAll() {
@@ -69,7 +69,7 @@ public class CustomTimers {
     }
 
     public void refreshScoreboards() {
-        Scoreboards.RefreshAll();
+        Scoreboards.refreshAll();
         AdminScoreboard.RefreshAll();
     }
 }

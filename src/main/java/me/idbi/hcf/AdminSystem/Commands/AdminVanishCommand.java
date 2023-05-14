@@ -64,7 +64,7 @@ public class AdminVanishCommand extends SubCommand {
             p.sendMessage(Messages.not_in_duty.language(p).queue());
             return;
         }
-        boolean inVanish = AdminTools.InvisibleManager.invisedAdmins.contains(p);
+        boolean inVanish = AdminTools.InvisibleManager.invisedAdmins.contains(p.getUniqueId());
         if (inVanish) {
             AdminTools.InvisibleManager.showPlayer(p);
             AdminScoreboard.refresh(p);

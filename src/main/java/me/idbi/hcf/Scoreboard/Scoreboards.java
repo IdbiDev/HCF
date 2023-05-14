@@ -29,44 +29,12 @@ public class Scoreboards {
         NameChanger.refresh(p);
     }
 
-    public static void RefreshAll() {
+    public static void refreshAll() {
         for (Player p : Bukkit.getOnlinePlayers()) {
             //Scoreboards.refresh(p);
             HCFPlayer.getPlayer(p).getScoreboard().update();
             NameChanger.refresh(p);
         }
-    }
-
-    public static boolean isContinue(Player p, String line) {
-        HCFPlayer player = HCFPlayer.getPlayer(p);
-        if (line.contains("%spawntag%") && !Timers.COMBAT_TAG.has(p)) {
-            return true;
-        } else if (line.contains("%enderpearl%") && !Timers.ENDER_PEARL.has(p)) {
-            return true;
-        } else if (line.contains("%stuck%") && !Timers.STUCK.has(p)) {
-            return true;
-        } else if (line.contains("%bard_energy%") && player.getBardEnergy() <= 0.0) {
-            return true;
-        } else if (line.contains("%eotw%") && !Timers.EOTW.has(p)) {
-            return true;
-        } else if (line.contains("%sotw%") && !Timers.SOTW.has(p)) {
-            return true;
-        } else if (line.contains("%class%") && player.getPlayerClass() == Classes.NONE) {
-            return true;
-        } else if (line.contains("%logout%") && !Timers.LOGOUT.has(p)) {
-            return true;
-        } else if (line.contains("%home%") && !Timers.HOME.has(p)) {
-            return true;
-        } else if (line.contains("%pvp_timer%") && !Timers.PVP_TIMER.has(p)) {
-            return true;
-        } else if (line.contains("%bard_cooldown%") && !Timers.BARD_COOLDOWN.has(p)) {
-            return true;
-        } else if (line.contains("%apple%") && !Timers.APPLE.has(p)) {
-            return true;
-        } else if (line.contains("%gapple%") && !Timers.GAPPLE.has(p)) {
-            return true;
-        }
-        return false;
     }
 
     public static String replaceVariables(String inputString, Player p) {

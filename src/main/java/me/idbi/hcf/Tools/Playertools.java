@@ -10,10 +10,7 @@ import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Permissions;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
@@ -109,25 +106,27 @@ public class Playertools {
         hcf.createScoreboard(player);
         hcf.setCurrentArea(getUpperClaim(player));
         hcf.setOnline(true);
-        hcf.join();
         Main.playerCache.put(hcf.getUUID(), hcf);
+        hcf.join();
         Scoreboards.refresh(player);
         NameChanger.refresh(player);
     }
+
     public static List<HCFPlayer> getClassesInFaction(Faction faction, Classes classes) {
         List<HCFPlayer> list = new ArrayList<>();
-        if(faction == null)
+        if (faction == null)
             return list;
-        for(HCFPlayer p : faction.getMembers())
-            if(p.getPlayerClass().equals(classes)) // cső meleg
+        for (HCFPlayer p : faction.getMembers())
+            if (p.getPlayerClass().equals(classes)) // cső meleg
                 list.add(p);
         return list;
 
     }
-    public static Claiming.Faction_Claim getUpperClaim(Player p){
+
+    public static Claiming.Faction_Claim getUpperClaim(Player p) {
         ArrayList<Claiming.Faction_Claim> originalClaims = Claiming.getPlayerArea(p);
         ArrayList<Claiming.Faction_Claim> claims = new ArrayList<>(originalClaims);
-        if(originalClaims.size() > 1) {
+        if (originalClaims.size() > 1) {
             for (Claiming.Faction_Claim claim : originalClaims) {
                 if (claim.getFaction().equals(Main.factionCache.get(2)))
                     claims.remove(claim);
@@ -138,6 +137,35 @@ public class Playertools {
 
         return claims.isEmpty() ? null : claims.get(0);
     }
+
+    public static Claiming.Faction_Claim getSmaller(Claiming.Faction_Claim claim1, Claiming.Faction_Claim claim2) {
+        int claim1X = claim1.getStartX() - claim1.getEndX();
+        int claim1Z = claim1.getStartZ() - claim1.getEndZ();
+        int blockCount = claim1X * claim1Z;
+
+        int claim2X = claim2.getStartX() - claim2.getEndX();
+        int claim2Z = claim2.getStartZ() - claim2.getEndZ();
+        int blockCount2 = claim2X * claim2Z;
+
+        if(blockCount > blockCount2) {
+            return claim2;
+        } else {
+            return claim1;
+        }
+    }
+
+    public static Claiming.Faction_Claim getUpperClaim(Location loc) {
+        ArrayList<Claiming.Faction_Claim> originalClaims = Claiming.getClaimsInArea(loc);
+        ArrayList<Claiming.Faction_Claim> claims = new ArrayList<>(originalClaims);
+        if (originalClaims.size() > 1) {
+            for (Claiming.Faction_Claim claim : originalClaims) {
+                if (claim.getFaction().equals(Main.factionCache.get(2)))
+                    claims.remove(claim);
+            }
+        }
+        return claims.isEmpty() ? null : claims.get(0);
+    }
+
     public static void cacheAll() {
         ResultSet rs = null;
         try {
@@ -152,14 +180,15 @@ public class Playertools {
         } catch (SQLException e) {
             e.printStackTrace();
         }catch (Exception e) {
-            try {
+            e.printStackTrace();
+            /*try {
                 while (rs.next()) {
                     cachePlayerSync(UUID.randomUUID(), rs);
                     Main.sendCmdMessage("Player " + rs.getString("uuid") + " cached!");
                 }
             }catch (SQLException ignored){
                 System.out.println("WTF");
-            }
+            }*/
         }
     }
 
@@ -290,7 +319,7 @@ public class Playertools {
             player.setFaction(faction);
         }
         //SQL_Connection.dbExecute(con,"UPDATE factions SET name='?' WHERE id='?'", name, String.valueOf(faction.id));
-        Scoreboards.RefreshAll();
+        Scoreboards.refreshAll();
     }
 
     public static int getPlayerBalance(Player p) {
@@ -402,7 +431,9 @@ public class Playertools {
                         Integer.parseInt(map.get("Z").toString()),
                         Integer.parseInt(map.get("YAW").toString()),
                         Integer.parseInt(map.get("PITCH").toString()));
-                faction.setHomeLocation(loc);
+                int x = loc.getBlockX();
+                int z = loc.getBlockZ();
+                faction.setHomeLocation(loc.add(x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5));
                 /*Main.DTR_REGEN.put(faction.factionid, System.currentTimeMillis() + DTR_REGEN_TIME* 1000L);
                 faction.DTR -= Main.DEATH_DTR;*/
 
@@ -879,6 +910,27 @@ public class Playertools {
             return false;
         }
         return true;
+    }
+
+    public static void refreshPosition(Player p) {
+        Claiming.Faction_Claim c = Playertools.getUpperClaim(p);
+        HCFPlayer player = HCFPlayer.getPlayer(p);
+        if (player.getCurrentArea() != c) {
+
+            String wilderness = Messages.wilderness.language(p).queue();
+            Messages leaveZone = Messages.leave_zone.language(p);
+            Messages enteredZone = Messages.entered_zone.language(p);
+
+            p.sendMessage(leaveZone.setZone(player.getLocationFormatted()).queue());
+            player.setCurrentArea(c);
+
+            if (c == null) {
+                p.sendMessage(enteredZone.language(p).setZone(wilderness).queue());
+            } else {
+                p.sendMessage(enteredZone.setZone(player.getLocationFormatted()).queue());
+            }
+            Scoreboards.refresh(p);
+        }
     }
 
     public static Faction getWarzone() {

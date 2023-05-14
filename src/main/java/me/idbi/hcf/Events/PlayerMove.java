@@ -41,35 +41,7 @@ public class PlayerMove implements Listener {
                 }
             }
         }
-        Claiming.Faction_Claim c = Playertools.getUpperClaim(p);
-        if (player.getCurrentArea() != c) {
-
-            String wilderness = Messages.wilderness.language(p).queue();
-            Messages leaveZone = Messages.leave_zone.language(p);
-            Messages enteredZone = Messages.entered_zone.language(p);
-
-            /*String enemy = Config.enemy_color.asStr();
-            String friendly = Config.teammate_color.asStr();*/
-
-            e.getPlayer().sendMessage(leaveZone.setZone(player.getLocationFormatted()).queue());
-            player.setCurrentArea(c);
-
-            if (c == null) {
-                e.getPlayer().sendMessage(enteredZone.language(p).setZone(wilderness).queue());
-            } else {
-                e.getPlayer().sendMessage(enteredZone.setZone(player.getLocationFormatted()).queue());
-                /*boolean zoneIsFriendly = c.faction == player.faction;
-                if (!zoneIsFriendly) {
-                    zoneIsFriendly = c.faction.isAlly(player.faction);
-                }
-                if (zoneIsFriendly) {
-                    e.getPlayer().sendMessage(enteredZone.setZone(friendly.setZone(c.faction.name).queue()).queue());
-                } else {
-                    e.getPlayer().sendMessage(enteredZone.setZone(enemy.setZone(c.faction.name).queue()).queue());
-                }*/
-            }
-            Scoreboards.refresh(e.getPlayer());
-        }
+        Playertools.refreshPosition(p);
         if (player.getPlayerClass() == Classes.MINER) {
             Miner.setInvisMode(e.getPlayer(), e.getTo().getY() <= Miner.invisibleLevel);
         }

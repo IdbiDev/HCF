@@ -106,6 +106,7 @@ public class PlayerJoin implements Listener {
                 }
             }
         }
+
         PlayerStatistic statistic = hcf.getPlayerStatistic();
         p.sendMessage("Started:" + new Date(statistic.startDate));
         p.sendMessage("Last Login:" + new Date(statistic.lastLogin));

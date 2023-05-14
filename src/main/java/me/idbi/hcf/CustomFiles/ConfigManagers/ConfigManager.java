@@ -77,8 +77,8 @@ public class ConfigManager {
 
         manager = new SimpleConfigManager(this.plugin);
 
-        new MessagesComments();
-        new ConfigComments();
+        /*new MessagesComments();
+        new ConfigComments();*/
 
         config = manager.getNewConfig("config.yml", header);
         this.setupConfig();

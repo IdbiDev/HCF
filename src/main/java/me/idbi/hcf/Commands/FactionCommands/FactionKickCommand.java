@@ -113,7 +113,7 @@ public class FactionKickCommand extends SubCommand {
                 }
 
                 f.factionjoinLeftHistory.add(0, new HistoryEntrys.FactionJoinLeftEntry(hcf.getName(), "kicked", new Date().getTime()));
-                Scoreboards.RefreshAll();
+                Scoreboards.refreshAll();
                 NameChanger.refresh(p);
                 p.sendMessage(Messages.kick_message.language(p).setExecutor(p).setPlayer(hcf).queue());
                 hcf.sendMessage(Messages.kick_message_target);

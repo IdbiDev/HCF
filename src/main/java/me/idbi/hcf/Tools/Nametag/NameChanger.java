@@ -90,7 +90,7 @@ public class NameChanger implements Listener {
                 }
             }
         }
-        if(AdminTools.InvisibleManager.invisedAdmins.contains(player)) {
+        if(AdminTools.InvisibleManager.invisedAdmins.contains(player.getUniqueId())) {
             AdminTools.InvisibleManager.hidePlayer(player);
         }
     }

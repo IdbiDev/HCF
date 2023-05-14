@@ -11,6 +11,7 @@ import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
@@ -95,13 +96,13 @@ public class FactionDisbandCommand extends SubCommand {
         }
 //        displayTeams.removePlayerFromTeam(p);
 //        displayTeams.removeTeam(selectedFaction);
-        for (HCFPlayer player : selectedFaction.getMembers()) {
+        for (HCFPlayer player : new ArrayList<>(selectedFaction.getMembers())) {
             Player bukkitPlayer = Bukkit.getPlayer(player.getUUID());
-            player.setFactionWithoutRank(null);
+            //player.setFactionWithoutRank(null);
             final String rankName = player.getRank().getName();
-            player.setRank(null);
+            //player.setRank(null);
 
-            //player.removeFaction();
+            player.removeFaction();
 
 
             if (bukkitPlayer != null) {
@@ -122,6 +123,7 @@ public class FactionDisbandCommand extends SubCommand {
         }
 
         addCooldown(p);
+        selectedFaction.clearMembers();
 
 
         // LogLibrary.sendFactionDisband(p, selectedFaction.name);

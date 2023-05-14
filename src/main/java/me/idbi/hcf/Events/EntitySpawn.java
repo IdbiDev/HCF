@@ -11,7 +11,7 @@ public class EntitySpawn implements Listener {
         if(e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER))
             return;
         //e.getEntityType().name()
-        if(HCFRules.getRules().isEntityLimited(e.getEntity(),e.getEntity().getWorld())) {
+        if(HCFRules.getRules().isEntityLimited(e.getEntity(), e.getEntity().getWorld())) {
             e.setCancelled(true);
         }
     }

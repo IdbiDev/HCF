@@ -26,7 +26,7 @@ public class HCFRules {
     @Getter private HashMap<Enchantment, Integer> enchantLevels;
     @Getter private HashMap<PotionEffectType, Integer> potionLimit;
     @Getter private HashMap<PotionEffectType, Boolean> potionExtendable;
-    @Getter private HashMap<EntityType, Boolean> entityLimiter;
+    //@Getter private HashMap<EntityType, Boolean> entityLimiter;
 
     public HCFRules() {
         rules = this;
@@ -35,12 +35,25 @@ public class HCFRules {
         this.enchantLevels = new HashMap<>();
         this.potionLimit = new HashMap<>();
         this.potionExtendable = new HashMap<>();
-        this.entityLimiter = new HashMap<>();
+        //this.entityLimiter = new HashMap<>();
         setupAllowedLevels();
         setupPotions();
         setupBlacklistedBlocks();
         setupAlly();
-        setupEntities();
+        //setupEntities();
+    }
+
+    public void reload() {
+        this.blacklistedBlocks.clear();
+        this.allyBlocks.clear();
+        this.enchantLevels.clear();
+        this.potionLimit.clear();
+        this.potionExtendable.clear();
+        //this.entityLimiter = new HashMap<>();
+        setupAllowedLevels();
+        setupPotions();
+        setupBlacklistedBlocks();
+        setupAlly();
     }
 
     public void clearLists(){
@@ -60,7 +73,7 @@ public class HCFRules {
         }
     }
 
-    private void setupEntities() {
+   /* private void setupEntities() {
         for (String key : LimitsFile.get().getConfigurationSection("ENTITY_LIMITER").getKeys(false)) {
             boolean limited = LimitsFile.get().getBoolean(key);
             EntityType type = null;
@@ -73,7 +86,7 @@ public class HCFRules {
             entityLimiter.put(type, limited);
         }
     }
-
+*/
     private void setupBlacklistedBlocks() {
         for (String block : LimitsFile.get().getStringList("BLACKLISTED_BLOCKS")) {
             Material material = Material.getMaterial(block.toUpperCase());
@@ -92,8 +105,8 @@ public class HCFRules {
 
     private void setupPotions() {
         for (String key : LimitsFile.get().getConfigurationSection("POTION_LIMITER").getKeys(false)) {
-            int level = LimitsFile.get().getInt(key + ".LEVEL");
-            boolean extendable = LimitsFile.get().getBoolean(key + ".EXTENDED");
+            int level = LimitsFile.get().getInt("POTION_LIMITER." + key + ".LEVEL");
+            boolean extendable = LimitsFile.get().getBoolean("POTION_LIMITER." + key + ".EXTENDED");
             PotionEffectType type = PotionEffectType.getByName(key.toUpperCase());
             if(type == null) continue;
             potionLimit.put(type, level);

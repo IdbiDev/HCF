@@ -81,7 +81,7 @@ public class FactionTeamFocusCommand extends SubCommand {
             }
 
             fac.setFocusedTeam(focus);
-            Scoreboards.RefreshAll();
+            Scoreboards.refreshAll();
         } else {
             p.sendMessage(Messages.not_in_faction.language(p).queue());
         }

@@ -47,7 +47,7 @@ public class KothClaim implements Listener {
             player.setClaimID(0);
             endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());
-            p.getInventory().remove(Material.IRON_HOE);
+            p.getInventory().remove(e.getItem());
         }
         // Elfogadás
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getPlayer().isSneaking()) {
@@ -58,7 +58,7 @@ public class KothClaim implements Listener {
             player.setClaimID(0);
             endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());
-            p.getInventory().remove(Material.IRON_HOE);
+            p.getInventory().remove(e.getItem());
 //                if (HCF_Claiming.FinishClaiming(player.faction.id, e.getPlayer(), HCF_Claiming.ClaimAttributes.NORMAL)) {
 //                    e.getPlayer().sendMessage(Messages.faction_claim_accept.language(p).queue());
 //                    e.getPlayer().getInventory().remove(e.getItem());

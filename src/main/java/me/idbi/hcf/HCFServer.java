@@ -19,21 +19,21 @@ public class HCFServer {
     @Getter private static HCFServer server;
 
     public HCFServer() {
+        server = this;
         maps = new HashMap<>();
         World world = Bukkit.getWorld(Config.WorldName.asStr());
         World nether = Bukkit.getWorld(Config.NetherName.asStr());
         World end = Bukkit.getWorld(Config.EndName.asStr());
 
         HCFMap worldMap = new HCFMap(world, Playertools.parseLoc(world, Config.SpawnLocation.asStr()));
-        HCFMap netherMap = new HCFMap(world, nether.getSpawnLocation());
-        HCFMap endMap = new HCFMap(world, Playertools.parseLoc(world, Config.EndSpawn.asStr()));
+        HCFMap netherMap = new HCFMap(nether, Playertools.parseLoc(nether, Config.NetherSpawn.asStr()));
+        HCFMap endMap = new HCFMap(end, Playertools.parseLoc(end, Config.EndSpawn.asStr()));
 
         maps.put(world.getEnvironment(), worldMap);
         maps.put(nether.getEnvironment(), netherMap);
         maps.put(end.getEnvironment(), endMap);
 
         setupEntities();
-        server = this;
     }
     public void clearMaps(){
         for(HCFMap m : maps.values())
@@ -50,23 +50,41 @@ public class HCFServer {
 
     private void setupEntities() {
         for (String key : LimitsFile.get().getConfigurationSection("ENTITY_LIMITER").getKeys(false)) {
-            for (String world : LimitsFile.get().getConfigurationSection(key).getKeys(false)) {
+            for (String world : LimitsFile.get().getConfigurationSection("ENTITY_LIMITER." + key).getKeys(false)) {
                 HCFMap map = getMap(World.Environment.NORMAL);
                 if(world.equalsIgnoreCase("nether"))
                     map = getMap(World.Environment.NETHER);
                 if(world.equalsIgnoreCase("the_end"))
                     map = getMap(World.Environment.THE_END);
 
-                boolean limited = LimitsFile.get().getBoolean(key);
+                boolean limited = LimitsFile.get().getBoolean("ENTITY_LIMITER." + key + "." + world);
                 EntityType type = null;
                 try {
-                    type = EntityType.valueOf(key.toUpperCase());
+                    type = EntityType.valueOf(world);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     continue;
                 }
                 if(type == null) continue;
                 map.put(type, limited);
             }
         }
+    }
+
+    public void reload() {
+        maps.clear();
+        World world = Bukkit.getWorld(Config.WorldName.asStr());
+        World nether = Bukkit.getWorld(Config.NetherName.asStr());
+        World end = Bukkit.getWorld(Config.EndName.asStr());
+
+        HCFMap worldMap = new HCFMap(world, Playertools.parseLoc(world, Config.SpawnLocation.asStr()));
+        HCFMap netherMap = new HCFMap(nether, Playertools.parseLoc(nether, Config.NetherSpawn.asStr()));
+        HCFMap endMap = new HCFMap(end, Playertools.parseLoc(end, Config.EndSpawn.asStr()));
+
+        maps.put(world.getEnvironment(), worldMap);
+        maps.put(nether.getEnvironment(), netherMap);
+        maps.put(end.getEnvironment(), endMap);
+
+        setupEntities();
     }
 }

@@ -19,13 +19,23 @@ import org.bukkit.inventory.ItemStack;
 
 public class InteractShopSign implements Listener {
     public static boolean isFull(Player p, ItemStack is) {
-        return !p.getInventory().addItem(is).isEmpty();
+        for (ItemStack is2 : p.getInventory().getContents()) {
+            if (is2 == null) return false;
+            if (is2.isSimilar(is)) {
+                ///      56 +16          < 64
+                if (is2.getAmount()+is.getAmount() >= 64) {
+                    return true;
+                }
+            }
+        }
+        return false;
+        //return !p.getInventory().addItem(is).isEmpty();
     }
 
     private static int remainingSpace(Player p, ItemStack item) {
         int amount = 0;
         for (ItemStack is : p.getInventory().getContents()) {
-            if (is == null) continue;
+            if (is == null) return 0;
             if (is.isSimilar(item)) {
                 if (is.getAmount() < 64) {
                     amount += 64 - is.getAmount();
@@ -48,17 +58,17 @@ public class InteractShopSign implements Listener {
 
             Sign sign = (Sign) b.getState();
 
-            String line0 = sign.getLine(0);
+            String line0 = sign.getLine(0); // [buy]
 
             if(!Config.SignShopEnabled.asBoolean()) return;
             if (line0.equals(buyName)) {
                 if(!HCFPermissions.signshop_use.check(e.getPlayer())) return;
-                String line1 = sign.getLine(1); // amount
+                String line1 = sign.getLine(1); // darab
                 if (line1.matches("^[0-9]+$")) {
 
+                    String line2 = sign.getLine(2); // item
                     int amount = Integer.parseInt(line1);
-                    String line2 = sign.getLine(2);
-                    String line3 = sign.getLine(3);
+                    String line3 = sign.getLine(3); // ára
 
                     if (line3.matches("^[0-9$]+$")) {
                         Material material;
@@ -73,6 +83,7 @@ public class InteractShopSign implements Listener {
                             } else
                                 material = Material.matchMaterial(line2);
 
+                            // System.out.println(material);
                             int remainingSpace = remainingSpace(p, new ItemStack(material, amount, Short));
                             int signPrice = Integer.parseInt(line3.replace("$", ""));
                             int fertigPreise = (signPrice / amount) * remainingSpace;
@@ -81,7 +92,8 @@ public class InteractShopSign implements Listener {
                             Scoreboards.refresh(p);
                             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
                             if (remainingSpace < amount && remainingSpace > 0) {
-                                if (isFull(p, new ItemStack(material, remainingSpace, Short))) {
+                                ItemStack is = new ItemStack(material, remainingSpace, Short);
+                                if (isFull(p, is)) {
                                     p.sendMessage(Messages.not_enough_slot.language(p).queue());
                                     return;
                                 }
@@ -91,6 +103,7 @@ public class InteractShopSign implements Listener {
                                 }
 
                                 Playertools.setPlayerBalance(p, playerBalance - fertigPreise);
+                                p.getInventory().addItem(is);
                                 PlayerStatistic stat = hcfPlayer.getPlayerStatistic();
                                 stat.MoneySpend += fertigPreise;
                                 p.sendMessage(Messages.sign_shop_bought.language(p).setItem(new ItemStack(material, remainingSpace, Short))
@@ -112,9 +125,12 @@ public class InteractShopSign implements Listener {
                                         .setPrice(signPrice)
                                         .setAmount(String.valueOf(amount))
                                         .queue());
+                                p.getInventory().addItem(new ItemStack(material, amount, Short));
                                 Playertools.setPlayerBalance(p, playerBalance - signPrice);
                                 PlayerStatistic stat = hcfPlayer.getPlayerStatistic();
                                 stat.MoneySpend += signPrice;
+                            } else {
+                                p.sendMessage(Messages.not_enough_money.language(p).queue());
                             }
 
                             Scoreboards.refresh(p);
@@ -127,7 +143,7 @@ public class InteractShopSign implements Listener {
             //
             else if (line0.equals(sellName)) {
                 if(!HCFPermissions.signshop_use.check(e.getPlayer())) return;
-                String line1 = sign.getLine(1); // amount
+                String line1 = sign.getLine(1);
                 if (line1.matches("^[0-9]+$")) {
 
                     int amount = Integer.parseInt(line1);

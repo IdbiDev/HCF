@@ -13,6 +13,5 @@ public class PlayerPortal implements Listener {
         if (Timers.PVP_TIMER.has(hcfPlayer)) {
             e.setCancelled(true);
         }
-        System.out.println("asd");
     }
 }

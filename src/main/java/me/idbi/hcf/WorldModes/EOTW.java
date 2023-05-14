@@ -2,6 +2,8 @@ package me.idbi.hcf.WorldModes;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.HCFMap;
+import me.idbi.hcf.HCFServer;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Claiming;

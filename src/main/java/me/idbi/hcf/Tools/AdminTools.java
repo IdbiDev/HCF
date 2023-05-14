@@ -4,13 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class AdminTools {
     public static class InvisibleManager implements Listener {
 
-        public static List<UUID> invisedAdmins;
+        public static ArrayList<UUID> invisedAdmins;
 
         public static void hidePlayer(Player p) {
             for (Player target : Bukkit.getOnlinePlayers()) {
@@ -28,7 +29,7 @@ public class AdminTools {
             invisedAdmins.remove(admin.getUniqueId());
         }
 
-        public static List<UUID> getInvisedAdmins() {
+        public static ArrayList<UUID> getInvisedAdmins() {
             return invisedAdmins;
         }
     }

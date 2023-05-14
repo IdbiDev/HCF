@@ -3,6 +3,7 @@ package me.idbi.hcf.Commands.SingleCommands;
 import me.idbi.hcf.BukkitCommands.CommandInfo;
 import me.idbi.hcf.BukkitCommands.HCFCommand;
 import me.idbi.hcf.CustomFiles.Configs.Config;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.HCFServer;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
@@ -26,7 +27,9 @@ public class SetspawnCommand extends HCFCommand {
         World world = p.getWorld();
         if (world.getName().equalsIgnoreCase(Config.WorldName.asStr()) || world.getName().equalsIgnoreCase(Config.EndName.asStr()) || world.getName().equalsIgnoreCase(Config.NetherName.asStr())) {
             HCFServer.getServer().getMap(world).setWorldSpawn(p.getLocation());
-            p.sendMessage("Beállítva: " + p.getWorld().getName() + " Loc: " + p.getLocation().getBlockX() + " " + p.getLocation().getBlockY()+ " " + p.getLocation().getBlockZ());
+            p.sendMessage(Messages.setspawn.language(p).setWorld(world).setCoords(
+                    p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ()
+            ).queue());
         }
     }
 }

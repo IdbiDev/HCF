@@ -110,8 +110,7 @@ public final class Main extends JavaPlugin implements Listener {
     private VaultHook vaultHook;
     @Getter private static Main instance = null;
     @Getter private Tabbed tabbed;
-    @Getter
-    private TabManager tabManager;
+    @Getter private TabManager tabManager;
     @Getter private BoardManager scoreboardManager;
     @Getter private BungeeChanneling bungeeChanneling;
     public static String lobbyName;

@@ -44,7 +44,8 @@ public class PlayerInteract implements Listener {
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             Block block = e.getClickedBlock();
-            Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(block.getWorld(), block.getX(), block.getZ());
+            //Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(block.getWorld(), block.getX(), block.getZ());
+            Claiming.Faction_Claim claim = Playertools.getUpperClaim(block.getLocation());
             if (claim != null) {
                 if (claim.getFaction() == null) {
                     Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
@@ -54,17 +55,21 @@ public class PlayerInteract implements Listener {
 
                 HCFRules rules = HCFRules.getRules();
                 Faction f = Playertools.getPlayerFaction(p);
-                if (f != null) {
+                if (hcfPlayer.isInDuty()) {
+                    e.setCancelled(false);
+                } else if (f != null) {
                     if (Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).hasAllyPermission(baszogatottFaction, Permissions.INTERACT)) {
                         if (rules.isBlacklistedBlock(e.getClickedBlock())) {
                             e.setCancelled(true);
-                            p.sendMessage(Messages.no_permission.language(p).queue());
+                            if(claim.getAttribute() != Claiming.ClaimAttributes.PROTECTED)
+                                p.sendMessage(Messages.you_cant_do.language(p).setFaction(claim.getFaction()).queue());
                         }
                     }
                     if (rules.isAlly(e.getClickedBlock())) {
                         if (Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).hasAllyPermission(baszogatottFaction, Permissions.INVENTORY_ACCESS)) {
                             e.setCancelled(true);
-                            p.sendMessage(Messages.no_permission.language(p).queue());
+                            if(claim.getAttribute() != Claiming.ClaimAttributes.PROTECTED)
+                                p.sendMessage(Messages.you_cant_do.language(p).setFaction(claim.getFaction()).queue());
                         }
                     }
 
@@ -73,7 +78,8 @@ public class PlayerInteract implements Listener {
                         e.setCancelled(true);
                         if (rules.isBlacklistedBlock(e.getClickedBlock())) {
                             e.setCancelled(true);
-                            p.sendMessage(Messages.no_permission.language(p).queue());
+                            if(claim.getAttribute() != Claiming.ClaimAttributes.PROTECTED)
+                                p.sendMessage(Messages.you_cant_do.language(p).setFaction(claim.getFaction()).queue());
                         }
                     }
                 }

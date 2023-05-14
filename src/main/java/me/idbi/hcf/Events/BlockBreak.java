@@ -26,7 +26,7 @@ public class BlockBreak implements Listener {
         Block block = e.getBlock();
         int bx = Math.round(block.getX());
         int bz = Math.round(block.getZ());
-        Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(block.getWorld(), bx, bz);
+        Claiming.Faction_Claim claim = Playertools.getUpperClaim(block.getLocation());
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         if (claim != null) {
             if (claim.getFaction() == null)

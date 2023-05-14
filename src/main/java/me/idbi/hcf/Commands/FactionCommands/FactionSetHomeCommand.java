@@ -7,6 +7,7 @@ import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.SQL_Connection;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.json.JSONObject;
@@ -84,11 +85,17 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
             put("YAW", (int) p.getLocation().getYaw());
             put("PITCH", (int) p.getLocation().getPitch());
         }};
-        SQL_Connection.dbExecute(con,"UPDATE factions SET home='?' WHERE ID='?'",new JSONObject(map).toString());
+        //
         Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockZ());
         if (claim != null) {
             if (claim.getFaction().getId() == faction.getId()) {
-                faction.setHomeLocation(p.getLocation());
+                SQL_Connection.dbExecute(con,"UPDATE factions SET home='?' WHERE ID='?'", new JSONObject(map).toString(), faction.getId() + "");
+                int x = p.getLocation().getBlockX();
+                int z = p.getLocation().getBlockZ();
+                Location secLoc = p.getLocation().clone();
+                secLoc.setX(x);
+                secLoc.setZ(z);
+                faction.setHomeLocation(/*secLoc.add(x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5)*/p.getLocation());
                 addCooldown(p);
 
                 p.sendMessage(Messages.sethome_message.language(p).queue());

@@ -39,7 +39,7 @@ public class FactionUnteamFocusCommand extends SubCommand {
                 member.sendMessage(Messages.faction_team_unfocused.language(member).queue());
             }
 
-            Scoreboards.RefreshAll();
+            Scoreboards.refreshAll();
         } else {
             p.sendMessage(Messages.not_in_faction.language(p).queue());
         }

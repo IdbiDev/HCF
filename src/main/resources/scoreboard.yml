@@ -49,6 +49,7 @@ player_timers:
   sotw: '&d&lSOTW&7: &c'
   sotw_off: '&d&l&mSOTW&r&7: &c'
   location: '&6&lClaim&7: &c'
+
   INVINCIBILITY: '&a&lInvincible&7: &c'
   pvp_timer: '&d&lPvP Timer&7: &c'
   combat_tag: '&c&lSpawn Tag&7: &c'
@@ -61,7 +62,7 @@ player_timers:
   class_warmup: '&a&lClass Warmup&7: &c'
   logout: '&4&lLogout&7: &c'
   active_class: '&7&lClass&7: &c'
-  koth: '%color%%koth%&7: &c'
+  koth: '&l%koth%&7: &c'
   spawn: '&e&lSpawn&7: &c'
   ABILITIES: '' # %ability%&7: &c if you want per ability cooldown
   global_abilities: '&d&lPartner Item&7: &c'

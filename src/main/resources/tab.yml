@@ -8,7 +8,7 @@ faction_info:
   start_slot: 4
   no_faction:
     - "&7Not in faction."
-    - "&7/f create %name%"
+    - "&7/f create <name>"
   in_faction:
     - "&7DTR: %dtr%"
     - "&7Home: %home%"

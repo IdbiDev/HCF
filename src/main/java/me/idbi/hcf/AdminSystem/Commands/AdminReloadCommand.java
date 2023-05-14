@@ -1,10 +1,18 @@
 package me.idbi.hcf.AdminSystem.Commands;
 
 import me.idbi.hcf.Commands.SubCommand;
+import me.idbi.hcf.CustomFiles.*;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
+import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.HCFRules;
+import me.idbi.hcf.HCFServer;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Scoreboard.BoardManager;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.TabManager.TabManager;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Tasks;
+import me.idbi.hcf.Tools.WaypointPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -62,8 +70,22 @@ public class AdminReloadCommand extends SubCommand {
     @Override
     public void perform(Player p, String[] args) {
         Main.getInstance().getTabManager().reload();
+        LimitsFile.reload();
+        BoardFile.reload();
+        TabFile.reload();
+        ReclaimFile.reload();
         ConfigManager.getConfigManager().setup();
-        Scoreboards.RefreshAll();
         TabManager.getManager().reload();
+        HCFServer.getServer().reload();
+        HCFRules.getRules().reload();
+        BoardManager.get().setup();
+        Scoreboards.refreshAll();
+        p.sendMessage(Messages.reload.language(p).queue());
+        Tasks.executeLater(5, () -> {
+            for (HCFPlayer value : Main.playerCache.values()) {
+                // if(value.isOnline())
+                value.getWaypointPlayer().reload();
+            }
+        });
     }
 }

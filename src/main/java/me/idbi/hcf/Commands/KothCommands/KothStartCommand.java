@@ -56,9 +56,9 @@ public class KothStartCommand extends SubCommand {
 
     @Override
     public void perform(Player p, String[] args) {
-        if (getKothFromName(args[1]) != 0) {
-            startKoth(p,args[1]);
-            //Todo: koth started @everyone
+        Faction f = Playertools.getFactionByName(args[1].replaceAll("_", " "));
+        if (f != null) {
+            startKoth(p, f);
         } else {
             p.sendMessage(Messages.koth_invalid_name.language(p).queue());
         }

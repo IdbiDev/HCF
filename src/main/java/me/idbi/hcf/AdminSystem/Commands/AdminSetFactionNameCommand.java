@@ -80,6 +80,6 @@ public class AdminSetFactionNameCommand extends SubCommand {
 
         Main.nameToFaction.remove(args[1])  ;
         Main.nameToFaction.put(args[2],selectedFaction);
-        Scoreboards.RefreshAll();
+        Scoreboards.refreshAll();
     }
 }

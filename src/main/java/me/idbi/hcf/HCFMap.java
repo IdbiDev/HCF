@@ -38,6 +38,6 @@ public class HCFMap {
     }
 
     public void put(EntityType type, boolean state) {
-        entityLimiter.put(type, state);
+        this.entityLimiter.put(type, state);
     }
 }

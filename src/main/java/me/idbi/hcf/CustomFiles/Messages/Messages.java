@@ -1,5 +1,6 @@
 package me.idbi.hcf.CustomFiles.Messages;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.idbi.hcf.CustomFiles.ConfigManagers.ConfigManager;
 import me.idbi.hcf.CustomFiles.ConfigManagers.SimpleConfig;
 import me.idbi.hcf.CustomFiles.MessagesTool;
@@ -11,6 +12,7 @@ import me.idbi.hcf.Tools.Playertools;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -82,6 +84,7 @@ public enum Messages {
     faction_rally("Factions","%prefix% &2&o%player% &ahas set a rally point at &2&o%location% &a(&2&o%world%&a)"),
     faction_unrally("Factions","%prefix% &eYour factions rally point has been removed!"),
     faction_rally_waypoint_name("Factions", "Rally"),
+    faction_home_waypoint_name("Factions", "Home"),
 
     // Commands
     faction_creation("Factions","%prefix% &2&o%faction_name% &awas created by &2&o%player%&a!"),
@@ -627,6 +630,11 @@ public enum Messages {
         return this;
     }
 
+    public Messages papi(OfflinePlayer player) {
+        playerMessage = PlaceholderAPI.setPlaceholders(player, this.playerMessage);
+        return this;
+    }
+
     public String queue() {
         if (this.playerMessage == null) {
             return ChatColor.translateAlternateColorCodes('&', message.replace("%prefix%", this.thisPrefix));
@@ -649,6 +657,14 @@ public enum Messages {
     public Messages setFaction(Faction faction) {
         if (this.isString()) {
             this.playerMessage = this.playerMessage.replaceAll("%faction_name%", faction.getName());
+        }
+
+        return this;
+    }
+
+    public Messages setKoth(String koth) {
+        if (this.isString()) {
+            this.playerMessage = this.playerMessage.replaceAll("%koth%", koth);
         }
 
         return this;

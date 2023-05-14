@@ -35,8 +35,12 @@ public class CustomClaimCreateCommand extends SubCommand {
 
     @Override
     public void perform(Player p, String[] args) {
-        HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
-        Faction faction = Playertools.createCustomFaction(args[1].replaceAll("_", " "), null);
-        p.sendMessage(Messages.faction_create_success.language(p).setFaction(faction).queue());
+        String name = args[1].replaceAll("_", " ");
+        if(Playertools.getFactionByName(name) == null) {
+            Faction faction = Playertools.createCustomFaction(name, null);
+            p.sendMessage(Messages.faction_create_success.language(p).setFaction(faction).queue());
+        } else {
+            p.sendMessage(Messages.exists_faction_name.language(p).queue());
+        }
     }
 }

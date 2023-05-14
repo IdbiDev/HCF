@@ -34,7 +34,7 @@ public class FactionRankManager {
 
         Main.ranks.add(rank);
         faction.addRank(rank);
-        Scoreboards.RefreshAll();
+        Scoreboards.refreshAll();
         SQL_Connection.dbExecute(con, "INSERT INTO ranks SET name = '?', faction='?', isDefault='?',isLeader='?',priority='?', ID='?'",
                 name, String.valueOf(faction.getId()),
                 (rank.isDefault()) ? "1" : "0",
@@ -71,7 +71,7 @@ public class FactionRankManager {
         rank.setName(newName);
         SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE faction='?' AND rank='?'", newName, String.valueOf(faction.getId()), oldName);
         rank.saveRank();
-        Scoreboards.RefreshAll();
+        Scoreboards.refreshAll();
         faction.sortRanks();
         return true;
     }
@@ -93,7 +93,7 @@ public class FactionRankManager {
         SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE ID = '?'", String.valueOf(rank.id));
         faction.removeRank(rank);
         Main.ranks.remove(rank);
-        Scoreboards.RefreshAll();
+        Scoreboards.refreshAll();
         faction.sortRanks();
     }
 

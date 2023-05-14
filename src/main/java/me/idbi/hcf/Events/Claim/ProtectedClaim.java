@@ -46,7 +46,7 @@ public class ProtectedClaim implements Listener {
             player.setClaimType(Claiming.ClaimTypes.NONE);
             endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());
-            p.getInventory().remove(Material.IRON_HOE);
+            p.getInventory().remove(e.getItem());
             player.setClaimID(0);
         }
         // Elfogadás
@@ -57,7 +57,7 @@ public class ProtectedClaim implements Listener {
             player.setClaimType(Claiming.ClaimTypes.NONE);
             endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());
-            p.getInventory().remove(Material.IRON_HOE);
+            p.getInventory().remove(e.getItem());
             player.setClaimID(0);
 //                if (HCF_Claiming.FinishClaiming(player.faction.id, e.getPlayer(), HCF_Claiming.ClaimAttributes.NORMAL)) {
 //                    e.getPlayer().sendMessage(Messages.faction_claim_accept.language(p).queue());

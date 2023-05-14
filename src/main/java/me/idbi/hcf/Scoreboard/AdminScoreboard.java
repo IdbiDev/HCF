@@ -125,7 +125,7 @@ public class AdminScoreboard {
         HCFPlayer player = HCFPlayer.getPlayer(p);
         return PlaceholderAPI.setPlaceholders(p,
                 Scoreboards.replaceVariables(inputString, p)
-                        .replace("%invisible%", (AdminTools.InvisibleManager.invisedAdmins.contains(p) ? "§a✔" : "§c✖"))
+                        .replace("%invisible%", (AdminTools.InvisibleManager.invisedAdmins.contains(p.getUniqueId()) ? "§a✔" : "§c✖"))
                         .replace("%chat_mode%", player.getFormattedChatType())
                         .replace("%online_players%", Bukkit.getOnlinePlayers().size() + "")
                         .replace("%tps%", dfSharp.format(Lag.getTPS()) + ""));

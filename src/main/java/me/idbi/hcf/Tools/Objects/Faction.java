@@ -39,7 +39,7 @@ public class Faction {
     @Getter @Setter private AllyManager allyInvites;
     @Getter private final HashMap<Integer, AllyFaction> allies = new HashMap<>();
 
-    @Getter @Setter private Location homeLocation;
+    @Getter private Location homeLocation;
 
     @Getter @Setter private ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
     @Getter @Setter private ArrayList<HCFPlayer> members = new ArrayList<>();
@@ -123,22 +123,41 @@ public class Faction {
         this.refreshDTR();
     }
 
+    public void clearMembers() {
+        this.members.clear();
+    }
+
     public void setRallyPosition(Location loc) {
+        this.rallyPosition = loc;
         for (Player member : getOnlineMembers()) {
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(member);
             WaypointPlayer waypointPlayer = hcfPlayer.getWaypointPlayer();
-            waypointPlayer.createWaypoint(loc);
+            waypointPlayer.updateRally(loc);
         }
-        this.rallyPosition = loc;
+    }
+
+    public void setHomeLocation(Location loc) {
+        Location loc2 = loc.clone();
+        loc2.setX(loc.getBlockX());
+        loc2.setZ(loc.getBlockZ());
+        loc2.setY(loc.getBlockY());
+        int x = loc2.getBlockX();
+        int z = loc2.getBlockZ();
+        this.homeLocation = loc2.add(x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5);
+        for (Player member : getOnlineMembers()) {
+            HCFPlayer hcfPlayer = HCFPlayer.getPlayer(member);
+            WaypointPlayer waypointPlayer = hcfPlayer.getWaypointPlayer();
+            waypointPlayer.updateHome(loc);
+        }
     }
 
     public void setFocusedTeam(Faction faction) {
+        this.focusedTeam = faction;
         for (Player member : getOnlineMembers()) {
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(member);
             WaypointPlayer waypointPlayer = hcfPlayer.getWaypointPlayer();
-            waypointPlayer.updateWaypoint(faction);
+            waypointPlayer.updateFocus(faction);
         }
-        this.focusedTeam = faction;
     }
 
     public void removeMember(HCFPlayer hcfPlayer) {
@@ -430,6 +449,7 @@ public class Faction {
             value.getAllyFaction().getAllies().remove(this.id);
         }
 
+        this.allies.clear();
         SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(this.id));
         SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(this.id));
         SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(this.id));
