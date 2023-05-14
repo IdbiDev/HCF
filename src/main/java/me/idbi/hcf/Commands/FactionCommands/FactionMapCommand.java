@@ -65,6 +65,7 @@ public class FactionMapCommand extends SubCommand {
         for (Faction f : Main.factionCache.values()) {
             if (f.getClaims().isEmpty()) continue;
             for (Claiming.Faction_Claim claim : f.getClaims()) {
+                if(!pLoc.getWorld().equals(claim.getWorld())) continue;
                 if (pLoc.distance(new Location(claim.getWorld(), claim.getStartX(), pLoc.getBlockY(), claim.getStartZ())) > (16 * Bukkit.getServer().getViewDistance())) continue;
 
                 Claiming.Point bottom_left = new Claiming.Point(claim.getStartX(), claim.getStartZ());

@@ -18,7 +18,7 @@ public class KothSetRewardCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Opens the koth reward window. It can be used to set the rewards. (Wow)";
+        return "Opens the KoTH reward window. It can be used to set the rewards. (Wow)";
     }
 
     @Override

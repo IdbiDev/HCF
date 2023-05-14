@@ -35,7 +35,11 @@ public class HCFServer {
         setupEntities();
         server = this;
     }
-
+    public void clearMaps(){
+        for(HCFMap m : maps.values())
+            m.clearLists();
+        this.maps.clear();
+    }
     public HCFMap getMap(World world) {
         return maps.get(world.getEnvironment());
     }

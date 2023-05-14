@@ -36,7 +36,7 @@ public class PlayerDeath implements Listener {
 
         Faction faction = Playertools.getPlayerFaction(victim);
         HCFPlayer hcfVictim = HCFPlayer.getPlayer(victim);
-
+        victim.getWorld().strikeLightningEffect(victim.getLocation());
         hcfVictim.createRollback(victim.getLastDamageCause().getCause(), Rollback.RollbackLogType.DEATH);
         hcfVictim.addDeaths();
 
@@ -45,7 +45,6 @@ public class PlayerDeath implements Listener {
 
         e.setDeathMessage("");
         if (faction != null) {
-                //Main.DTRREGEN.put(faction.getId(), System.currentTimeMillis() + DTRREGENTIME);
             faction.setDTR_TIMEOUT(System.currentTimeMillis() + dtrRegenTime);
                 if(victim.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
                     faction.removeDTR(Config.OverworldDeathDTR.asDouble());

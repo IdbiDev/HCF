@@ -22,7 +22,7 @@ import me.idbi.hcf.Scoreboard.CustomTimers;
 import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
 import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.*;
-import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
+import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Lag;
@@ -40,6 +40,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.Connection;
 import java.util.*;
@@ -83,7 +84,6 @@ public final class Main extends JavaPlugin implements Listener {
     public static Location endSpawnLocation;
     public static HashMap<String, CustomTimers> customSBTimers;
     public static LinkedHashMap<Integer, Faction> factionCache = new LinkedHashMap<>();
-    public static LinkedHashMap<String, Claiming.Faction_Claim> kothCache = new LinkedHashMap<>();
     public static HashMap<String, Faction> nameToFaction = new HashMap<>();
     public static LinkedHashMap<UUID, HCFPlayer> playerCache = new LinkedHashMap<>();
     public static ArrayList<FactionRankManager.Rank> ranks = new ArrayList<>();
@@ -133,15 +133,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static void savePlayers() {
         for (Map.Entry<UUID, HCFPlayer> value : playerCache.entrySet()) {
             HCFPlayer hcf = value.getValue();
-            hcf.save(); // nem lehet sync mert ez auto save azaz 6000 ticknél mindig fagyna a szero!
-
-            // ToDo: HCFPlayer edited
-
-            /*Player p = value.getKey();
-            if (p == null)
-                continue;*/
-            //SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?',money='?',factionname='?',name='?' WHERE UUID='?'", p_Obj.getData("factionid"), p_Obj.getData("rank"), p_Obj.getData("money"), p_Obj.getData("faction"),ChatColor.stripColor(p.getName()), p.getUniqueId().toString());
-
+            hcf.save();
         }
     }
 
@@ -207,14 +199,15 @@ public final class Main extends JavaPlugin implements Listener {
         HCFRules rules = new HCFRules();
 
         this.scoreboardManager = new BoardManager(this);
-        this.scoreboardManager.setup();;
+        this.scoreboardManager.setup();
+        ;
 
         // Setup variables
 
         dtrRegenTime = Config.DTRRegen.asInt() * 1000L;
         deathbanTime = Config.Deathban.asInt() * 1000L;
         stuckDuration = Config.StuckTimer.asInt() * 1000;
-        Koth.GLOBAL_TIME = Config.KOTHDuration.asInt() * 1000;
+        Koth.GLOBAL_TIME = Config.KOTHDuration.asInt();
         deathban = Config.DeathbanEnable.asBoolean();
         memberStartingMoney = Config.DefaultBalance.asInt();
         claimPriceMultiplier = Config.ClaimPriceMultiplier.asDouble();
@@ -267,6 +260,7 @@ public final class Main extends JavaPlugin implements Listener {
         Playertools.loadRanks();
         playerCache.clear();
         Playertools.cacheAll();
+        System.out.println("Cache");
         new NameChanger(this);
         // Load online players
 
@@ -274,6 +268,7 @@ public final class Main extends JavaPlugin implements Listener {
             FastBoard board = new FastBoard(player);
             Main.boards.put(player.getUniqueId(), board);
             Playertools.loadOnlinePlayer(player);
+            System.out.println(player);
         }
 
         // Timers
@@ -331,9 +326,7 @@ public final class Main extends JavaPlugin implements Listener {
 
         border.setCenter(spawnLocation);
         autoKoth.startAutoKoth();
-        if (Config.WarzoneSize.asInt() != 0 && !Main.factionCache.get(1).getClaims().isEmpty()) {
-            //System.out.println("Bro van warzone");
-            //String str = Config.SpawnLocation.asStr();
+        if (Config.WarzoneSize.asInt() != 0) {
             Faction f = Main.factionCache.get(2);
             int warzoneSize = Config.WarzoneSize.asInt();
             Claiming.Faction_Claim claim;
@@ -342,21 +335,7 @@ public final class Main extends JavaPlugin implements Listener {
             claim = new Claiming.Faction_Claim(spawnLocation.getBlockX() - warzoneSize, spawnLocation.getBlockX() + warzoneSize, spawnLocation.getBlockZ() - warzoneSize, spawnLocation.getBlockZ() + warzoneSize, 2, Claiming.ClaimAttributes.SPECIAL, Config.NetherName.asStr());
             f.addClaim(claim);
         }
-//        for (int i = 0; i < 100; i++) {
-//            Faction f = Playertools.createCustomFaction("Faction"+i,UUID.randomUUID().toString());
-//            f.addBalance(i);
-//            f.setPoints(i);
-//
-//        }
-
-        /*HCF_Claiming.Faction_Claim spawnClaim = null;
-        autoKoth.startAutoKoth();
-        SOTW.EnableSOTW();*/
     }
-
-   //public static Main getInstance() {
-     /*   return instance;
-    *///}
 
     private static Economy econ = null;
 
@@ -387,21 +366,6 @@ public final class Main extends JavaPlugin implements Listener {
                 for (HCFPlayer hcf : playerCache.values()) {
                     hcf.saveSync();
                 }
-
-//                for (Player player : Bukkit.getOnlinePlayers()) {
-//                    if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
-//                    List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
-//                    for (Iterator<Location> it = copy.iteratoar(); it.hasNext(); ) {
-//                        Location loc = it.next();
-//                        player.sendBlockChange(loc, Material.AIR, (byte) 0);
-//                        if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
-//                            List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
-//                            it.remove();
-//                            //l.remove(loc);
-//                            Main.playerBlockChanges.put(player.getUniqueId(), l);
-//                        }
-//                    }
-//
                 System.out.println("Saving");
                 for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
                     integerFactionEntry.getValue().saveFactionDataSync();
@@ -409,10 +373,42 @@ public final class Main extends JavaPlugin implements Listener {
                     for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
                         rank.saveRankSync();
                     }
+                    integerFactionEntry.getValue().clearClaims();
+                    integerFactionEntry.getValue().setRanks(null);
+                    integerFactionEntry.getValue().setMembers(null);
                 }
-                con.close();
-                con = null;
-
+                con.close();//Teccik? eskü igen idk hogy megy e
+                //I mean, nem basztam el semmit xD REMÉLEM
+                con = null; // az online playereket nem kéne újrabetölteni? Nem, ez disable // szerot már próbáltad xdf? Nem xD
+                // fasza, akkor most kipróbálom xd semmi Megy?
+                customSBTimers.clear();
+                factionCache.clear();
+                nameToFaction.clear();
+                playerCache.clear();
+                ranks.clear();
+                savedItems.clear();
+                savedPlayers.clear();
+                deathWaitClear.clear();
+                availableLanguages.clear();
+                playerBlockChanges.clear();
+                factionMapBlockChanges.clear();
+                kothRewardsGUI.clear();
+                blacklistedRankNames.clear();
+                inventoryRollbacks.clear();
+                boards.clear();
+                playerBank.clear();
+                for(BukkitTask t : miscTimers.tasks){
+                    t.cancel();
+                }
+                miscTimers.tasks.clear();
+                HCFServer.getServer().clearMaps();
+                HCFRules.getRules().clearLists();
+                ConfigManager.getClassConfig().free();
+                ConfigManager.getSimpleConfig().free();
+                ConfigManager.getMainMessages().free();
+                ConfigManager.getEnglishMessages().free();
+                ConfigManager.getGUIMessages().free();
+                ConfigManager.getGUIEnglishMessages().free();
             } catch (Exception asked) {
                 asked.printStackTrace();
             }
@@ -427,41 +423,86 @@ public final class Main extends JavaPlugin implements Listener {
 
         this.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
         this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
-        vaultHook.unhook();
-        try {
-            for (HCFPlayer hcf : playerCache.values()) {
-                hcf.saveSync();
-            }
-
-//            for (Player player : getServer().getOnlinePlayers()) {
-//                if (!Main.playerBlockChanges.containsKey(player.getUniqueId())) continue;
-//                List<Location> copy = Main.playerBlockChanges.get(player.getUniqueId());
-//                for (Iterator<Location> it = copy.iterator(); it.hasNext(); ) {
-//                    Location loc = it.next();
-//                    player.sendBlockChange(loc, Material.AIR, (byte) 0);
-//                    if (Main.playerBlockChanges.containsKey(player.getUniqueId())) {
-//                        List<Location> l = Main.playerBlockChanges.get(player.getUniqueId());
-//                        it.remove();
-//                        //l.remove(loc);
-//                        Main.playerBlockChanges.put(player.getUniqueId(), l);
-//                    }
-//                }
-//
-//            }
-            System.out.println("Saving");
-            for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
-                integerFactionEntry.getValue().saveFactionDataSync();
-                System.out.println("Saving:  " + integerFactionEntry.getValue().getName());
-                for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
-                    rank.saveRankSync();
+            try {
+                for (HCFPlayer hcf : playerCache.values()) {
+                    hcf.saveSync();
+                    hcf.getWaypointPlayer().disable();
                 }
-            }
-            con.close();
-            con = null;
+                System.out.println("Saving");
+                for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
+                    integerFactionEntry.getValue().saveFactionDataSync();
+                    System.out.println("Saving:  " + integerFactionEntry.getValue().getName());
+                    for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
+                        rank.saveRankSync();
+                    }
+                    integerFactionEntry.getValue().clearClaims();
+                    integerFactionEntry.getValue().setRanks(null);
+                    integerFactionEntry.getValue().setMembers(null);
+                }
+                con.close();
+                con = null;
+                customSBTimers.clear();
+                factionCache.clear();
+                nameToFaction.clear();
+                playerCache.clear();
+                ranks.clear();
+                savedItems.clear();
+                savedPlayers.clear();
+                deathWaitClear.clear();
+                availableLanguages.clear();
+                playerBlockChanges.clear();
+                factionMapBlockChanges.clear();
+                kothRewardsGUI.clear();
+                blacklistedRankNames.clear();
+                inventoryRollbacks.clear();
+                boards.clear();
+                playerBank.clear();
+                for(BukkitTask t : miscTimers.tasks){
+                    t.cancel();
+                }
+                miscTimers.tasks.clear();
+                HCFServer.getServer().clearMaps();
+                HCFRules.getRules().clearLists();
+                ConfigManager.getClassConfig().free();
+                ConfigManager.getSimpleConfig().free();
+                ConfigManager.getMainMessages().free();
+                ConfigManager.getEnglishMessages().free();
+                ConfigManager.getGUIMessages().free();
+                ConfigManager.getGUIEnglishMessages().free();
 
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
+            } catch (Exception asked) {
+                asked.printStackTrace();
+                con = null;
+                customSBTimers.clear();
+                factionCache.clear();
+                nameToFaction.clear();
+                playerCache.clear();
+                ranks.clear();
+                savedItems.clear();
+                savedPlayers.clear();
+                deathWaitClear.clear();
+                availableLanguages.clear();
+                playerBlockChanges.clear();
+                factionMapBlockChanges.clear();
+                kothRewardsGUI.clear();
+                blacklistedRankNames.clear();
+                inventoryRollbacks.clear();
+                boards.clear();
+                playerBank.clear();
+                for(BukkitTask t : miscTimers.tasks){
+                    t.cancel();
+                }
+                miscTimers.tasks.clear();
+                HCFServer.getServer().clearMaps();
+                HCFRules.getRules().clearLists();
+                ConfigManager.getClassConfig().free();
+                ConfigManager.getSimpleConfig().free();
+                ConfigManager.getMainMessages().free();
+                ConfigManager.getEnglishMessages().free();
+                ConfigManager.getGUIMessages().free();
+                ConfigManager.getGUIEnglishMessages().free();
+            }
         }
-    }
+
 
 }

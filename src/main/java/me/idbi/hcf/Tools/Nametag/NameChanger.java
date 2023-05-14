@@ -1,4 +1,4 @@
-package me.idbi.hcf.Tools.FactionHistorys.Nametag;
+package me.idbi.hcf.Tools.Nametag;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -40,7 +40,8 @@ public class NameChanger implements Listener {
                     }
                     WrappedGameProfile profile = playerInfoData.getProfile();
                     profile = profile.withName(getNameToSend(profile.getUUID()));
-                    PlayerInfoData newPlayerInfoData = new PlayerInfoData(profile, playerInfoData.getPing(), playerInfoData.getGameMode(), playerInfoData.getDisplayName());
+                    PlayerInfoData newPlayerInfoData = new PlayerInfoData(
+                            profile, playerInfoData.getPing(), playerInfoData.getGameMode(), playerInfoData.getDisplayName());
                     newPlayerInfoDataList.add(newPlayerInfoData);
                 }
                 event.getPacket().getPlayerInfoDataLists().write(0, newPlayerInfoDataList);

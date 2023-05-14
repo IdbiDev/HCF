@@ -73,7 +73,7 @@ public class ConfigManager {
     public void setup() {
         allMessages = new HashMap<>();
         allGuiMessages = new HashMap<>();
-        String[] header = {"This is super simple", "And highly customizable", "new and fresh SimpleConfig!"};
+        String[] header = {"HCF Plus","Made by: Idbi & Koba"};
 
         manager = new SimpleConfigManager(this.plugin);
 

@@ -30,22 +30,9 @@ public class EOTW implements Gamemode {
         border.setSize(Config.WorldBorderSize.asInt());
 
         border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.getSpawnLocation());
-        Claiming.Faction_Claim spawnClaim = null;
-        try {
-            spawnClaim = Main.factionCache.get(1).getClaims().get(0);
-            spawnClaim.setAttribute(Claiming.ClaimAttributes.KOTH);
-            Koth.startKoth(spawnClaim.getFaction().getName());
-        } catch (Exception ignored) {
-            Main.sendCmdMessage(Messages.cant_start_eotw.queue());
-            return;
-        }
 
-
-        border.setSize(
-                getDistanceBetweenPoints2D(
-                        new Claiming.Point(spawnClaim.getStartX(), spawnClaim.getStartZ()),
-                        new Claiming.Point(spawnClaim.getEndX(), spawnClaim.getEndZ())),
-                EOTWTIME);
+// köcsög
+        border.setSize(1, EOTWTIME);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.sendTitle(
@@ -72,7 +59,6 @@ public class EOTW implements Gamemode {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
                 }
-                Main.sendCmdMessage("EOTW ended!");
                 Koth.stopKoth();
             }
         }.runTaskLater(Main.getPlugin(Main.class),Config.EOTWDuration.asInt() * 20L);
@@ -88,14 +74,7 @@ public class EOTW implements Gamemode {
             WorldBorder border = world.getWorldBorder();
             border.setSize(Config.WorldBorderSize.asInt());
 
-            border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.getSpawnLocation());
-            Claiming.Faction_Claim spawnClaim = null;
-            try {
-                spawnClaim = Main.factionCache.get(1).getClaims().get(0);
-                spawnClaim.setAttribute(Claiming.ClaimAttributes.PROTECTED);
-            } catch (Exception ignored) {
-                return;
-            }
+            border.setCenter(Main.getSpawnLocation());
             for(Faction f : Main.factionCache.values()) {
                 f.refreshDTR();
             }

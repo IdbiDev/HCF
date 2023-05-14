@@ -2,14 +2,17 @@ package me.idbi.hcf.Commands.KothCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.entity.Player;
 
-import static me.idbi.hcf.Koth.Koth.createKoth;
+import static me.idbi.hcf.Koth.Koth.startKoth;
+import static me.idbi.hcf.Koth.Koth.stopKoth;
 
-public class KothCreateCommand extends SubCommand {
+public class KothStopCommand  extends SubCommand {
     @Override
     public String getName() {
-        return "create";
+        return "stop";
     }
 
     @Override
@@ -19,12 +22,12 @@ public class KothCreateCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Creates a koth faction";
+        return "Stops the currently going KoTH!";
     }
 
     @Override
     public String getSyntax() {
-        return "/koth " + getName() + " <Koth name>";
+        return "/koth " + getName();
     }
 
     @Override
@@ -54,7 +57,13 @@ public class KothCreateCommand extends SubCommand {
 
     @Override
     public void perform(Player p, String[] args) {
-        createKoth(p,args[1]);
-        p.sendMessage(Messages.koth_success_create.language(p).setFaction(args[1]).queue());
+        Faction f = Playertools.getFactionByName(args[1].replaceAll("_", " "));
+        if (f != null) {
+            stopKoth();
+        } else {
+            p.sendMessage(Messages.koth_invalid_name.language(p).queue());
+        }
     }
+}
+{
 }

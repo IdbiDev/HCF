@@ -1,7 +1,6 @@
 package me.idbi.hcf.Tools;
 
 
-import me.idbi.hcf.Bossbar.BossbarTools;
 import me.idbi.hcf.Classes.ClassSelector;
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.SubClasses.Bard;
@@ -11,7 +10,7 @@ import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.AdminScoreboard;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
+import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.MountainEvent;
@@ -29,11 +28,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.idbi.hcf.Koth.Koth.GLOBAL_TIME;
-import static me.idbi.hcf.Koth.Koth.stopKoth;
-
 public class MiscTimers {
     private final HashMap<HCFPlayer, BukkitTask> warmup_tasks = new HashMap<>();
+    public final ArrayList<BukkitTask> tasks = new ArrayList<>();
     Bard bard = new Bard();
     public void addClassToPlayer(Player player) {
         HCFPlayer p = HCFPlayer.getPlayer(player);
@@ -55,7 +52,7 @@ public class MiscTimers {
         warmup_tasks.put(p, task);
     }
     public void DTRTimer() {
-        new BukkitRunnable() {
+        BukkitTask t =  new BukkitRunnable() {
             @Override
             public void run() {
                 for (Faction f : Main.factionCache.values()) {
@@ -104,10 +101,11 @@ public class MiscTimers {
 
             }
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 20);
+        tasks.add(t);
     }
 
     public void mainRefresher() {
-        new BukkitRunnable() {
+        BukkitTask t = new BukkitRunnable() {
             @Override
             public void run() {
                 if(MountainEvent.getInstance().isReset()) {
@@ -130,36 +128,39 @@ public class MiscTimers {
                 }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 2);
+        tasks.add(t);
     }
 
     public void KOTHCountdown() {
-        new BukkitRunnable() {
+
+      BukkitTask t = new BukkitRunnable() {
             @Override
             public void run() {
                 if (Koth.GLOBAL_AREA != null && Koth.GLOBAL_PLAYER != null) {
-                    //TODO: Scoreboard format MIN:SS
-                    GLOBAL_TIME--;
-                    if (GLOBAL_TIME % 30 == 0)
-                        Bukkit.broadcastMessage(Messages.koth_capture_timer
-                                .setFaction(Koth.GLOBAL_AREA.getFaction()).setFormattedTime(GLOBAL_TIME).queue());
-                    //  Bukkit.broadcastMessage(Messages.KOTH_CAPTURE_TIMER.setFaction(KOTH.GLOBAL_AREA.faction.factioname).repTime_formatted(GLOBAL_TIME).queue());
-                    if (GLOBAL_TIME <= 0) {
-                        stopKoth();
-                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            BossbarTools.remove(onlinePlayer);
-                        }
+                    Koth.GLOBAL_TIME--;
+                    if (Koth.GLOBAL_TIME % 30 == 0)
+                        for(Player _p : Bukkit.getOnlinePlayers())
+                            _p.sendMessage(Messages.koth_capture_timer
+                                    .language(_p)
+                                    .setFaction(Koth.GLOBAL_AREA.getFaction())
+                                    .setFormattedTime(Koth.GLOBAL_TIME)
+                                    .queue()
+                            );
+                    else if (Koth.GLOBAL_TIME % 15 == 0) {
+                        Koth.GLOBAL_PLAYER.sendMessage(Messages.koth_holding.language(Koth.GLOBAL_PLAYER).setFaction(Koth.GLOBAL_AREA.getFaction()).queue());
+                    }
+                    if (Koth.GLOBAL_TIME <= 0) {
+                        Koth.reward(Koth.GLOBAL_PLAYER);
+                        Koth.stopKoth();
                     }
                 }
-
-//                for (Player online : Bukkit.getOnlinePlayers()) {
-//                    BarUtil.setBar(online, "Igen nem §cTe köcsög §cigen " + GLOBAL_TIME, 50);
-//                }
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 0, 20);
+        tasks.add(t);
     }
 
     public void createFakeWalls() {
-        new BukkitRunnable() {
+        BukkitTask t = new BukkitRunnable() {
             @Override
             public void run() {
 
@@ -180,6 +181,7 @@ public class MiscTimers {
 
             }
         }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, 1);
+        tasks.add(t);
     }
     public void removeFakeWalls(Player player) {
         new BukkitRunnable() {
@@ -202,7 +204,7 @@ public class MiscTimers {
     }
 
     public void autoSave() {
-        new BukkitRunnable() {
+        BukkitTask t = new BukkitRunnable() {
             @Override
             public void run() {
                 try {
@@ -217,6 +219,7 @@ public class MiscTimers {
 
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 6000, 6000);
+        tasks.add(t);
     }
 
     private void executeClassWarmup(Player player) {

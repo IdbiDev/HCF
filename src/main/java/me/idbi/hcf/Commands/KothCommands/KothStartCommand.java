@@ -2,9 +2,10 @@ package me.idbi.hcf.Commands.KothCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.entity.Player;
 
-import static me.idbi.hcf.Koth.Koth.getKothFromName;
 import static me.idbi.hcf.Koth.Koth.startKoth;
 
 public class KothStartCommand extends SubCommand {
@@ -20,12 +21,12 @@ public class KothStartCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Starts the selected koth";
+        return "Starts the selected KoTH";
     }
 
     @Override
     public String getSyntax() {
-        return "/koth " + getName() + "<Koth name>";
+        return "/koth " + getName() + "<KoTH name>";
     }
 
     @Override

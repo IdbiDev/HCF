@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
@@ -42,6 +43,14 @@ public class HCFRules {
         setupEntities();
     }
 
+    public void clearLists(){
+        blacklistedBlocks.clear();
+        allyBlocks.clear();
+        enchantLevels.clear();
+        potionLimit.clear();
+        potionExtendable.clear();
+        //entityLimiter.clear();
+    }
     private void setupAllowedLevels() {
         for (String key : LimitsFile.get().getConfigurationSection("ENCHANTMENT_LIMITER").getKeys(false)) {
             int level = LimitsFile.get().getInt(key);
@@ -107,8 +116,12 @@ public class HCFRules {
 //        return this.entityLimiter.get(ent.getType());
 //    }
     public boolean isEntityLimited(Entity ent, World world) {
+        if(ent instanceof Player)
+            return false;
         HCFMap map = HCFServer.getServer().getMap(world);
-        return map.getEntityLimiter().get(ent.getType());
+        if(map == null)
+            return false;
+        return map.getEntityLimiter().get(ent.getType()) != null && map.getEntityLimiter().get(ent.getType());
     }
     public boolean isBlacklistedBlock(Block block) {
         return this.blacklistedBlocks.contains(block.getType());

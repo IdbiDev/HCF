@@ -9,6 +9,7 @@ import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -18,7 +19,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 
@@ -26,7 +26,8 @@ public class Koth implements Listener {
 
     public static Claiming.Faction_Claim GLOBAL_AREA = null;
     public static Player GLOBAL_PLAYER = null;
-    public static int GLOBAL_TIME;
+    public static int GLOBAL_TIME = 0;
+    static Random r = new Random();
 
     @EventHandler(priority = EventPriority.LOWEST)
     public static void KothMoveEvent(PlayerMoveEvent e) {
@@ -39,7 +40,6 @@ public class Koth implements Listener {
             Claiming.Point point = new Claiming.Point(e.getTo().getBlockX(), e.getTo().getBlockZ());
             Player p = e.getPlayer();
             if (GLOBAL_PLAYER == null) {
-                // ha kothba ment ÉS nem foglalja senki
                 if (GLOBAL_AREA.getAttribute().equals(Claiming.ClaimAttributes.KOTH) && Claiming.doOverlap(start, end, point, point)) {
                     HCFPlayer hcf = HCFPlayer.getPlayer(p);
                     if (hcf.inFaction()) {
@@ -62,17 +62,6 @@ public class Koth implements Listener {
         }
     }
 
-    public static Faction createKoth(Player p,String name) {
-        Faction f = Playertools.createCustomFaction(name, null);
-        //p.sendMessage(Messages.koth_created.language(p).setFaction(f).queue());
-        return f;
-//        KOTH.koth_area temp = new KOTH.koth_area(
-//                faction,
-//                new HCF_Claiming.Point(claim.startX,claim.startZ),
-//                new HCF_Claiming.Point(claim.endX,claim.endZ)
-//        );
-    }
-
     public static void startKoth(String f) {
         try {
             Faction kothFaction = Playertools.getFactionByName(f);
@@ -87,7 +76,7 @@ public class Koth implements Listener {
                 if(kothArea != null) {
                     GLOBAL_AREA = kothArea;
                     GLOBAL_PLAYER = null;
-                    GLOBAL_TIME = Config.KOTHDuration.asInt() * 60;
+                    GLOBAL_TIME = Config.KOTHDuration.asInt();
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         p.sendTitle(
                                 Messages.koth_start_title.language(p).setFaction(kothFaction.getName()).queue(),
@@ -101,12 +90,11 @@ public class Koth implements Listener {
             e.printStackTrace();
             GLOBAL_AREA = null;
             GLOBAL_PLAYER = null;
-            GLOBAL_TIME = Config.KOTHDuration.asInt() * 60;
+            GLOBAL_TIME = Config.KOTHDuration.asInt() ;
         }
     }
-    public static void startKoth(Player player,String f) {
+    public static void startKoth(Faction kothFaction) {
         try {
-            Faction kothFaction = Playertools.getFactionByName(f);
             Claiming.Faction_Claim kothArea = null;
             if(kothFaction != null) {
                 for(Claiming.Faction_Claim claim : kothFaction.getClaims()) {
@@ -118,7 +106,37 @@ public class Koth implements Listener {
                 if(kothArea != null) {
                     GLOBAL_AREA = kothArea;
                     GLOBAL_PLAYER = null;
-                    GLOBAL_TIME = Config.KOTHDuration.asInt() * 60;
+                    GLOBAL_TIME = Config.KOTHDuration.asInt();
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        p.sendTitle(
+                                Messages.koth_start_title.language(p).setFaction(kothFaction.getName()).queue(),
+                                Messages.koth_start_subtitle.language(p).setFaction(kothFaction.getName()).queue()
+                        );
+                        p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            GLOBAL_AREA = null;
+            GLOBAL_PLAYER = null;
+            GLOBAL_TIME = Config.KOTHDuration.asInt() ;
+        }
+    }
+    public static void startKoth(Player player,Faction kothFaction) {
+        try {
+            Claiming.Faction_Claim kothArea = null;
+            if(kothFaction != null) {
+                for(Claiming.Faction_Claim claim : kothFaction.getClaims()) {
+                    if(claim.getAttribute().equals(Claiming.ClaimAttributes.KOTH)) {
+                        kothArea = claim;
+                        break;
+                    }
+                }
+                if(kothArea != null) {
+                    GLOBAL_AREA = kothArea;
+                    GLOBAL_PLAYER = null;
+                    GLOBAL_TIME = Config.KOTHDuration.asInt();
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         p.sendTitle(
                                 Messages.koth_start_title.language(p).setFaction(kothFaction.getName()).queue(),
@@ -131,7 +149,6 @@ public class Koth implements Listener {
                     player.sendMessage(Messages.koth_failed_not_valid_claim.language(player).queue());
                 }
             } else {
-                //Todo: Koth not found
                 player.sendMessage(Messages.koth_invalid_name.language(player).queue());
             }
 
@@ -142,33 +159,35 @@ public class Koth implements Listener {
     }
 
     public static void StartRandomKoth() {
-        if (Main.kothCache.isEmpty()) {
-            return;
+        ArrayList<Faction> factions = new ArrayList<>();
+        for(Faction f : Main.factionCache.values()) {
+            if(f.getLeader() == null){
+                for (Claiming.Faction_Claim c : f.getClaims())
+                    if(c.getAttribute().equals(Claiming.ClaimAttributes.KOTH))
+                        factions.add(f);
+            }
         }
-        int c = new Random().nextInt(Main.kothCache.size());
-        List<String> names = new ArrayList<>(Main.kothCache.keySet());
-        startKoth(names.get((c == 0 && names.size() > 0) ? c : c - 1));
+
+        if(!factions.isEmpty()) {
+            startKoth(factions.get(r.nextInt(factions.size()-1)));
+        }
     }
 
     public static void stopKoth() {
         GLOBAL_AREA = null;
-        //TODO:  Koth Elfoglalta xy
-        //TODO: Set the items
-        KOTHItemManager.addRewardsToPlayer(GLOBAL_PLAYER);
         GLOBAL_PLAYER = null;
-        GLOBAL_TIME = Config.KOTHDuration.asInt() * 60;
-
+        GLOBAL_TIME = Config.KOTHDuration.asInt();
         for (Player player : Bukkit.getOnlinePlayers()) {
             BossbarTools.remove(player);
         }
-        ///Main.autoKoth.StopAutoKoth();
+    }
+    public static void reward(Player p) {
+        KOTHItemManager.addRewardsToPlayer(p);
+        for(Player _p : Bukkit.getOnlinePlayers()){ // ha GLOBAL AREA null akk az adbi leszopja magát!
+            _p.sendMessage(Messages.koth_faction_winner.language(_p).setFaction(HCFPlayer.getPlayer(p).getFaction()).setKoth(Koth.GLOBAL_AREA.getFaction().getName()).queue());
+        }
+        p.sendMessage(Messages.claim_koth_rewards.language(p).queue());
+        HCFPlayer.getPlayer(p).getFaction().addPoints(Config.PointPerKoth.asInt());
     }
 
-    public static int getKothFromName(String name) {
-        Faction k = Main.nameToFaction.get(name);
-        if (k != null) {
-            return k.getId();
-        }
-        return 0;
-    }
 }

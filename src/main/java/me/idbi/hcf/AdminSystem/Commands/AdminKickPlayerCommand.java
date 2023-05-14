@@ -4,7 +4,7 @@ import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
+import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.SQL_Connection;
 import org.bukkit.Bukkit;

@@ -3,6 +3,7 @@ package me.idbi.hcf.Events.Claim;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.TowerTools;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,20 +25,25 @@ public class SpecialClaim implements Listener {
             return;
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            TowerTools.removePillar(p, endpositions.get(player.getClaimID()));
             p.sendMessage(Messages.claim_pos_end.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
             Claiming.setEndPosition(player.getClaimID(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             e.setCancelled(true);
+            TowerTools.createPillar(p, endpositions.get(player.getClaimID()));
         }
         if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+            TowerTools.removePillar(p, startpositions.get(player.getClaimID()));
             p.sendMessage(Messages.claim_pos_start.language(p).setLoc(e.getClickedBlock().getX(), e.getClickedBlock().getZ()).queue());
             e.setCancelled(true);
             Claiming.setStartPosition(player.getClaimID(), e.getClickedBlock().getX(), e.getClickedBlock().getZ());
+            TowerTools.createPillar(p, startpositions.get(player.getClaimID()));
         }
         // Elvetés
         if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking()) {
+            TowerTools.removePillar(p,Claiming.startpositions.get(player.getClaimID()));
+            TowerTools.removePillar(p,Claiming.endpositions.get(player.getClaimID()));
             player.setClaimType(Claiming.ClaimTypes.NONE);
-
-            endpositions.remove(player.getClaimID()); // UwU Mentem <3
+            endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());
             p.getInventory().remove(e.getItem());
             player.setClaimID(0);
@@ -45,6 +51,8 @@ public class SpecialClaim implements Listener {
         // Elfogadás
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getPlayer().isSneaking()) {
             Claiming.ForceFinishClaim(player.getClaimID(), p, Claiming.ClaimAttributes.SPECIAL);
+            TowerTools.removePillar(p,Claiming.startpositions.get(player.getClaimID()));
+            TowerTools.removePillar(p,Claiming.endpositions.get(player.getClaimID()));
             player.setClaimType(Claiming.ClaimTypes.NONE);
             endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());

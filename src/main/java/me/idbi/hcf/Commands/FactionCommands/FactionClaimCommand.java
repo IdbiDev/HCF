@@ -78,7 +78,7 @@ public class FactionClaimCommand extends SubCommand {
                 for(String l : Messages.claim_info.queueList())
                     p.sendMessage(ChatColor.translateAlternateColorCodes('&', l));
                 //ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
-                hcfPlayer.setClaimType(Claiming.ClaimTypes.FACTION);
+                hcfPlayer.setClaimType(Claiming.ClaimTypes.NORMAL);
                 addCooldown(p);
             } else {
                 p.sendMessage(Messages.not_enough_slot.language(p).queue());

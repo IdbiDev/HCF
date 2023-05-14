@@ -23,7 +23,8 @@ public enum Timers {
     LOGOUT(Config.Logout.asInt() * 1000),
     HOME(Config.HomeTimer.asInt() * 1000),
     SOTW(Config.SOTWDuration.asInt() * 1000),
-    EOTW(Config.EOTWDuration.asInt() * 1000);
+    EOTW(Config.EOTWDuration.asInt() * 1000),
+    KOTH_ANTI_SPAM(10 * 1000);//Hard coded
 
     private final int time;
 

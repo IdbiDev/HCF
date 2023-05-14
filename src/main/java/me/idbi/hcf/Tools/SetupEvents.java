@@ -96,7 +96,6 @@ public class SetupEvents {
 
         pm.registerEvents(new ConsumeItem(), m);
         pm.registerEvents(new BasicClaim(), m);
-        pm.registerEvents(new SpawnClaim(), m);
         pm.registerEvents(new KothClaim(), m);
         pm.registerEvents(new ProtectedClaim(), m);
         pm.registerEvents(new SpecialClaim(), m);

@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,7 @@ public class SimpleConfig {
 
     private final File file;
     private FileConfiguration config;
+    private final Reader reader;
 
     public SimpleConfig(Reader configStream, File configFile, int comments, JavaPlugin plugin) {
         this.comments = comments;
@@ -23,8 +25,16 @@ public class SimpleConfig {
 
         this.file = configFile;
         this.config = YamlConfiguration.loadConfiguration(configStream);
-    }
+        this.reader = configStream;
 
+    }
+    public void free() {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public Object get(String path) {
         return this.config.get(path);
     }

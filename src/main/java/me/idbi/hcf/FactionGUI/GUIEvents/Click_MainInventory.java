@@ -92,12 +92,6 @@ public class Click_MainInventory implements Listener {
             GUISound.playSound(p, GUISound.HCFSounds.CLICK);
             p.openInventory(InviteManagerInventory.inv(((Player) e.getWhoClicked())));
         } else if (e.getCurrentItem().isSimilar(GUI_Items.histories(((Player) e.getWhoClicked())))) {
-            // ToDo: Logs check permission
-            //if(!playertools.hasPermission(p, Faction_Rank_Manager.Permissions.MANAGE_INVITE)) {
-             /*   p.sendMessage(Messages.NO_PERMISSION_IN_FACTION.queue());
-                GUI_Sound.playSound(p, GUI_Sound.HCFSounds.ERROR);
-                return;
-            }*/
             GUISound.playSound(p, GUISound.HCFSounds.CLICK);
             p.openInventory(FactionHistoryInventory.inv(p, Playertools.getPlayerFaction(p),
                     1, 1, 1, 1, 1, 1));

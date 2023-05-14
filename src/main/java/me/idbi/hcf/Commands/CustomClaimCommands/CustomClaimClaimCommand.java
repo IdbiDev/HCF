@@ -16,7 +16,7 @@ public class CustomClaimClaimCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Valid claim types: 'Protected': PvP and building is denied, 'Special': PvP is allowed but build is denied";
+        return "Valid claim types: 'Protected': PvP and building is denied, 'Special': PvP is allowed but building is denied,'KoTH': KoTH Capture zone";
     }
 
     @Override

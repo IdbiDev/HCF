@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,6 @@ public class Claiming {
     public static final HashMap<Integer, Point> startpositions = new HashMap<>();
     public static final HashMap<Integer, Point> endpositions = new HashMap<>();
 
-    public static final HashMap<Player, ArrayList<Location>> ConnectPosition = new HashMap<>();
 
     public static void setStartPosition(int faction, int x, int z) {
         if (!startpositions.containsKey(faction)) {
@@ -145,10 +145,6 @@ public class Claiming {
                         attribute.name().toLowerCase(),
                         p.getWorld().getName()
                 );
-                //HandleSpawn
-
-                endpositions.remove(faction);
-                startpositions.remove(faction);
                 Claiming.Faction_Claim claim;
                 claim = new Claiming.Faction_Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
                 f.addClaim(claim);
@@ -182,10 +178,7 @@ public class Claiming {
                         attribute.name().toLowerCase(),
                         p.getWorld().getName()
                 );
-                //HandleSpawn
                 Faction f = Main.factionCache.get(faction);
-                endpositions.remove(faction);
-                startpositions.remove(faction);
                 Claiming.Faction_Claim claim = new Claiming.Faction_Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
                 f.addClaim(claim);
                 Scoreboards.RefreshAll();
@@ -196,6 +189,7 @@ public class Claiming {
             return false;
         } catch (Exception e) {
             p.sendMessage(Messages.error_while_executing.language(p).queue());
+            e.printStackTrace();
         }
         return false;
     }
@@ -350,7 +344,6 @@ public class Claiming {
         return playerFac.getId() != actionFaction.getId();
     }
 
-    //Old find point FUCKED UP IDK MIEZ
     public static boolean FindPoint_old(int x1, int y1, int x2,
                                         int y2, int x, int y) {
         return x >= x1 && x <= x2 &&
@@ -365,27 +358,51 @@ public class Claiming {
         return doOverlap(rc, lc, p, p);
     }
 
-    /// TODO:     This need some optimization
     public static ArrayList<Claiming.Faction_Claim> getPlayerArea(Player p) {
         ArrayList<Claiming.Faction_Claim> claims = new ArrayList<>();
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
                 if(!val.getWorld().equals(p.getWorld())) continue;
+
+                Location l = new Location(p.getWorld(),val.getStartX() + ((double) val.getWidth() /2),p.getLocation().getBlockY(),val.getStartZ() + ((double) val.getHeight() /2));
                 int x = p.getLocation().getBlockX();
                 int z = p.getLocation().getBlockZ();
+                if(p.getLocation().distanceSquared(l) > (val.getSize()^2)) continue;
+                if (val.getStartX() <= x && val.getEndX() >= x) {
+                    if (val.getStartZ() <= z && val.getEndZ() >= z) {
+                        claims.add(val);
+                    }
+                }
+            }
+        }
+        claims.sort(Comparator.comparingInt(Faction_Claim::getSize));
+        for (Faction_Claim c : claims)
+            System.out.println(c.getSize());
+        //claims.sort();
+        return claims;
+    }
+    public static ArrayList<Claiming.Faction_Claim> getClaimsInArea(Location loc) {
+        ArrayList<Claiming.Faction_Claim> claims = new ArrayList<>();
+        for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
+            for (Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
+
+                Location l = new Location(loc.getWorld(),val.getStartX() + ((double) val.getWidth() /2),loc.getBlockY(),val.getStartZ() + ((double) val.getHeight() /2));
+                int x = loc.getBlockX();
+                int z = loc.getBlockZ();
+
+                if(loc.distanceSquared(l) > (val.getSize()^2)) continue;
 
                 if (val.getStartX() <= x && val.getEndX() >= x) {
                     if (val.getStartZ() <= z && val.getEndZ() >= z) {
                         claims.add(val);
                     }
                 }
-
-                //if(FindPoint(claimrc.getX(),claimrc.getZ(),claimlc.getX(),claimlc.getZ(),playerPoint.getX(),playerPoint.getZ())){
-                /*if(doOverlap(claimlc,claimrc,playerPoint,playerPoint)) {
-                    return val;
-                }*/
             }
-        }
+        }// de akkor írd  ÍTT VAN GECIújra fasz
+        claims.sort(Comparator.comparingInt(Faction_Claim::getSize));
+        for (Faction_Claim c : claims)
+            System.out.println(c.getSize());
+
         return claims;
     }
 
@@ -503,29 +520,6 @@ public class Claiming {
         return -1;
     }
 
-    public static boolean SpawnPrepare(Player p) {
-        if (p.getInventory().firstEmpty() != -1) {
-
-            p.getInventory().setItem(p.getInventory().firstEmpty(), Claiming.Wands.claimWand());
-            return true;
-        } else {
-            p.sendMessage(Messages.not_enough_slot.language(p).queue());
-        }
-
-        return false;
-    }
-
-    public static boolean KothPrepare(Player p) {
-        if (p.getInventory().firstEmpty() != -1) {
-            p.getInventory().setItem(p.getInventory().firstEmpty(), Claiming.Wands.claimWand());
-            return true;
-        } else {
-            p.sendMessage(Messages.not_enough_slot.language(p).queue());
-        }
-
-        return false;
-    }
-
 
     public static Location ReturnSafeSpot(Location old) {
         Location loc = null;
@@ -547,7 +541,6 @@ public class Claiming {
                 }
             }
         }
-
         return loc;
     }
 
@@ -559,12 +552,9 @@ public class Claiming {
     }
 
     public enum ClaimTypes {
-
-        FACTION,
+        NORMAL,
         PROTECTED,
-        SPAWN,
         KOTH,
-        END,
         SPECIAL,
         NONE;
 
@@ -595,18 +585,28 @@ public class Claiming {
         @Getter @Setter private Faction faction;
         //Attributes: Protected, KOTH, normal,Special
         @Getter @Setter private ClaimAttributes attribute;
+        @Getter private int size;
+        @Getter private Point start;
+        @Getter private Point end;
+        @Getter private int height;
+        @Getter private int width;
 
         public Faction_Claim(int startX, int endX, int startZ, int endZ, int faction, ClaimAttributes attribute, String world) {
             this.startX = startX;
             this.endX = endX;
             this.startZ = startZ;
             this.endZ = endZ;
+            this.start = new Point(startX,startZ);
+            this.end = new Point(endX,endZ);
             this.faction = Main.factionCache.get(faction);
             this.attribute = attribute;
             this.world = Bukkit.getWorld(world);
             if (this.world == null) {
                 this.world = Bukkit.getWorld(Config.WorldName.asStr());
             }
+            this.size = getDistanceBetweenPoints2D(start,end);
+            this.height = getDistanceBetweenPoints2D(start,new Point(startX,endZ));
+            this.width = getDistanceBetweenPoints2D(start,new Point(endX,startZ));
         }
     }
 

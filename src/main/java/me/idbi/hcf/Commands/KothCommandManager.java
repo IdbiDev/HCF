@@ -15,11 +15,9 @@ public class KothCommandManager implements CommandExecutor {
     private final ArrayList<SubCommand> subcommands = new ArrayList<>();
 
     public KothCommandManager() {
-        subcommands.add(new KothCreateCaptureZoneCommand());
-        subcommands.add(new KothCreateCommand());
-        subcommands.add(new KothCreateNeutralZoneCommand());
         subcommands.add(new KothSetRewardCommand());
         subcommands.add(new KothStartCommand());
+        subcommands.add(new KothStopCommand());
 
         for (SubCommand command : subcommands) {
             SubCommand.commandCooldowns.put(command, new HashMap<>());

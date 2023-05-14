@@ -5,7 +5,7 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
+import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Permissions;
@@ -133,6 +133,9 @@ public class Playertools {
                     claims.remove(claim);
             }
         }
+
+        // A legkisebb claim legyen felül!!!!
+
         return claims.isEmpty() ? null : claims.get(0);
     }
     public static void cacheAll() {
@@ -242,9 +245,10 @@ public class Playertools {
     }
 
     public static Faction getFactionByName(String name) {
-        for(Faction f : Main.factionCache.values())
-            if(f.getName().equalsIgnoreCase(name))
+        for(Faction f : Main.factionCache.values()){
+            if(f.getName().replace("_"," ").equalsIgnoreCase(name) || ChatColor.stripColor(f.getName()).equalsIgnoreCase(ChatColor.stripColor(name)))
                 return f;
+        }
         return null;
 //        if (Main.nameToFaction.containsKey(name)) {
 //            return Main.nameToFaction.get(name);
@@ -377,7 +381,6 @@ public class Playertools {
                 Main.factionCache.put(rs.getInt("ID"), faction);
                 Main.nameToFaction.put(rs.getString("name"), faction);
 
-                faction.setDTR(Double.parseDouble(CalculateDTR(faction)));
                 faction.setDTR(Double.parseDouble(CalculateDTR(faction)));
 //                if(main_score.getTeam(faction.name) == null)
 //                    main_score.registerNewTeam(faction.name).setPrefix(ChatColor.GREEN.toString());
@@ -537,17 +540,12 @@ public class Playertools {
     public static Faction createCustomFaction(String name, String leader) {
         int largestID = getFreeFactionId();
         Faction faction = new Faction(largestID, name, leader, 0);
-
         Main.factionCache.put(largestID, faction);
-
         Main.nameToFaction.put(faction.getName(), faction);
         SQL_Connection.dbExecute(con, "INSERT INTO factions SET ID='?', name='?',leader='?'", String.valueOf(faction.getId()), name, leader);
         return faction;
     }
 
-
-    //Koba, ne nyírj ki ha nem működik gec XD
-    //Todo: Check + Bugfix ha van
     public static boolean CheckClaimPlusOne(Claiming.Point left_c, Claiming.Point right_c, int diff, Claiming.Point p1, Claiming.Point p2) {
         //Getting the bottom left point
         int minX = Math.min(left_c.getX(), right_c.getX());
@@ -693,17 +691,6 @@ public class Playertools {
         return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
     }
 
-    public static boolean finishSpawn(Player admin) {
-        HCFPlayer player = HCFPlayer.getPlayer(admin);
-        if (Claiming.ForceFinishClaim(1, admin, Claiming.ClaimAttributes.PROTECTED)) {
-            //Todo: Kurvva sikerült
-            player.setClaimType(Claiming.ClaimTypes.NONE);
-            admin.sendMessage(Messages.spawn_claim_success.language(admin).queue());
-            admin.getInventory().remove(Claiming.Wands.claimWand());
-            return true;
-        }
-        return false;
-    }
 
     public static boolean isInWarzone(Location loc) {
         Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(loc.getWorld(), loc.getBlockX(), loc.getBlockZ());
@@ -783,47 +770,52 @@ public class Playertools {
 
     public static ArrayList<Faction> sortByOnlineMembers() {
         ArrayList<Faction> f = new ArrayList<>(Main.factionCache.values());
-        f.sort(Comparator.comparingInt(Faction::countOnlineMembers));
-        Collections.reverse(f);
         f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
         f.removeIf(fac -> Objects.equals(fac.getLeader(), null));
         f.removeIf(fac -> Objects.equals(fac.getLeader(), "null"));
+        f.sort(Comparator.comparingInt(Faction::countOnlineMembers));
+        Collections.reverse(f);
+
         return f;
     }
     public static ArrayList<Faction> sortByDTR() {
         ArrayList<Faction> f = new ArrayList<>(Main.factionCache.values());
-        f.sort(Comparator.comparingDouble(Faction::getDTR));
-        Collections.reverse(f);
         f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
         f.removeIf(fac -> Objects.equals(fac.getLeader(), null));
         f.removeIf(fac -> Objects.equals(fac.getLeader(), "null"));
+        f.sort(Comparator.comparingDouble(Faction::getDTR));
+        Collections.reverse(f);
+
         return f;
     }
     public static ArrayList<Faction> sortByBalance() {
         ArrayList<Faction> f = new ArrayList<>(Main.factionCache.values());
-        f.sort(Comparator.comparingInt(Faction::getBalance));
-        Collections.reverse(f);
         f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
         f.removeIf(fac -> Objects.equals(fac.getLeader(), null));
         f.removeIf(fac -> Objects.equals(fac.getLeader(), "null"));
+        f.sort(Comparator.comparingInt(Faction::getBalance));
+        Collections.reverse(f);
+
         return f;
     }
     public static ArrayList<Faction> sortByKills() {
         ArrayList<Faction> f = new ArrayList<>(Main.factionCache.values());
-        f.sort(Comparator.comparingInt(Faction::getKills));
-        Collections.reverse(f);
         f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
         f.removeIf(fac -> Objects.equals(fac.getLeader(), null));
         f.removeIf(fac -> Objects.equals(fac.getLeader(), "null"));
+        f.sort(Comparator.comparingInt(Faction::getKills));
+        Collections.reverse(f);
+
         return f;
     }
     public static ArrayList<Faction> sortByPoints() {
         ArrayList<Faction> f = new ArrayList<>(Main.factionCache.values());
-        f.sort(Comparator.comparingInt(Faction::getPoints));
-        Collections.reverse(f);
         f.removeIf(fac -> Objects.equals(fac.getLeader(), ""));
         f.removeIf(fac -> Objects.equals(fac.getLeader(), null));
         f.removeIf(fac -> Objects.equals(fac.getLeader(), "null"));
+        f.sort(Comparator.comparingInt(Faction::getPoints));
+        Collections.reverse(f);
+
         return f;
     }
 

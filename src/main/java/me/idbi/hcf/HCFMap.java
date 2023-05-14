@@ -20,6 +20,10 @@ public class HCFMap {
         this.world = world;
         this.worldSpawn = spawn;
         this.type = world.getEnvironment();
+        this.entityLimiter = new HashMap<>();
+    }
+    public void clearLists(){
+        entityLimiter.clear();
     }
 
     public void setWorldSpawn(Location loc) {

@@ -35,6 +35,7 @@ public enum Config {
     KOTHDuration("Cooldowns", 300, createComment("Set the KoTH event length", "Must be in seconds")),
     SOTWDuration("Cooldowns", 600, createComment("Set the SOTW event length", "Must be in seconds")),
     EOTWDuration("Cooldowns", 600, createComment("Set the EOTW event length", "Must be in seconds")),
+
     //DTRRegen("Cooldowns", 60, createComment("Must be in seconds")),
 
     WorldName("Default values", "world", createComment("Sets the world, where the HCF server are.")),

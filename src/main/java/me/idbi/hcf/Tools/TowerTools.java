@@ -88,6 +88,25 @@ public class TowerTools {
             }
         });
     }
+    public static void createPillar(Player p, Claiming.Point point) {
+        if(point == null) return;
+        Tasks.executeAsync(() -> {
+            HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
+                hcfPlayer.addFactionViewMapLocation(point);
+                Location loc = new Location(p.getWorld(), point.getX(), p.getLocation().getBlockY(), point.getZ());
+                for (int i = 0; i <= 256; i++) {
+                    loc.setY(i);
+                    if(loc.getBlock().getType().equals(Material.AIR)) {
+                        if(i % 2 == 0)
+                            p.sendBlockChange(loc, Material.GLOWSTONE, (byte) 0);
+                        else if(i % 5 == 0)
+                            p.sendBlockChange(loc, Material.DIAMOND_BLOCK, (byte) 0);
+                        else
+                            p.sendBlockChange(loc, Material.GLASS, (byte) 0);
+                    }
+                }
+        });
+    }
     public static void removePillar(Player p, List<Claiming.Point> list) {
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         Tasks.executeAsync(() -> {
@@ -102,6 +121,21 @@ public class TowerTools {
                 }
                 hcfPlayer.removeFactionViewMapLocation(point);
             }
+        });
+    }
+    public static void removePillar(Player p, Claiming.Point point) {
+        if(point == null) return;
+        HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
+        Tasks.executeAsync(() -> {
+                Location loc = new Location(p.getWorld(), point.getX(), 0, point.getZ());
+                for (int i = 0; i <= 256; i++) {
+                    loc.setY(i);
+                    if (loc.getBlock().getType().equals(Material.AIR)) {
+                        p.sendBlockChange(loc, Material.AIR, (byte) 0);
+                    }
+                }
+                hcfPlayer.removeFactionViewMapLocation(point);
+
         });
     }
 }

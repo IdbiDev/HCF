@@ -138,7 +138,6 @@ public enum Messages {
 //    zone_enemy("&c%zone%"),
     wilderness("Claims","&2Wilderness"),
     warzone("Claims","&4Warzone"),
-    spawn("Claims","&aSpawn"),
     cant_find_page("Server","&cThis page does not exists!"),
 
     // Faction messages
@@ -240,8 +239,9 @@ public enum Messages {
     freeze_executor_off("Admin","%prefix% &cYou unfroze &4&o%player%"),
     admin_freeze_dtr_enable("Admin","%prefix% &aYou froze &2&o%faction_name%&a's DTR to: &o%dtr%"),
     admin_freeze_dtr_disable("Admin","%prefix% &aYou unfroze &2&o%faction_name%&a's DTR"),
+    setspawn("Admin", "%prefix% &aYou set spawn of &2&o%world% &ato &2&o%location_x%, %location_y%, %location_z%&a!"),
+    spawn_teleported("Admin", "%prefix% &aYou have been teleported to the world's spawn!"),
 
-    spawn_claim_success("Claims","%prefix% &bYou successfully claimed the spawn!"),
 
     faction_admin_withdraw("Admin","%prefix% &c&l%executor% &cdeposited &c&l%amount% &cinto the faction's bank!"),
     faction_admin_deposit("Admin","%prefix% &c&l%executor% &cwithdrew &c&l%amount% &cfrom the faction's bank!"),
@@ -302,7 +302,6 @@ public enum Messages {
     waypoint_enabled("Waypoints", "%prefix% &aYou successfully enabled waypoints!"),
     waypoint_disabled("Waypoints", "%prefix% &cYou successfully disabled waypoints!"),
 
-    // KOTH SOTW EOTW
     enable_eotw("Eotw","%prefix% &aEOTW started!"),
     disable_eotw("Eotw","%prefix% &cEOTW disabled!"),
     eotw_already_started("Eotw","%prefix% &cEOTW already started!"),
@@ -311,17 +310,18 @@ public enum Messages {
     enable_deathmatch("Eotw","%prefix% &aDeathmatch started!"),
     disable_deathmatch("Eotw","%prefix% &cDeathmatch disabled!"),
 
-    // koth
     updated_koth_rewards("Koth","%prefix% &aSuccessfully saved rewards!"),
-    claim_koth_rewards("Koth","%prefix% &aYou claimed KOTH rewards!"),
-    koth_invalid_name("Koth","%prefix% &cThis KOTH doesn't exits!"),
-    koth_success_create("Koth","%prefix% &aSuccessfully created the &6&o%faction_name%&a koth!"),
-    koth_capturing_started("Koth","%prefix% &aSomeone started to occupy the &6&o%faction_name%&a KOTH!"),
-    koth_capturing_ended("Koth","%prefix% &aThe occupation of KOTH &6&o%faction_name%&a was interrupted!"),
+    claim_koth_rewards("Koth","%prefix% &aYou claimed KoTH rewards!"),
+    koth_invalid_name("Koth","%prefix% &cThis KoTH doesn't exits!"),
+    koth_faction_winner("Koth","%prefix% &aThe &6&o%faction_name%&a won the &6&o%koth%&a KoTH!"),
+    koth_success_create("Koth","%prefix% &aSuccessfully created the &6&o%faction_name%&a KoTH!"),
+    koth_capturing_started("Koth","%prefix% &aSomeone started to occupy the &6&o%faction_name%&a KoTH!"),
+    koth_holding("Koth","%prefix% &aYou holding the &6&o%faction_name%&a KoTH!"),
+    koth_capturing_ended("Koth","%prefix% &aThe occupation of KoTH &6&o%faction_name%&a was interrupted!"),
     koth_capture_timer("Koth","%prefix% &aSomeone is capturing &6&o%faction_name%&a (%format_time%)"),
-    koth_start_title("Koth","&a&lKOTH &r&aStarted!"),
+    koth_start_title("Koth","&a&KoTH &r&aStarted!"),
     koth_start_subtitle("Koth","&6&o%faction_name%"),
-    koth_failed_not_valid_claim("Koth","%prefix% &cThis faction does not have a valid KOTH claim!"),
+    koth_failed_not_valid_claim("Koth","%prefix% &cThis faction does not have a valid KoTH claim!"),
 
     lives_get("Lives", "%prefix% &2&o%player% &ahas &2&o%lives%&a lives."),
     lives_take_executor("Lives", "%prefix% &aYou removed from &2&o%player% &2&o%lives% &alives. Player has &2&o%leftlives%&a lives left!"),

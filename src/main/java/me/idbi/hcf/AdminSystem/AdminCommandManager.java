@@ -31,7 +31,6 @@ public class AdminCommandManager implements CommandExecutor {
         subcommands.add(new AdminSetFactionLeaderCommand());
         subcommands.add(new AdminSetFactionNameCommand());
         subcommands.add(new AdminSetPlayerFactionCommand());
-        subcommands.add(new AdminSpawnPlaceCommand());
         subcommands.add(new AdminTakeMoneyCommand());
         subcommands.add(new AdminDTRFreezeCommand());
 

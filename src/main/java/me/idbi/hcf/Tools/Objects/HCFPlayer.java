@@ -469,14 +469,14 @@ public class HCFPlayer {
             }
             boolean friendly = currentArea.getFaction() == faction;
             boolean isWarzone = currentArea.getFaction().getId() == 2;
-            boolean isSpawn = currentArea.getFaction().getId() == 1;
+            //boolean isSpawn = currentArea.getFaction().getId() == 1;
             boolean isAlly = false;
             if (!friendly) {
                 if (faction != null)
                     isAlly = currentArea.getFaction().isAlly(faction);
             }
-            if(isSpawn)
-                return Messages.spawn.language(offline.getPlayer()).queue();
+          /*  if(isSpawn)
+                return Messages.spawn.language(offline.getPlayer()).queue();*/
             if(isWarzone)
                 return Messages.warzone.language(offline.getPlayer()).queue();
 

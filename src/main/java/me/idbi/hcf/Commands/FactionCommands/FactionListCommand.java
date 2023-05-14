@@ -114,7 +114,7 @@ public class FactionListCommand extends SubCommand {
         if(factions.size() > 10 && factions.size() > (page * 10 + 10))
             hasNext = true;
 
-        p.openInventory(FactionToplistInventory.listInv(p, factions, type, 1));
+        //p.openInventory(FactionToplistInventory.listInv(p, factions, type, 1));
         if(page == 1) {
             List<Faction> newFactions = factions.subList(0, Math.min(factions.size(), 10));
             printFactions(p, newFactions, type);

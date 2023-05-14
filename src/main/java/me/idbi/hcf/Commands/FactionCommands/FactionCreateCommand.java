@@ -5,7 +5,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.FactionGUI.GUISound;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.Tools.FactionHistorys.Nametag.NameChanger;
+import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.FactionHistory;
@@ -80,7 +80,7 @@ public class FactionCreateCommand extends SubCommand {
         if (Playertools.getPlayerFaction(p) == null) {
             String name = args[1];
             if(!Playertools.isValidName(args[1])) {
-                p.sendMessage("Nem valid név!");
+                p.sendMessage(Messages.prefix_cmd.language(p).queue() + " " + Messages.gui_bad_word.language(p).queue());
                 return;
             }
             if (!isFactionNameTaken(name)) {
