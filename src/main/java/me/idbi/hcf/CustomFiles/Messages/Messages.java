@@ -219,12 +219,12 @@ public enum Messages {
     member_list_design_online("Design","&a%member% &f[&7%member_kill%&f]"),
     member_list_design_offline("Design","&7%member% &f[&7%member_kill%&f]"),
 
-    faction_list_title("Design","&7&m--- &6Faction List by %type% &7&m---"),
+    faction_list_title("Design","&7&m---&r &6Faction List by %type% &7&m---"),
     faction_list("Design","&7%number%. &e%faction_name% &6-- &7[&a%online%&7] [%dtr%&7]"),
     faction_custom_list_title("Design","&7&m---&r &6Custom Faction List &7&m---"),
     faction_custom_list("Design","&7%number%. &e%faction_name% &6 - &7[&a%type%&7]"),
 
-    faction_top_title("Design","&7&m--- &6Faction Top by %type% &7&m---"),
+    faction_top_title("Design","&7&m---&r &6Faction Top by %type% &7&m---"),
     faction_top("Design","&7%number%. &e%faction_name% &6-- &e%value%"),
     faction_top_list_gui_prefix("Design","&7#%number% "),
 
@@ -325,8 +325,8 @@ public enum Messages {
     koth_holding("Koth","%prefix% &aYou holding the &6&o%faction_name%&a KoTH!"),
     koth_capturing_ended("Koth","%prefix% &aThe occupation of KoTH &6&o%faction_name%&a was interrupted!"),
     koth_capture_timer("Koth","%prefix% &aSomeone is capturing &6&o%faction_name%&a (%format_time%)"),
-    koth_start_title("Koth","&a&KoTH &r&aStarted!"),
-    koth_start_subtitle("Koth","&6&o%faction_name%"),
+    koth_start_title("Koth","&a%faction_name%"),
+    koth_start_subtitle("Koth","&2&oCapture the zone!"),
     koth_failed_not_valid_claim("Koth","%prefix% &cThis faction does not have a valid KoTH claim!"),
 
     lives_get("Lives", "%prefix% &2&o%player% &ahas &2&o%lives%&a lives."),
@@ -707,6 +707,11 @@ public enum Messages {
 
     public Messages setTime(String time) {
         playerMessage = playerMessage.replace("%time%", time);
+        return this;
+    }
+
+    public Messages setLanguage(String lang) {
+        playerMessage = playerMessage.replace("%language%", lang);
         return this;
     }
 

@@ -37,6 +37,12 @@ public class CustomClaimListCommand extends SubCommand {
     }
     @Override
     public void perform(Player p, String[] args) {
+        ArrayList<Faction> factionArrayList = new ArrayList<>();
+        for(Faction f : Main.factionCache.values()){
+            if(f.isCustom()) {
+                factionArrayList.add(f);
+            }
+        }
         if(args.length == 1) {
             try {
                run(p, factionArrayList,1);
@@ -68,8 +74,8 @@ public class CustomClaimListCommand extends SubCommand {
         try {
             if (page * 10 <= factions.size()) {
                 List<Faction> pageFactions = factions.subList(page * 10, Math.min(page * 10 + 10, factions.size()));
-                printFactions(p, pageFactions, type);
-                ClickableFactions.sendPage(p, page, hasNext, true, "/f list " + type.toLowerCase());
+                printFactions(p, pageFactions);
+                ClickableFactions.sendPage(p, page, hasNext, true, "/customclaim list");
             } else {
                 p.sendMessage(Messages.cant_find_page.language(p).queue());
             }

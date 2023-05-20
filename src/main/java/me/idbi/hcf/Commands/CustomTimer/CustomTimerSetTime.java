@@ -6,10 +6,33 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.CustomTimers;
 import org.bukkit.entity.Player;
 
-public class CT_EditTime {
+public class CustomTimerSetTime extends SubCommand {
 
+    @Override
+    public String getName() {
+        return "settime";
+    }
 
-    public static void editCustomTimerTime(Player p, String[] args) {
+    @Override
+    public String getDescription() {
+        return "Lists all the custom created factions.";
+    }
+
+    @Override
+    public String getSyntax() {
+        return "/customtimer " + getName() + " <name> <time>h|m";
+    }
+
+    @Override
+    public int getCooldown() {
+        return 0;
+    }
+    @Override
+    public String getPermission() {
+        return "factions.commands.customtimer." + getName();
+    }
+    @Override
+    public void perform(Player p, String[] args) {
         long seconds = System.currentTimeMillis();
         if (args.length == 3) {
             if (!CustomTimers.isCreated(args[1])) {

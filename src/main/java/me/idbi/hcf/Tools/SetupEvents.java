@@ -29,6 +29,7 @@ import me.idbi.hcf.SignShop.InteractShopSign;
 import me.idbi.hcf.SubClaims.SubClaimBreakListener;
 import me.idbi.hcf.SubClaims.SubClaimListener;
 import me.idbi.hcf.SubClaims.SubClaimSignListener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.PluginManager;
 
 import static org.bukkit.Bukkit.getServer;
@@ -147,6 +148,8 @@ public class SetupEvents {
         pm.registerEvents(new FactionTopListener(), m);
         pm.registerEvents(new PlacePVPTag(), m);
         pm.registerEvents(new EntitySpawn(), m);
+
+        pm.registerEvents(new EntityDamage(), m);
 
 
     }

@@ -66,7 +66,7 @@ public class MiscTimers {
                     }
                 }
 
-                HashMap<LivingEntity, Long> savedPlayers = Main.savedPlayers;
+                HashMap<LivingEntity, Long> savedPlayers = new HashMap<>(Main.savedPlayers);
                 for (Map.Entry<LivingEntity, Long> entry : savedPlayers.entrySet()) {
                     LivingEntity key = entry.getKey();
                     long val = entry.getValue();

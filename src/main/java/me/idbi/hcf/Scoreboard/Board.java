@@ -157,10 +157,11 @@ public class Board {
                 try {
                     String getLine = ChatColor.translateAlternateColorCodes('&',
                             BoardFile.get().getString("player_timers." + value.name().toLowerCase()));
-
+                    //System.out.println(getLine);
                     if (getLine == null) continue;
                     boardList.add(getLine + Formatter.getRemaining(value.get(hcfPlayer), true));
                 } catch (NullPointerException e) {
+                    //e.printStackTrace();
                 }
             }
         }

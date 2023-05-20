@@ -93,6 +93,8 @@ public class SignPlace implements Listener {
                 String dpName = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName());
                 if (!dpName.startsWith(ChatColor.stripColor(Config.DeathSignTitle.asStr())) && !dpName.startsWith(ChatColor.stripColor(Config.KoTHSignTitle.asStr()))) {
                     return;
+                }
+            }
 
             event.setCancelled(true);
             Block block = event.getClickedBlock().getRelative(event.getBlockFace());

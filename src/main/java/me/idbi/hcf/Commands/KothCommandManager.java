@@ -58,7 +58,7 @@ public class KothCommandManager implements CommandExecutor {
                 } else {
                     p.sendMessage("§e§m--------------------------------");
                     for (int i = 0; i < getSubcommands().size(); i++) {
-                        p.sendMessage(getSubcommands().get(i).getSyntax() + " - " + getSubcommands().get(i).getDescription());
+                        p.sendMessage("§9" + getSubcommands().get(i).getSyntax() + " §f-§7 " + getSubcommands().get(i).getDescription());
                     }
                     p.sendMessage("§e§m--------------------------------");
                 }

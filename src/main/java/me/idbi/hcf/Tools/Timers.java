@@ -37,8 +37,13 @@ public enum Timers {
         add(HCFPlayer.getPlayer(p));
     }
 
+    /**
+     * Automatically added current millis!!!!
+     * @param p
+     * @param time
+     */
     public void add(Player p, long time) {
-        add(HCFPlayer.getPlayer(p), time);
+        add(HCFPlayer.getPlayer(p), time + System.currentTimeMillis());
     }
     public void add(UUID uuid) {
         add(HCFPlayer.getPlayer(uuid));
@@ -89,7 +94,9 @@ public enum Timers {
     }
 
     public boolean has(HCFPlayer hcfPlayer) {
-        if(hcfPlayer.getTimers().get(this) == null) return false;
+        if(hcfPlayer.getTimers().get(this) == null) {
+            return false;
+        }
 
         long unixTime = System.currentTimeMillis();
         long timer = hcfPlayer.getTimers().get(this);

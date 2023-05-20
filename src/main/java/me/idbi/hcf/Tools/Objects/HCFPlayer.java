@@ -255,7 +255,17 @@ public class HCFPlayer {
         }
         EconomyResponse r = Main.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(this.uuid), amount);
         System.out.println("Economy response addMoney: " + r.transactionSuccess() + " Error: " + r.errorMessage);
-        this.money =  Math.toIntExact(Math.round(r.balance));
+        this.money = Math.toIntExact(Math.round(r.balance));
+    }
+
+    public void removeMoney(int amount) {
+        if (this.money - amount < 0) {
+            this.money = 0;
+            return;
+        }
+        EconomyResponse r = Main.getEconomy().withdrawPlayer(Bukkit.getOfflinePlayer(this.uuid), Math.max(0, amount));
+        System.out.println("Economy response addMoney: " + r.transactionSuccess() + " Error: " + r.errorMessage);
+        this.money = Math.toIntExact(Math.round(r.balance));
     }
 
     public void addFactionViewMapLocation(Point loc) {

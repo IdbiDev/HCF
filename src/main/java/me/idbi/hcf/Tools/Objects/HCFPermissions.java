@@ -9,15 +9,13 @@ public enum HCFPermissions {
     elevator_create("factions.elevator.create"),
     slot_bypass("factions.admin.slotbypass"),
     eotw_join("factions.admin.eotwjoin"),
-    admin_customtimer("factions.commands.admin.customtimer"),
-    logout("factions.commands.logout"),
+    //admin_customtimer("factions.commands.admin.customtimer"),
     signshop_use("factions.signshop.use"),
     signshop_create("factions.signshop.create"),
-    reclaim("factions.commands.reclaim"),
     crowbar_use("factions.crowbar.use"),
     deathban_bypass("factions.admin.deathbanbypass"),
     home_bypass("factions.admin.homebypass"),
-    faction_call("factions.commands.factioncall");
+    vanish_bypass("factions.admin.vanishbypass");
 
     private String permission;
 

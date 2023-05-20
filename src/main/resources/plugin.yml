@@ -87,8 +87,6 @@ permissions:
     default: op
   factions.admin.slotbypass:
     default: op
-  factions.commands.admin.customtimer:
-    default: op
   factions.commands.pvptimer:
     default: false
   factions.crowbar.use:
@@ -111,10 +109,13 @@ permissions:
     default: op
   factions.admin.homebypass:
     default: op
+  factions.admin.vanishbypass:
+    default: op
 
   factions.admin.*:
     default: op
     children:
+      factions.admin.vanishbypass: true
       factions.commands.faction.*: true
       factions.commands.koth.*: true
       factions.commands.lives.*: true
@@ -127,6 +128,7 @@ permissions:
       factions.admin.deathbanbypass: true
       factions.reclaim.default: true
       factions.commands.spawn: true
+      factions.commands.admin.event: true
   factions.commands.faction.*:
     default: op
     children:
@@ -157,7 +159,7 @@ permissions:
       factions.commands.unrally: true
       factions.commands.unfocus: true
       factions.commands.withdraw: true
-      factions.commands.event: true
+      # factions.commands.admin.event: true
       factions.commands.promote: true
       factions.commands.demote: true
       factions.commands.rename: true
@@ -197,6 +199,7 @@ permissions:
       factions.commands.customclaim.claim: true
       factions.commands.customclaim.delete: true
       factions.commands.customclaim.unclaim: true
+      factions.commands.customclaim.list: true
 
   factions.commands.admin.*:
     default: op
@@ -223,9 +226,13 @@ permissions:
       factions.commands.admin.vanish: true
       factions.commands.admin.withdraw: true
       factions.commands.admin.items: true
-      factions.commands.admin.customtimer: true
+      factions.commands.admin.customtimer.create: true
+      factions.commands.admin.customtimer.delete: true
+      factions.commands.admin.customtimer.settext: true
+      factions.commands.admin.customtimer.settime: true
       factions.commands.admin.slots: true
       factions.commands.admin.setspawn: true
+      factions.commands.admin.event: true
   factions.*:
     default: op
     children:
@@ -346,6 +353,8 @@ permissions:
     default: false
   factions.commands.customclaim.unclaim:
     default: false
+  factions.commands.customclaim.list:
+    default: false
 
 # ALLY COMMANDS
   factions.commands.ally.accept:
@@ -405,4 +414,16 @@ permissions:
   factions.commands.admin.withdraw:
     default: op
   factions.commands.admin.items:
+    default: op
+  factions.commands.admin.event:
+    default: op
+
+# CUSTOM TIMER
+  factions.commands.admin.customtimer.settime:
+    default: op
+  factions.commands.admin.customtimer.delete:
+    default: op
+  factions.commands.admin.customtimer.create:
+    default: op
+  factions.commands.admin.customtimer.settext:
     default: op

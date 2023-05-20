@@ -19,16 +19,17 @@ import org.bukkit.inventory.ItemStack;
 
 public class InteractShopSign implements Listener {
     public static boolean isFull(Player p, ItemStack is) {
+        int amount = 0;
         for (ItemStack is2 : p.getInventory().getContents()) {
             if (is2 == null) return false;
             if (is2.isSimilar(is)) {
                 ///      56 +16          < 64
-                if (is2.getAmount()+is.getAmount() >= 64) {
-                    return true;
-                }
+                if (is2.getAmount() >= 64) continue;
+                //if (is2.getAmount() + is.getAmount() <= 64) {
+                amount += is2.getAmount();
             }
         }
-        return false;
+        return amount % 64 == 0;
         //return !p.getInventory().addItem(is).isEmpty();
     }
 
@@ -40,6 +41,17 @@ public class InteractShopSign implements Listener {
                 if (is.getAmount() < 64) {
                     amount += 64 - is.getAmount();
                 }
+            }
+        }
+        return amount;
+    }
+
+    private static int remainingAmount(Player p, ItemStack item) {
+        int amount = 0;
+        for (ItemStack is : p.getInventory().getContents()) {
+            if (is == null) continue;
+            if (is.isSimilar(item)) {
+                amount += is.getAmount();
             }
         }
         return amount;
@@ -86,52 +98,51 @@ public class InteractShopSign implements Listener {
                             // System.out.println(material);
                             int remainingSpace = remainingSpace(p, new ItemStack(material, amount, Short));
                             int signPrice = Integer.parseInt(line3.replace("$", ""));
-                            int fertigPreise = (signPrice / amount) * remainingSpace;
+                            int price = signPrice;
                             int playerBalance = Playertools.getPlayerBalance(p);
 
                             Scoreboards.refresh(p);
                             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
+                            ItemStack is = new ItemStack(material, amount, Short);
                             if (remainingSpace < amount && remainingSpace > 0) {
-                                ItemStack is = new ItemStack(material, remainingSpace, Short);
+                                is = new ItemStack(material, remainingSpace, Short);
+                                if (isFull(p, is)) {
+                                    System.out.println("1");
+                                    p.sendMessage(Messages.not_enough_slot.language(p).queue());
+                                    return;
+                                }
+                                price = (signPrice / amount) * remainingSpace;
+                                amount = remainingSpace;
+                                if (playerBalance < price) {
+                                    p.sendMessage(Messages.not_enough_money.language(p).queue());
+                                    return;
+                                }
+                            } else {
                                 if (isFull(p, is)) {
                                     p.sendMessage(Messages.not_enough_slot.language(p).queue());
                                     return;
                                 }
-                                if (playerBalance < fertigPreise) {
+                                if (playerBalance < signPrice) {
                                     p.sendMessage(Messages.not_enough_money.language(p).queue());
                                     return;
                                 }
-
-                                Playertools.setPlayerBalance(p, playerBalance - fertigPreise);
-                                p.getInventory().addItem(is);
-                                PlayerStatistic stat = hcfPlayer.getPlayerStatistic();
-                                stat.MoneySpend += fertigPreise;
-                                p.sendMessage(Messages.sign_shop_bought.language(p).setItem(new ItemStack(material, remainingSpace, Short))
-                                        .setPrice(fertigPreise)
-                                        .setAmount(String.valueOf(remainingSpace))
-                                        .queue());
-                                Scoreboards.refresh(p);
-                                return;
                             }
 
-                            if (isFull(p, new ItemStack(material, amount, Short))) {
-                                p.sendMessage(Messages.not_enough_slot.language(p).queue());
-                                return;
-                            }
+                            p.getInventory().addItem(is);
+                            p.sendMessage(Messages.sign_shop_bought.language(p)
+                                    .setItem(is)
+                                    .setPrice(price)
+                                    .setAmount(String.valueOf(amount))
+                                    .queue());
 
-                            if (playerBalance >= signPrice) {
-                                p.sendMessage(Messages.sign_shop_bought.language(p)
-                                        .setItem(new ItemStack(material, amount, Short))
-                                        .setPrice(signPrice)
-                                        .setAmount(String.valueOf(amount))
-                                        .queue());
-                                p.getInventory().addItem(new ItemStack(material, amount, Short));
-                                Playertools.setPlayerBalance(p, playerBalance - signPrice);
-                                PlayerStatistic stat = hcfPlayer.getPlayerStatistic();
-                                stat.MoneySpend += signPrice;
+                            hcfPlayer.removeMoney(price);
+                            PlayerStatistic stat = hcfPlayer.getPlayerStatistic();
+                            stat.MoneySpend += price;
+
+                            /*if (playerBalance >= signPrice) {
                             } else {
-                                p.sendMessage(Messages.not_enough_money.language(p).queue());
-                            }
+
+                            }*/
 
                             Scoreboards.refresh(p);
                         } catch (NullPointerException | IllegalArgumentException ex) {
@@ -162,20 +173,31 @@ public class InteractShopSign implements Listener {
                             } else
                                 material = Material.matchMaterial(line2);
 
-                            int price = Integer.parseInt(line3.replace("$", ""));
 
                             if (p.getInventory().contains(material)) {
-                                p.getInventory().removeItem(new ItemStack(material, amount, Short));
+                                int signPrice = Integer.parseInt(line3.replace("$", ""));
+                                int price = signPrice;
+                                int remainingAmount = remainingAmount(p, new ItemStack(material, amount, Short));
+
+                                ItemStack is = new ItemStack(material, amount, Short);
+                                if(remainingAmount < amount) {
+                                    price = (int) Math.round(((double) remainingAmount / (double) amount) * signPrice);
+                                    is = new ItemStack(material, remainingAmount, Short);
+                                    amount = remainingAmount;
+                                }
+                                p.getInventory().removeItem(is);
+
                                 p.sendMessage(Messages.sign_shop_sold.language(p)
                                         .setPrice(price)
-                                        .setAmount(line1)
-                                        .setItem(new ItemStack(material, amount, Short))
+                                        .setAmount(amount + "")
+                                        .setItem(is)
                                         .queue()
                                 );
 
+
                                 HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
-                                Scoreboards.refresh(p);
                                 hcfPlayer.addMoney(price);
+                                Scoreboards.refresh(p);
                                 PlayerStatistic stat = hcfPlayer.getPlayerStatistic();
                                 stat.MoneyEarned += price;
                             } else {

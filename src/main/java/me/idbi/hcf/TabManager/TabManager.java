@@ -131,7 +131,7 @@ public class TabManager {
             }
         }
 
-        c = 0;
+        c = 1;
         if (hcfPlayer.inFaction()) {
             tab.set(this.playerInfo_startSlot, new TextTabItem(translate(this.playerInfo_factionNameColor) + hcfPlayer.getFaction().getName()));
 

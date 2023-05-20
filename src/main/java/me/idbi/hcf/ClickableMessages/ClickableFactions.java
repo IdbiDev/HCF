@@ -11,7 +11,8 @@ import org.bukkit.entity.Player;
 public class ClickableFactions {
 
     public static void sendList(Player p, Faction f, int number) {
-        TextComponent text = new TextComponent(Messages.faction_list.language(p).setNumber(number).setFaction(f).setOnlines(f.countOnlineMembers()).setDTR(f).queue());
+        TextComponent text = new TextComponent(Messages.faction_list.language(p)
+                .setNumber(number).setFaction(f).setOnlines(f.countOnlineMembers()).setDTR(f).queue());
         text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7/f show "+f.getName()).create()));
         text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f show " + f.getName()));
         p.spigot().sendMessage(text);

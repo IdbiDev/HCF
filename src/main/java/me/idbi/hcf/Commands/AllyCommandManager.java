@@ -57,12 +57,8 @@ public class AllyCommandManager implements CommandExecutor {
                             p.sendMessage(Messages.error_while_executing.language(p).queue());
                         }
                     }
-                } else if (args.length == 0) {
-                    p.sendMessage("--------------------------------");
-                    for (int i = 0; i < getSubcommands().size(); i++) {
-                        p.sendMessage(getSubcommands().get(i).getSyntax() + " - " + getSubcommands().get(i).getDescription());
-                    }
-                    p.sendMessage("--------------------------------");
+                } else {
+                    showSubCommands(p);
                 }
 
             }

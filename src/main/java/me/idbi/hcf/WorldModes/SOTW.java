@@ -1,5 +1,6 @@
 package me.idbi.hcf.WorldModes;
 
+import com.google.common.base.StandardSystemProperty;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
@@ -12,6 +13,7 @@ import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.github.paperspigot.Title;
 
 public class SOTW implements Gamemode {
     BukkitTask task = null;
@@ -37,6 +39,7 @@ public class SOTW implements Gamemode {
             p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
             //Set SOTW Timer
             Timers.SOTW.add(p, SOTWTime);
+
         }
         Main.SOTWEnabled = true;
         //SOTW end routine
@@ -46,6 +49,10 @@ public class SOTW implements Gamemode {
                 Main.SOTWEnabled = false;
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
+                    p.sendTitle(
+                            Messages.sotw_end_title.language(p).queue(),
+                            Messages.sotw_end_subtitle.language(p).queue()
+                    );
                 }
                 Main.sendCmdMessage("SOTW ended!");
             }
@@ -66,9 +73,15 @@ public class SOTW implements Gamemode {
             for(Faction f : Main.factionCache.values()) {
                 f.refreshDTR();
             }
+
             for(Player p : Bukkit.getOnlinePlayers()) {
                 Timers.SOTW.remove(p);
+                p.sendTitle(
+                        Messages.sotw_end_title.language(p).queue(),
+                        Messages.sotw_end_subtitle.language(p).queue()
+                );
             }
+
             task.cancel();
             task = null;
         }

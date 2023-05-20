@@ -49,6 +49,7 @@ public class ProtectedClaim implements Listener {
             player.setClaimType(ClaimTypes.NONE);
             endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());
+            player.sendMessage(Messages.faction_claim_decline);
             p.getInventory().remove(e.getItem());
             player.setClaimID(0);
         }
@@ -60,6 +61,7 @@ public class ProtectedClaim implements Listener {
             player.setClaimType(ClaimTypes.NONE);
             endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());
+            player.sendMessage(Messages.faction_claim_accept);
             p.getInventory().remove(e.getItem());
             player.setClaimID(0);
 //                if (HCF_Claiming.FinishClaiming(player.faction.id, e.getPlayer(), HCF_Claiming.ClaimAttributes.NORMAL)) {

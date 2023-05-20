@@ -26,7 +26,7 @@ public class PlayerMove implements Listener {
                 || e.getFrom().getBlockY() != e.getTo().getBlockY()
                 || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
 
-            Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(e.getTo().getWorld(),e.getTo().getBlockX(), e.getTo().getBlockZ());
+            Claim claim = Claiming.sendClaimByXZ(e.getTo().getWorld(),e.getTo().getBlockX(), e.getTo().getBlockY(), e.getTo().getBlockZ());
             if (claim != null) {
                 if (Claiming.FindPoint_old(claim.getStartX(), claim.getStartZ(), claim.getEndX(), claim.getEndZ(), e.getTo().getBlockX(), e.getTo().getBlockZ()) && ((SpawnShield.pvpCooldown(e.getPlayer()) && claim.getAttribute().equals(ClaimAttributes.NORMAL) || (Timers.COMBAT_TAG.has(p) && claim.getAttribute().equals(ClaimAttributes.PROTECTED))))) {
                     Location loc = new Location(

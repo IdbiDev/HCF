@@ -98,7 +98,7 @@ public class HistoryItems_1 {
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         format.setTimeZone(timezone);
 
-        System.out.println(entry.amount + "");
+        //System.out.println(entry.amount + "");
         if((entry.amount + "").startsWith("-")) {
             return "§7[§6" + format.format(date) + "§7] §e" + entry.player + "§7: [§6-$" + Math.abs(entry.amount) + "§7]";
         } else {

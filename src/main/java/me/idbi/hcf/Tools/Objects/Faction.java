@@ -136,6 +136,10 @@ public class Faction {
         }
     }
 
+    public boolean isCustom() {
+        return this.leader == null;
+    }
+
     public void setHomeLocation(Location loc) {
         Location loc2 = loc.clone();
         loc2.setX(loc.getBlockX());

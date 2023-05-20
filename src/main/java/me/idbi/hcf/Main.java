@@ -243,6 +243,7 @@ public final class Main extends JavaPlugin implements Listener {
         KothRewardsFile.setup();
         ReclaimFile.setup();
         TabFile.setup();
+
         this.tabManager = new TabManager(this);
 
         // setup classes
@@ -261,13 +262,6 @@ public final class Main extends JavaPlugin implements Listener {
         print(playerCache.size());
         new NameChanger(this);
         // Load online players
-
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            FastBoard board = new FastBoard(player);
-            Main.boards.put(player.getUniqueId(), board);
-            Playertools.loadOnlinePlayer(player);
-            System.out.println(player);
-        }
 
         // Timers
         miscTimers.DTRTimer();
@@ -321,7 +315,6 @@ public final class Main extends JavaPlugin implements Listener {
         WorldBorder border = world.getWorldBorder();
         border.setSize(Config.WorldBorderSize.asInt());
 
-
         border.setCenter(spawnLocation);
         autoKoth.startAutoKoth();
         if (Config.WarzoneSize.asInt() != 0) {
@@ -332,6 +325,13 @@ public final class Main extends JavaPlugin implements Listener {
             f.addClaim(claim);
             claim = new Claim(spawnLocation.getBlockX() - warzoneSize, spawnLocation.getBlockX() + warzoneSize, spawnLocation.getBlockZ() - warzoneSize, spawnLocation.getBlockZ() + warzoneSize, 2, ClaimAttributes.SPECIAL, Config.NetherName.asStr());
             f.addClaim(claim);
+        }
+
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            FastBoard board = new FastBoard(player);
+            Main.boards.put(player.getUniqueId(), board);
+            Playertools.loadOnlinePlayer(player);
+            System.out.println(player);
         }
     }
 
@@ -390,6 +390,7 @@ public final class Main extends JavaPlugin implements Listener {
                 factionMapBlockChanges.clear();
                 kothRewardsGUI.clear();
                 blacklistedRankNames.clear();
+                AdminTools.InvisibleManager.invisedAdmins.clear();
                 inventoryRollbacks.clear();
                 boards.clear();
                 playerBank.clear();

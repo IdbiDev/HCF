@@ -1,5 +1,6 @@
 package me.idbi.hcf.Economy;
 
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -248,7 +249,7 @@ public class HCFEconomy implements Economy {
 
     @Override
     public boolean createPlayerAccount(OfflinePlayer offlinePlayer) {
-        m.playerBank.put(offlinePlayer.getUniqueId(),0D);
+        m.playerBank.put(offlinePlayer.getUniqueId(), Config.DefaultBalance.asDouble());
         return false;
     }
 

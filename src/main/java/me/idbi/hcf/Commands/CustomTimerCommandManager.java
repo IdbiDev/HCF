@@ -1,9 +1,7 @@
 package me.idbi.hcf.Commands;
 
-import me.idbi.hcf.Commands.CustomTimer.CT_Create;
-import me.idbi.hcf.Commands.CustomTimer.CT_EditText;
-import me.idbi.hcf.Commands.CustomTimer.CT_EditTime;
-import me.idbi.hcf.Commands.CustomTimer.CT_Remove;
+import me.idbi.hcf.Commands.CustomClaimCommands.*;
+import me.idbi.hcf.Commands.CustomTimer.*;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.CustomTimers;
@@ -12,60 +10,97 @@ import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class CustomTimerCommand implements CommandExecutor {
+public class CustomTimerCommandManager implements CommandExecutor, TabCompleter {
+
+
+    private final ArrayList<SubCommand> subcommands = new ArrayList<>();
+
+    public CustomTimerCommandManager() {
+        subcommands.add(new CustomTimerCreate());
+        subcommands.add(new CustomTimerDelete());
+        subcommands.add(new CustomTimerSetTime());
+        subcommands.add(new CustomTimerSetText());
+        subcommands.add(new CustomTimerList());
+
+        for (SubCommand command : subcommands) {
+            SubCommand.commandCooldowns.put(command, new HashMap<>());
+        }
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("customtimer")) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                if (!HCFPermissions.admin_customtimer.check(p)) return false;
 
-                if (args[0].equalsIgnoreCase("create")) {
-                    CT_Create.createCustomTimer(p, args);
-                } else if (args[0].equalsIgnoreCase("delete")) {
-                    CT_Remove.removeCustomTimer(p, args);
-                } else if (args[0].equalsIgnoreCase("settime")) {
-                    CT_EditTime.editCustomTimerTime(p, args);
-                } else if (args[0].equalsIgnoreCase("settext")) {
-                    CT_EditText.editCustomTimerText(p, args);
-                } else if (args[0].equalsIgnoreCase("list")) {
-                    if (Main.customSBTimers.isEmpty()) {
-                        p.sendMessage(Messages.customt_no_active_timer.language(p).queue());
-                        return false;
-                    }
-                    p.sendMessage(" ");
-                    int counter = 1;
-                    for (Map.Entry<String, CustomTimers> cus : Main.customSBTimers.entrySet()) {
-                        p.sendMessage("§3#" + counter + " §b" + cus.getKey() + " §7(" + (cus.getValue().isActive() ? "§aActive§7" : "§cExpired§7")
-                                + ")§7: §r" + cus.getValue().text);
-                        p.sendMessage("§7§o(( Expire in §b" + Formatter.formatMMSS((cus.getValue().getTime())) + "§7§o ))");
-                        p.sendMessage(" ");
-                        counter++;
-                    }
-                } else if (args[0].equalsIgnoreCase("help")) {
-                    if (args.length == 2) {
-                        switch (args[1]) {
-                            case "create": p.sendMessage("§cUsage: /customtimer create <name> <time>h|m <text_with_underline>"); break;
-                            case "delete": p.sendMessage("§cUsage: /customtimer delete <name>"); break;
-                            case "settext": p.sendMessage("§cUsage: /customtimer settext <name> <text>"); break;
-                            case "settime": p.sendMessage("§cUsage: /customtimer settime <name> <time>h|m"); break;
+                if (args.length == 0) {
+                    showSubcommands(p);
+                    return true;
+                }
+
+                for (int i = 0; i < getSubcommands().size(); i++) {
+                    try {
+                        SubCommand cmd = getSubcommands().get(i);
+                        if (cmd.isCommand(args[0])) {
+                            if (!cmd.hasPermission(p)) {
+                                p.sendMessage(Messages.no_permission.language(p).queue());
+                                return true;
+                            }
+
+                            if (cmd.hasCooldown(p)) {
+                                long cooldown = SubCommand.commandCooldowns.get(cmd).get(p);
+                                p.sendMessage(Messages.command_cooldown.language(p)
+                                        .setTime((cooldown / 1000 - System.currentTimeMillis() / 1000) + "").queue());
+                                return true;
+                            }
+
+                            cmd.perform(p, args);
                         }
-                    } else if (args.length == 1) {
-                        p.sendMessage("§cCommands:");
-                        p.sendMessage("§e/customtimer create <name> <time>h|m <text_with_underline> §7- Create custom timer");
-                        p.sendMessage("§e/customtimer delete <name> §7- Delete custom timer");
-                        p.sendMessage("§e/customtimer settext <name> <text> §7- Modify the text to the new text");
-                        p.sendMessage("§e/customtimer settime <name> <time>h|m §7- Sets the time to the new time"); // Koba a kurva anyád neke KURVA ANYÁDÁÁÁDl jó éjt gevci
-                        p.sendMessage("§c/customtimer list §7- Lists the custom timers");
+                    } catch (IndexOutOfBoundsException e) {
+                        p.sendMessage("§cUsage: " + getSubcommands().get(i).getSyntax());
+                        //e.printStackTrace();
+                        p.sendMessage(Messages.missing_argument.language(p).queue());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        p.sendMessage(Messages.error_while_executing.language(p).queue());
                     }
                 }
             }
         }
-        return false;
+        return true;
+    }
+
+    public ArrayList<SubCommand> getSubcommands() {
+        return subcommands;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if(command.getName().equalsIgnoreCase("customclaim")) {
+            if(args.length == 1) {
+                List<String> lista = new ArrayList<>();
+                for (SubCommand subcommand : this.getSubcommands()) {
+                    lista.add(subcommand.getName());
+                }
+                return lista;
+            }
+        }
+        return null;
+    }
+
+    private void showSubcommands(Player player) {
+        player.sendMessage("§e§m--------------------------------");
+        for (SubCommand cmd : getSubcommands()) {
+            player.sendMessage("§9" + cmd.getSyntax() + " §f-§7 " + cmd.getDescription());
+        }
+        player.sendMessage("§e§m--------------------------------");
     }
 }

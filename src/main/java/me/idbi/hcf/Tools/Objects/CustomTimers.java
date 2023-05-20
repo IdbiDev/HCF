@@ -10,8 +10,11 @@ import java.util.Map;
 
 public class CustomTimers {
 
+    @Getter @Setter
     public String name;
+    @Getter
     public long time;
+    @Getter
     public String text;
 
     public CustomTimers(String name, long time, String text) {
@@ -62,10 +65,10 @@ public class CustomTimers {
         refreshScoreboards();
     }
 
-    public String getFormatted() {
+    /*public String getFormatted() {
         String timeFormatted = Scoreboards.ConvertTime(((int) (getTime() / 1000)));
         return text + " " + timeFormatted;
-    }
+    }*/
 
     public void delete() {
         Main.customSBTimers.remove(this.name);

@@ -8,10 +8,34 @@ import me.idbi.hcf.Tools.Objects.CustomTimers;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class CT_Create {
+public class CustomTimerCreate extends SubCommand {
 
 
-    public static void createCustomTimer(Player p, String[] args) {
+    @Override
+    public String getName() {
+        return "create";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Lists all the custom created factions.";
+    }
+
+    @Override
+    public String getSyntax() {
+        return "/customtimer " + getName() + " <name> <time>h|m <text_with_underline>";
+    }
+
+    @Override
+    public int getCooldown() {
+        return 0;
+    }
+    @Override
+    public String getPermission() {
+        return "factions.commands.customtimer." + getName();
+    }
+    @Override
+    public void perform(Player p, String[] args) {
         long seconds = System.currentTimeMillis();
         if (args.length == 4) {
             if (CustomTimers.isCreated(args[1])) {
@@ -34,6 +58,9 @@ public class CT_Create {
                     p.sendMessage("§cUsage: /customtimer create <name> <time>h|m <text_with_underline>");
                     return;
                 }
+            } else {
+                p.sendMessage("§cUsage: /customtimer create <name> <time>h|m <text_with_underline>");
+                return;
             }
             String mainText = ChatColor.translateAlternateColorCodes('&', args[3].replace("_", " "));
 

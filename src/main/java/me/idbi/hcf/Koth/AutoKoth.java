@@ -28,6 +28,27 @@ public class AutoKoth {
             }
         }.runTaskTimer(Main.getPlugin(Main.class), 20L, 20 * 60);
     }
+    
+    public static boolean isStartKoth() {
+        List<String> list = Config.KoTHStartDate.asStrList();
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        String date = formatter.format(new Date());
+        for (String s : list) {
+            System.out.println("Check: " + s + " " + date);
+            if(!s.matches("^[0-9:]{4,5}$")) continue;
+            if(date.equalsIgnoreCase(s) || date.replaceFirst("0", "").equalsIgnoreCase(s)) {
+                if(!s.contains(":")) continue;
+                String min = date.split(":")[1];
+                String sMin = s.split(":")[1];
+                if(min.equalsIgnoreCase(sMin)) {
+                    System.out.println("Started");
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
 
 }

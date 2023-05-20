@@ -1,8 +1,10 @@
 package me.idbi.hcf.Tools;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Objects.Claim;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Objects.Point;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

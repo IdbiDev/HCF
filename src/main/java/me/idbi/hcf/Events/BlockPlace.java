@@ -63,14 +63,14 @@ public class BlockPlace implements Listener {
                 // System.out.println("MAU");
                 e.setCancelled(true);
                 Faction f = Playertools.getPlayerFaction(p);
-                if (f == null) return;
-                if (!f.hasAllyPermission(baszogatottFaction, Permissions.PLACE_BLOCK)) {
-                    e.setCancelled(true);
-                    p.sendMessage(Messages.you_cant_do.language(p).setFaction(Claiming.sendFactionTerretoryByXZ(p, block.getX(), block.getZ())).queue());
-                } else {
-                    e.setCancelled(false);
+                if (f != null) {
+                    if (!f.hasAllyPermission(baszogatottFaction, Permissions.PLACE_BLOCK)) {
+                        e.setCancelled(true);
+                        p.sendMessage(Messages.you_cant_do.language(p).setFaction(Claiming.sendFactionTerretoryByXZ(p, block.getX(), block.getZ())).queue());
+                    } else {
+                        e.setCancelled(false);
+                    }
                 }
-
             } else {
                 // System.out.println("ODA KELL asd MÁ AFDőpédfklőpsdkfglpdfkgpldfkglőéfgkőlpdgl,");
             }

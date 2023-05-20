@@ -1,9 +1,6 @@
 package me.idbi.hcf.Commands;
 
-import me.idbi.hcf.Commands.CustomClaimCommands.CustomClaimClaimCommand;
-import me.idbi.hcf.Commands.CustomClaimCommands.CustomClaimCreateCommand;
-import me.idbi.hcf.Commands.CustomClaimCommands.CustomClaimDeleteCommand;
-import me.idbi.hcf.Commands.CustomClaimCommands.CustomClaimUnclaimCommand;
+import me.idbi.hcf.Commands.CustomClaimCommands.*;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,6 +21,7 @@ public class CustomClaimCommandManager  implements CommandExecutor, TabCompleter
         subcommands.add(new CustomClaimClaimCommand());
         subcommands.add(new CustomClaimDeleteCommand());
         subcommands.add(new CustomClaimUnclaimCommand());
+        subcommands.add(new CustomClaimListCommand());
 
         for (SubCommand command : subcommands) {
             SubCommand.commandCooldowns.put(command, new HashMap<>());
@@ -61,7 +59,7 @@ public class CustomClaimCommandManager  implements CommandExecutor, TabCompleter
                         }
                     } catch (IndexOutOfBoundsException e) {
                         p.sendMessage("§cUsage: " + getSubcommands().get(i).getSyntax());
-                        e.printStackTrace();
+                        //e.printStackTrace();
                         p.sendMessage(Messages.missing_argument.language(p).queue());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -94,7 +92,7 @@ public class CustomClaimCommandManager  implements CommandExecutor, TabCompleter
     private void showSubcommands(Player player) {
         player.sendMessage("§e§m--------------------------------");
         for (SubCommand cmd : getSubcommands()) {
-            player.sendMessage(cmd.getSyntax() + " - " + cmd.getDescription());
+            player.sendMessage("§9" + cmd.getSyntax() + " §f-§7 " + cmd.getDescription());
         }
         player.sendMessage("§e§m--------------------------------");
     }

@@ -33,17 +33,16 @@ public class PlayerJoin implements Listener {
         // p.setScoreboard(ScoreboardBuilder.getOrCreate(p).build());
 
         //TabManager.test(e.getPlayer());
-        TabManager.getManager().refresh(e.getPlayer());
+        //TabManager.getManager().refresh(e.getPlayer());
 
         /*FastBoard board = new FastBoard(e.getPlayer());
         board.updateTitle(Config.DefaultScoreboardTitle.asStr());
         Main.boards.put(e.getPlayer().getUniqueId(), board);*/
 
-        HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        hcf.createScoreboard(p);
         Playertools.loadOnlinePlayer(p);
+        HCFPlayer hcf = HCFPlayer.getPlayer(p);
+        //hcf.createScoreboard(p);
 
-        Main.getEconomy().createPlayerAccount(e.getPlayer());
         if (Main.deathWaitClear.contains(p.getUniqueId())) {
             p.getInventory().clear();
             p.getInventory().setArmorContents(null);

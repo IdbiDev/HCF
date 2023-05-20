@@ -19,7 +19,7 @@ public class SetupCommands {
         m.getCommand("fc").setExecutor(new FactionPositionCommand());
         m.getCommand("koth").setExecutor(new KothCommandManager());
         m.getCommand("setuplogs").setExecutor(new Command_test());
-        m.getCommand("customtimer").setExecutor(new CustomTimerCommand());
+        m.getCommand("customtimer").setExecutor(new CustomTimerCommandManager());
         m.getCommand("revive").setExecutor(new ReviveCommand());
         m.getCommand("reclaim").setExecutor(new ReclaimCommand());
         m.getCommand("logout").setExecutor(new LogoutCommand());

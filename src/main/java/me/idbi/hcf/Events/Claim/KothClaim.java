@@ -50,6 +50,7 @@ public class KothClaim implements Listener {
             player.setClaimID(0);
             endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());
+            player.sendMessage(Messages.faction_claim_decline);
             p.getInventory().remove(e.getItem());
         }
         // Elfogadás
@@ -61,6 +62,7 @@ public class KothClaim implements Listener {
             player.setClaimID(0);
             endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());
+            player.sendMessage(Messages.faction_claim_accept);
             p.getInventory().remove(e.getItem());
 //                if (HCF_Claiming.FinishClaiming(player.faction.id, e.getPlayer(), HCF_Claiming.ClaimAttributes.NORMAL)) {
 //                    e.getPlayer().sendMessage(Messages.faction_claim_accept.language(p).queue());

@@ -94,6 +94,7 @@ public class Playertools {
             SQL_Async.dbExecuteAsync(con, "INSERT INTO members SET name='?',uuid='?',money='?'", player.getName(), player.getUniqueId().toString(), Config.DefaultBalance.asInt() + "");
             HCFPlayer hcf = HCFPlayer.createPlayer(player);
             Main.playerCache.put(hcf.getUUID(), hcf);
+            Main.getEconomy().createPlayerAccount(player);
             loadOnlinePlayer(player);
             return;
         }
@@ -121,8 +122,8 @@ public class Playertools {
 
     }
 
-    public static Claiming.Faction_Claim getUpperClaim(Player p) {
-        ArrayList<Claiming.Faction_Claim> originalClaims = Claiming.getPlayerArea(p);
+    public static Claim getUpperClaim(Player p) {
+        /*ArrayList<Claiming.Faction_Claim> originalClaims = Claiming.getPlayerArea(p);
         ArrayList<Claiming.Faction_Claim> claims = new ArrayList<>(originalClaims);
         if (originalClaims.size() > 1) {
             for (Claiming.Faction_Claim claim : originalClaims) {
@@ -132,24 +133,8 @@ public class Playertools {
         }
 
         // A legkisebb claim legyen felül!!!!
-
-        return claims.isEmpty() ? null : claims.get(0);
-    }
-
-    public static Claiming.Faction_Claim getSmaller(Claiming.Faction_Claim claim1, Claiming.Faction_Claim claim2) {
-        int claim1X = claim1.getStartX() - claim1.getEndX();
-        int claim1Z = claim1.getStartZ() - claim1.getEndZ();
-        int blockCount = claim1X * claim1Z;
-
-        int claim2X = claim2.getStartX() - claim2.getEndX();
-        int claim2Z = claim2.getStartZ() - claim2.getEndZ();
-        int blockCount2 = claim2X * claim2Z;
-
-        if(blockCount > blockCount2) {
-            return claim2;
-        } else {
-            return claim1;
-        }
+*/
+        return getUpperClaim(p.getLocation());
     }
 
     public static Claim getUpperClaim(Location loc) {
@@ -185,7 +170,7 @@ public class Playertools {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             /*try {
                 while (rs.next()) {
@@ -280,8 +265,13 @@ public class Playertools {
     }
 
     public static Faction getFactionByName(String name) {
+        name = name.replace("_", " ");
         for(Faction f : Main.factionCache.values()){
-            if(f.getName().replace("_"," ").equalsIgnoreCase(name) || ChatColor.stripColor(f.getName()).equalsIgnoreCase(ChatColor.stripColor(name)))
+            String fName = f.getName().replace("_", " ");
+            if(fName.equalsIgnoreCase(name))
+                return f;
+            if(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', fName))
+                    .equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', name))))
                 return f;
         }
         return null;
@@ -334,7 +324,7 @@ public class Playertools {
     }
 
     public static void setPlayerBalance(Player p, int amount) {
-        HCFPlayer.getPlayer(p).setMoney(amount);
+        HCFPlayer.getPlayer(p).setMoney(Math.max(0, amount));
     }
 
     public static void cacheFactionClaims() {
@@ -737,7 +727,7 @@ public class Playertools {
     }
 
     public static boolean isInWarzone(Player p) {
-        Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockZ());
+        Claim claim = Claiming.sendClaimByXZ(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ());
         if(claim == null) return false;
         if(claim.getFaction() == null) return false;
         return claim.getFaction().getId() == 2;

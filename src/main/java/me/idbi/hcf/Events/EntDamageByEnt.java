@@ -36,6 +36,14 @@ public class EntDamageByEnt implements Listener {
                 damager.sendMessage(Messages.cant_damage_admin.language(damager).queue());
                 e.setCancelled(true);
             }
+
+
+            if(Timers.SOTW.has(damagerplayer)) {
+                damager.sendMessage(Messages.cant_damage_while_pvptimer.language(damager).queue());
+                e.setCancelled(true);
+                return;
+            }
+
             //String c = ChatColor.stripColor(HCF_Claiming.sendFactionTerritory(victim));
             try {
                 Claim claim = victimplayer.getCurrentArea();
@@ -60,10 +68,6 @@ public class EntDamageByEnt implements Listener {
                     }
                 }
 
-                if(Timers.SOTW.has(damagerplayer)) {
-                    damager.sendMessage(Messages.cant_damage_while_pvptimer.language(damager).queue());
-                    e.setCancelled(true);
-                }
                 if(Timers.LOGOUT.has(victimplayer)) {
                     Timers.LOGOUT.remove(victimplayer);
                     victim.sendMessage(Messages.logout_timer_interrupted.language(victim).queue());

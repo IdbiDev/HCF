@@ -90,9 +90,9 @@ public class NameChanger implements Listener {
                 }
             }
         }
-        if(AdminTools.InvisibleManager.invisedAdmins.contains(player.getUniqueId())) {
+        /*if(AdminTools.InvisibleManager.invisedAdmins.contains(player.getUniqueId())) {
             AdminTools.InvisibleManager.hidePlayer(player);
-        }
+        }*/
     }
 
     public static void refreshAll() {
@@ -129,7 +129,8 @@ public class NameChanger implements Listener {
     private String getNameToSend(UUID id) {
         Player player = Bukkit.getPlayer(id);
         if (!fakeNames.containsKey(player.getUniqueId())) return player.getName();
-        return fakeNames.get(player.getUniqueId());
+        String name = fakeNames.get(player.getUniqueId());
+        return name.substring(0, Math.min(16, name.length()));
     }
 
     public void changeName(final Player player, String fakeName) {

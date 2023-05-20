@@ -383,9 +383,11 @@ public class Claiming {
 
             }
         }
-        claims.sort(Comparator.comparingInt(Faction_Claim::getSize));
-        for (Faction_Claim c : claims)
-            System.out.println(c.getSize());
+        claims.sort(Comparator.comparingInt(Claim::getSize));
+        for (Claim c : claims) {
+
+        }
+            //System.out.println(c.getSize());
         //claims.sort();
         return claims;
     }
@@ -410,9 +412,11 @@ public class Claiming {
                 }
             }
         }// de akkor írd  ÍTT VAN GECIújra fasz
-        claims.sort(Comparator.comparingInt(Faction_Claim::getSize));
-        for (Faction_Claim c : claims)
-            System.out.println(c.getSize());
+        claims.sort(Comparator.comparingInt(Claim::getSize));
+        for (Claim c : claims){
+
+        }
+            //System.out.println(c.getSize());
 
         return claims;
     }
@@ -463,8 +467,8 @@ public class Claiming {
                     return val;
                 }
             }
-        }
-        return null;
+        }*/
+        //return null;
     }
 
     public static boolean isClaimBorder(int x, int z) {

@@ -6,9 +6,33 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.CustomTimers;
 import org.bukkit.entity.Player;
 
-public class CT_Remove {
+public class CustomTimerDelete extends SubCommand {
 
-    public static void removeCustomTimer(Player p, String[] args) {
+    @Override
+    public String getName() {
+        return "delete";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Lists all the custom created factions.";
+    }
+
+    @Override
+    public String getSyntax() {
+        return "/customtimer " + getName() + " <name>";
+    }
+
+    @Override
+    public int getCooldown() {
+        return 0;
+    }
+    @Override
+    public String getPermission() {
+        return "factions.commands.customtimer." + getName();
+    }
+    @Override
+    public void perform(Player p, String[] args) {
         if (args.length == 2) {
             if (args[0].equalsIgnoreCase("delete")) {
                 if (CustomTimers.isCreated(args[1])) {

@@ -117,10 +117,10 @@ public class FactionCommandManager implements CommandExecutor, TabCompleter {
     }
 
     private void showSubcommands(Player player) {
-        player.sendMessage("--------------------------------");
+        player.sendMessage("§e§m--------------------------------");
         for (SubCommand cmd : getSubcommands()) {
-            player.sendMessage(cmd.getSyntax() + " - " + cmd.getDescription());
+            player.sendMessage("§9" + cmd.getSyntax() + " §f-§7 " + cmd.getDescription());
         }
-        player.sendMessage("--------------------------------");
+        player.sendMessage("§e§m--------------------------------");
     }
 }

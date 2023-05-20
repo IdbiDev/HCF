@@ -1,5 +1,6 @@
 package me.idbi.hcf.Tools;
 
+import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -16,6 +17,7 @@ public class AdminTools {
         public static void hidePlayer(Player p) {
             for (Player target : Bukkit.getOnlinePlayers()) {
                 if (target == p) continue;
+                if(HCFPermissions.vanish_bypass.check(target)) continue;
 
                 target.hidePlayer(p);
             }

@@ -23,24 +23,17 @@ import java.util.List;
 public class ReclaimCommand extends HCFCommand {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if(cmd.getName().equalsIgnoreCase("reclaim")) {
-            if(sender instanceof Player) {
-                Player p = (Player) sender;
-                if (args.length == 0) {
-                    if (!HCFPermissions.reclaim.check(p)) return false;
-                    if (ReclaimConfig.isClaimed(p)) {
-                        p.sendMessage(Messages.reclaim_already_claimed.language(p).queue());
-                        return false;
-                    }
-                    reclaim(p);
-                    p.sendMessage(Messages.reclaim_claimed.language(p).queue());
-                } else {
-                    p.sendMessage(Messages.no_permission.language(p).queue());
-                }
+    public void execute(Player p, String[] args) {
+        if (args.length == 0) {
+            if (ReclaimConfig.isClaimed(p)) {
+                p.sendMessage(Messages.reclaim_already_claimed.language(p).queue());
+                return;
             }
+            reclaim(p);
+            p.sendMessage(Messages.reclaim_claimed.language(p).queue());
+        } else {
+            p.sendMessage(Messages.no_permission.language(p).queue());
         }
-        return false;
     }
 
     @Override
