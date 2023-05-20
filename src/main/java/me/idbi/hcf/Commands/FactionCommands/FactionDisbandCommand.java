@@ -29,7 +29,7 @@ public class FactionDisbandCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Disbands the faction. This process is can't be undo.";
     }
 
     @Override

@@ -7,7 +7,7 @@ import me.idbi.hcf.BukkitCommands.CommandRegistry;
 import me.idbi.hcf.Commands.*;
 import me.idbi.hcf.Commands.SingleCommands.*;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Reclaim.Commands.ReclaimCommand;
+import me.idbi.hcf.Commands.SingleCommands.ReclaimCommand;
 
 public class SetupCommands {
     public static void setupCommands() {

@@ -20,7 +20,7 @@ public class AdminHelpCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "This help window";
     }
 
     @Override

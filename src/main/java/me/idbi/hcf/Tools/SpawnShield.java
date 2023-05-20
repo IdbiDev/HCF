@@ -1,7 +1,10 @@
 package me.idbi.hcf.Tools;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Objects.Claim;
+import me.idbi.hcf.Tools.Objects.ClaimAttributes;
 import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.Point;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,45 +19,45 @@ public class SpawnShield {
     }
 
     public static void CalcWall(Player p) {
-        Claiming.Point player_point = new Claiming.Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
+        Point player_point = new Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
         Faction player_faction = Playertools.getPlayerFaction(p);
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-            for (Claiming.Faction_Claim claim : thisFaction.getValue().getClaims()) {
+            for (Claim claim : thisFaction.getValue().getClaims()) {
                 if (!p.getWorld().getName().equalsIgnoreCase(claim.getWorld().getName())) continue;
                 boolean kellfal = false;
                 //true              //    true - > NINCS
-                if ((pvpCooldown(p) && !claim.getAttribute().equals(Claiming.ClaimAttributes.PROTECTED))) {
+                if ((pvpCooldown(p) && !claim.getAttribute().equals(ClaimAttributes.PROTECTED))) {
                     kellfal = true;
-                } else if (Main.SOTWEnabled && ((claim.getAttribute().equals(Claiming.ClaimAttributes.NORMAL) && claim.getFaction().getId() != (player_faction != null ? player_faction.getId() : 0)))) {
+                } else if (Main.SOTWEnabled && ((claim.getAttribute().equals(ClaimAttributes.NORMAL) && claim.getFaction().getId() != (player_faction != null ? player_faction.getId() : 0)))) {
                     kellfal = true;
-                } else if ((Timers.COMBAT_TAG.has(p) && claim.getAttribute().equals(Claiming.ClaimAttributes.PROTECTED))) {
+                } else if ((Timers.COMBAT_TAG.has(p) && claim.getAttribute().equals(ClaimAttributes.PROTECTED))) {
                     kellfal = true;
                 }
                 if (!kellfal)
                     continue;
                 // Négy sarokpont
-                Claiming.Point bottom_left = new Claiming.Point(claim.getStartX(), claim.getStartZ());
-                Claiming.Point top_right = new Claiming.Point(claim.getEndX(), claim.getEndZ());
+                Point bottom_left = new Point(claim.getStartX(), claim.getStartZ());
+                Point top_right = new Point(claim.getEndX(), claim.getEndZ());
 
-                Claiming.Point top_left = new Claiming.Point(top_right.getX(), bottom_left.getZ());
-                Claiming.Point bottom_right = new Claiming.Point(bottom_left.getX(), top_right.getZ());
+                Point top_left = new Point(top_right.getX(), bottom_left.getZ());
+                Point bottom_right = new Point(bottom_left.getX(), top_right.getZ());
 
                 int width = getDistanceBetweenPoints2D(bottom_left, top_left) + 1;
                 int height = getDistanceBetweenPoints2D(bottom_left, bottom_right) + 1;
                 int minX = Math.min(top_right.getX(), bottom_left.getX());
                 int minZ = Math.min(top_right.getZ(), bottom_left.getZ());
                 int record = 9999;
-                Claiming.Point record_point = new Claiming.Point(0, 0);
+                Point record_point = new Point(0, 0);
                 // -21+
                 for (int x = minX; x < minX + width; x++) {
-                    int distance = getDistanceBetweenPoints2D(new Claiming.Point(x, minZ), player_point);
+                    int distance = getDistanceBetweenPoints2D(new Point(x, minZ), player_point);
                     if (distance < record) {
                         record = distance;
                         record_point.setX(x);
                         record_point.setZ(minZ);
                     }
                     //p.sendBlockChange(new Location(p.getWorld(),x,p.getLocation().getBlockY(),minZ),Material.BEDROCK,(byte) 0);
-                    distance = getDistanceBetweenPoints2D(new Claiming.Point(x, minZ + height - 1), player_point);
+                    distance = getDistanceBetweenPoints2D(new Point(x, minZ + height - 1), player_point);
                     if (distance < record) {
                         record = distance;
                         record_point.setX(x);
@@ -63,14 +66,14 @@ public class SpawnShield {
                     //p.sendBlockChange(new Location(p.getWorld(),x,p.getLocation().getBlockY(),minZ+height-1),Material.BEDROCK,(byte) 0);
                 }
                 for (int z = minZ; z < minZ + height; z++) {
-                    int distance = getDistanceBetweenPoints2D(new Claiming.Point(minX, z), player_point);
+                    int distance = getDistanceBetweenPoints2D(new Point(minX, z), player_point);
                     if (distance < record) {
                         record = distance;
                         record_point.setX(minX);
                         record_point.setZ(z);
                     }
                     //p.sendBlockChange(new Location(p.getWorld(),minX,p.getLocation().getBlockY(),z),Material.BRICK,(byte) 0);
-                    distance = getDistanceBetweenPoints2D(new Claiming.Point(minX + width - 1, z), player_point);
+                    distance = getDistanceBetweenPoints2D(new Point(minX + width - 1, z), player_point);
                     if (distance < record) {
                         record = distance;
                         record_point.setX(minX + width - 1);
@@ -104,20 +107,20 @@ public class SpawnShield {
      */
     public static void calcWall(Player player) {
         Faction playerFaction = Playertools.getPlayerFaction(player);
-        Claiming.Point playerPoint = new Claiming.Point(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
+        Point playerPoint = new Point(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
 
         for (Faction faction : Main.factionCache.values()) {
-            for (Claiming.Faction_Claim claim : faction.getClaims()) {
+            for (Claim claim : faction.getClaims()) {
                 if (!player.getWorld().equals(claim.getWorld())) {
                     continue;
                 }
 
                 boolean shouldBuildWall = false;
-                if (pvpCooldown(player) && claim.getAttribute() != Claiming.ClaimAttributes.PROTECTED) {
+                if (pvpCooldown(player) && claim.getAttribute() != ClaimAttributes.PROTECTED) {
                     shouldBuildWall = true;
-                } else if (Main.SOTWEnabled && claim.getAttribute() == Claiming.ClaimAttributes.NORMAL && claim.getFaction().getId() != (playerFaction != null ? playerFaction.getId() : 0)) {
+                } else if (Main.SOTWEnabled && claim.getAttribute() == ClaimAttributes.NORMAL && claim.getFaction().getId() != (playerFaction != null ? playerFaction.getId() : 0)) {
                     shouldBuildWall = true;
-                } else if (Timers.COMBAT_TAG.has(player) && claim.getAttribute() == Claiming.ClaimAttributes.PROTECTED) {
+                } else if (Timers.COMBAT_TAG.has(player) && claim.getAttribute() == ClaimAttributes.PROTECTED) {
                     shouldBuildWall = true;
                 }
 
@@ -125,20 +128,20 @@ public class SpawnShield {
                     continue;
                 }
 
-                Claiming.Point bottomLeft = new Claiming.Point(claim.getStartX(), claim.getStartZ());
-                Claiming.Point topRight = new Claiming.Point(claim.getEndX(), claim.getEndZ());
-                Claiming.Point topLeft = new Claiming.Point(topRight.getX(), bottomLeft.getZ());
-                Claiming.Point bottomRight = new Claiming.Point(bottomLeft.getX(), topRight.getZ());
+                Point bottomLeft = new Point(claim.getStartX(), claim.getStartZ());
+                Point topRight = new Point(claim.getEndX(), claim.getEndZ());
+                Point topLeft = new Point(topRight.getX(), bottomLeft.getZ());
+                Point bottomRight = new Point(bottomLeft.getX(), topRight.getZ());
 
                 int width = getDistanceBetweenPoints2D(bottomLeft, topLeft) + 1;
                 int height = getDistanceBetweenPoints2D(bottomLeft, bottomRight) + 1;
                 int minX = Math.min(topRight.getX(), bottomLeft.getX());
                 int minZ = Math.min(topRight.getZ(), bottomLeft.getZ());
                 int record = 9999;
-                Claiming.Point recordPoint = new Claiming.Point(0, 0);
+                Point recordPoint = new Point(0, 0);
 
                 for (int x = minX; x < minX + width; x++) {
-                    int distance = getDistanceBetweenPoints2D(new Claiming.Point(x, minZ), playerPoint);
+                    int distance = getDistanceBetweenPoints2D(new Point(x, minZ), playerPoint);
 
                     if (distance < record) {
                         record = distance;
@@ -146,7 +149,7 @@ public class SpawnShield {
                         recordPoint.setZ(minZ);
                     }
 
-                    distance = getDistanceBetweenPoints2D(new Claiming.Point(x, minZ + height - 1), playerPoint);
+                    distance = getDistanceBetweenPoints2D(new Point(x, minZ + height - 1), playerPoint);
 
                     if (distance < record) {
                         record = distance;
@@ -156,7 +159,7 @@ public class SpawnShield {
                 }
 
                 for (int z = minZ; z < minZ + height; z++) {
-                    int distance = getDistanceBetweenPoints2D(new Claiming.Point(minX, z), playerPoint);
+                    int distance = getDistanceBetweenPoints2D(new Point(minX, z), playerPoint);
 
                     if (distance < record) {
                         record = distance;
@@ -164,7 +167,7 @@ public class SpawnShield {
                         recordPoint.setZ(z);
                     }
 
-                    distance = getDistanceBetweenPoints2D(new Claiming.Point(minX + width - 1, z), playerPoint);
+                    distance = getDistanceBetweenPoints2D(new Point(minX + width - 1, z), playerPoint);
 
                     if (distance < record) {
                         record = distance;
@@ -185,7 +188,7 @@ public class SpawnShield {
     }
 
 
-    public static void placeWall(Player p, Location loc, String side, Claiming.Faction_Claim claim) {
+    public static void placeWall(Player p, Location loc, String side, Claim claim) {
 
         if (side.equals("x")) {
             for (int x = -5; x <= 5; x++) {
@@ -193,9 +196,9 @@ public class SpawnShield {
                     Location temp = new Location(loc.getWorld(), loc.getBlockX() + x, loc.getBlockY() + y, loc.getBlockZ());
                     if (!temp.getBlock().getType().equals(Material.AIR)) continue;
 
-                    Claiming.Point point = new Claiming.Point(temp.getBlockX(), temp.getBlockZ());
-                    Claiming.Point bottom_left = new Claiming.Point(claim.getStartX(), claim.getStartZ());
-                    Claiming.Point top_right = new Claiming.Point(claim.getEndX(), claim.getEndZ());
+                    Point point = new Point(temp.getBlockX(), temp.getBlockZ());
+                    Point bottom_left = new Point(claim.getStartX(), claim.getStartZ());
+                    Point top_right = new Point(claim.getEndX(), claim.getEndZ());
                     /*p.sendBlockChange(new Location(loc.getWorld(),bottom_left.x,loc.getY(),bottom_left.z), Material.GOLD_BLOCK, (byte) 14);
                     p.sendBlockChange(new Location(loc.getWorld(),top_right.x,loc.getY(),top_right.z), Material.GOLD_BLOCK, (byte) 14);
                     p.sendBlockChange(new Location(loc.getWorld(),point.x,loc.getY(),point.z), Material.WOOL, (byte) 14);*/
@@ -211,9 +214,9 @@ public class SpawnShield {
                     Location temp = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() + y, loc.getBlockZ() + z);
                     if (!temp.getBlock().getType().equals(Material.AIR)) continue;
 
-                    Claiming.Point point = new Claiming.Point(temp.getBlockX(), temp.getBlockZ());
-                    Claiming.Point bottom_left = new Claiming.Point(claim.getStartX(), claim.getStartZ());
-                    Claiming.Point top_right = new Claiming.Point(claim.getEndX(), claim.getEndZ());
+                    Point point = new Point(temp.getBlockX(), temp.getBlockZ());
+                    Point bottom_left = new Point(claim.getStartX(), claim.getStartZ());
+                    Point top_right = new Point(claim.getEndX(), claim.getEndZ());
                     //p.sendBlockChange(new Location(loc.getWorld(),point.x,loc.getY(),point.z), Material.DIAMOND_BLOCK, (byte) 14);
                     if (Claiming.doOverlap(bottom_left, top_right, point, point)) {
                         p.sendBlockChange(temp, Material.STAINED_GLASS, (byte) 14);

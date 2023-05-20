@@ -26,7 +26,7 @@ public class KothStartCommand extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/koth " + getName() + "<KoTH name>";
+        return "/koth " + getName() + " <KoTH name>";
     }
 
     @Override

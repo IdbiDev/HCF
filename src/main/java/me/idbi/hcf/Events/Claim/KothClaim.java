@@ -2,7 +2,10 @@ package me.idbi.hcf.Events.Claim;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Objects.ClaimAttributes;
+import me.idbi.hcf.Tools.Objects.ClaimTypes;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Objects.Wand;
 import me.idbi.hcf.Tools.TowerTools;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,8 +24,8 @@ public class KothClaim implements Listener {
         Player p = e.getPlayer();
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if(e.getItem() == null) return;
-        if(player.getClaimType() != Claiming.ClaimTypes.KOTH) return;
-        if (!e.getItem().isSimilar(Claiming.Wands.claimWand())) {
+        if(player.getClaimType() != ClaimTypes.KOTH) return;
+        if (!e.getItem().isSimilar(Wand.claimWand())) {
             return;
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
@@ -43,7 +46,7 @@ public class KothClaim implements Listener {
         if (e.getAction().equals(Action.LEFT_CLICK_AIR) && e.getPlayer().isSneaking()) {
             TowerTools.removePillar(p,Claiming.startpositions.get(player.getClaimID()));
             TowerTools.removePillar(p,Claiming.endpositions.get(player.getClaimID()));
-            player.setClaimType(Claiming.ClaimTypes.NONE);
+            player.setClaimType(ClaimTypes.NONE);
             player.setClaimID(0);
             endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());
@@ -51,10 +54,10 @@ public class KothClaim implements Listener {
         }
         // Elfogadás
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) && e.getPlayer().isSneaking()) {
-            Claiming.ForceFinishClaim(player.getClaimID(), p, Claiming.ClaimAttributes.KOTH);
+            Claiming.ForceFinishClaim(player.getClaimID(), p, ClaimAttributes.KOTH);
             TowerTools.removePillar(p,Claiming.startpositions.get(player.getClaimID()));
             TowerTools.removePillar(p,Claiming.endpositions.get(player.getClaimID()));
-            player.setClaimType(Claiming.ClaimTypes.NONE);
+            player.setClaimType(ClaimTypes.NONE);
             player.setClaimID(0);
             endpositions.remove(player.getClaimID());
             startpositions.remove(player.getClaimID());

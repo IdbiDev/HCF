@@ -1,5 +1,7 @@
 package me.idbi.hcf.Commands.SingleCommands;
 
+import me.idbi.hcf.BukkitCommands.CommandInfo;
+import me.idbi.hcf.BukkitCommands.HCFCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.BungeeChanneling;
 import me.idbi.hcf.Tools.Objects.HCFPermissions;
@@ -12,27 +14,32 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-
-public class LogoutCommand implements CommandExecutor, Listener {
+@CommandInfo(
+        name = "logout",
+        description = "Select language",
+        permission = "factions.commands.logout",
+        syntax = "/logout")
+public class LogoutCommand extends HCFCommand implements Listener  {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void execute(Player p, String[] args) {
         // /revive <player>
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
-            if (!HCFPermissions.logout.check(p)) return false;
-            if (Timers.LOGOUT.has(p)) {
-                // Todo: Already logging out
-                //HCF_Timer.removeLogoutTimer(p);
-                p.sendMessage(Messages.logout_timer_already_started.language(p).queue());
+        if (Timers.LOGOUT.has(p)) {
+            // Todo: Already logging out
+            //HCF_Timer.removeLogoutTimer(p);
+            p.sendMessage(Messages.logout_timer_already_started.language(p).queue());
 
-            } else {
-                BungeeChanneling.getInstance().sendToLobby(p);
-                Timers.LOGOUT.add(p);
-                p.sendMessage(Messages.logout_timer_started.language(p).queue());
-            }
+        } else {
+            BungeeChanneling.getInstance().sendToLobby(p);
+            Timers.LOGOUT.add(p);
+            p.sendMessage(Messages.logout_timer_started.language(p).queue());
         }
-        return false;
     }
+
+    @Override
+    public int getCooldown() {
+        return 0;
+    }
+
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         if (e.getFrom().getBlockX() != e.getTo().getBlockX()

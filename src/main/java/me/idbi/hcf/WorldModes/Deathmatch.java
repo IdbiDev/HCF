@@ -4,7 +4,10 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Objects.Claim;
+import me.idbi.hcf.Tools.Objects.ClaimAttributes;
 import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.Point;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -27,7 +30,7 @@ public class Deathmatch implements Gamemode {
         border.setSize(Config.WorldBorderSize.asInt());
         int EOTWTIME = Config.EOTWDuration.asInt() * 1000;
         border.setCenter(/*new Location(world, coords[0], coords[1], coords[2])*/Main.getSpawnLocation());
-        Claiming.Faction_Claim spawnClaim = null;
+        Claim spawnClaim = null;
         try {
             spawnClaim = Main.factionCache.get(1).getClaims().get(0);
         } catch (Exception ignored) {
@@ -39,8 +42,8 @@ public class Deathmatch implements Gamemode {
 
         border.setSize(
                 getDistanceBetweenPoints2D(
-                        new Claiming.Point(spawnClaim.getStartX(), spawnClaim.getStartZ()),
-                        new Claiming.Point(spawnClaim.getEndX(), spawnClaim.getEndZ())),
+                        new Point(spawnClaim.getStartX(), spawnClaim.getStartZ()),
+                        new Point(spawnClaim.getEndX(), spawnClaim.getEndZ())),
                 EOTWTIME);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -54,8 +57,8 @@ public class Deathmatch implements Gamemode {
 
         for(Faction f : Main.factionCache.values()) {
             f.setDTR(-9.9D);
-            for (Claiming.Faction_Claim claim : f.getClaims()) {
-                claim.setAttribute(Claiming.ClaimAttributes.NORMAL);
+            for (Claim claim : f.getClaims()) {
+                claim.setAttribute(ClaimAttributes.NORMAL);
             }
         }
         Main.EOTWENABLED = true;
@@ -83,10 +86,10 @@ public class Deathmatch implements Gamemode {
             border.setSize(Config.WorldBorderSize.asInt());
 
 
-            Claiming.Faction_Claim spawnClaim = null;
+            Claim spawnClaim = null;
             try {
                 spawnClaim = Main.factionCache.get(1).getClaims().get(0);
-                spawnClaim.setAttribute(Claiming.ClaimAttributes.PROTECTED);
+                spawnClaim.setAttribute(ClaimAttributes.PROTECTED);
             } catch (Exception ignored) {
                 return;
             }

@@ -1,6 +1,7 @@
 package me.idbi.hcf.Commands.FactionCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.FactionGUI.GUISound;
 import me.idbi.hcf.Main;
@@ -39,7 +40,7 @@ public class FactionCreateCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Creates a new faction.";
     }
 
     @Override
@@ -91,12 +92,12 @@ public class FactionCreateCommand extends SubCommand {
                         return;
                     }
                 }
+
                 //Create Faction
                 int x = Playertools.getFreeFactionId();
                 SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?', leader='?',ID = '?'", name, p.getUniqueId().toString(), String.valueOf(x));
                 Faction faction = new Faction(x, name, p.getUniqueId().toString(), 0);
-                //
-
+                faction.setPoints(Config.PointStart.asInt());
                 Main.factionCache.put(x, faction);
                 Main.nameToFaction.put(faction.getName(), faction);
 

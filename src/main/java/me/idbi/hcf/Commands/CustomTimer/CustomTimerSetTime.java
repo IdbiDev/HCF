@@ -1,8 +1,9 @@
 package me.idbi.hcf.Commands.CustomTimer;
 
+import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Scoreboard.CustomTimers;
+import me.idbi.hcf.Tools.Objects.CustomTimers;
 import org.bukkit.entity.Player;
 
 public class CT_EditTime {

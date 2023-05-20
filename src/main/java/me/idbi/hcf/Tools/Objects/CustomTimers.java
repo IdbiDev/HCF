@@ -1,6 +1,10 @@
-package me.idbi.hcf.Scoreboard;
+package me.idbi.hcf.Tools.Objects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Scoreboard.AdminScoreboard;
+import me.idbi.hcf.Scoreboard.Scoreboards;
 
 import java.util.Map;
 

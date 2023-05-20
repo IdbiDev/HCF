@@ -23,7 +23,7 @@ public class AdminTakeMoneyCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Takes money from the selected player";
     }
 
     @Override

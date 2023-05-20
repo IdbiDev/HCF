@@ -23,7 +23,7 @@ public class AdminReclaimResetCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Resets a player reclaim status. This will let the player reclaim again.";
     }
 
     @Override

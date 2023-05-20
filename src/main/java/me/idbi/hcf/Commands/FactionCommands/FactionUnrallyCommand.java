@@ -15,7 +15,7 @@ public class FactionUnrallyCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Removes the rally from you.";
     }
 
     @Override

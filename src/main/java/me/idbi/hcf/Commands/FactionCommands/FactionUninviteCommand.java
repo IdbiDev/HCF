@@ -24,12 +24,12 @@ public class FactionUninviteCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Uninvite an invited member.";
     }
 
     @Override
     public String getSyntax() {
-        return "/faction " + getName();
+        return "/faction " + getName() + " <player>";
     }
 
     @Override

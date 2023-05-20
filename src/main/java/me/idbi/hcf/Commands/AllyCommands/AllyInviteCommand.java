@@ -23,7 +23,7 @@ public class AllyInviteCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Invites a faction to create an alliance.";
     }
 
     @Override

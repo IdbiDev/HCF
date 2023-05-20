@@ -3,6 +3,7 @@ package me.idbi.hcf.Events;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Objects.Claim;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Permissions;
@@ -18,8 +19,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import static me.idbi.hcf.Main.warzoneSize;
-
 public class BlockPlace implements Listener {
 
     @EventHandler
@@ -27,7 +26,7 @@ public class BlockPlace implements Listener {
         Player p = e.getPlayer();
         Block block = e.getBlock();
         HCFPlayer hcf = HCFPlayer.getPlayer(p);
-        Claiming.Faction_Claim claim = Playertools.getUpperClaim(block.getLocation());
+        Claim claim = Playertools.getUpperClaim(block.getLocation());
         if (claim != null) {
             if (claim.getFaction() == null) {
                 Bukkit.getLogger().severe("Töröld az SQLTTT BUZIAA AIGFAKEJAFTZHEAFF!!!!444 1000%% véssszély!!! aesteregg");
@@ -35,14 +34,14 @@ public class BlockPlace implements Listener {
             }
             Faction baszogatottFaction = claim.getFaction();
 
-            if (Playertools.getDistanceBetweenPoints2D(new Claiming.Point(block.getX(), block.getZ()),
-                    new Claiming.Point(Playertools.getSpawn().getBlockX(),
+            /*if (Playertools.getDistanceBetweenPoints2D(new Point(block.getX(), block.getZ()),
+                    new Point(Playertools.getSpawn().getBlockX(),
                             Playertools.getSpawn().getBlockZ())) == warzoneSize && !hcf.isInDuty()) {
 
                 p.sendMessage(Messages.warzone_no_permission.language(p).queue());
                 e.setCancelled(true);
                 return;
-            }
+            }*/
 //        if(hcf.inDuty) {
 //            e.setCancelled(false);
 //        } else if(HCF_Claiming.checkEnemyClaimAction(block.getX(), block.getZ(), baszogatottFaction)) {

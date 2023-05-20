@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 @CommandInfo(
         name = "mountain",
-        description = "Mountain",
+        description = "Reload mountain event.",
         permission = "factions.commands.admin.mountain",
         syntax = "/mountain reload")
 public class MountainCommand extends HCFCommand {

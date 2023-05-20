@@ -18,15 +18,12 @@ import me.idbi.hcf.Economy.VaultHook;
 import me.idbi.hcf.Koth.AutoKoth;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Scoreboard.BoardManager;
-import me.idbi.hcf.Scoreboard.CustomTimers;
+import me.idbi.hcf.Tools.Objects.CustomTimers;
 import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
 import me.idbi.hcf.TabManager.TabManager;
 import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
-import me.idbi.hcf.Tools.Objects.Faction;
-import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import me.idbi.hcf.Tools.Objects.Lag;
-import me.idbi.hcf.Tools.Objects.MountainEvent;
+import me.idbi.hcf.Tools.Objects.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
@@ -56,6 +53,7 @@ public final class Main extends JavaPlugin implements Listener {
 
 
     // Beállítások configba
+    @Getter public static TimeZone timeZone;
     public static int serverSlot;
     public static int worldBorderRadius;
     public static boolean deathban;
@@ -206,7 +204,7 @@ public final class Main extends JavaPlugin implements Listener {
         dtrRegenTime = Config.DTRRegen.asInt() * 1000L;
         deathbanTime = Config.Deathban.asInt() * 1000L;
         stuckDuration = Config.StuckTimer.asInt() * 1000;
-        Koth.GLOBAL_TIME = Config.KOTHDuration.asInt();
+        Koth.GLOBAL_TIME = Config.KoTHDuration.asInt();
         deathban = Config.DeathbanEnable.asBoolean();
         memberStartingMoney = Config.DefaultBalance.asInt();
         claimPriceMultiplier = Config.ClaimPriceMultiplier.asDouble();
@@ -227,6 +225,7 @@ public final class Main extends JavaPlugin implements Listener {
         Plugin multi = getServer().getPluginManager().getPlugin("Multiverse-Core");
         EOTWENABLED = false;
         SOTWEnabled = false;
+        timeZone = TimeZone.getTimeZone(Config.Timezone.asStr());
 
         // SQL
         if (con == null)
@@ -259,7 +258,7 @@ public final class Main extends JavaPlugin implements Listener {
         Playertools.loadRanks();
         playerCache.clear();
         Playertools.cacheAll();
-        System.out.println("Cache");
+        print(playerCache.size());
         new NameChanger(this);
         // Load online players
 
@@ -328,10 +327,10 @@ public final class Main extends JavaPlugin implements Listener {
         if (Config.WarzoneSize.asInt() != 0) {
             Faction f = Main.factionCache.get(2);
             int warzoneSize = Config.WarzoneSize.asInt();
-            Claiming.Faction_Claim claim;
-            claim = new Claiming.Faction_Claim(spawnLocation.getBlockX() - warzoneSize, spawnLocation.getBlockX() + warzoneSize, spawnLocation.getBlockZ() - warzoneSize, spawnLocation.getBlockZ() + warzoneSize, 2, Claiming.ClaimAttributes.SPECIAL, spawnLocation.getWorld().getName());
+            Claim claim;
+            claim = new Claim(spawnLocation.getBlockX() - warzoneSize, spawnLocation.getBlockX() + warzoneSize, spawnLocation.getBlockZ() - warzoneSize, spawnLocation.getBlockZ() + warzoneSize, 2, ClaimAttributes.SPECIAL, spawnLocation.getWorld().getName());
             f.addClaim(claim);
-            claim = new Claiming.Faction_Claim(spawnLocation.getBlockX() - warzoneSize, spawnLocation.getBlockX() + warzoneSize, spawnLocation.getBlockZ() - warzoneSize, spawnLocation.getBlockZ() + warzoneSize, 2, Claiming.ClaimAttributes.SPECIAL, Config.NetherName.asStr());
+            claim = new Claim(spawnLocation.getBlockX() - warzoneSize, spawnLocation.getBlockX() + warzoneSize, spawnLocation.getBlockZ() - warzoneSize, spawnLocation.getBlockZ() + warzoneSize, 2, ClaimAttributes.SPECIAL, Config.NetherName.asStr());
             f.addClaim(claim);
         }
     }
@@ -365,10 +364,8 @@ public final class Main extends JavaPlugin implements Listener {
                 for (HCFPlayer hcf : playerCache.values()) {
                     hcf.saveSync();
                 }
-                System.out.println("Saving");
                 for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
                     integerFactionEntry.getValue().saveFactionDataSync();
-                    System.out.println("Saving:  " + integerFactionEntry.getValue().getName());
                     for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
                         rank.saveRankSync();
                     }
@@ -427,10 +424,8 @@ public final class Main extends JavaPlugin implements Listener {
                     hcf.saveSync();
                     hcf.getWaypointPlayer().disable();
                 }
-                System.out.println("Saving");
                 for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
                     integerFactionEntry.getValue().saveFactionDataSync();
-                    System.out.println("Saving:  " + integerFactionEntry.getValue().getName());
                     for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
                         rank.saveRankSync();
                     }
@@ -502,6 +497,11 @@ public final class Main extends JavaPlugin implements Listener {
                 ConfigManager.getGUIEnglishMessages().free();
             }
         }
+    public static void print(Object... args){
+        for(Object o : args){
+            System.out.println(o);
+        }
+    }
 
 
 }

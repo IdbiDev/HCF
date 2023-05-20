@@ -37,7 +37,7 @@ public class FactionKickCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Kicks the selected player from the faction.";
     }
 
     @Override

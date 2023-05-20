@@ -1,5 +1,6 @@
 package me.idbi.hcf.Events;
 
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.TabManager.TabManager;
@@ -68,7 +69,7 @@ public class PlayerJoin implements Listener {
                 Timers.PVP_TIMER.add(e.getPlayer());
         }
         if(Main.SOTWEnabled) {
-            Timers.SOTW.add(p, Main.SOTWStarted - System.currentTimeMillis());
+            Timers.SOTW.add(p, Main.SOTWStarted + Config.SOTWDuration.asInt() * 1000L - System.currentTimeMillis());
         }
         e.setJoinMessage("");
         List<UUID> list = new ArrayList<>(AdminTools.InvisibleManager.getInvisedAdmins());

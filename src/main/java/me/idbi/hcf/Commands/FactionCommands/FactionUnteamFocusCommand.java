@@ -15,7 +15,7 @@ public class FactionUnteamFocusCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Removes the team focus mode.)";
     }
 
     @Override

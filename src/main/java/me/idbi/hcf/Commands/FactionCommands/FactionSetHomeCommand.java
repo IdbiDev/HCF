@@ -4,6 +4,7 @@ import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.FactionRankManager;
+import me.idbi.hcf.Tools.Objects.Claim;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.SQL_Connection;
@@ -31,7 +32,7 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Sets the faction home to the current position.";
     }
 
     @Override
@@ -86,7 +87,7 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
             put("PITCH", (int) p.getLocation().getPitch());
         }};
         //
-        Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockZ());
+        Claim claim = Claiming.sendClaimByXZ(p.getWorld(), p.getLocation().getBlockX() ,p.getLocation().getBlockY(), p.getLocation().getBlockZ());
         if (claim != null) {
             if (claim.getFaction().getId() == faction.getId()) {
                 SQL_Connection.dbExecute(con,"UPDATE factions SET home='?' WHERE ID='?'", new JSONObject(map).toString(), faction.getId() + "");

@@ -27,7 +27,7 @@ public class FactionWithdrawCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Withdraws from the faction's balance.";
     }
 
     @Override
@@ -43,7 +43,6 @@ public class FactionWithdrawCommand extends SubCommand {
     @Override
     public void perform(Player p, String[] args) {
         if (!Playertools.hasPermission(p, FactionRankManager.Permissions.MANAGE_MONEY)) {
-            // ToDo: permission handle
             p.sendMessage(Messages.no_permission.language(p).queue());
             return;
         }

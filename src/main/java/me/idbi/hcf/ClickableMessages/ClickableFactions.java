@@ -16,6 +16,13 @@ public class ClickableFactions {
         text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f show " + f.getName()));
         p.spigot().sendMessage(text);
     }
+    public static void sendListCustom(Player p, Faction f, int number) {
+        TextComponent text = new TextComponent(Messages.faction_custom_list.language(p)
+                .setNumber(number).setFaction(f).replace("%type%", "Custom").queue());
+//        text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7/f show "+f.getName()).create()));
+//        text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f show " + f.getName()));
+        p.spigot().sendMessage(text);
+    }
 
     public static void sendTop(Player p, Faction f, int number, int value) {
         TextComponent text = new TextComponent(Messages.faction_top.language(p).setNumber(number).setFaction(f).setValue(value).queue());

@@ -7,6 +7,7 @@ import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.SQL_Connection;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,7 +30,7 @@ public class AdminSetPlayerFactionCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Adds the player to the selected faction.";
     }
 
     @Override
@@ -67,7 +68,8 @@ public class AdminSetPlayerFactionCommand extends SubCommand {
 
     @Override
     public void perform(Player p, String[] args) {
-        if (!Main.nameToFaction.containsKey(args[2])) {
+        Faction selectedFaction = Playertools.getFactionByName(args[2]);
+        if (selectedFaction == null) {
             p.sendMessage(Messages.not_found_faction.language(p).queue());
             return;
         }
@@ -76,7 +78,7 @@ public class AdminSetPlayerFactionCommand extends SubCommand {
             return;
         }
         Player target = Bukkit.getPlayer(args[1]);
-        Faction selectedFaction = Main.nameToFaction.get(args[2]);
+
         HCFPlayer player = HCFPlayer.getPlayer(p);
 
         player.setFaction(selectedFaction);
@@ -86,16 +88,13 @@ public class AdminSetPlayerFactionCommand extends SubCommand {
         //Sikeres belépés
         target.sendMessage(Messages.player_joined_faction_message.language(target).queue());
 
-        //Faction -> xy belépett
-        Faction f = Main.nameToFaction.get(args[2]);
-
-        for (Player member : f.getOnlineMembers()) {
+        for (Player member : selectedFaction.getOnlineMembers()) {
             member.sendMessage(Messages.new_member_join_faction.language(member).setPlayer(target).queue());
 
         }
 
         Scoreboards.refresh(target);
-        p.sendMessage(Messages.admin_set_playerfaction.setFaction(f).setPlayer(target).queue());
+        p.sendMessage(Messages.admin_set_playerfaction.setFaction(selectedFaction).setPlayer(target).queue());
         NameChanger.refresh(target);
     }
 }

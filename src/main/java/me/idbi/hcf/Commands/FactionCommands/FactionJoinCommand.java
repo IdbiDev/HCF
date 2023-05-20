@@ -30,7 +30,7 @@ public class FactionJoinCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Joins the faction to which you have already been invited.";
     }
 
     @Override

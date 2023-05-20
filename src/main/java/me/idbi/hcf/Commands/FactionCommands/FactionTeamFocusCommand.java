@@ -23,7 +23,7 @@ public class FactionTeamFocusCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Enables the team focus on the scoreboard.";
     }
 
     @Override

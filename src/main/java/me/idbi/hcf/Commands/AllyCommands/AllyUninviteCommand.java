@@ -22,7 +22,7 @@ public class AllyUninviteCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Uninvite an faction from the alliance.";
     }
 
     @Override

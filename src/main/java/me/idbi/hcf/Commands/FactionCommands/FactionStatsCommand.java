@@ -32,7 +32,7 @@ public class FactionStatsCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Shows the player statistics.";
     }
 
     @Override

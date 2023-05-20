@@ -2,6 +2,7 @@ package me.idbi.hcf.Commands.FactionCommands;
 
 
 import me.idbi.hcf.Commands.SubCommand;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
@@ -16,6 +17,7 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class FactionLeaveCommand extends SubCommand {
     private static final Connection con = Main.getConnection();
@@ -74,19 +76,20 @@ public class FactionLeaveCommand extends SubCommand {
 
             Faction f = Playertools.getPlayerFaction(p);
             if (!Objects.equals(f.getLeader(), p.getUniqueId().toString())) {
+                HCFPlayer hcf = HCFPlayer.getPlayer(p);
+                if(hcf.getCurrentArea().getFaction() == f && !Config.EnableLeaveFriendly.asBoolean()){
+                    hcf.sendMessage(Messages.cant_leave_while_on_claim);
+                    return;
+                }
 
                 SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?' WHERE uuid = '?'", "None", "0", p.getUniqueId().toString());
 
                 p.sendMessage(Messages.player_leaving_faction_message.language(p).queue());
 
-                HCFPlayer hcf = HCFPlayer.getPlayer(p);
+
                 final String rankForLejjebb = hcf.getRank().getName();
 
                 hcf.removeFaction();
-
-//                displayTeams.removePlayerFromTeam(p);
-//                displayTeams.addToNonFaction(p);
-                //f.removePrefixPlayer(p);
 
                 for (Player member : f.getOnlineMembers()) {
                     member.sendMessage(Messages.member_leave_faction.language(member).setPlayer(p).queue());

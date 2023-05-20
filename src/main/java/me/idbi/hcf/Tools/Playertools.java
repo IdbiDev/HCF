@@ -6,10 +6,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
-import me.idbi.hcf.Tools.Objects.Faction;
-import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import me.idbi.hcf.Tools.Objects.Permissions;
-import me.idbi.hcf.Tools.Objects.PlayerStatistic;
+import me.idbi.hcf.Tools.Objects.*;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.NameTagVisibility;
@@ -24,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static me.idbi.hcf.Commands.FactionCommands.FactionCreateCommand.con;
 import static me.idbi.hcf.Main.*;
 
 
@@ -104,7 +102,7 @@ public class Playertools {
         HCFPlayer hcf = HCFPlayer.getPlayer(player);
         assert hcf != null;
         hcf.createScoreboard(player);
-        hcf.setCurrentArea(getUpperClaim(player));
+        hcf.setCurrentArea(getUpperClaim(player.getLocation()));
         hcf.setOnline(true);
         Main.playerCache.put(hcf.getUUID(), hcf);
         hcf.join();
@@ -154,11 +152,11 @@ public class Playertools {
         }
     }
 
-    public static Claiming.Faction_Claim getUpperClaim(Location loc) {
-        ArrayList<Claiming.Faction_Claim> originalClaims = Claiming.getClaimsInArea(loc);
-        ArrayList<Claiming.Faction_Claim> claims = new ArrayList<>(originalClaims);
+    public static Claim getUpperClaim(Location loc) {
+        ArrayList<Claim> originalClaims = Claiming.getClaimsInArea(loc);
+        ArrayList<Claim> claims = new ArrayList<>(originalClaims);
         if (originalClaims.size() > 1) {
-            for (Claiming.Faction_Claim claim : originalClaims) {
+            for (Claim claim : originalClaims) {
                 if (claim.getFaction().equals(Main.factionCache.get(2)))
                     claims.remove(claim);
             }
@@ -169,11 +167,19 @@ public class Playertools {
     public static void cacheAll() {
         ResultSet rs = null;
         try {
+
             //PreparedStatement ps = con.prepareStatement("SELECT * FROM members");
             PreparedStatement ps = con.prepareStatement("SELECT members.uuid,members.name,members.faction,members.rank,members.kills,members.deaths,members.money,members.language,members.statistics,members.lives,deathbans.time FROM `members` LEFT JOIN deathbans ON members.uuid = deathbans.uuid;");
             rs = ps.executeQuery();
 
             while (rs.next()) {
+//                HashMap<String,Object> map =  SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid='?' AND name='?' ORDER BY ID DESC",e.getUniqueId().toString(),e.getName());
+//                // 15 , 29 ,69
+//
+//                PreparedStatement asd = con.prepareStatement("DELETE FROM members WHERE uuid=? AND ID > ?");
+//                asd.setString(1, e.getUniqueId().toString());
+//                asd.setInt(2, (int) map.get("ID"));
+//                asd.executeUpdate();
                 cachePlayerSync(UUID.fromString(rs.getString("uuid")), rs);
                 Main.sendCmdMessage("Player " + rs.getString("uuid") + " cached!");
             }
@@ -337,15 +343,15 @@ public class Playertools {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 try {
-                    Claiming.ClaimAttributes at = Claiming.ClaimAttributes.NORMAL;
+                    ClaimAttributes at = ClaimAttributes.NORMAL;
                     if (rs.getString("type").equalsIgnoreCase("protected")) {
-                        at = Claiming.ClaimAttributes.PROTECTED;
+                        at = ClaimAttributes.PROTECTED;
                     } else if (rs.getString("type").equalsIgnoreCase("koth")) {
-                        at = Claiming.ClaimAttributes.KOTH;
+                        at = ClaimAttributes.KOTH;
                     }
                     Faction f = Main.factionCache.get(rs.getInt("factionid"));
                     if (f != null) {
-                        Claiming.Faction_Claim claim = new Claiming.Faction_Claim(rs.getInt("startX"), rs.getInt("endX"), rs.getInt("startZ"), rs.getInt("endZ"), rs.getInt("factionid"), at, rs.getString("world"));
+                        Claim claim = new Claim(rs.getInt("startX"), rs.getInt("endX"), rs.getInt("startZ"), rs.getInt("endZ"), rs.getInt("factionid"), at, rs.getString("world"));
                         f.addClaim(claim);
                     }
 
@@ -577,7 +583,7 @@ public class Playertools {
         return faction;
     }
 
-    public static boolean CheckClaimPlusOne(Claiming.Point left_c, Claiming.Point right_c, int diff, Claiming.Point p1, Claiming.Point p2) {
+    public static boolean CheckClaimPlusOne(Point left_c, Point right_c, int diff, Point p1, Point p2) {
         //Getting the bottom left point
         int minX = Math.min(left_c.getX(), right_c.getX());
         int minZ = Math.min(left_c.getZ(), right_c.getZ());
@@ -587,13 +593,13 @@ public class Playertools {
         int maxZ = Math.max(left_c.getZ(), right_c.getZ());
 
         //Creating the new claim
-        Claiming.Point new_claim_start = new Claiming.Point(minX - diff, minZ - diff);
-        Claiming.Point new_claim_end = new Claiming.Point(maxX + diff, maxZ + diff);
+        Point new_claim_start = new Point(minX - diff, minZ - diff);
+        Point new_claim_end = new Point(maxX + diff, maxZ + diff);
 
         return Claiming.doOverlap(new_claim_start, new_claim_end, p1, p2);
     }
 
-    public static int getDistanceBetweenPoints2D(Claiming.Point p1, Claiming.Point p2) {
+    public static int getDistanceBetweenPoints2D(Point p1, Point p2) {
         return (Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getZ() - p2.getZ()));
     }
 
@@ -724,7 +730,7 @@ public class Playertools {
 
 
     public static boolean isInWarzone(Location loc) {
-        Claiming.Faction_Claim claim = Claiming.sendClaimByXZ(loc.getWorld(), loc.getBlockX(), loc.getBlockZ());
+        Claim claim = Claiming.sendClaimByXZ(loc.getWorld(), loc.getBlockX(),loc.getBlockY(), loc.getBlockZ());
         if(claim == null) return false;
         if(claim.getFaction() == null) return false;
         return claim.getFaction().getId() == 2;
@@ -739,9 +745,9 @@ public class Playertools {
 
     public static void cancelSpawnClaim(Player admin) {
         HCFPlayer player = HCFPlayer.getPlayer(admin);
-        player.setClaimType(Claiming.ClaimTypes.NONE);
+        player.setClaimType(ClaimTypes.NONE);
         admin.sendMessage(Messages.faction_claim_decline.language(admin).queue());
-        admin.getInventory().remove(Claiming.Wands.claimWand());
+        admin.getInventory().remove(Wand.claimWand());
     }
 
     public static boolean isValidName(String name) {
@@ -913,7 +919,7 @@ public class Playertools {
     }
 
     public static void refreshPosition(Player p) {
-        Claiming.Faction_Claim c = Playertools.getUpperClaim(p);
+        Claim c = Playertools.getUpperClaim(p);
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if (player.getCurrentArea() != c) {
 

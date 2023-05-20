@@ -19,7 +19,7 @@ public class FactionManageCommand  extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Opens a manage window. You can customize the faction is this mode.";
     }
 
     @Override

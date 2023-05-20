@@ -29,7 +29,7 @@ public class FactionHomeCommand extends SubCommand implements Listener {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Teleports to the faction home.";
     }
 
     @Override

@@ -6,7 +6,7 @@ import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.entity.Player;
 
-public class AdminDTRFreezeCommand extends SubCommand {
+public class    AdminDTRFreezeCommand extends SubCommand {
     @Override
     public String getName() {
         return "freezedtr";
@@ -14,7 +14,7 @@ public class AdminDTRFreezeCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Toggles the selected faction ability to regen their DTR";
     }
 
     @Override

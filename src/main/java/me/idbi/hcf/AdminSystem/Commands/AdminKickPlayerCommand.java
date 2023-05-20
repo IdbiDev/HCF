@@ -28,7 +28,7 @@ public class AdminKickPlayerCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Kicks the selected player from the selected faction.";
     }
 
     @Override

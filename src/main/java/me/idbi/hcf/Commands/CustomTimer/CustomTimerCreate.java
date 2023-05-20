@@ -1,7 +1,10 @@
 package me.idbi.hcf.Commands.CustomTimer;
 
+import me.idbi.hcf.BukkitCommands.CommandInfo;
+import me.idbi.hcf.BukkitCommands.HCFCommand;
+import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Scoreboard.CustomTimers;
+import me.idbi.hcf.Tools.Objects.CustomTimers;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

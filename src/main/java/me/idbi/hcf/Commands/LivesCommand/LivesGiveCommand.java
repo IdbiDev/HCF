@@ -16,7 +16,7 @@ public class LivesGiveCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Gives live to the selected player";
     }
 
     @Override

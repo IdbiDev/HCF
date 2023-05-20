@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import static me.idbi.hcf.Commands.FactionCommands.FactionCreateCommand.con;
 @CommandInfo(
         name = "revive",
-        description = "Revive a player",
+        description = "Revive a deathbanned player",
         permission = "factions.commands.revive",
         syntax = "/revive <player>")
 public class ReviveCommand extends HCFCommand {

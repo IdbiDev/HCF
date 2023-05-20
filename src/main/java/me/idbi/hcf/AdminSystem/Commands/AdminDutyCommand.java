@@ -25,7 +25,7 @@ public class AdminDutyCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Staff mode, enables all the staff commands.";
     }
 
     @Override

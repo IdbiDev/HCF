@@ -2,7 +2,10 @@ package me.idbi.hcf.Events.Claim;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Objects.ClaimAttributes;
+import me.idbi.hcf.Tools.Objects.ClaimTypes;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Objects.Wand;
 import me.idbi.hcf.Tools.TowerTools;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,8 +20,8 @@ public class BasicClaim implements Listener {
         //SIMA CLAIM
         HCFPlayer player = HCFPlayer.getPlayer(p);
         if (e.getItem() == null) return;
-        if(player.getClaimType() != Claiming.ClaimTypes.NORMAL) return;
-        if (!e.getItem().isSimilar(Claiming.Wands.claimWand())) {
+        if(player.getClaimType() != ClaimTypes.NORMAL) return;
+        if (!e.getItem().isSimilar(Wand.claimWand())) {
             return;
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
@@ -70,7 +73,7 @@ public class BasicClaim implements Listener {
         }
         // Elfogadás
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-            if (Claiming.FinishClaiming(player.getFaction().getId(), e.getPlayer(), Claiming.ClaimAttributes.NORMAL)) {
+            if (Claiming.FinishClaiming(player.getFaction().getId(), e.getPlayer(), ClaimAttributes.NORMAL)) {
                 e.getPlayer().sendMessage(Messages.faction_claim_accept.language(p).queue());
                 e.getPlayer().getInventory().remove(e.getItem());
                 TowerTools.removePillar(p,Claiming.startpositions.get(player.getFaction().getId()));

@@ -22,7 +22,7 @@ public class AdminVanishCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "This will make you invisible. Staffs can still see you.";
     }
 
     @Override

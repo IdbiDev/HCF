@@ -21,7 +21,7 @@ public class AdminWithdrawCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Withdraws from the selected faction. Your own account money won't be used.";
     }
 
     @Override

@@ -5,7 +5,10 @@ import me.idbi.hcf.HCFRules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Objects.Claim;
+import me.idbi.hcf.Tools.Objects.ClaimAttributes;
 import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.Point;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,12 +42,12 @@ public class PearlFixer implements Listener {
         if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL) && !event.isCancelled() && Timers.COMBAT_TAG.has(event.getPlayer())) {
             Location location = event.getTo();
             for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-                for (Claiming.Faction_Claim claim : thisFaction.getValue().getClaims()) {
+                for (Claim claim : thisFaction.getValue().getClaims()) {
                     if(location.getWorld().equals(claim.getWorld())) continue;
-                    if (claim.getAttribute().equals(Claiming.ClaimAttributes.PROTECTED)) {
-                        Claiming.Point claimStart = new Claiming.Point(claim.getStartX(), claim.getStartZ());
-                        Claiming.Point claimEnd = new Claiming.Point(claim.getEndX(), claim.getEndZ());
-                        Claiming.Point getTo = new Claiming.Point(location.getBlockX(), location.getBlockZ());
+                    if (claim.getAttribute().equals(ClaimAttributes.PROTECTED)) {
+                        Point claimStart = new Point(claim.getStartX(), claim.getStartZ());
+                        Point claimEnd = new Point(claim.getEndX(), claim.getEndZ());
+                        Point getTo = new Point(location.getBlockX(), location.getBlockZ());
                         if (Claiming.FindPoint_old(claimStart.getX(), claimStart.getZ(), claimEnd.getX(), claimEnd.getZ(), getTo.getX(), getTo.getZ())) {
                             event.setCancelled(true);
                             event.getPlayer().sendMessage(Messages.cant_teleport_to_safezone.language(event.getPlayer()).queue());

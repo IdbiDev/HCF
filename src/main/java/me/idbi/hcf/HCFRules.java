@@ -128,7 +128,7 @@ public class HCFRules {
 //        if(!this.entityLimiter.containsKey(ent.getType())) return false;
 //        return this.entityLimiter.get(ent.getType());
 //    }
-    public boolean isEntityLimited(Entity ent, World world) {
+    public boolean  isEntityLimited(Entity ent, World world) {
         if(ent instanceof Player)
             return false;
         HCFMap map = HCFServer.getServer().getMap(world);
@@ -170,11 +170,11 @@ public class HCFRules {
             " / \\  / \\  / \\  / \\  / \\  / \\  / \\   / \\  / \\  / \\   / \\  / \\  / \\  / \\   / \\  / \\  / \\   / \\  / \\  / \\  / \\ \n" +
             "( C )( r )( e )( a )( t )( e )( d ) ( b )( y )( : ) ( K )( o )( b )( a ) ( a )( n )( d ) ( I )( d )( b )( i )\n" +
             " \\_/  \\_/  \\_/  \\_/  \\_/  \\_/  \\_/   \\_/  \\_/  \\_/   \\_/  \\_/  \\_/  \\_/   \\_/  \\_/  \\_/   \\_/  \\_/  \\_/  \\_/";
-    public static final int maxInvitesPerFaction = 14; // >> GUI limit
-    public static final int maxMembersPerFaction = 14; // >> GUI limit
-    public static final int maxRanksPerFaction = 28; // >> GUI limit
-    public static final int maxAlliesPerFaction = 14; // >> GUI limit
-    public static final String version = "0.1";
+    @Getter public static final int maxInvitesPerFaction = 14; // >> GUI limit
+    @Getter public static final int maxMembersPerFaction = 14; // >> GUI limit
+    @Getter public static final int maxRanksPerFaction = 28; // >> GUI limit
+    @Getter public static final int maxAlliesPerFaction = 14; // >> GUI limit
+    @Getter public static final String version = "0.1";
     public static final String authors = "Idbi & Koba";
     public static final String discord = "https://discord.gg/aaswGgjJgU";
     public static final String website = "UwU";

@@ -21,7 +21,7 @@ public class FactionRallyCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Enables the rally-mode.";
     }
 
     @Override

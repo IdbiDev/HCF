@@ -6,12 +6,8 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.Tools.Objects.Faction;
-import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import me.idbi.hcf.Tools.Objects.*;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,8 +18,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.idbi.hcf.Tools.Playertools.CheckClaimPlusOne;
-import static me.idbi.hcf.Tools.Playertools.getDistanceBetweenPoints2D;
+import static me.idbi.hcf.Tools.Playertools.*;
 
 public class Claiming {
     private static final Connection con = Main.getConnection();
@@ -72,8 +67,8 @@ public class Claiming {
                 int endX = Math.max(faction_start.getX(), faction_end.getX());
                 int endZ = Math.max(faction_start.getZ(), faction_end.getZ());
 
-                Claiming.Point top_left = new Claiming.Point(faction_start.getX(), faction_end.getZ());
-                Claiming.Point bottom_right = new Claiming.Point(faction_end.getX(), faction_start.getZ());
+                Point top_left = new Point(faction_start.getX(), faction_end.getZ());
+                Point bottom_right = new Point(faction_end.getX(), faction_start.getZ());
                 if(getDistanceBetweenPoints2D(top_left,faction_end) < Config.MinClaimSize.asInt() || getDistanceBetweenPoints2D(faction_start,top_left) < Config.MinClaimSize.asInt() ){
                     p.sendMessage(Messages.faction_claim_too_small.language(p).setNumber(Config.MinClaimSize.asInt()).queue());
                     return false;
@@ -87,12 +82,22 @@ public class Claiming {
 
                     //if (f.claims.isEmpty()) continue;
 
-                    for (Claiming.Faction_Claim val : f.getClaims()) {
+                    for (Claim val : f.getClaims()) {
                         if(!val.getWorld().equals(p.getWorld())) continue;
-
+                        //Todo teszt:
                         Point start_this = new Point(Math.min(val.getStartX(), val.getEndX()), Math.min(val.getStartZ(), val.getEndZ()));
                         Point end_this = new Point(Math.max(val.getStartX(), val.getEndX()), Math.max(val.getStartZ(), val.getEndZ()));
-
+                        Location findig = new Location(val.getWorld(),
+                                val.getStartX() + ((double) val.getWidth() / 2),
+                                p.getLocation().getBlockY(),
+                                val.getStartZ() + ((double) val.getHeight() / 2));
+                        Claim asked = new Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
+                        Location top_faction = new Location(val.getWorld(),
+                                val.getStartX() + ((double) asked.getWidth() / 2),
+                                p.getLocation().getBlockY(),
+                                val.getStartZ() + ((double) asked.getHeight() / 2));
+                        if (top_faction.distance(findig) > (val.getSize())) continue;
+                        //Todo: Teszt
                         /*Point start_other = new Point(faction_start.getX(), faction_start.getZ());
                         Point end_other = new Point(faction_end.getX(), faction_end.getZ());*/
 
@@ -113,9 +118,9 @@ public class Claiming {
                 boolean validClaim = false;
 
                 if(!f.getClaims().isEmpty() && Config.MustBeConnected.asBoolean()) {
-                    for(Faction_Claim claim : f.getClaims()) {
+                    for(Claim claim : f.getClaims()) {
                         if(!claim.getWorld().equals(p.getWorld())) continue;
-                        if (isClaimConnected(new Faction_Claim(startX,endX,startZ,endZ,1,ClaimAttributes.NORMAL,"UwU"),claim)) {
+                        if (isClaimConnected(new Claim(startX,endX,startZ,endZ,1,ClaimAttributes.NORMAL,"UwU"),claim)) {
                             validClaim = true;
                         }
                     }
@@ -145,8 +150,8 @@ public class Claiming {
                         attribute.name().toLowerCase(),
                         p.getWorld().getName()
                 );
-                Claiming.Faction_Claim claim;
-                claim = new Claiming.Faction_Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
+                Claim claim;
+                claim = new Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
                 f.addClaim(claim);
                 Scoreboards.refreshAll();
                 return true;
@@ -179,7 +184,7 @@ public class Claiming {
                         p.getWorld().getName()
                 );
                 Faction f = Main.factionCache.get(faction);
-                Claiming.Faction_Claim claim = new Claiming.Faction_Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
+                Claim claim = new Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
                 f.addClaim(claim);
                 Scoreboards.refreshAll();
 
@@ -322,7 +327,7 @@ public class Claiming {
 //        return false;
 //    }
 
-    public static boolean isClaimConnected(Faction_Claim a,Faction_Claim b) {
+    public static boolean isClaimConnected(Claim a, Claim b) {
         Point aStart = new Point(a.getStartX(),a.getStartZ());
         Point aEnd = new Point(a.getEndX(),a.getEndZ());
         Point bStart = new Point(b.getStartX(),b.getStartZ());
@@ -333,7 +338,7 @@ public class Claiming {
         return false;
     }
 
-    public static boolean isEnemyClaim(Player executePlayer, Faction_Claim actionClaim) {
+    public static boolean isEnemyClaim(Player executePlayer, Claim actionClaim) {
 
         Faction playerFac = Playertools.getPlayerFaction(executePlayer);
         Faction actionFaction = actionClaim.getFaction();
@@ -358,21 +363,24 @@ public class Claiming {
         return doOverlap(rc, lc, p, p);
     }
 
-    public static ArrayList<Claiming.Faction_Claim> getPlayerArea(Player p) {
-        ArrayList<Claiming.Faction_Claim> claims = new ArrayList<>();
+    public static ArrayList<Claim> getPlayerArea(Player p) {
+        ArrayList<Claim> claims = new ArrayList<>();
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-            for (Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
-                if(!val.getWorld().equals(p.getWorld())) continue;
-
-                Location l = new Location(p.getWorld(),val.getStartX() + ((double) val.getWidth() /2),p.getLocation().getBlockY(),val.getStartZ() + ((double) val.getHeight() /2));
+            for (Claim val : thisFaction.getValue().getClaims()) {
                 int x = p.getLocation().getBlockX();
                 int z = p.getLocation().getBlockZ();
-                if(p.getLocation().distanceSquared(l) > (val.getSize()^2)) continue;
+                if(!val.getWorld().equals(p.getWorld())) continue;
+                if (val.getSize() <= Config.MaxClaimSize.asInt()) {
+                    Location l = new Location(p.getWorld(), val.getStartX() + ((double) val.getWidth() / 2), p.getLocation().getBlockY(), val.getStartZ() + ((double) val.getHeight() / 2));
+                    if (p.getLocation().distance(l) > (val.getSize())) continue;
+                }
                 if (val.getStartX() <= x && val.getEndX() >= x) {
                     if (val.getStartZ() <= z && val.getEndZ() >= z) {
                         claims.add(val);
                     }
                 }
+
+
             }
         }
         claims.sort(Comparator.comparingInt(Faction_Claim::getSize));
@@ -381,17 +389,20 @@ public class Claiming {
         //claims.sort();
         return claims;
     }
-    public static ArrayList<Claiming.Faction_Claim> getClaimsInArea(Location loc) {
-        ArrayList<Claiming.Faction_Claim> claims = new ArrayList<>();
+    public static ArrayList<Claim> getClaimsInArea(Location loc) {
+        ArrayList<Claim> claims = new ArrayList<>();
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-            for (Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
-
-                Location l = new Location(loc.getWorld(),val.getStartX() + ((double) val.getWidth() /2),loc.getBlockY(),val.getStartZ() + ((double) val.getHeight() /2));
+            for (Claim val : thisFaction.getValue().getClaims()) {
+                if(!loc.getWorld().equals(val.getWorld())) continue;
                 int x = loc.getBlockX();
                 int z = loc.getBlockZ();
-
-                if(loc.distanceSquared(l) > (val.getSize()^2)) continue;
-
+                if (val.getSize() <= Config.MaxClaimSize.asInt()) {
+                    Location l = new Location(loc.getWorld(),
+                            val.getStartX() + ((double) val.getWidth() / 2),
+                            loc.getBlockY(),
+                            val.getStartZ() + ((double) val.getHeight() / 2));
+                    if (loc.distance(l) > (val.getSize())) continue;
+                }
                 if (val.getStartX() <= x && val.getEndX() >= x) {
                     if (val.getStartZ() <= z && val.getEndZ() >= z) {
                         claims.add(val);
@@ -408,7 +419,7 @@ public class Claiming {
 
     public static boolean isAreaNeutral(Location loc) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-            for (Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
+            for (Claim val : thisFaction.getValue().getClaims()) {
                 if(!loc.getWorld().equals(val.getWorld())) continue;
                 if (FindPoint_old(val.getStartX(), val.getStartZ(), val.getEndX(), val.getEndZ(), loc.getBlockX(), loc.getBlockZ())) {
                     return false;
@@ -419,19 +430,30 @@ public class Claiming {
     }
 
     public static String sendFactionTerretoryByXZ(Player p, int x, int z) {
-        for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
+        Location loc = new Location(p.getWorld(),x,p.getLocation().getBlockY(),z);
+        Claim claim = getUpperClaim(loc);
+        /*for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
                 if(!p.getWorld().equals(val.getWorld())) continue;
                 if (FindPoint_old(val.getStartX(), val.getStartZ(), val.getEndX(), val.getEndZ(), x, z)) {
                     return Config.EnemyColor.asStr() + thisFaction.getValue().getName();
                 }
             }
-        }
-        return Messages.wilderness.language(p).queue();
+        }*/
+        if(claim == null)
+            return Messages.wilderness.language(p).queue();
+
+        if(Playertools.isInWarzone(loc))
+            return Messages.warzone.language(p).queue();
+
+        return Config.EnemyColor.asStr() + claim.getFaction().getName();
+
     }
 
-    public static Faction_Claim sendClaimByXZ(World world, int x, int z) {
-        for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
+    public static Claim sendClaimByXZ(World world, int x, int y, int z) {
+        Location loc = new Location(world,x,y,z);
+        return getUpperClaim(loc);
+        /*for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
                 if(!val.getWorld().getName().equals(world.getName())) continue;
                 Point playerPoint = new Point(x, z);
@@ -447,7 +469,7 @@ public class Claiming {
 
     public static boolean isClaimBorder(int x, int z) {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
-            for (Claiming.Faction_Claim val : thisFaction.getValue().getClaims()) {
+            for (Claim val : thisFaction.getValue().getClaims()) {
                 Point playerPoint = new Point(x, z);
 
                 int maxX = Math.max(val.getStartX(), val.getEndX());
@@ -502,7 +524,7 @@ public class Claiming {
     }
     public static double calculateMoneyFromClaim(Faction faction) {
         double money = 0;
-        for(Faction_Claim claim : faction.getClaims()) {
+        for(Claim claim : faction.getClaims()) {
             int size = Math.round((Math.abs(claim.getEndX() - claim.getStartX()) * Math.abs(claim.getEndZ () - claim.getStartZ())));
             money += (size*Config.ClaimPriceMultiplier.asDouble());
         }
@@ -543,85 +565,4 @@ public class Claiming {
         }
         return loc;
     }
-
-    public enum ClaimAttributes {
-        PROTECTED,
-        NORMAL,
-        KOTH,
-        SPECIAL;
-    }
-
-    public enum ClaimTypes {
-        NORMAL,
-        PROTECTED,
-        KOTH,
-        SPECIAL,
-        NONE;
-
-        public static ClaimTypes getByName(String name) {
-            for (ClaimTypes value : values()) {
-                if(value.name().equalsIgnoreCase(name))
-                    return value;
-            }
-            return null;
-        }
-    }
-
-    public static class Point {
-        @Getter @Setter private int x, z;
-
-        public Point(int x, int z) {
-            this.x = x;
-            this.z = z;
-        }
-    }
-
-    public static class Faction_Claim {
-        @Getter @Setter private World world;
-        @Getter @Setter private int startX;
-        @Getter @Setter private int endX;
-        @Getter @Setter private int startZ;
-        @Getter @Setter private int endZ;
-        @Getter @Setter private Faction faction;
-        //Attributes: Protected, KOTH, normal,Special
-        @Getter @Setter private ClaimAttributes attribute;
-        @Getter private int size;
-        @Getter private Point start;
-        @Getter private Point end;
-        @Getter private int height;
-        @Getter private int width;
-
-        public Faction_Claim(int startX, int endX, int startZ, int endZ, int faction, ClaimAttributes attribute, String world) {
-            this.startX = startX;
-            this.endX = endX;
-            this.startZ = startZ;
-            this.endZ = endZ;
-            this.start = new Point(startX,startZ);
-            this.end = new Point(endX,endZ);
-            this.faction = Main.factionCache.get(faction);
-            this.attribute = attribute;
-            this.world = Bukkit.getWorld(world);
-            if (this.world == null) {
-                this.world = Bukkit.getWorld(Config.WorldName.asStr());
-            }
-            this.size = getDistanceBetweenPoints2D(start,end);
-            this.height = getDistanceBetweenPoints2D(start,new Point(startX,endZ));
-            this.width = getDistanceBetweenPoints2D(start,new Point(endX,startZ));
-        }
-    }
-
-    public static class Wands {
-        public static ItemStack claimWand() {
-            ItemStack wand = new ItemStack(Material.DIAMOND_HOE);
-            ItemMeta meta = wand.getItemMeta();
-
-            meta.setDisplayName(Config.ClaimingWandTitle.asStr());
-            meta.setLore(Config.ClaimingWandLore.asChatColorList());
-
-            wand.setItemMeta(meta);
-            wand.setItemMeta(meta);
-            return wand;
-        }
-    }
-
 }

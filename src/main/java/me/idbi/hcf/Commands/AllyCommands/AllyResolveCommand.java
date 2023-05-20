@@ -23,7 +23,7 @@ public class AllyResolveCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Resolves the current alliance.";
     }
 
     @Override

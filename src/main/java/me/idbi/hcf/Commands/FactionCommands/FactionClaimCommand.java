@@ -5,7 +5,9 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.FactionRankManager;
+import me.idbi.hcf.Tools.Objects.ClaimTypes;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Objects.Wand;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -25,12 +27,12 @@ public class FactionClaimCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Gives a claiming wand, and enables the claiming pillars.";
     }
 
     @Override
     public String getSyntax() {
-        return "/f claim";
+        return "/faction claim";
     }
 
     @Override
@@ -74,11 +76,11 @@ public class FactionClaimCommand extends SubCommand {
                 return;
             }
             if (p.getInventory().firstEmpty() != -1) {
-                p.getInventory().setItem(p.getInventory().firstEmpty(), Claiming.Wands.claimWand());
+                p.getInventory().setItem(p.getInventory().firstEmpty(), Wand.claimWand());
                 for(String l : Messages.claim_info.queueList())
                     p.sendMessage(ChatColor.translateAlternateColorCodes('&', l));
                 //ListMessages.CLAIM_INFO.queue().forEach(p::sendMessage);
-                hcfPlayer.setClaimType(Claiming.ClaimTypes.NORMAL);
+                hcfPlayer.setClaimType(ClaimTypes.NORMAL);
                 addCooldown(p);
             } else {
                 p.sendMessage(Messages.not_enough_slot.language(p).queue());

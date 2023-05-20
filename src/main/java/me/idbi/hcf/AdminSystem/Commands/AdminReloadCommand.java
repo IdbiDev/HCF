@@ -31,7 +31,7 @@ public class AdminReloadCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Reloads the config files";
     }
 
     @Override

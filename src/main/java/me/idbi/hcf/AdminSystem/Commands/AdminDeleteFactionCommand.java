@@ -29,7 +29,7 @@ public class AdminDeleteFactionCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Deletes the selected faction.";
     }
 
     @Override

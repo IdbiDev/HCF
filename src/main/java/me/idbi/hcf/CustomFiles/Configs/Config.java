@@ -7,6 +7,7 @@ import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public enum Config {
@@ -32,7 +33,6 @@ public enum Config {
     HomeTimer("Cooldowns", 15, createComment("This will be set if you use the command", "Must be in seconds")),
     StuckTimer("Cooldowns", 30, createComment("This will be set if you use the command", "Must be in seconds")),
     Logout("Cooldowns", 30, createComment("This will be set if you use the command", "Must be in seconds")),
-    KOTHDuration("Cooldowns", 300, createComment("Set the KoTH event length", "Must be in seconds")),
     SOTWDuration("Cooldowns", 600, createComment("Set the SOTW event length", "Must be in seconds")),
     EOTWDuration("Cooldowns", 600, createComment("Set the EOTW event length", "Must be in seconds")),
 
@@ -57,6 +57,14 @@ public enum Config {
     CookingSpeedMultiplier("Default values", 1, createComment("")),
     PlayerLoseMoney("Kills", true, createComment("If the player dies, the current balance of the player will be transfered to the killer, or deleted.")),
     AddMoneyOnKill("Kills", 1000, createComment("If the player kills, then this value will deposited into the killer account.")),
+    DeathSignTitle("Kills", "&cDeath Sign"),
+    DeathSign("Kills", Arrays.asList(
+            "&5",
+            "&c%victim%",
+            "&fslain by",
+            "&a%killer%",
+            "&f%date%"
+    )),
     ClaimingWandTitle("Claim", "&6Claiming Wand"),
     ClaimingWandLore("Claim", Arrays.asList(
             "&eLeft and right click on the ground",
@@ -96,8 +104,7 @@ public enum Config {
     EndDeathDTR("Faction DTR", 1,createComment("The DTR will be decreased by this number, when a member die.")),
 
 
-    MaxMember("Faction Settings",5),
-    EnableLeaveFriendly("Faction Settings",false),
+    EnableLeaveFriendly("Faction Settings",false,createComment("This will let the player leave the faction, while the player is inside the faction claim")),
     MaxMembers("Faction Settings", 7, createComment("Maximum member per faction.")),
     MaxAllies("Faction Settings", 2, createComment("Maximum allies per faction.")),
     MinNameLength("Faction Settings",3),
@@ -111,7 +118,7 @@ public enum Config {
     MustBeConnected("Faction Claim",true),
     MaxClaims("Faction Claim",5),
     MinClaimSize("Faction Claim",4),
-    MaxClaimSize("Faction Claim",100),
+    MaxClaimSize("Faction Claim",50),
     EnableFlowingToClaim("Faction Claim",false,createComment("This value will let water flow in a claim. (But, it can still flow inside the claim, outside it will stop when it reaches the claim border)")),
     ClaimPriceMultiplier("Faction Claim", 1.5, createComment("(1$/Block) * Multiplier")),
     UnClaimPriceMultiplier("Faction Claim", 0.5, createComment("(1$/Block) * Multiplier")),
@@ -170,7 +177,21 @@ public enum Config {
     ElevatorTitle("Elevator", "&9[Elevator]"),
 
     SubClaimTitle("SubClaim", "&b[Subclaim]"),
-    SubClaimAllowLowerRank("SubClaim", true, createComment("Allows player which have lower ranks to open chests"));
+    SubClaimAllowLowerRank("SubClaim", true, createComment("Allows player which have lower ranks to open chests")),
+
+    KoTHDuration("KoTH", 300, createComment("Set the KoTH event length", "Must be in seconds")),
+    AutoKoTHEnabled("KoTH", true, createComment("Starts daily automatically a KoTH","See 'Auto-KoTH' section for more settings")),
+    KoTHMinOnline("Auto-KoTH", 10, createComment("Minimum online members to start a KoTH.")),
+    KoTHStartDate("Auto-KoTH", Arrays.asList("8:00", "15:00"), createComment("Daily KoTH start date.","When the auto KoTH starts, it will not overwrite the currently going KoTH","The given time is converted to the set timezone!","Make sure,you are using the right Timezone!")),
+    KoTHSignTitle("KoTH","&6&nKoTH &r&6Sign"),
+    KoTHSign("KoTH",Arrays.asList(
+            "&5",
+            "&9%koth%",
+            "&0capped by",
+            "&9%capturer%",
+            "%date%"
+    ));
+
 
     public String section;
     public Object value;

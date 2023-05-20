@@ -5,6 +5,7 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class AdminSetFactionNameCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Changes the selected faction's name.";
     }
 
     @Override
@@ -60,7 +61,8 @@ public class AdminSetFactionNameCommand extends SubCommand {
 
     @Override
     public void perform(Player p, String[] args) {
-        if (!Main.nameToFaction.containsKey(args[1])) {
+        Faction selectedFaction = Playertools.getFactionByName(args[1]);
+        if (selectedFaction == null) {
             p.sendMessage(Messages.not_found_faction.language(p).queue());
             return;
         }
@@ -68,7 +70,6 @@ public class AdminSetFactionNameCommand extends SubCommand {
 //            p.sendMessage(Messages.not_a_number.language(p).queue());
 //            return;
 //        }
-        Faction selectedFaction = Main.nameToFaction.get(args[1]);
         selectedFaction.setName(args[2]);
         selectedFaction.saveFactionData();
 

@@ -21,7 +21,7 @@ public class AdminFreezeCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Freeze the selected player";
     }
 
     @Override

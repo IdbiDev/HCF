@@ -1,19 +1,19 @@
-name: HCFPlugin
+name: HCFPlus
 version: '${project.version}'
 main: me.idbi.hcf.Main
 #api-version: 1.8
 prefix: 'HCF+'
 authors: [ "Idbi", "kbalu" ]
-description: FÜR PLAYERS WO WANNA PLAY some HCF
+description: Basic HCF, just better
 softdepend:
   - Multiverse-Core
-  - HCF-
+  - HCFAbilities
 depend:
   - Vault
   - ProtocolLib
   - TabAPI
 loadbefore:
-  - HCF-
+  - HCFAbilities
   - ProtocolLib
 
 commands:
@@ -29,7 +29,7 @@ commands:
     aliases: [ fcall, factioncall, factionc ]
     description: Gives your position to your faction!
   koth:
-    aliases: [ k, kh, pornhub ]
+    aliases: [ k, kh ]
     description: HCF+ Koth commands
     #usage: /<command> help
   setuplogs:

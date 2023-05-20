@@ -53,7 +53,8 @@ public class PlayerDeath implements Listener {
                 }else {
                     faction.removeDTR(Config.EndDeathDTR.asDouble());
                 }
-                faction.removePoints(Config.PointDecreaseOnDeath.asInt());
+                if(Config.EnablePointDecreaseOnDeath.asBoolean())
+                    faction.removePoints(Config.PointDecreaseOnDeath.asInt());
         }
         if (damager != null) {
             HCFPlayer hcfDamager = HCFPlayer.getPlayer(damager);

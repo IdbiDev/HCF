@@ -6,7 +6,7 @@ import me.idbi.hcf.Commands.CustomTimer.CT_EditTime;
 import me.idbi.hcf.Commands.CustomTimer.CT_Remove;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Scoreboard.CustomTimers;
+import me.idbi.hcf.Tools.Objects.CustomTimers;
 import me.idbi.hcf.Tools.Formatter;
 import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import org.bukkit.command.Command;

@@ -151,6 +151,7 @@ public enum Messages {
     executor_invite_message("&eYou invited &6&o%player% &eto your faction!"),
     invited_invite_message("&eYou invited to &6&o%faction_name% &efaction by &6&o%executor%&e!"),*/
     leader_leaving_faction("Factions","%prefix% &cYou can't leave this faction, because you are the leader! Use &e&l/f disband %faction% &r&cinstead!"),
+    cant_leave_while_on_claim("Factions","%prefix% &cYou can't leave this faction, while you are inside the faction's claim!"),
     not_leader("Factions","%prefix% &cYou are not the faction's leader!"),
     cant_kick_yourself("Factions","%prefix% &cYou can't kick yourself!"),
     cant_kick_leader("Factions","%prefix% &cYou can't the faction leader!"),
@@ -220,6 +221,8 @@ public enum Messages {
 
     faction_list_title("Design","&7&m--- &6Faction List by %type% &7&m---"),
     faction_list("Design","&7%number%. &e%faction_name% &6-- &7[&a%online%&7] [%dtr%&7]"),
+    faction_custom_list_title("Design","&7&m---&r &6Custom Faction List &7&m---"),
+    faction_custom_list("Design","&7%number%. &e%faction_name% &6 - &7[&a%type%&7]"),
 
     faction_top_title("Design","&7&m--- &6Faction Top by %type% &7&m---"),
     faction_top("Design","&7%number%. &e%faction_name% &6-- &e%value%"),
@@ -377,18 +380,23 @@ public enum Messages {
     mountain_remaining("Mountain","%prefix% &cMountain&e respawn in %time%!"),
 
     // Custom timers
-    customt_created("CustomTimers","%prefix% §aCustom timer successfully created!"),
-    customt_deleted("CustomTimers","%prefix% §aCustom timer successfully deleted!"),
-    customt_edited("CustomTimers","%prefix% §aCustom timer successfully edited!"),
-    customt_no_active_timer("CustomTimers","%prefix% §cNo available active timers!"),
-    customt_not_found("CustomTimers","%prefix% §cThis timer not found!"),
-    already_created("CustomTimers","%prefix% §aThis name already in use!"),
+    customt_created("CustomTimers","%prefix% &aCustom timer successfully created!"),
+    customt_deleted("CustomTimers","%prefix% &aCustom timer successfully deleted!"),
+    customt_edited("CustomTimers","%prefix% &aCustom timer successfully edited!"),
+    customt_no_active_timer("CustomTimers","%prefix% &cNo available active timers!"),
+    customt_not_found("CustomTimers","%prefix% &cThis timer not found!"),
+    already_created("CustomTimers","%prefix% &aThis name already in use!"),
+    language_not_found("Language","%prefix% &cThis language does not exists on this server!"),
+    language_current("Language","%prefix% &aYour language is &2&o%language%&a."),
+    language_set("Language","%prefix% &aYou have successfully set your language to: &2&o%language%&a."),
 
 
-    sotw_start_title("Sotw","SOTW STARTED"),
-    sotw_start_subtitle("Sotw","Kawaii"),
-    eotw_start_title("Eotw","EOTW STARTED"),
-    eotw_start_subtitle("Eotw","UwU"),
+    sotw_start_title("Sotw","&6&nSOTW&r &eStarted!"),
+    sotw_start_subtitle("Sotw","&a&oPreparation has begun!"), // Get ready to start the map
+    eotw_start_title("Eotw","&4&nEOTW&r &cStarted!"),
+    eotw_start_subtitle("Eotw","&c&oWatch out! Border is shrinking!"),
+    sotw_end_title("Sotw","&4&nSOTW&r &cEnded!"),
+    sotw_end_subtitle("Sotw","&c&oGood Luck!"),
     cant_teleport_to_safezone("PvP","%prefix% &cYou can't teleport to a protected zone while you are in PvP tag"),
     missing_argument("Server","%prefix% &cThis command requires &none or more&f&c argument!"),
 

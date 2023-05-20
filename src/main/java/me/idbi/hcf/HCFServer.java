@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class HCFServer {
 
-    private HashMap<World.Environment, HCFMap> maps;
+    @Getter private HashMap<World.Environment, HCFMap> maps;
 
     @Getter private static HCFServer server;
 

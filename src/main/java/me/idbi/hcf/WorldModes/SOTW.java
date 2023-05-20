@@ -27,7 +27,8 @@ public class SOTW implements Gamemode {
         //border.setCenter(new Location(world, coords[0], coords[1], coords[2]));
         border.setCenter(Main.getSpawnLocation());
         Main.sendCmdMessage("&1&bSOTW STARTED Successfully!");
-        Main.SOTWStarted = System.currentTimeMillis() + SOTWTime;
+        Main.SOTWStarted = System.currentTimeMillis();
+        // 1500 + 3000
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.sendTitle(
                     Messages.sotw_start_title.language(p).queue(),

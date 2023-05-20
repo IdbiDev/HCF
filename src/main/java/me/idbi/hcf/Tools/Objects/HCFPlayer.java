@@ -39,11 +39,11 @@ public class HCFPlayer {
     @Getter private PlayerStatistic playerStatistic;
     @Getter private TreeMap<Integer, Rollback> rollbacks;
     @Getter private TableTabList tabList;
-    @Getter @Setter private Claiming.ClaimTypes claimType;
+    @Getter @Setter private ClaimTypes claimType;
     @Getter @Setter private Classes playerClass;
     @Getter @Setter private boolean freezed;
     @Getter @Setter private double bardEnergy;
-    @Getter @Setter private Claiming.Faction_Claim currentArea;
+    @Getter @Setter private Claim currentArea;
     @Getter @Setter private int assassinState;
     @Setter private boolean inDuty;
     @Getter @Setter private Location stuckLocation;
@@ -58,7 +58,7 @@ public class HCFPlayer {
     @Getter private Board scoreboard;
     @Getter @Setter private boolean isClassWarmup;
     @Getter @Setter private boolean viewMap;
-    @Getter private List<Claiming.Point> factionViewMapLocations;
+    @Getter private List<Point> factionViewMapLocations;
     @Getter private WaypointPlayer waypointPlayer;
 
     public HCFPlayer(UUID uuid,
@@ -74,7 +74,7 @@ public class HCFPlayer {
     ) {
         try {
             this.uuid = uuid;
-            this.name = Bukkit.getOfflinePlayer(this.uuid).getName();
+            this.name = Bukkit.getOfflinePlayer(uuid).isOnline() ? Bukkit.getPlayer(uuid).getName() : Bukkit.getOfflinePlayer(uuid).getName();
             this.money = money;
             Main.getInstance().playerBank.put(uuid, (double) money);
             this.faction = faction;
@@ -86,7 +86,7 @@ public class HCFPlayer {
             this.inDuty = false;
             this.currentArea = null;
             this.stuckLocation = null;
-            this.claimType = Claiming.ClaimTypes.NONE;
+            this.claimType = ClaimTypes.NONE;
             this.freezed = false;
             this.claimID = 0;
             this.toggledChatTypes = new ArrayList<>();
@@ -121,18 +121,7 @@ public class HCFPlayer {
         if (Main.playerCache.containsKey(p.getUniqueId())) {
             return Main.playerCache.get(p.getUniqueId());
         } else {
-            //todo: SQL?
             Playertools.loadOnlinePlayer(p);
-            /*return new HCFPlayer(
-                    p.getUniqueId(),c
-                    0,
-                    0,
-                    null,
-                    Config.default_balance.asInt(),
-                    new PlayerStatistic(new JSONObject(PlayerStatistic.defaultStats)),
-                    null,
-                    Config.default_language.asStr()
-            );*/
         }
 
         return getPlayer(p);
@@ -158,6 +147,7 @@ public class HCFPlayer {
         if (Main.playerCache.containsKey(uuid)) {
             return Main.playerCache.get(uuid);
         } else {
+
             return new HCFPlayer(
                     uuid,
                     0,
@@ -213,7 +203,7 @@ public class HCFPlayer {
         this.waypointPlayer = new WaypointPlayer(this);
         this.playerClass = Classes.NONE;
         this.isClassWarmup = false;
-        this.claimType = Claiming.ClaimTypes.NONE;
+        this.claimType = ClaimTypes.NONE;
         this.toggledChatTypes = new ArrayList<>();
         this.factionViewMapLocations = new ArrayList<>();
         this.viewMap = false;
@@ -268,12 +258,12 @@ public class HCFPlayer {
         this.money =  Math.toIntExact(Math.round(r.balance));
     }
 
-    public void addFactionViewMapLocation(Claiming.Point loc) {
+    public void addFactionViewMapLocation(Point loc) {
         if(!this.factionViewMapLocations.contains(loc))
             this.factionViewMapLocations.add(loc);
     }
 
-    public void removeFactionViewMapLocation(Claiming.Point loc) {
+    public void removeFactionViewMapLocation(Point loc) {
         this.factionViewMapLocations.remove(loc);
     }
 
@@ -365,7 +355,7 @@ public class HCFPlayer {
 
     public boolean giveWand(Player p) {
         if (p.getInventory().firstEmpty() != -1) {
-            p.getInventory().setItem(p.getInventory().firstEmpty(), Claiming.Wands.claimWand());
+            p.getInventory().setItem(p.getInventory().firstEmpty(), Wand.claimWand());
             return true;
         }
         return false;

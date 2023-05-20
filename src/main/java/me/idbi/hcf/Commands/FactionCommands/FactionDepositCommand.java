@@ -28,7 +28,7 @@ public class FactionDepositCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Deposits to the faction bank.";
     }
 
     @Override

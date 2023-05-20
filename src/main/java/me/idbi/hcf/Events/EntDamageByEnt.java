@@ -2,7 +2,10 @@ package me.idbi.hcf.Events;
 
 import me.idbi.hcf.Classes.SubClasses.Archer;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Objects.Claim;
+import me.idbi.hcf.Tools.Objects.ClaimAttributes;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.entity.Player;
@@ -17,7 +20,11 @@ public class EntDamageByEnt implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent e) {
-
+        if(e.getEntity() instanceof Player)
+            if (Main.SOTWEnabled) {
+                e.setCancelled(true);
+                return;
+            }
         if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
             Player damager = (Player) e.getDamager();
             Player victim = (Player) e.getEntity();
@@ -31,22 +38,22 @@ public class EntDamageByEnt implements Listener {
             }
             //String c = ChatColor.stripColor(HCF_Claiming.sendFactionTerritory(victim));
             try {
-                Claiming.Faction_Claim claim = victimplayer.getCurrentArea();
-                Claiming.Faction_Claim damagerClaim = damagerplayer.getCurrentArea();
+                Claim claim = victimplayer.getCurrentArea();
+                Claim damagerClaim = damagerplayer.getCurrentArea();
                 if (claim != null && damagerClaim != null) {
-                    if (claim.getAttribute() == Claiming.ClaimAttributes.PROTECTED || damagerClaim.getAttribute() == Claiming.ClaimAttributes.PROTECTED) {
+                    if (claim.getAttribute() == ClaimAttributes.PROTECTED || damagerClaim.getAttribute() == ClaimAttributes.PROTECTED) {
                         e.setCancelled(true);
                         damager.sendMessage(Messages.cant_damage_protected_area.language(damager).queue());
                         return;
                     }
                 } else if (claim == null && damagerClaim != null) {
-                    if (damagerClaim.getAttribute() == Claiming.ClaimAttributes.PROTECTED) {
+                    if (damagerClaim.getAttribute() == ClaimAttributes.PROTECTED) {
                         e.setCancelled(true);
                         damager.sendMessage(Messages.cant_damage_protected_area.language(damager).queue());
                         return;
                     }
                 } else if (claim != null) {
-                    if (claim.getAttribute() == Claiming.ClaimAttributes.PROTECTED) {
+                    if (claim.getAttribute() == ClaimAttributes.PROTECTED) {
                         e.setCancelled(true);
                         damager.sendMessage(Messages.cant_damage_protected_area.language(damager).queue());
                         return;

@@ -23,12 +23,12 @@ public class FactionDemoteCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Demotes the selected to the next lower rank. Use the manage GUI if you want to manually select the rank.";
     }
 
     @Override
     public String getSyntax() {
-        return "/f " + getName() + " <Player>";
+        return "/faction " + getName() + " <Player>";
     }
 
     @Override

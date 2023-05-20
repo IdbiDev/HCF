@@ -16,7 +16,7 @@ public class LivesSetCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Sets the selected player's lives";
     }
 
     @Override

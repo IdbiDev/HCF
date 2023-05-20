@@ -15,7 +15,7 @@ public class CustomClaimCreateCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Creates a new Faction, with no leader. You can give color code to the faction name, or '_' to use space";
     }
 
     @Override

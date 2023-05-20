@@ -28,7 +28,7 @@ public class AdminChatCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Uses the admin chat";
     }
 
     @Override

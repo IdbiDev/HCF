@@ -29,7 +29,7 @@ public class Faction {
     @Getter @Setter private String name;
     @Getter @Setter private String leader;
     @Setter private int balance;
-    @Getter private ArrayList<Claiming.Faction_Claim> claims = new ArrayList<>();
+    @Getter private ArrayList<Claim> claims = new ArrayList<>();
     @Getter @Setter private double DTR = 0;
     @Getter @Setter private double DTR_MAX = 0;
     @Getter @Setter private long DTR_TIMEOUT = 0L;
@@ -64,7 +64,7 @@ public class Faction {
         this.allyInvites = new AllyManager();
         this.balance = balance;
         this.ranks = new ArrayList<FactionRankManager.Rank>();
-        this.claims = new ArrayList<Claiming.Faction_Claim>();
+        this.claims = new ArrayList<Claim>();
         this.members = new ArrayList<HCFPlayer>();
         this.DTR_MAX = Config.MaxDTR.asDouble();
         this.DTR = this.getDTR_MAX();
@@ -95,7 +95,7 @@ public class Faction {
         this.DTR -= dtr;
     }
 
-    public void removeClaim(Claiming.Faction_Claim claim) {
+    public void removeClaim(Claim claim) {
         this.claims.remove(claim);
     }
 
@@ -276,7 +276,7 @@ public class Faction {
         // Allies.removeIf(allyFaction -> allyFaction.getAllyFaction().id == ally.id);
     }
 
-    public void addClaim(Claiming.Faction_Claim claimid) {
+    public void addClaim(Claim claimid) {
         try {
             claims.add(claimid);
         } catch (NullPointerException ex) {
@@ -286,7 +286,7 @@ public class Faction {
         }
     }
 
-    public Claiming.Faction_Claim getFactionClaim(Integer id) {
+    public Claim getFactionClaim(Integer id) {
         return claims.get(id);
     }
 
@@ -627,5 +627,18 @@ public class Faction {
     }
     public void sortRanks() {
         this.ranks.sort(Comparator.comparingInt(FactionRankManager.Rank::getPriority));
+    }
+
+    public void updateLeader(HCFPlayer newLeader) {
+        if(this.leader == null){
+            setLeader(newLeader.getUUID().toString());
+            return;
+        }
+        UUID before_leader = UUID.fromString(this.leader);
+        HCFPlayer before_leader_hcf = HCFPlayer.getPlayer(before_leader);
+        newLeader.setRank(this.getLeaderRank());
+        before_leader_hcf.setRank(this.getDefaultRank());
+        setLeader(newLeader.getUUID().toString());
+
     }
 }

@@ -1,36 +1,32 @@
 package me.idbi.hcf.Koth;
 
+import lombok.Getter;
+import lombok.Setter;
+import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 
 public class AutoKoth {
-    public static boolean isAutoKothEnabled = true;
-    private static BukkitTask task;
+    @Getter private static BukkitTask task;
 
     public void startAutoKoth() {
-        if (isAutoKothEnabled && Koth.GLOBAL_AREA == null) {
-            task = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Koth.StartRandomKoth();
+        task = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (Config.AutoKoTHEnabled.asBoolean()) {
+                    if (isStartKoth() && Koth.GLOBAL_AREA == null && (Bukkit.getOnlinePlayers().size() > Config.KoTHMinOnline.asInt())) {
+                        Koth.StartRandomKoth();
+                    }
                 }
-            }.runTaskTimer(Main.getPlugin(Main.class), 20L, getRandomHour(1));
-        }
-    }
-
-    public void StopAutoKoth() {
-        isAutoKothEnabled = false;
-        task.cancel();
-    }
-
-    private long getRandomHour(int interrvall) {
-        return interrvall * 3600000L;
-    }
-
-    private long getRandomSec(int interrvall) {
-        return interrvall * 60000L;
+            }
+        }.runTaskTimer(Main.getPlugin(Main.class), 20L, 20 * 60);
     }
 
 

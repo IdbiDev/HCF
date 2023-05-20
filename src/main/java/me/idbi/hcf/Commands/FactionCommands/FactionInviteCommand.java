@@ -26,7 +26,7 @@ public class FactionInviteCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Invites a player to the faction.";
     }
 
     @Override

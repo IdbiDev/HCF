@@ -23,12 +23,12 @@ public class FactionPromoteCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Promote the selected player to the next rank. Use the manager GUI to manually select the new rank.";
     }
 
     @Override
     public String getSyntax() {
-        return "/f " + getName() + " <Player>";
+        return "/faction " + getName() + " <Player>";
     }
 
     @Override

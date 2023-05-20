@@ -22,7 +22,7 @@ public class AllyDeclineCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Declines an ally request.";
     }
 
     @Override

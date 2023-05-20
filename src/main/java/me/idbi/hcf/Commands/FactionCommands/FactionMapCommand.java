@@ -3,8 +3,10 @@ package me.idbi.hcf.Commands.FactionCommands;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Objects.Claim;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Tools.Objects.Point;
 import me.idbi.hcf.Tools.Tasks;
 import me.idbi.hcf.Tools.TowerTools;
 import org.bukkit.Bukkit;
@@ -23,7 +25,7 @@ public class FactionMapCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Places columns on the corners of each surrounding claim";
     }
 
     @Override
@@ -44,7 +46,7 @@ public class FactionMapCommand extends SubCommand {
     @Override
     public void perform(Player p, String[] args) {
 
-        List<Claiming.Point> points = getMap(p);
+        List<Point> points = getMap(p);
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         if (!hcfPlayer.isViewMap()) {
             Tasks.executeAsync(() -> {
@@ -59,20 +61,20 @@ public class FactionMapCommand extends SubCommand {
         addCooldown(p);
     }
 
-    public List<Claiming.Point> getMap(Player p) {
+    public List<Point> getMap(Player p) {
         Location pLoc = p.getLocation();
-        List<Claiming.Point> locs = new ArrayList<>();
+        List<Point> locs = new ArrayList<>();
         for (Faction f : Main.factionCache.values()) {
             if (f.getClaims().isEmpty()) continue;
-            for (Claiming.Faction_Claim claim : f.getClaims()) {
+            for (Claim claim : f.getClaims()) {
                 if(!pLoc.getWorld().equals(claim.getWorld())) continue;
                 if (pLoc.distance(new Location(claim.getWorld(), claim.getStartX(), pLoc.getBlockY(), claim.getStartZ())) > (16 * Bukkit.getServer().getViewDistance())) continue;
 
-                Claiming.Point bottom_left = new Claiming.Point(claim.getStartX(), claim.getStartZ());
-                Claiming.Point top_right = new Claiming.Point(claim.getEndX(), claim.getEndZ());
+                Point bottom_left = new Point(claim.getStartX(), claim.getStartZ());
+                Point top_right = new Point(claim.getEndX(), claim.getEndZ());
 
-                Claiming.Point top_left = new Claiming.Point(top_right.getX(), bottom_left.getZ());
-                Claiming.Point bottom_right = new Claiming.Point(bottom_left.getX(), top_right.getZ());
+                Point top_left = new Point(top_right.getX(), bottom_left.getZ());
+                Point bottom_right = new Point(bottom_left.getX(), top_right.getZ());
 
                 locs.add(bottom_left);
                 locs.add(top_right);

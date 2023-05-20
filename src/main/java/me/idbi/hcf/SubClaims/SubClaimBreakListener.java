@@ -2,6 +2,7 @@ package me.idbi.hcf.SubClaims;
 
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Objects.Claim;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
@@ -21,7 +22,7 @@ public class SubClaimBreakListener implements Listener {
                 Sign sign = SubClaimTool.getSign(e.getBlock());
                 if(sign == null) return;
                 String signRankName = sign.getLine(1);
-                Claiming.Faction_Claim c = Claiming.sendClaimByXZ(e.getPlayer().getWorld(),e.getBlock().getX(),e.getBlock().getZ());
+                Claim c = Claiming.sendClaimByXZ(e.getPlayer().getWorld(),e.getBlock().getX(), e.getBlock().getY(), e.getBlock().getZ());
                 if(c != null) {
                     if (!SubClaimTool.hasAccess(e.getPlayer(), signRankName,c.getFaction())) {
                         e.setCancelled(true);
@@ -34,7 +35,7 @@ public class SubClaimBreakListener implements Listener {
             if(SubClaimTool.isSubClaim(sign)) {
                 if(Objects.equals(sign.getLine(0), "")) return;
                 if(Objects.equals(sign.getLine(1), "")) return;
-                Claiming.Faction_Claim c = Claiming.sendClaimByXZ(e.getPlayer().getWorld(),e.getBlock().getX(),e.getBlock().getZ());
+                Claim c = Claiming.sendClaimByXZ(e.getPlayer().getWorld(),e.getBlock().getX(), e.getBlock().getY(), e.getBlock().getZ());
                 if(!SubClaimTool.hasAccess(e.getPlayer(), sign.getLine(1),c.getFaction())) {
                     e.setCancelled(true);
                     e.getPlayer().sendMessage(Messages.subclaim_no_access.language(e.getPlayer()).queue());

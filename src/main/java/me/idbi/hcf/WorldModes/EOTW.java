@@ -2,11 +2,11 @@ package me.idbi.hcf.WorldModes;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.HCFMap;
-import me.idbi.hcf.HCFServer;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Objects.Claim;
+import me.idbi.hcf.Tools.Objects.ClaimAttributes;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Timers;
 import org.bukkit.Bukkit;
@@ -46,8 +46,8 @@ public class EOTW implements Gamemode {
         }
 
         for(Faction f : Main.factionCache.values()) {
-            for(Claiming.Faction_Claim c : f.getClaims()) {
-                if(c.getAttribute().equals(Claiming.ClaimAttributes.NORMAL)) {
+            for(Claim c : f.getClaims()) {
+                if(c.getAttribute().equals(ClaimAttributes.NORMAL)) {
                     f.setDTR(-9.9D);
                 }
             }

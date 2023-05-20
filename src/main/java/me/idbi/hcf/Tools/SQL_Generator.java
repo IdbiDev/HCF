@@ -30,7 +30,7 @@ public class SQL_Generator {
                 "CREATE TABLE IF NOT EXISTS `logs` (`ID` bigint(255) NOT NULL AUTO_INCREMENT,`player` varchar(255) NOT NULL,`action` varchar(255) NOT NULL,`type` varchar(255) NOT NULL,`time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(), PRIMARY KEY (`ID`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; ",
                 "CREATE TRIGGER faction_inserter BEFORE INSERT ON `factions` FOR EACH ROW SET NEW.`Allies` = CASE WHEN NEW.Allies IS NULL THEN '{}' END; ",
                 "CREATE TRIGGER member_inserter BEFORE INSERT ON `members` FOR EACH ROW SET NEW.`statistics` = CASE WHEN NEW.statistics IS NULL THEN '%player_statistics%' END; ".replace("%player_statistics%", PlayerStatistic.defaultStats),//                              `statistics` longtext NOT NULL DEFAULT '%player_statistics%',
-                "INSERT IGNORE INTO `factions` SET ID = 2, money = 0, name = 'Warzone', leader = '';"
+                "INSERT IGNORE INTO `factions` SET ID = 2, money = 0, name = 'Warzone', leader = 'null';"
         };
         for (String data : tables) {
             PreparedStatement st = null;

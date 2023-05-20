@@ -19,9 +19,8 @@ public class AdminDepositCommand extends SubCommand {
         return argument.equalsIgnoreCase(getName()) || argument.equalsIgnoreCase("d");
     }
 
-    @Override
-    public String getDescription() {
-        return null;
+    @Override public String getDescription() {
+        return "Deposits to the selected faction. Your own account money won't be used.";
     }
 
     @Override

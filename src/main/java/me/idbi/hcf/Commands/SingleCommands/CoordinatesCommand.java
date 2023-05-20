@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 @CommandInfo(
         name = "coordinates",
-        description = "Coordinates",
+        description = "Show default coordinates",
         permission = "factions.commands.coordinates",
         syntax = "/coordinates")
 public class CoordinatesCommand extends HCFCommand {

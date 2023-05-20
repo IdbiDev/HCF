@@ -5,6 +5,7 @@ import me.idbi.hcf.Classes.SubClasses.Miner;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.HCFRules;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Objects.Claim;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.Permissions;
@@ -26,7 +27,7 @@ public class BlockBreak implements Listener {
         Block block = e.getBlock();
         int bx = Math.round(block.getX());
         int bz = Math.round(block.getZ());
-        Claiming.Faction_Claim claim = Playertools.getUpperClaim(block.getLocation());
+        Claim claim = Playertools.getUpperClaim(block.getLocation());
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         if (claim != null) {
             if (claim.getFaction() == null)

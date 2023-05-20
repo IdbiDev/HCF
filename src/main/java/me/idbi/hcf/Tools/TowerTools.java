@@ -14,13 +14,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class TowerTools {
 
-    public static CompletableFuture<List<Claiming.Point>> getMapTowers(Player p) {
-        CompletableFuture<List<Claiming.Point>> result = new CompletableFuture<>();
+    public static CompletableFuture<List<Point>> getMapTowers(Player p) {
+        CompletableFuture<List<Point>> result = new CompletableFuture<>();
         new BukkitRunnable() {
             @Override
             public void run() {
                 Location pLoc = p.getLocation();
-                List<Claiming.Point> locs = new ArrayList<>();
+                List<Point> locs = new ArrayList<>();
                 for (Faction f : Main.factionCache.values()) {
                     if(f.getClaims().isEmpty()) continue;
                     int minX = Integer.MAX_VALUE;
@@ -28,7 +28,7 @@ public class TowerTools {
 
                     int maxX = -Integer.MAX_VALUE;
                     int maxZ = -Integer.MAX_VALUE;
-                    for (Claiming.Faction_Claim claim : f.getClaims()) {
+                    for (Claim claim : f.getClaims()) {
                         if(pLoc.distanceSquared(new Location(
                                 claim.getWorld(),
                                 claim.getStartX(), pLoc.getBlockY(), claim.getStartZ())
@@ -48,16 +48,16 @@ public class TowerTools {
                     }
 
 
-                    Claiming.Point fClaim = new Claiming.Point(minX, minZ);
+                    Point fClaim = new Point(minX, minZ);
                     locs.add(fClaim);
 
-                    Claiming.Point fClaim2 = new Claiming.Point(minX, maxZ);
+                    Point fClaim2 = new Point(minX, maxZ);
                     locs.add(fClaim2);
 
-                    Claiming.Point fClaim3 = new Claiming.Point(maxX, minZ);
+                    Point fClaim3 = new Point(maxX, minZ);
                     locs.add(fClaim3);
 
-                    Claiming.Point fClaim4 = new Claiming.Point(maxX, maxZ);
+                    Point fClaim4 = new Point(maxX, maxZ);
                     locs.add(fClaim4);
                 }
                 result.complete(locs);
@@ -68,10 +68,10 @@ public class TowerTools {
         return result;
     }
 
-    public static void createPillar(Player p, List<Claiming.Point> list) {
+    public static void createPillar(Player p, List<Point> list) {
         Tasks.executeAsync(() -> {
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
-            for (Claiming.Point point : list) {
+            for (Point point : list) {
                 hcfPlayer.addFactionViewMapLocation(point);
                 Location loc = new Location(p.getWorld(), point.getX(), p.getLocation().getBlockY(), point.getZ());
                 for (int i = 0; i <= 256; i++) {
@@ -88,7 +88,7 @@ public class TowerTools {
             }
         });
     }
-    public static void createPillar(Player p, Claiming.Point point) {
+    public static void createPillar(Player p, Point point) {
         if(point == null) return;
         Tasks.executeAsync(() -> {
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
@@ -107,11 +107,11 @@ public class TowerTools {
                 }
         });
     }
-    public static void removePillar(Player p, List<Claiming.Point> list) {
+    public static void removePillar(Player p, List<Point> list) {
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         Tasks.executeAsync(() -> {
-            List<Claiming.Point> points = new ArrayList<>(list);
-            for (Claiming.Point point : points) {
+            List<Point> points = new ArrayList<>(list);
+            for (Point point : points) {
                 Location loc = new Location(p.getWorld(), point.getX(), 0, point.getZ());
                 for (int i = 0; i <= 256; i++) {
                     loc.setY(i);
@@ -123,7 +123,7 @@ public class TowerTools {
             }
         });
     }
-    public static void removePillar(Player p, Claiming.Point point) {
+    public static void removePillar(Player p, Point point) {
         if(point == null) return;
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         Tasks.executeAsync(() -> {

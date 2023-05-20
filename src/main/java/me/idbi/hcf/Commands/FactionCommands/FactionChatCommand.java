@@ -22,7 +22,7 @@ public class FactionChatCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Write to the selected chat";
     }
 
     @Override

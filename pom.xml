@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.idbi</groupId>
-    <artifactId>HCFCica</artifactId>
+    <artifactId>HCFPlus</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>HCFPlugin</name>
+    <name>HCF+</name>
 
-    <description>FÜR PLAYERS WO WANNA PLAY some HCF</description>
+    <description>Basic HCF, just better</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -32,7 +32,7 @@
                     <!--<source>${java.version}</source>
                     <target>${java.version}</target> -->
                     <!--<outputDirectory>C:\Users\kille\Desktop\HCFPlus\TsipuEgymeleg\plugins</outputDirectory> -->
-                    <outputDirectory>C:\Users\kille\Desktop\HCFPlus\TsipuEgymeleg\plugins</outputDirectory>
+                    <outputDirectory>C:\Users\porto\Desktop\HCFPlus\TsipuEgymeleg\plugins</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -148,21 +148,21 @@
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
-            <systemPath>C:\Users\kille\Desktop\BuildTools\craftbukkit-1.8.8.jar</systemPath>
+            <systemPath>C:\Users\porto\Desktop\BuildTools\craftbukkit-1.8.8.jar</systemPath>
             <scope>system</scope>
         </dependency>
         <dependency>
             <groupId>me.idbi</groupId>
             <artifactId>hcf_abilitys</artifactId>
             <version>1.0</version>
-            <systemPath>C:\Users\kille\Desktop\HCFPlus\TsipuEgymeleg\plugins\HCF+ Abilities.jar</systemPath>
+            <systemPath>C:\Users\porto\Desktop\HCFPlus\TsipuEgymeleg\plugins\HCF+ Abilities.jar</systemPath>
             <scope>system</scope>
         </dependency>
         <dependency>
             <groupId>com.lunarclient</groupId>
             <artifactId>bukkitapi</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <systemPath>C:\Users\kille\Desktop\HCFPlus\TsipuEgymeleg\plugins\bukkitapi.jar</systemPath>
+            <systemPath>C:\Users\porto\Desktop\HCFPlus\TsipuEgymeleg\plugins\bukkitapi.jar</systemPath>
             <scope>system</scope>
         </dependency>
         <dependency>

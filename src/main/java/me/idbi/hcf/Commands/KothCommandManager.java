@@ -55,12 +55,12 @@ public class KothCommandManager implements CommandExecutor {
                             p.sendMessage(Messages.error_while_executing.language(p).queue());
                         }
                     }
-                } else if (args.length == 0) {
-                    p.sendMessage("--------------------------------");
+                } else {
+                    p.sendMessage("§e§m--------------------------------");
                     for (int i = 0; i < getSubcommands().size(); i++) {
                         p.sendMessage(getSubcommands().get(i).getSyntax() + " - " + getSubcommands().get(i).getDescription());
                     }
-                    p.sendMessage("--------------------------------");
+                    p.sendMessage("§e§m--------------------------------");
                 }
 
             }

@@ -73,4 +73,12 @@ public class AllyCommandManager implements CommandExecutor {
     public ArrayList<SubCommand> getSubcommands() {
         return subcommands;
     }
+
+    private void showSubCommands(Player p){
+        p.sendMessage("§e§m--------------------------------");
+        for (int i = 0; i < getSubcommands().size(); i++) {
+            p.sendMessage("§9" + getSubcommands().get(i).getSyntax() + " §f-§7 " + getSubcommands().get(i).getDescription());
+        }
+        p.sendMessage("§e§m--------------------------------");
+    }
 }

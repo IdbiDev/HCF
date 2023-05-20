@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 @CommandInfo(
         name = "pvp",
-        description = "Pvp Enable",
+        description = "Disables the pvp timer, you can now PvP with others!",
         permission = "factions.commands.pvptimer",
         syntax = "/pvp enable")
 public class PvpTimerCommand extends HCFCommand {

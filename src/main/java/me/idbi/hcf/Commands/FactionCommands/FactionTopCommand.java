@@ -27,7 +27,7 @@ public class FactionTopCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Sort factions";
+        return "Sorts the top factions by the selected filter";
     }
 
     @Override

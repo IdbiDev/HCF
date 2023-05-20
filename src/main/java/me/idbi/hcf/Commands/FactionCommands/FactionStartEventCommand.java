@@ -30,7 +30,7 @@ public class FactionStartEventCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Starts the selected event.";
     }
 
     @Override

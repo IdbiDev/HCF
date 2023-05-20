@@ -3,6 +3,7 @@ package me.idbi.hcf.Commands.CustomClaimCommands;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Objects.ClaimTypes;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
@@ -44,7 +45,7 @@ public class CustomClaimClaimCommand extends SubCommand {
             return;
         }
 
-        Claiming.ClaimTypes type = Claiming.ClaimTypes.getByName(args[2]);
+        ClaimTypes type = ClaimTypes.getByName(args[2]);
         if(type == null) {
             hcfPlayer.sendMessage(Messages.invalid_type);
         }

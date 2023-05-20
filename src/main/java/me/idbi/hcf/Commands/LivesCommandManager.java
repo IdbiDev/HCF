@@ -107,10 +107,10 @@ public class LivesCommandManager implements CommandExecutor, TabCompleter {
     }
 
     private void showSubcommands(CommandSender player) {
-        player.sendMessage("--------------------------------");
+        player.sendMessage("§e§m--------------------------------");
         for (SubCommand cmd : getSubcommands()) {
             player.sendMessage(cmd.getSyntax() + " - " + cmd.getDescription());
         }
-        player.sendMessage("--------------------------------");
+        player.sendMessage("§e§m--------------------------------");
     }
 }

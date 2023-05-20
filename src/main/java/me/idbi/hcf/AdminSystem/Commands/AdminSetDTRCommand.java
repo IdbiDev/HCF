@@ -21,7 +21,7 @@ public class AdminSetDTRCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Sets the selected faction's DTR to a value. You can't exceed the faction's max DTR.";
     }
 
     @Override

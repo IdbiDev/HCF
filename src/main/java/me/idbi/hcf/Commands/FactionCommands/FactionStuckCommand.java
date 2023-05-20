@@ -36,7 +36,7 @@ public class FactionStuckCommand extends SubCommand implements Listener {
 
     @Override
     public String getDescription() {
-        return "Stucks player to a safe location";
+        return "Teleports the player to a safe location";
     }
 
     @Override

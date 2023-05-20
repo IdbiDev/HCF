@@ -24,7 +24,7 @@ public class AllyAcceptCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Accepts an ally request from another faction.";
     }
 
     @Override

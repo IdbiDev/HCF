@@ -4,9 +4,11 @@ import me.idbi.hcf.ClickableMessages.ClickableFactions;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.FactionListGUI.FactionToplistInventory;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.Faction;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomClaimListCommand extends SubCommand {
@@ -37,14 +39,19 @@ public class CustomClaimListCommand extends SubCommand {
     public void perform(Player p, String[] args) {
         if(args.length == 1) {
             try {
-               // run(p, factions, 1, type);
+               run(p, factionArrayList,1);
             } catch (IndexOutOfBoundsException e) {
                 p.sendMessage(Messages.cant_find_page.language(p).queue());
             }
-            return;
+        }else if(args.length == 2) {
+            try {
+                run(p, factionArrayList, Integer.parseInt(args[1]));
+            } catch (IndexOutOfBoundsException e) {
+                p.sendMessage(Messages.cant_find_page.language(p).queue());
+            }
         }
     }
-    /*private void run(Player p, List<Faction> factions, int page) {
+    private void run(Player p, List<Faction> factions, int page) {
         if (!(page > 0)) {
             p.sendMessage(Messages.cant_find_page.language(p).queue());
             return;
@@ -52,12 +59,10 @@ public class CustomClaimListCommand extends SubCommand {
         boolean hasNext = false;
         if(factions.size() > 10 && factions.size() > (page * 10 + 10))
             hasNext = true;
-
-        p.openInventory(FactionToplistInventory.listInv(p, factions, type, 1));
         if(page == 1) {
             List<Faction> newFactions = factions.subList(0, Math.min(factions.size(), 10));
-            printFactions(p, newFactions, type);
-            ClickableFactions.sendPage(p, page, hasNext, false, "/f list " + type.toLowerCase());
+            printFactions(p, newFactions);
+            ClickableFactions.sendPage(p, page, hasNext, false, "/customclaim list");
             return;
         }
         try {
@@ -71,5 +76,14 @@ public class CustomClaimListCommand extends SubCommand {
         } catch (IndexOutOfBoundsException e) {
             p.sendMessage(Messages.cant_find_page.language(p).queue());
         }
-    }*/
+    }
+    private void printFactions(Player p, List<Faction> factions) {
+        int count = 1;
+        p.sendMessage(Messages.faction_custom_list_title.language(p).queue());
+        for (Faction f : factions) {
+            //p.sendMessage(Messages.faction_list.language(p).setNumber(count).setOnlines(f.getOnlineMembers().size()).setFaction(f).queue());
+            ClickableFactions.sendListCustom(p, f, count);
+            count++;
+        }
+    }
 }

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
-public class AdminGiveMoneyCommand extends SubCommand {
+public class                                                                                                                                                                                                                                                        AdminGiveMoneyCommand extends SubCommand {
     @Override
     public String getName() {
         return "givemoney";
@@ -23,7 +23,7 @@ public class AdminGiveMoneyCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+            return "Gives money to the selected player";
     }
 
     @Override

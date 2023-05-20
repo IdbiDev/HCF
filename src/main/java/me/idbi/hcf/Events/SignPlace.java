@@ -1,5 +1,7 @@
 package me.idbi.hcf.Events;
 
+import me.idbi.hcf.CustomFiles.Configs.Config;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -14,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -31,31 +34,49 @@ public class SignPlace implements Listener {
 
         ItemStack is = new ItemStack(Material.SIGN);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§cDeath Sign §f[§7" + victim.getName() + "§f]");
-        im.setLore(Arrays.asList(
-                "§5",
-                "§c" + victim.getName(),
-                "§fslain by",
-                "§a" + killer.getName(),
-                "§f" + formatter.format(new Date())
-        ));
+        im.setDisplayName(Config.DeathSignTitle.asStr());
+        ArrayList<String> lore = new ArrayList<>();
+        for (String s : Config.DeathSign.asStrList())
+            lore.add(ChatColor.translateAlternateColorCodes('&', s
+                    .replace("%killer%",killer.getName())
+                    .replace("%victim%",victim.getName())
+                    .replace("%date%", formatter.format(new Date()))));
+
+        im.setLore(lore);
         is.setItemMeta(im);
         return is;
     }
-
     public static ItemStack deathSign(String killer, String victim) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 
         ItemStack is = new ItemStack(Material.SIGN);
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName("§cDeath Sign §f[§7" + victim + "§f]");
-        im.setLore(Arrays.asList(
-                "§5",
-                "§c" + victim,
-                "§fslain by",
-                "§a" + killer,
-                "§f" + formatter.format(new Date())
-        ));
+        im.setDisplayName(Config.DeathSignTitle.asStr());
+        ArrayList<String> lore = new ArrayList<>();
+        for (String s : Config.DeathSign.asStrList())
+            lore.add(ChatColor.translateAlternateColorCodes('&', s
+                    .replace("%killer%",killer)
+                    .replace("%victim%",victim)
+                    .replace("%date%", formatter.format(new Date()))));
+
+        im.setLore(lore);
+        is.setItemMeta(im);
+        return is;
+    }
+    public static ItemStack KoTHSign(String koth,String capper) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+
+        ItemStack is = new ItemStack(Material.SIGN);
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName(Config.KoTHSignTitle.asStr().replace("%koth%",koth));
+        ArrayList<String> lore = new ArrayList<>();
+        for (String s : Config.KoTHSign.asStrList())
+            lore.add(ChatColor.translateAlternateColorCodes('&', s
+                            .replace("%capturer%",capper)
+                            .replace("%date%",formatter.format(new Date()))
+                            .replace("%koth%",koth)));
+
+        im.setLore(lore);
         is.setItemMeta(im);
         return is;
     }
@@ -65,11 +86,12 @@ public class SignPlace implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
+        if (event.getItem() == null) return;
+        if (!event.getItem().hasItemMeta()) return;
         if (event.getPlayer().getItemInHand().getType() == Material.SIGN) {
-            if (event.getItem() == null) return;
-            if (!event.getItem().hasItemMeta()) return;
-            if (event.getItem().getItemMeta().hasDisplayName())
-                if (!event.getItem().getItemMeta().getDisplayName().startsWith("§cDeath Sign"))
+            if (event.getItem().getItemMeta().hasDisplayName()) {
+                String dpName = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName());
+                if (!dpName.startsWith(ChatColor.stripColor(Config.DeathSignTitle.asStr())) && !dpName.startsWith(ChatColor.stripColor(Config.KoTHSignTitle.asStr()))) {
                     return;
 
             event.setCancelled(true);

@@ -24,7 +24,7 @@ public class AdminItemsCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+    return "Gives the listed items.";
     }
 
     @Override
