@@ -55,8 +55,11 @@ public class AdminCommandManager implements CommandExecutor {
                     AdminItemsCommand items = new AdminItemsCommand();
                     if (items.isCommand(args[0])) {
                         try {
+                            if (!items.hasPermission(p)) {
+                                p.sendMessage(Messages.no_permission.language(p).queue());
+                                return false;
+                            }
                             items.perform(sender, args);
-                            return false;
                         } catch (IndexOutOfBoundsException e) {
                             sender.sendMessage("§cUsage: " + items.getSyntax());
                             sender.sendMessage(Messages.missing_argument.queue());
@@ -64,6 +67,7 @@ public class AdminCommandManager implements CommandExecutor {
                             sender.sendMessage(Messages.error_while_executing.queue());
                             e.printStackTrace();
                         }
+                        return false;
                     }
                     for (int i = 0; i < getSubcommands().size(); i++) {
                         try {
@@ -75,8 +79,7 @@ public class AdminCommandManager implements CommandExecutor {
                             }
                             if (cmd.getName().equalsIgnoreCase("chat")
                                     || cmd.getName().equalsIgnoreCase("duty")
-                                    || cmd.getName().equalsIgnoreCase("reload")
-                            ) {
+                                    || cmd.getName().equalsIgnoreCase("reload")) {
                                 cmd.perform(p, args);
                                 continue;
                             }
@@ -93,7 +96,11 @@ public class AdminCommandManager implements CommandExecutor {
                             e.printStackTrace();
                         }
                     }
-                } else if (args.length == 0) {
+                } else if(args.length == 0) {
+                    AdminDutyCommand duty = new AdminDutyCommand();
+                    if(!duty.hasPermission(p)) {
+                        p.sendMessage(Messages.not_in_duty.language(p).queue());
+                    }
                     AdminDutyCommand.duty(p);
                 }
             }

@@ -5,7 +5,6 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.keenant.tabbed.Tabbed;
 import lombok.Getter;
-import me.idbi.hcf.Bossbar.Bossbar;
 import me.idbi.hcf.BukkitCommands.BukkitCommandManager;
 import me.idbi.hcf.Commands.FactionCommands.FactionSetHomeCommand;
 import me.idbi.hcf.Commands.SubCommand;

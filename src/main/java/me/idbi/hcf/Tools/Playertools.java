@@ -429,7 +429,7 @@ public class Playertools {
                         Integer.parseInt(map.get("PITCH").toString()));
                 int x = loc.getBlockX();
                 int z = loc.getBlockZ();
-                faction.setHomeLocation(loc.add(x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5));
+                faction.setHomeLocation(loc.add(/*x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5*/0.5, 0, 0.5));
                 /*Main.DTR_REGEN.put(faction.factionid, System.currentTimeMillis() + DTR_REGEN_TIME* 1000L);
                 faction.DTR -= Main.DEATH_DTR;*/
 
@@ -927,6 +927,21 @@ public class Playertools {
             }
             Scoreboards.refresh(p);
         }
+    }
+
+    public static boolean isFocused(Player player, Player target) {
+        HCFPlayer hcfPlayer = HCFPlayer.getPlayer(player);
+        HCFPlayer hcfPlayer2 = HCFPlayer.getPlayer(target);
+        if(hcfPlayer2.inFaction() && hcfPlayer.inFaction()) {
+            if(!isTeammate(player, target)) {
+                Faction fac1 = hcfPlayer.getFaction();
+                Faction fac2 = hcfPlayer2.getFaction();
+                if(fac1.getFocusedTeam() == fac2) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static Faction getWarzone() {

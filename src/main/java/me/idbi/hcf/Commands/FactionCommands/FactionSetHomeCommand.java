@@ -41,29 +41,6 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
     }
 
     @Override
-    public String getPermission() {
-        return "factions.commands." + getName();
-    }
-
-    @Override
-    public boolean hasPermission(Player p) {
-        return p.hasPermission(getName());
-    }
-
-    @Override
-    public boolean hasCooldown(Player p) {
-        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
-        return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
-    }
-
-    @Override
-    public void addCooldown(Player p) {
-        HashMap<Player, Long> hashMap = SubCommand.commandCooldowns.get(this);
-        hashMap.put(p, System.currentTimeMillis() + (getCooldown() * 1000L));
-        SubCommand.commandCooldowns.put(this, hashMap);
-    }
-
-    @Override
     public int getCooldown() {
         return 2;
     }
@@ -87,7 +64,7 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
             put("PITCH", (int) p.getLocation().getPitch());
         }};
         //
-        Claim claim = Claiming.sendClaimByXZ(p.getWorld(), p.getLocation().getBlockX() ,p.getLocation().getBlockY(), p.getLocation().getBlockZ());
+        Claim claim = Claiming.sendClaimByXZ(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ());
         if (claim != null) {
             if (claim.getFaction().getId() == faction.getId()) {
                 SQL_Connection.dbExecute(con,"UPDATE factions SET home='?' WHERE ID='?'", new JSONObject(map).toString(), faction.getId() + "");
@@ -96,7 +73,7 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
                 Location secLoc = p.getLocation().clone();
                 secLoc.setX(x);
                 secLoc.setZ(z);
-                faction.setHomeLocation(/*secLoc.add(x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5)*/p.getLocation());
+                faction.setHomeLocation(/*secLoc.add(x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5*/p.getLocation()/*secLoc*/);
                 addCooldown(p);
 
                 p.sendMessage(Messages.sethome_message.language(p).queue());
@@ -106,9 +83,9 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
                             .language(member)
                             .setPlayer(p)
                             .setCoords(
-                                    p.getLocation().getBlockX(),
-                                    p.getLocation().getBlockY(),
-                                    p.getLocation().getBlockZ())
+                                    secLoc.getBlockX(),
+                                    secLoc.getBlockY(),
+                                    secLoc.getBlockZ())
                             .queue());
                 }
             }

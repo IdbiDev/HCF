@@ -86,7 +86,7 @@ public class FactionCommandManager implements CommandExecutor, TabCompleter {
                         }
                     } catch (IndexOutOfBoundsException e) {
                         p.sendMessage("§cUsage: " + getSubcommands().get(i).getSyntax());
-                        e.printStackTrace();
+                        //e.printStackTrace();
                         p.sendMessage(Messages.missing_argument.language(p).queue());
                     } catch (Exception e) {
                         e.printStackTrace();

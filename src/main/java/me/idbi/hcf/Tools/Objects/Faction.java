@@ -144,14 +144,14 @@ public class Faction {
         Location loc2 = loc.clone();
         loc2.setX(loc.getBlockX());
         loc2.setZ(loc.getBlockZ());
-        loc2.setY(loc.getBlockY());
         int x = loc2.getBlockX();
         int z = loc2.getBlockZ();
-        this.homeLocation = loc2.add(x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5);
+        System.out.println(loc2);
+        this.homeLocation = loc2.add(0.5, 0, 0.5)/*.add(x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5);*/;
         for (Player member : getOnlineMembers()) {
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(member);
             WaypointPlayer waypointPlayer = hcfPlayer.getWaypointPlayer();
-            waypointPlayer.updateHome(loc);
+            waypointPlayer.updateHome(this.homeLocation);
         }
     }
 

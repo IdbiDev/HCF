@@ -63,7 +63,7 @@ public class PlayerInteract implements Listener {
                                 p.sendMessage(Messages.you_cant_do.language(p).setFaction(claim.getFaction()).queue());
                         }
                     }
-                    if (rules.isAlly(e.getClickedBlock())) {
+                    else if (rules.isAlly(e.getClickedBlock())) {
                         if (Claiming.isEnemyClaim(p, claim) && !Objects.requireNonNull(f).hasAllyPermission(baszogatottFaction, Permissions.INVENTORY_ACCESS)) {
                             e.setCancelled(true);
                             if(claim.getAttribute() != ClaimAttributes.PROTECTED)

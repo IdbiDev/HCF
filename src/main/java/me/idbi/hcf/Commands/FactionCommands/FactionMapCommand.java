@@ -34,11 +34,6 @@ public class FactionMapCommand extends SubCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "factions.commands." + getName();
-    }
-
-    @Override
     public int getCooldown() {
         return 2;
     }

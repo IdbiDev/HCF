@@ -32,26 +32,6 @@ public class FactionDemoteCommand extends SubCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "factions.commands." + getName();
-    }
-
-    @Override
-    public boolean hasPermission(Player p) {
-        return p.hasPermission(getPermission());
-    }
-
-    @Override
-    public boolean hasCooldown(Player p) {
-        return false;
-    }
-
-    @Override
-    public void addCooldown(Player p) {
-
-    }
-
-    @Override
     public int getCooldown() {
         return 0;
     }

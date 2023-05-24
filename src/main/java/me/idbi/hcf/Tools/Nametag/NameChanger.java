@@ -73,7 +73,9 @@ public class NameChanger implements Listener {
                         fakeName = Config.AllyColor.asStr() + player.getName();
                     } else {
                         if (Timers.ARCHER_TAG.has(player)) {
-                            fakeName =  Config.ArcherTagColor.asStr() + player.getName();
+                            fakeName = Config.ArcherTagColor.asStr() + player.getName();
+                        } else if(Playertools.isFocused(forWhom, player)) {
+                            fakeName = Config.FocusedTagColor.asStr() + player.getName();
                         } else {
                             fakeName = Config.EnemyColor.asStr() + player.getName();
                         }

@@ -45,11 +45,6 @@ public class AdminReloadCommand extends SubCommand {
     }
 
     @Override
-    public boolean hasPermission(Player p) {
-        return p.hasPermission(getPermission());
-    }
-
-    @Override
     public boolean hasCooldown(Player p) {
         if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
         return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();

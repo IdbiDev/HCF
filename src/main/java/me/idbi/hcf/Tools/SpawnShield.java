@@ -24,7 +24,8 @@ public class SpawnShield {
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (Claim claim : thisFaction.getValue().getClaims()) {
                 if (!p.getWorld().getName().equalsIgnoreCase(claim.getWorld().getName())) continue;
-                boolean kellfal = false;
+                if(claim.getAttribute() != ClaimAttributes.NORMAL) continue;
+                boolean placeWall = false;
                 //true              //    true - > NINCS
                 /*if ((pvpCooldown(p) && !claim.getAttribute().equals(ClaimAttributes.PROTECTED))) {
                     placeWall = true;

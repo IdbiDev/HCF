@@ -1,16 +1,23 @@
 package me.idbi.hcf.API;
 
 import me.idbi.hcf.BukkitCommands.HCFCommand;
+import me.idbi.hcf.CustomFiles.ReclaimFile;
 import me.idbi.hcf.HCFMap;
 import me.idbi.hcf.HCFRules;
 import me.idbi.hcf.HCFServer;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.Objects.CustomTimers;
-import me.idbi.hcf.Tools.Objects.HCFPlayer;
+import me.idbi.hcf.Reclaim.ReclaimConfig;
+import me.idbi.hcf.Tools.Objects.*;
+import me.idbi.hcf.Tools.Playertools;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class HCFApi {
@@ -55,5 +62,73 @@ public class HCFApi {
 
     public static HCFCustomTimerApi getCustomTimerApi() {
         return c_api;
+    }
+
+    public static Claim getClaim(Location loc) {
+        return Playertools.getUpperClaim(loc);
+    }
+
+    public static Claim getClaim(Player player) {
+        return Playertools.getUpperClaim(player);
+    }
+
+    public static boolean inWilderness(Player p) {
+        return getClaim(p) == null;
+    }
+
+    public static boolean inWilderness(Location loc) {
+        return getClaim(loc) == null;
+    }
+
+    public static boolean inWarzone(Player p) {
+        return Playertools.isInWarzone(p);
+    }
+
+    public static boolean inWarzone(Location loc) {
+        return Playertools.isInWarzone(loc);
+    }
+
+    public static Faction getFaction(String name) {
+        return Playertools.getFactionByName(name);
+    }
+
+    public static Faction getFaction(OfflinePlayer player) {
+        return Playertools.getPlayerFaction(player);
+    }
+
+    public static HashMap<Integer, Faction> getFactions() {
+        return Main.factionCache;
+    }
+
+    public static HashMap<UUID, HCFPlayer> getHCFPlayers() {
+        return Main.playerCache;
+    }
+
+    public static boolean inFaction(Player p) {
+        return HCFPlayer.getPlayer(p).inFaction();
+    }
+
+    public static void resetReclaim(Player p) {
+        ReclaimConfig.resetClaim(p);
+    }
+
+    public static void resetReclaims() {
+        ReclaimFile.get().set("ClaimedReclaims", null);
+        ReclaimFile.save();
+    }
+
+    /**
+     *
+     * @param claim
+     * @return the players inside the claim
+     */
+    public static List<Player> getPlayersInClaim(Claim claim) {
+        List<Player> players = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if(claim.in(player.getLocation())) {
+                players.add(player);
+            }
+        }
+        return players;
     }
 }

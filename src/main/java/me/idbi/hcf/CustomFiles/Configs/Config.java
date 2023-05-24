@@ -30,7 +30,6 @@ public enum Config {
     ClassWarmupTime("Cooldowns", 3, createComment("This will be used if you are equipping a class", "Must be in seconds")),
     Deathban("Cooldowns", 3600, createComment("This will be set if you die.", "Must be in seconds")),
     TeleportHome("Cooldowns", 10, createComment("This will be set if you teleporting home.", "Must be in seconds")),
-    HomeTimer("Cooldowns", 15, createComment("This will be set if you use the command", "Must be in seconds")),
     StuckTimer("Cooldowns", 30, createComment("This will be set if you use the command", "Must be in seconds")),
     Logout("Cooldowns", 30, createComment("This will be set if you use the command", "Must be in seconds")),
     SOTWDuration("Cooldowns", 600, createComment("Set the SOTW event length", "Must be in seconds")),
@@ -129,6 +128,7 @@ public enum Config {
     AllyColor("Colors", "&d"),
     EnemyColor("Colors", "&c"),
     ArcherTagColor("Colors", "&4"),
+    FocusedTagColor("Colors", "&4"),
     StaffModeColor("Colors", "&b"),
 
     BlackListedNames(Arrays.asList(

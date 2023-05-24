@@ -39,29 +39,6 @@ public class FactionJoinCommand extends SubCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "factions.commands." + getName();
-    }
-
-    @Override
-    public boolean hasPermission(Player p) {
-        return p.hasPermission(getPermission());
-    }
-
-    @Override
-    public boolean hasCooldown(Player p) {
-        if(!SubCommand.commandCooldowns.get(this).containsKey(p)) return false;
-        return SubCommand.commandCooldowns.get(this).get(p) > System.currentTimeMillis();
-    }
-
-    @Override
-    public void addCooldown(Player p) {
-        HashMap<Player, Long> hashMap = SubCommand.commandCooldowns.get(this);
-        hashMap.put(p, System.currentTimeMillis() + (getCooldown() * 1000L));
-        SubCommand.commandCooldowns.put(this, hashMap);
-    }
-
-    @Override
     public int getCooldown() {
         return 2;
     }
