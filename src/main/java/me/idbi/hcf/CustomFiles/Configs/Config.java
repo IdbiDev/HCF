@@ -46,6 +46,7 @@ public enum Config {
     NetherName("Default values", "world_nether", createComment("Sets the nether, where the HCF nether are.")),
     NetherSpawn("Default values", "0 0 0 0 0", createComment("Sets the nether, where the HCF nether are.")),
     DeathbanEnable("Default values", false, createComment("Sets the death-ban.", "Only 'true' or 'false' are accepted!")),
+    SOTWSpawnEnable("Default values", true, createComment("Enables the spawn tp during SOTW mode.")),
 
     EnchantCost("Default values", 20, createComment("Enchantment cost. Constant.")),
     DefaultBalance("Default values", 1000, createComment("On the first join, this will be the player money.")),

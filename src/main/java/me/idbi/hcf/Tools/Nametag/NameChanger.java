@@ -7,9 +7,10 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
+import com.comphenix.protocol.wrappers.WrappedSignedProperty;
+import com.google.common.collect.Multimap;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.AdminTools;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.Timers;
@@ -39,7 +40,13 @@ public class NameChanger implements Listener {
                         continue;
                     }
                     WrappedGameProfile profile = playerInfoData.getProfile();
+                    Multimap<String, WrappedSignedProperty> pm = profile.getProperties();
                     profile = profile.withName(getNameToSend(profile.getUUID()));
+                    // Innen üres a gameprofile properties
+                    for(Map.Entry<String, WrappedSignedProperty> hash : pm.entries()) {
+                        profile.getProperties().put(hash.getKey(),hash.getValue());
+                    }
+                    //Fillelve
                     PlayerInfoData newPlayerInfoData = new PlayerInfoData(
                             profile, playerInfoData.getPing(), playerInfoData.getGameMode(), playerInfoData.getDisplayName());
                     newPlayerInfoDataList.add(newPlayerInfoData);
@@ -89,6 +96,7 @@ public class NameChanger implements Listener {
                     }
                 }
             }
+            //reloadSkinForSelf(player);
         }
         /*if(AdminTools.InvisibleManager.invisedAdmins.contains(player.getUniqueId())) {
             AdminTools.InvisibleManager.hidePlayer(player);

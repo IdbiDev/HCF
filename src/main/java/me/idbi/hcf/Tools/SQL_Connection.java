@@ -49,6 +49,7 @@ public class SQL_Connection {
                 }
                 // Az elkészített qh-t dobni az sqlnek
                 try {
+                    if(con.isClosed()) return;
                     PreparedStatement st = con.prepareStatement(private_string_query);
                     st.executeUpdate();
                     st.close();
@@ -62,6 +63,7 @@ public class SQL_Connection {
     }
 
     public static int dbSyncExec(Connection con, String query, String... args) {
+
         String private_string_query = "";
         int c_arg = 0;
         for (char c : query.toCharArray()) {
@@ -74,6 +76,7 @@ public class SQL_Connection {
         }
         // Az elkészített qh-t dobni az sqlnek
         try {
+            if(con.isClosed()) return -1;
             PreparedStatement st = con.prepareStatement(private_string_query, Statement.RETURN_GENERATED_KEYS);
             st.executeUpdate();
             ResultSet genkys = st.getGeneratedKeys();
@@ -106,6 +109,7 @@ public class SQL_Connection {
 
         Statement poll_stm = null;
         try {
+            if(con.isClosed()) return null;
             poll_stm = con.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();

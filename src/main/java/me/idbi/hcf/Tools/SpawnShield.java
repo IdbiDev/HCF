@@ -20,20 +20,26 @@ public class SpawnShield {
 
     public static void CalcWall(Player p) {
         Point player_point = new Point(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
-        Faction player_faction = Playertools.getPlayerFaction(p);
+        //Faction player_faction = Playertools.getPlayerFaction(p);
         for (Map.Entry<Integer, Faction> thisFaction : Main.factionCache.entrySet()) {
             for (Claim claim : thisFaction.getValue().getClaims()) {
                 if (!p.getWorld().getName().equalsIgnoreCase(claim.getWorld().getName())) continue;
                 boolean kellfal = false;
                 //true              //    true - > NINCS
-                if ((pvpCooldown(p) && !claim.getAttribute().equals(ClaimAttributes.PROTECTED))) {
-                    kellfal = true;
+                /*if ((pvpCooldown(p) && !claim.getAttribute().equals(ClaimAttributes.PROTECTED))) {
+                    placeWall = true;
                 } else if (Main.SOTWEnabled && ((claim.getAttribute().equals(ClaimAttributes.NORMAL) && claim.getFaction().getId() != (player_faction != null ? player_faction.getId() : 0)))) {
-                    kellfal = true;
+                    placeWall = true;
                 } else if ((Timers.COMBAT_TAG.has(p) && claim.getAttribute().equals(ClaimAttributes.PROTECTED))) {
-                    kellfal = true;
-                }
-                if (!kellfal)
+                    placeWall = true;
+                }*/
+                //Combat tagban fal
+                if(Timers.COMBAT_TAG.has(p) && claim.getAttribute().equals(ClaimAttributes.PROTECTED))
+                    placeWall = true;
+                //PVP timer rak falat a normal claimekre
+                if(Timers.PVP_TIMER.has(p) && claim.getAttribute().equals(ClaimAttributes.NORMAL))
+                    placeWall = true;
+                if (!placeWall)
                     continue;
                 // Négy sarokpont
                 Point bottom_left = new Point(claim.getStartX(), claim.getStartZ());

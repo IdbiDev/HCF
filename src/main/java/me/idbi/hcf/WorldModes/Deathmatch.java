@@ -70,7 +70,6 @@ public class Deathmatch implements Gamemode {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.playSound(p.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
                 }
-                Main.sendCmdMessage("EOTW ended!");
             }
         }.runTaskLater(Main.getPlugin(Main.class),Config.EOTWDuration.asInt() * 20L);
     }
@@ -97,7 +96,8 @@ public class Deathmatch implements Gamemode {
                 f.refreshDTR();
             }
             for(Player p : Bukkit.getOnlinePlayers()) {
-                Timers.ENDER_PEARL.remove(p);
+                Timers.EOTW.remove(p);
+                Main.miscTimers.removeFakeWalls(p);
             }
             task.cancel();
             task = null;

@@ -82,6 +82,7 @@ public class EOTW implements Gamemode {
             }
             for(Player p : Bukkit.getOnlinePlayers()) {
                 Timers.EOTW.remove(p);
+                Main.miscTimers.removeFakeWalls(p);
             }
             task.cancel();
             task = null;

@@ -102,6 +102,10 @@
             <id>alvinb-repo</id>
             <url>http://repo.bringholm.com/</url>
         </repository>
+        <repository>
+            <id>codemc-releases</id>
+            <url>https://repo.codemc.org/repository/maven-releases/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -182,5 +186,11 @@
             <version>4.8.0</version>
             <scope>provided</scope>
         </dependency>
+       <!-- <dependency>
+            <groupId>net.skinsrestorer</groupId>
+            <artifactId>skinsrestorer-api</artifactId>
+            <version>14.2.10</version>
+            <scope>provided</scope>
+        </dependency>-->
     </dependencies>
 </project>

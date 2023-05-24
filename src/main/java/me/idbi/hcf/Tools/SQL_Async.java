@@ -32,6 +32,7 @@ public class SQL_Async {
 
                 Statement poll_stm = null;
                 try {
+                    if(con.isClosed()) return;
                     poll_stm = con.createStatement();
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -112,6 +113,7 @@ public class SQL_Async {
                 }
                 // Az elkészített qh-t dobni az sqlnek
                 try {
+                    if(con.isClosed()) return;
                     PreparedStatement st = con.prepareStatement(private_string_query, Statement.RETURN_GENERATED_KEYS);
                     st.executeUpdate();
                     ResultSet genkys = st.getGeneratedKeys();

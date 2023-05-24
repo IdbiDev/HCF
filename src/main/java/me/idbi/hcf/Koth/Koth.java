@@ -1,6 +1,5 @@
 package me.idbi.hcf.Koth;
 
-import me.idbi.hcf.Bossbar.BossbarTools;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Events.SignPlace;
@@ -188,9 +187,6 @@ public class Koth implements Listener {
         GLOBAL_AREA = null;
         GLOBAL_PLAYER = null;
         GLOBAL_TIME = Config.KoTHDuration.asInt();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            BossbarTools.remove(player);
-        }
     }
     public static void reward(Player p) {
         KOTHItemManager.addRewardsToPlayer(p);

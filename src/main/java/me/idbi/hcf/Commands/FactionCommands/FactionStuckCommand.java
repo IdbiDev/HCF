@@ -65,7 +65,6 @@ public class FactionStuckCommand extends SubCommand implements Listener {
     @Override
     public void perform(Player p, String[] args) {
         if (!Timers.STUCK.has(p)) {
-            //Todo: somethingwrite
             Timers.STUCK.add(p);
             p.sendMessage(Messages.stuck_started.language(p).setAmount(String.valueOf(Main.stuckDuration)).queue());
             HCFPlayer player = HCFPlayer.getPlayer(p);

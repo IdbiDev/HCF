@@ -1,7 +1,6 @@
 package me.idbi.hcf.Koth;
 
 import lombok.Getter;
-import lombok.Setter;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import org.bukkit.Bukkit;
@@ -34,14 +33,12 @@ public class AutoKoth {
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         String date = formatter.format(new Date());
         for (String s : list) {
-            System.out.println("Check: " + s + " " + date);
             if(!s.matches("^[0-9:]{4,5}$")) continue;
             if(date.equalsIgnoreCase(s) || date.replaceFirst("0", "").equalsIgnoreCase(s)) {
                 if(!s.contains(":")) continue;
                 String min = date.split(":")[1];
                 String sMin = s.split(":")[1];
                 if(min.equalsIgnoreCase(sMin)) {
-                    System.out.println("Started");
                     return true;
                 }
             }

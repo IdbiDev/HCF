@@ -1,6 +1,5 @@
 package me.idbi.hcf.Events;
 
-import me.idbi.hcf.Bossbar.BossbarTools;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.InventoryRollback.Rollback;
@@ -56,7 +55,6 @@ public class PlayerLeft implements Listener {
 
         player.save();
 
-        BossbarTools.remove(e.getPlayer());
 
         if (Playertools.isInStaffDuty(e.getPlayer())) {
             AdminTools.InvisibleManager.showPlayer(e.getPlayer());

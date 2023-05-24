@@ -54,7 +54,6 @@ public class SOTW implements Gamemode {
                             Messages.sotw_end_subtitle.language(p).queue()
                     );
                 }
-                Main.sendCmdMessage("SOTW ended!");
             }
         }.runTaskLater(Main.getPlugin(Main.class),Config.SOTWDuration.asInt() * 20L);
     }
@@ -80,6 +79,7 @@ public class SOTW implements Gamemode {
                         Messages.sotw_end_title.language(p).queue(),
                         Messages.sotw_end_subtitle.language(p).queue()
                 );
+                Main.miscTimers.removeFakeWalls(p);
             }
 
             task.cancel();

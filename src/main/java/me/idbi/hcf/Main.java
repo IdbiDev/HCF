@@ -100,7 +100,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static AutoKoth autoKoth = new AutoKoth();
     private static ConfigManager configManager;
     private static Connection con;
-    private MiscTimers miscTimers;
+    public static MiscTimers miscTimers;
     public static HashMap<UUID, FastBoard> boards;
 
     public final HashMap<UUID, Double> playerBank = new HashMap<>();
@@ -172,11 +172,8 @@ public final class Main extends JavaPlugin implements Listener {
 
         long deltatime = System.currentTimeMillis();
         kothRewardsGUI = new ArrayList<>();
-        EOTWStarted = System.currentTimeMillis() / 1000;
         blacklistedRankNames = new ArrayList<>();
         SubCommand.commandCooldowns = new HashMap<>();
-        Bossbar.bars = new HashMap<>();
-        //currentLanguages = new HashMap<>();
         inventoryRollbacks = new HashMap<>();
         boards = new HashMap<>();
         FactionSetHomeCommand.teleportPlayers = new ArrayList<Player>();
