@@ -55,7 +55,6 @@ public class PlayerLeft implements Listener {
 
         player.save();
 
-
         if (Playertools.isInStaffDuty(e.getPlayer())) {
             AdminTools.InvisibleManager.showPlayer(e.getPlayer());
             //AdminTools.InvisibleManager.invisedAdmins.remove(e.getPlayer());
