@@ -6,6 +6,7 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.HCFServer;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Timers;
 import net.minecraft.server.v1_8_R3.WorldGenEnder;
@@ -28,7 +29,7 @@ public class SpawnCommand extends HCFCommand {
     public void execute(Player p, String[] args) {
         //HCFServer.getServer().getMap(World.Environment.NORMAL).setWorldSpawn(p.getLocation());
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
-        if(args.length == 1 && hcfPlayer.isInDuty()) {
+        if(args.length == 1 && (hcfPlayer.isInDuty() || HCFPermissions.admin_spawn.check(p))) {
             World.Environment env = World.Environment.NORMAL;
             if (args[0].equalsIgnoreCase("nether"))
                 env = World.Environment.NETHER;
@@ -45,6 +46,9 @@ public class SpawnCommand extends HCFCommand {
                 p.teleport(HCFServer.getServer().getMap(World.Environment.NORMAL).getWorldSpawn());
                 p.sendMessage(Messages.spawn_teleported.language(p).queue());
             } else if (hcfPlayer.isInDuty()) {
+                p.sendMessage(Messages.spawn_teleported.language(p).queue());
+                p.teleport(HCFServer.getServer().getMap(World.Environment.NORMAL).getWorldSpawn());
+            } else if(HCFPermissions.admin_spawn.check(p)) {
                 p.sendMessage(Messages.spawn_teleported.language(p).queue());
                 p.teleport(HCFServer.getServer().getMap(World.Environment.NORMAL).getWorldSpawn());
             } else {

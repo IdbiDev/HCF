@@ -15,7 +15,8 @@ public enum HCFPermissions {
     crowbar_use("factions.crowbar.use"),
     deathban_bypass("factions.admin.deathbanbypass"),
     home_bypass("factions.admin.homebypass"),
-    vanish_bypass("factions.admin.vanishbypass");
+    vanish_bypass("factions.admin.vanishbypass"),
+    admin_spawn("factions.commands.admin.spawn");
 
     private String permission;
 

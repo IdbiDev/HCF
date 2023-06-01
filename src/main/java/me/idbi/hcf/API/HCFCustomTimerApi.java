@@ -15,6 +15,10 @@ public class HCFCustomTimerApi {
         return Main.customSBTimers.containsKey(name);
     }
 
+    public static CustomTimers createTimer(String name, long time, String text) {
+        CustomTimers timer = new CustomTimers(name, time, text);
+        return timer;
+    }
     /**
      *
      * @param name
