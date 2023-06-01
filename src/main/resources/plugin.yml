@@ -111,7 +111,9 @@ permissions:
     default: op
   factions.admin.vanishbypass:
     default: op
-
+  factions.commands.admin.spawn:
+    default: op
+    
   factions.admin.*:
     default: op
     children:
@@ -129,6 +131,7 @@ permissions:
       factions.reclaim.default: true
       factions.commands.spawn: true
       factions.commands.admin.event: true
+      factions.commands.admin.spawn: true
   factions.commands.faction.*:
     default: op
     children:

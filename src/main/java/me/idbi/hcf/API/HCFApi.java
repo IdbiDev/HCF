@@ -72,19 +72,19 @@ public class HCFApi {
         return Playertools.getUpperClaim(player);
     }
 
-    public static boolean inWilderness(Player p) {
+    public static boolean isInWilderness(Player p) {
         return getClaim(p) == null;
     }
 
-    public static boolean inWilderness(Location loc) {
+    public static boolean isInWilderness(Location loc) {
         return getClaim(loc) == null;
     }
 
-    public static boolean inWarzone(Player p) {
+    public static boolean isInWarzone(Player p) {
         return Playertools.isInWarzone(p);
     }
 
-    public static boolean inWarzone(Location loc) {
+    public static boolean isInWarzone(Location loc) {
         return Playertools.isInWarzone(loc);
     }
 
