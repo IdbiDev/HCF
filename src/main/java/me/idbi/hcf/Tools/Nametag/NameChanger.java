@@ -9,6 +9,7 @@ import com.comphenix.protocol.wrappers.PlayerInfoData;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
 import com.google.common.collect.Multimap;
+import me.idbi.hcf.API.HCFNameChangeEvent;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.Faction;
@@ -25,6 +26,12 @@ import java.util.*;
 public class NameChanger implements Listener {
     private final static Map<UUID, String> fakeNames = new HashMap<UUID, String>();
     private final Plugin plugin;
+    public static void setFakeName(UUID uuid, String name) {
+        fakeNames.put(uuid, name);
+    }
+    public static String getFakeName(UUID uuid) {
+        return fakeNames.get(uuid);
+    }
 
     public NameChanger(Main plugin) {
         this.plugin = plugin;
@@ -40,16 +47,19 @@ public class NameChanger implements Listener {
                         continue;
                     }
                     WrappedGameProfile profile = playerInfoData.getProfile();
-                    Multimap<String, WrappedSignedProperty> pm = profile.getProperties();
-                    profile = profile.withName(getNameToSend(profile.getUUID()));
-                    // Innen üres a gameprofile properties
-                    for(Map.Entry<String, WrappedSignedProperty> hash : pm.entries()) {
-                        profile.getProperties().put(hash.getKey(),hash.getValue());
+                    HCFNameChangeEvent changeEvent = new HCFNameChangeEvent(event.getPlayer(), getNameToSend(profile.getUUID()));
+                    if(!changeEvent.isCancelled()) {
+                        Multimap<String, WrappedSignedProperty> pm = profile.getProperties();
+                        profile = profile.withName(getNameToSend(profile.getUUID()));
+                        // Innen üres a gameprofile properties
+                        for (Map.Entry<String, WrappedSignedProperty> hash : pm.entries()) {
+                            profile.getProperties().put(hash.getKey(), hash.getValue());
+                        }
+                        //Fillelve
+                        PlayerInfoData newPlayerInfoData = new PlayerInfoData(
+                                profile, playerInfoData.getPing(), playerInfoData.getGameMode(), playerInfoData.getDisplayName());
+                        newPlayerInfoDataList.add(newPlayerInfoData);
                     }
-                    //Fillelve
-                    PlayerInfoData newPlayerInfoData = new PlayerInfoData(
-                            profile, playerInfoData.getPing(), playerInfoData.getGameMode(), playerInfoData.getDisplayName());
-                    newPlayerInfoDataList.add(newPlayerInfoData);
                 }
                 event.getPacket().getPlayerInfoDataLists().write(0, newPlayerInfoDataList);
             }

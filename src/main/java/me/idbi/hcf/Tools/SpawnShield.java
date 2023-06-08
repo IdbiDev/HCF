@@ -51,8 +51,10 @@ public class SpawnShield {
 
                 int width = getDistanceBetweenPoints2D(bottom_left, top_left) + 1;
                 int height = getDistanceBetweenPoints2D(bottom_left, bottom_right) + 1;
+
                 int minX = Math.min(top_right.getX(), bottom_left.getX());
                 int minZ = Math.min(top_right.getZ(), bottom_left.getZ());
+
                 int record = 9999;
                 Point record_point = new Point(0, 0);
                 // -21+

@@ -1,5 +1,6 @@
 package me.idbi.hcf.HistoryGUI.Player;
 
+import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 import org.bukkit.Material;
@@ -31,11 +32,13 @@ public class PlayerHistoryItems {
         PlayerStatistic stats = hcfPlayer.getPlayerStatistic();
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        formatter.setTimeZone(Main.getTimeZone());
+        formatter2.setTimeZone(Main.getTimeZone());
         im.setLore(Arrays.asList(
                 "§5",
-                "§6§l▎ §7Time Played: §e" + formatter.format(new Date(stats.TimePlayed - 60 * 60 * 1000L)),
-                "§6§l▎ §7First Join: §e" + formatter2.format(new Date(stats.startDate - 3600 * 1000L)),
-                "§6§l▎ §7Last Join: §e" + formatter2.format(new Date(stats.lastLogin - 3600 * 1000L)),
+                "§6§l▎ §7Time Played: §e" + formatter.format(new Date(stats.TimePlayed)),
+                "§6§l▎ §7First Join: §e" + formatter2.format(new Date(stats.startDate )),
+                "§6§l▎ §7Last Join: §e" + formatter2.format(new Date(stats.lastLogin )),
                 "§5",
                 "§6§l┏ §7Money Earned: §e$" + stats.MoneyEarned,
                 "§6§l┗ §7Money Spend: §e$" + stats.MoneySpend,
@@ -56,13 +59,14 @@ public class PlayerHistoryItems {
         public long TotalClassTime;
      */
     public static ItemStack classStats(Player p) {
+
         ItemStack is = new ItemStack(Material.PAPER);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName("§2☰ §aClass Statistics");
         HCFPlayer hcfPlayer = HCFPlayer.getPlayer(p);
         PlayerStatistic stats = hcfPlayer.getPlayerStatistic();
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-
+        formatter.setTimeZone(Main.getTimeZone());
         long total = 0L;
         total += stats.TotalBardClassTime;
         total += stats.TotalAssassinClassTime;
