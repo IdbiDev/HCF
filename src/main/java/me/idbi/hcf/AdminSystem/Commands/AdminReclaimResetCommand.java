@@ -28,7 +28,7 @@ public class AdminReclaimResetCommand extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/admin " + getName() + "<all | <player>>";
+        return "/admin " + getName() + "<all | <player>";
     }
 
     @Override

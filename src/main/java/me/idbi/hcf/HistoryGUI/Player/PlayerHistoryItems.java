@@ -73,14 +73,16 @@ public class PlayerHistoryItems {
         total += stats.TotalArcherClassTime;
         total += stats.TotalMinerClassTime;
 
+        long cucc = 60 * 60 * 1000L;
+
         im.setLore(Arrays.asList(
                 "§5",
-                "§2§l▎ §7Bard: §a" + formatter.format(new Date(stats.TotalBardClassTime - 60 * 60 * 1000L)),
-                "§2§l▎ §7Assassin: §a" + formatter.format(new Date(stats.TotalAssassinClassTime - 60 * 60 * 1000L)),
-                "§2§l▎ §7Archer: §a" + formatter.format(new Date(stats.TotalArcherClassTime - 60 * 60 * 1000L)),
-                "§2§l▎ §7Miner: §a" + formatter.format(new Date(stats.TotalMinerClassTime - 60 * 60 * 1000L)),
+                "§2§l▎ §7Bard: §a" + formatter.format(new Date(stats.TotalBardClassTime - cucc/* - cucc*/)),
+                "§2§l▎ §7Assassin: §a" + formatter.format(new Date(stats.TotalAssassinClassTime - cucc/* - cucc*/)),
+                "§2§l▎ §7Archer: §a" + formatter.format(new Date(stats.TotalArcherClassTime - cucc/* - cucc*/)),
+                "§2§l▎ §7Miner: §a" + formatter.format(new Date(stats.TotalMinerClassTime - cucc/* - cucc*/)),
                 "§5",
-                "§2§l➸ §7Total: §a" + formatter.format(new Date(total - 3600000))
+                "§2§l➸ §7Total: §a" + formatter.format(new Date(total - cucc/* - cucc*/))
 
         ));
         is.setItemMeta(im);
