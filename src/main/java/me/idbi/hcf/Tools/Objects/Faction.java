@@ -137,7 +137,7 @@ public class Faction {
     }
 
     public boolean isCustom() {
-        return this.leader == null;
+        return this.leader == null || this.leader.equals("null");
     }
 
     public void setHomeLocation(Location loc) {

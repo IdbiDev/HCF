@@ -7,6 +7,7 @@ import me.idbi.hcf.HCFRules;
 import me.idbi.hcf.HCFServer;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Reclaim.ReclaimConfig;
+import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.*;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Bukkit;
@@ -90,6 +91,13 @@ public class HCFApi {
 
     public static Faction getFaction(String name) {
         return Playertools.getFactionByName(name);
+    }
+    public static String setFakeName(Player p, String newName) {
+        NameChanger.setFakeName(p.getUniqueId(), newName);
+        return newName;
+    }
+    public static String getFakeName(Player p, String newName) {
+        return NameChanger.getFakeName(p.getUniqueId());
     }
 
     public static Faction getFaction(OfflinePlayer player) {

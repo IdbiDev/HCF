@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.UUID;
+
 public class GUI_Items {
 
     public static ItemStack rankManager(Player p) {
@@ -74,10 +76,15 @@ public class GUI_Items {
                 : Messages.status_design_offline.language(p).queue());
         String leaderName = "";
         try {
-            leaderName = ((Bukkit.getPlayer(faction.getLeader())) != null
-                    ? Bukkit.getPlayer(faction.getLeader()).getName()
-                    : Bukkit.getOfflinePlayer(faction.getLeader()).getName());
+            if(!faction.isCustom()) {
+                Player leader = Bukkit.getPlayer(UUID.fromString(faction.getLeader()));
+                leaderName = (leader != null
+                        ? leader.getName()
+                        : Bukkit.getOfflinePlayer(UUID.fromString(faction.getLeader())).getName());
+            }
+
         } catch (IllegalArgumentException ignore) {
+            //ignore.printStackTrace();
         }
 
         im.setLore(GUIMessages.faction_stats.language(p).setupShow(
