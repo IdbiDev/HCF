@@ -1,3 +1,6 @@
 # HCF
-Minecraft HCF+ 1.8
-Koba egy meleg UwU
+Minecraft HCF Plus Core Plugin
+
+Created by: Idbi & Koba
+
+"Basic hcf, just better"
