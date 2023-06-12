@@ -36,7 +36,7 @@ public class PlayerHistoryItems {
         formatter2.setTimeZone(Main.getTimeZone());
         im.setLore(Arrays.asList(
                 "§5",
-                "§6§l▎ §7Time Played: §e" + formatter.format(new Date(stats.TimePlayed)),
+                "§6§l▎ §7Time Played: §e" + str,
                 "§6§l▎ §7First Join: §e" + formatter2.format(new Date(stats.startDate )),
                 "§6§l▎ §7Last Join: §e" + formatter2.format(new Date(stats.lastLogin )),
                 "§5",
@@ -73,14 +73,12 @@ public class PlayerHistoryItems {
         total += stats.TotalArcherClassTime;
         total += stats.TotalMinerClassTime;
 
-        long cucc = 60 * 60 * 1000L;
-
         im.setLore(Arrays.asList(
                 "§5",
-                "§2§l▎ §7Bard: §a" + formatter.format(new Date(stats.TotalBardClassTime - cucc/* - cucc*/)),
-                "§2§l▎ §7Assassin: §a" + formatter.format(new Date(stats.TotalAssassinClassTime - cucc/* - cucc*/)),
-                "§2§l▎ §7Archer: §a" + formatter.format(new Date(stats.TotalArcherClassTime - cucc/* - cucc*/)),
-                "§2§l▎ §7Miner: §a" + formatter.format(new Date(stats.TotalMinerClassTime - cucc/* - cucc*/)),
+                "§2§l▎ §7Bard: §a" + Formatter.formatMMSS(stats.TotalBardClassTime),
+                "§2§l▎ §7Assassin: §a" + Formatter.formatMMSS(stats.TotalAssassinClassTime),
+                "§2§l▎ §7Archer: §a" + Formatter.formatMMSS(stats.TotalArcherClassTime),
+                "§2§l▎ §7Miner: §a" + Formatter.formatMMSS(stats.TotalMinerClassTime),
                 "§5",
                 "§2§l➸ §7Total: §a" + formatter.format(new Date(total - cucc/* - cucc*/))
 

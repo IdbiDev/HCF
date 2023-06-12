@@ -193,7 +193,12 @@ public final class Main extends JavaPlugin implements Listener {
 
         this.scoreboardManager = new BoardManager(this);
         this.scoreboardManager.setup();
-        ;
+        // Variables
+        playerBlockChanges = new HashMap<>();
+        protocolManager = ProtocolLibrary.getProtocolManager();
+        //EnchantmentFile.setup();
+        AdminTools.InvisibleManager.invisedAdmins = new ArrayList<>();
+        customSBTimers = new HashMap<>();
 
         // Setup variables
 
@@ -222,25 +227,18 @@ public final class Main extends JavaPlugin implements Listener {
         EOTWENABLED = false;
         SOTWEnabled = false;
         timeZone = TimeZone.getTimeZone(Config.Timezone.asStr());
-
+        TimeZone.setDefault(timeZone);
         // SQL
         if (con == null)
             return;
         new SQL_Generator();
-
-        // Variables
-        playerBlockChanges = new HashMap<>();
-        protocolManager = ProtocolLibrary.getProtocolManager();
-        //EnchantmentFile.setup();
-        AdminTools.InvisibleManager.invisedAdmins = new ArrayList<>();
-        customSBTimers = new HashMap<>();
 
         // koth
         KothRewardsFile.setup();
         ReclaimFile.setup();
         TabFile.setup();
 
-        this.tabManager = new TabManager(this);
+
 
         // setup classes
         //SetupBot.setup();
@@ -369,10 +367,8 @@ public final class Main extends JavaPlugin implements Listener {
                     integerFactionEntry.getValue().setRanks(null);
                     integerFactionEntry.getValue().setMembers(null);
                 }
-                con.close();//Teccik? eskü igen idk hogy megy e
-                //I mean, nem basztam el semmit xD REMÉLEM
-                con = null; // az online playereket nem kéne újrabetölteni? Nem, ez disable // szerot már próbáltad xdf? Nem xD
-                // fasza, akkor most kipróbálom xd semmi Megy?
+                con.close();
+                con = null;
                 customSBTimers.clear();
                 factionCache.clear();
                 nameToFaction.clear();

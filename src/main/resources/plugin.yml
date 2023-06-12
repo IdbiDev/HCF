@@ -1,5 +1,5 @@
 name: HCFPlus
-version: '${project.version}'
+version: '1.1'
 main: me.idbi.hcf.Main
 #api-version: 1.8
 prefix: 'HCF+'

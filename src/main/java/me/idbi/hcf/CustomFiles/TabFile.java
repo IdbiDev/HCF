@@ -14,7 +14,7 @@ public class TabFile {
 
     public static void setup() {
         cfg = new File(m.getDataFolder(), "tab.yml"); //
-        if (!cfg.exists()) {
+            if (!cfg.exists()) {
             m.saveResource("tab.yml", false);
            /* try {
                 //cfg.createNewFile();
