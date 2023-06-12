@@ -106,6 +106,7 @@ public class Playertools {
         hcf.setCurrentArea(getUpperClaim(player.getLocation()));
         hcf.setOnline(true);
         Main.playerCache.put(hcf.getUUID(), hcf);
+        hcf.getPlayerStatistic().lastLogin = new Date().getTime();
         hcf.join();
         Scoreboards.refresh(player);
         NameChanger.refresh(player);

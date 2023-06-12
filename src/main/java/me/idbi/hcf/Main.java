@@ -238,6 +238,8 @@ public final class Main extends JavaPlugin implements Listener {
         ReclaimFile.setup();
         TabFile.setup();
 
+        this.tabManager = new TabManager(this);
+
 
 
         // setup classes

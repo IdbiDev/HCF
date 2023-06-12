@@ -15,11 +15,11 @@ public enum Config {
     BungeeCord(true),
     DefaultLanguage("Language", "en", createComment("Sets the default language to the players.")),
     Timezone("Timezone", "Europe/Budapest", createComment("Sets the default timezone on the server. ", "Please use this website if you don't understand the timezone format:","https://code2care.org/pages/java-timezone-list-utc-gmt-offset")),
-    Host("Database", "mysqlgame.clans.hu"),
+    Host("Database", "localhost"),
     Port("Database", "3306"),
-    Database("Database", "hcfplus917"),
-    Username("Database", "hcfplus917"),
-    Password("Database", "GUvaJE2E2EQuSup"),
+    Database("Database", "database"),
+    Username("Database", "root"),
+    Password("Database", " "),
     EnderPearl("Cooldowns", 10, createComment("Sets the enderpearl cooldown after thrown.", "Must be in seconds")),
     PvPTimer("Cooldowns", 30, createComment("This will be set if after joining, or respawning.", "Must be in seconds")),
     CombatTag("Cooldowns", 30, createComment("This will be set if you are hit", "Must be in seconds")),
@@ -38,10 +38,10 @@ public enum Config {
     //DTRRegen("Cooldowns", 60, createComment("Must be in seconds")),
 
     WorldName("Default values", "world", createComment("Sets the world, where the HCF server are.")),
-    SpawnLocation("Default values", "0.5 64 0.5 0 0", createComment("Sets the world spawn-point!", "Order: X,Y,Z,Pitch,Yaw (Separation with SPACE instead comma)")),
-    EndOverworldLocation("Default values", "-9.5 64 -28.5 0 0", createComment("Sets the end, where the HCF end are.")),
+    SpawnLocation("Default values", "0.5 75 0.5 0 0", createComment("Sets the world spawn-point!", "Order: X,Y,Z,Pitch,Yaw (Separation with SPACE instead comma)")),
+    EndOverworldLocation("Default values", "0.5 75 0.5 0 0", createComment("Sets the end, where the HCF end are.")),
     EndName("Default values", "world_the_end", createComment("Sets the end, where the HCF end are.")),
-    EndSpawn("Default values", "93.5 59 -2.5 90 0", createComment("Sets the end, where the HCF end are.")),
+    EndSpawn("Default values", "0.5 75 0 90 0", createComment("Sets the end, where the HCF end are.")),
     NetherName("Default values", "world_nether", createComment("Sets the nether, where the HCF nether are.")),
     NetherSpawn("Default values", "0 0 0 0 0", createComment("Sets the nether, where the HCF nether are.")),
     DeathbanEnable("Default values", false, createComment("Sets the death-ban.", "Only 'true' or 'false' are accepted!")),
@@ -137,13 +137,13 @@ public enum Config {
 
     MountainEventReset("MountainEvent", 3600, createComment("Set Mountain event reset time", "Must be in seconds")),
     MountainEventMaterial("MountainEvent", Material.GLOWSTONE.name(), createComment("Set Mountain event block type")),
-    MountainEventLocation1("MountainEvent", "3 69 -11", createComment("Select 2 location of the o")),
-    MountainEventLocation2("MountainEvent", "6 73 -7", createComment("Set Mountain event block type")),
+    MountainEventLocation1("MountainEvent", "0 75 0", createComment("Select 2 location of the o")),
+    MountainEventLocation2("MountainEvent", "15 80 15", createComment("Set Mountain event block type")),
 
     LunarWaypoints("Waypoints", Arrays.asList(
-            "Spawn; world; -39, 60, -9; #FF0000",
-            "End; world; -39, 60, -13; #FFFFFF",
-            "End Exit; world_the_end; -39, 60, -17; #FFFFFF"
+            "Spawn; world; 0.5, 75, 0; #FF0000",
+            "End; world; 0.5, 75, 0.5; #FFFFFF",
+            "End Exit; world_the_end; 0.5, 75, 0.5; #FFFFFF"
     ), createComment("Syntax: 'name; world; x, y, z; #hexcode'")),
     HomeWaypoint("Waypoints", "Home; #0000FF"),
     RallyWaypoint("Waypoints", "Rally; #FF0000"),

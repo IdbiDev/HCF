@@ -1,6 +1,7 @@
 package me.idbi.hcf.HistoryGUI.Player;
 
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Formatter;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 import org.bukkit.Material;
@@ -8,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -34,6 +36,8 @@ public class PlayerHistoryItems {
         SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         formatter.setTimeZone(Main.getTimeZone());
         formatter2.setTimeZone(Main.getTimeZone());
+        /*System.out.println(new Date(stats.TimePlayed - 60 * 60 * 1000L));*/
+        String str = Formatter.formatMMSS(stats.TimePlayed);
         im.setLore(Arrays.asList(
                 "§5",
                 "§6§l▎ §7Time Played: §e" + str,
@@ -80,7 +84,7 @@ public class PlayerHistoryItems {
                 "§2§l▎ §7Archer: §a" + Formatter.formatMMSS(stats.TotalArcherClassTime),
                 "§2§l▎ §7Miner: §a" + Formatter.formatMMSS(stats.TotalMinerClassTime),
                 "§5",
-                "§2§l➸ §7Total: §a" + formatter.format(new Date(total - cucc/* - cucc*/))
+                "§2§l➸ §7Total: §a" + Formatter.formatMMSS(total)
 
         ));
         is.setItemMeta(im);
