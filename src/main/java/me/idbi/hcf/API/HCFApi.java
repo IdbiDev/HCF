@@ -10,11 +10,13 @@ import me.idbi.hcf.Reclaim.ReclaimConfig;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.*;
 import me.idbi.hcf.Tools.Playertools;
+import me.idbi.hcf_abilitys.api.HCFAbilityApi;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,6 +125,14 @@ public class HCFApi {
     public static void resetReclaims() {
         ReclaimFile.get().set("ClaimedReclaims", null);
         ReclaimFile.save();
+    }
+
+    public static boolean isAbilityLoaded() {
+        Plugin ability = Bukkit.getPluginManager().getPlugin("HCFAbilities");
+        if(ability != null && ability.isEnabled()) {
+            return true;
+        }
+        return false;
     }
 
     /**

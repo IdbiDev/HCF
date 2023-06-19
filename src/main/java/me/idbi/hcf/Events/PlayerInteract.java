@@ -1,5 +1,6 @@
 package me.idbi.hcf.Events;
 
+import me.idbi.hcf.API.HCFApi;
 import me.idbi.hcf.Classes.Classes;
 import me.idbi.hcf.Classes.SubClasses.Bard;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
@@ -70,6 +71,9 @@ public class PlayerInteract implements Listener {
                                 p.sendMessage(Messages.you_cant_do.language(p).setFaction(claim.getFaction()).queue());
                         }
                     }
+                    if(Playertools.isInWarzone(p)) {
+                        e.setCancelled(false);
+                    }
 
                 } else {
                     if (Claiming.isEnemyClaim(p, claim)) {
@@ -79,6 +83,9 @@ public class PlayerInteract implements Listener {
                             if(claim.getAttribute() != ClaimAttributes.PROTECTED)
                                 p.sendMessage(Messages.you_cant_do.language(p).setFaction(claim.getFaction()).queue());
                         }
+                    }
+                    if(Playertools.isInWarzone(p)) {
+                        e.setCancelled(false);
                     }
                 }
             }
