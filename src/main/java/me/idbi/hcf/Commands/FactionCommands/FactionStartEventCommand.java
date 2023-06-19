@@ -12,7 +12,6 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 public class FactionStartEventCommand extends SubCommand {
-    public static Connection con = Main.getConnection();
     SOTW sotw = new SOTW();
     EOTW eotw = new EOTW();
     Deathmatch deathmatch = new Deathmatch();

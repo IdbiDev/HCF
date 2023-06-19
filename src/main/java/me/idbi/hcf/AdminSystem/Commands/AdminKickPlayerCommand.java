@@ -4,17 +4,22 @@ import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import me.idbi.hcf.Tools.SQL_Connection;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
+import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.util.HashMap;
 
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.set;
+import static me.idbi.hcf.Tools.Playertools.con;
 public class AdminKickPlayerCommand extends SubCommand {
-    private static final Connection con = Main.getConnection();
 
     @Override
     public String getName() {
@@ -77,8 +82,13 @@ public class AdminKickPlayerCommand extends SubCommand {
         Player target = Bukkit.getPlayer(args[1]);
         HCFPlayer player = HCFPlayer.getPlayer(target);
         player.removeFaction();
-
-        SQL_Connection.dbExecute(con, "UPDATE members SET faction=0 WHERE uuid='?'", target.getUniqueId().toString());
+        if(Main.isUsingMongoDB()) {
+            Bson update = combine(set("faction", 0), set("rank", "None"));
+            MongoDBDriver.Update(MongoDBDriver.MongoCollections.MEMBERS, eq("uuid", target.getUniqueId().toString()), update);
+        }else {
+            SQL_Connection.dbExecute(con, "UPDATE members SET rank = '?', faction = '?' WHERE uuid = '?'", "None", "0", target.getUniqueId().toString());
+        }
+        //SQL_Connection.dbExecute(con, "UPDATE members SET faction=0 WHERE uuid='?'", target.getUniqueId().toString());
         Scoreboards.refresh(target);
         NameChanger.refresh(target);
     }

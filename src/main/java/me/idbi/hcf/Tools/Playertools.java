@@ -5,13 +5,20 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.Tools.Database.MongoDB.AsyncMongoDBDriver;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Async;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.*;
+import org.bson.Document;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.jetbrains.annotations.Async;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,13 +28,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static me.idbi.hcf.Commands.FactionCommands.FactionCreateCommand.con;
+import static com.mongodb.client.model.Filters.empty;
+import static com.mongodb.client.model.Filters.eq;
 import static me.idbi.hcf.Main.*;
 
 
 public class Playertools {
-    private static final Connection con = Main.getConnection();
+    public static Connection con = null;
 
+    public static void initConnection() {
+        con = Main.getCon();
+    }
 
    /* public static void LoadPlayer(Player player) {
 
@@ -91,7 +102,22 @@ public class Playertools {
     public static void loadOnlinePlayer(Player player) {
         //SQL_Connection.dbExecute(con, "INSERT IGNORE INTO members SET name='?',uuid='?',money='?'", player.getName(), player.getUniqueId().toString(),Config.default_balance.asInt() + "");
         if (!Main.playerCache.containsKey(player.getUniqueId())) {
-            SQL_Async.dbExecuteAsync(con, "INSERT INTO members SET name='?',uuid='?',money='?'", player.getName(), player.getUniqueId().toString(), Config.DefaultBalance.asInt() + "");
+            if(Main.isUsingMongoDB()) {
+                Document insert = new Document();
+                insert.append(MongoFields.MembersFields.NAME.get(), player.getName());
+                insert.append(MongoFields.MembersFields.UUID.get(),player.getUniqueId().toString());
+                insert.append(MongoFields.MembersFields.MONEY.get(),Config.DefaultBalance.asInt());
+                insert.append(MongoFields.MembersFields.FACTION.get(),0);
+                insert.append(MongoFields.MembersFields.RANK.get(),"None");
+                insert.append(MongoFields.MembersFields.KILLS.get(),0);
+                insert.append(MongoFields.MembersFields.DEATHS.get(),0);
+                insert.append(MongoFields.MembersFields.LIVES.get(),0);
+                insert.append(MongoFields.MembersFields.LANGUAGE.get(), "en");
+                insert.append(MongoFields.MembersFields.STATISTICS.get() ,PlayerStatistic.defaultStats);
+                MongoDBDriver.Insert(MongoDBDriver.MongoCollections.MEMBERS,insert);
+            }else {
+                SQL_Async.dbExecuteAsync(con, "INSERT INTO members SET name='?',uuid='?',money='?'", player.getName(), player.getUniqueId().toString(), Config.DefaultBalance.asInt() + "");
+            }
             HCFPlayer hcf = HCFPlayer.createPlayer(player);
             Main.playerCache.put(hcf.getUUID(), hcf);
             Main.getEconomy().createPlayerAccount(player);
@@ -153,34 +179,22 @@ public class Playertools {
     public static void cacheAll() {
         ResultSet rs = null;
         try {
+            if (Main.isUsingMongoDB()) {
 
-            //PreparedStatement ps = con.prepareStatement("SELECT * FROM members");
-            PreparedStatement ps = con.prepareStatement("SELECT members.uuid,members.name,members.faction,members.rank,members.kills,members.deaths,members.money,members.language,members.statistics,members.lives,deathbans.time FROM `members` LEFT JOIN deathbans ON members.uuid = deathbans.uuid;");
-            rs = ps.executeQuery();
+                ArrayList<Document> res = MongoDBDriver.FindAll(MongoDBDriver.MongoCollections.MEMBERS.getName(), empty());
+                for (Document document : res) {
+                    cachePlayerSyncMongoDB(UUID.fromString(document.getString(MongoFields.MembersFields.UUID.get())), document);
+                }
+            } else {
+                PreparedStatement ps = con.prepareStatement("SELECT members.uuid,members.name,members.faction,members.rank,members.kills,members.deaths,members.money,members.language,members.statistics,members.lives,deathbans.time FROM `members` LEFT JOIN deathbans ON members.uuid = deathbans.uuid;");
+                rs = ps.executeQuery();
 
-            while (rs.next()) {
-//                HashMap<String,Object> map =  SQL_Connection.dbPoll(con,"SELECT * FROM members WHERE uuid='?' AND name='?' ORDER BY ID DESC",e.getUniqueId().toString(),e.getName());
-//                // 15 , 29 ,69
-//
-//                PreparedStatement asd = con.prepareStatement("DELETE FROM members WHERE uuid=? AND ID > ?");
-//                asd.setString(1, e.getUniqueId().toString());
-//                asd.setInt(2, (int) map.get("ID"));
-//                asd.executeUpdate();
-                cachePlayerSync(UUID.fromString(rs.getString("uuid")), rs);
-                Main.sendCmdMessage("Player " + rs.getString("uuid") + " cached!");
+                while (rs.next()) {
+                    cachePlayerSync(UUID.fromString(rs.getString("uuid")), rs);
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
-            /*try {
-                while (rs.next()) {
-                    cachePlayerSync(UUID.randomUUID(), rs);
-                    Main.sendCmdMessage("Player " + rs.getString("uuid") + " cached!");
-                }
-            }catch (SQLException ignored){
-                System.out.println("WTF");
-            }*/
         }
     }
 
@@ -206,24 +220,33 @@ public class Playertools {
             e.printStackTrace();
         }
     }
+    public static void cachePlayerSyncMongoDB(UUID uuid, Document doc) {
+        Document death_dc = MongoDBDriver.Find(
+            MongoDBDriver.MongoCollections.DEATHBANS,
+            eq(MongoFields.MembersFields.UUID.get(),uuid.toString()));
 
-    //Reload / Restart / Mindig létezik
-//    public static void cachePlayer(UUID uuid) {
-//        SQL_Async.dbPollAsync(con, "SELECT * FROM members WHERE uuid='?'", uuid.toString()).thenAcceptAsync(playerMap -> {
-//            if (!playerMap.isEmpty()) {
-//                HCFPlayer hcf = new HCFPlayer(
-//                        uuid,
-//                        (int) playerMap.get("kills"),
-//                        (int) playerMap.get("deaths"),
-//                        Main.factionCache.get((int) playerMap.get("faction")),
-//                        (int) playerMap.get("money"),
-//                        new PlayerStatistic(new JSONObject(playerMap.get("statistics").toString())),
-//                        playerMap.get("rank").toString(),
-//                        playerMap.get("language").toString(),0
-//                );
-//            }
-//        });
-//    }
+        String yes = MongoFields.DeathbansFields.TIME.get();
+        String jsoncat = doc.getString(MongoFields.MembersFields.STATISTICS.get());
+        HCFPlayer hcf = new HCFPlayer(
+                uuid,
+                doc.getInteger(MongoFields.MembersFields.KILLS.get()),
+                doc.getInteger(MongoFields.MembersFields.DEATHS.get()),
+                Main.factionCache.get(doc.getInteger(MongoFields.MembersFields.FACTION.get())),
+                //Math.toIntExact(Math.round(Main.getEconomy().getBalance(Bukkit.getOfflinePlayer(uuid)))),
+                doc.getInteger(MongoFields.MembersFields.MONEY.get()),
+
+                new PlayerStatistic(new JSONObject(jsoncat)),
+                doc.getString(MongoFields.MembersFields.RANK.get()),
+                doc.getString(MongoFields.MembersFields.LANGUAGE.get()),
+
+                !death_dc.containsKey(yes) ? 0 : death_dc.getLong(MongoFields.DeathbansFields.TIME.get())
+        );
+        hcf.setLives(doc.getInteger(MongoFields.MembersFields.LIVES.get()));
+        Main.playerCache.put(hcf.getUUID(), hcf);
+        if (hcf.inFaction())
+            hcf.getFaction().addMember(hcf);
+    }
+
 
     public static List<Player> getPlayersInDistance(Player p, double distance) {
         List<Player> players = new ArrayList<>();
@@ -330,24 +353,42 @@ public class Playertools {
 
     public static void cacheFactionClaims() {
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM claims");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                try {
+            if (Main.isUsingMongoDB()) {
+
+                ArrayList<Document> res = MongoDBDriver.FindAll("claims",empty());
+                for (Document document : res) {
                     ClaimAttributes at = ClaimAttributes.NORMAL;
-                    if (rs.getString("type").equalsIgnoreCase("protected")) {
+                    if (document.getString("type").equalsIgnoreCase("protected")) {
                         at = ClaimAttributes.PROTECTED;
-                    } else if (rs.getString("type").equalsIgnoreCase("koth")) {
+                    } else if (document.getString("type").equalsIgnoreCase("koth")) {
                         at = ClaimAttributes.KOTH;
                     }
-                    Faction f = Main.factionCache.get(rs.getInt("factionid"));
+                    Faction f = Main.factionCache.get(document.getInteger("factionid"));
                     if (f != null) {
-                        Claim claim = new Claim(rs.getInt("startX"), rs.getInt("endX"), rs.getInt("startZ"), rs.getInt("endZ"), rs.getInt("factionid"), at, rs.getString("world"));
+                        Claim claim = new Claim(document.getInteger("startX"), document.getInteger("endX"), document.getInteger("startZ"), document.getInteger("endZ"), document.getInteger("factionid"), at, document.getString("world"));
                         f.addClaim(claim);
                     }
+                }
+            } else {
+                PreparedStatement ps = con.prepareStatement("SELECT * FROM claims");
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    try {
+                        ClaimAttributes at = ClaimAttributes.NORMAL;
+                        if (rs.getString("type").equalsIgnoreCase("protected")) {
+                            at = ClaimAttributes.PROTECTED;
+                        } else if (rs.getString("type").equalsIgnoreCase("koth")) {
+                            at = ClaimAttributes.KOTH;
+                        }
+                        Faction f = Main.factionCache.get(rs.getInt("factionid"));
+                        if (f != null) {
+                            Claim claim = new Claim(rs.getInt("startX"), rs.getInt("endX"), rs.getInt("startZ"), rs.getInt("endZ"), rs.getInt("factionid"), at, rs.getString("world"));
+                            f.addClaim(claim);
+                        }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -390,55 +431,78 @@ public class Playertools {
 
     public static void setFactionCache() {
         try {
-            Main.factionCache.clear();
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM factions");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Faction faction = new Faction(rs.getInt("ID"), rs.getString("name"),
-                        Objects.equals(rs.getString("leader"), "null") ? null :  rs.getString("leader"),
-                        rs.getInt("money"));
-                if (isValidJSON(rs.getString("statistics"))) {
-                    faction.loadFactionHistory(new JSONObject(rs.getString("statistics")));
-                } else {
-                    faction.loadFactionHistory(faction.assembleFactionHistory());
+            if (Main.isUsingMongoDB()) {
+
+                ArrayList<Document> res = MongoDBDriver.FindAll(MongoDBDriver.MongoCollections.FACTIONS.getName(), empty());
+                for (Document document : res) {
+                    Faction faction = new Faction(
+                            document.getInteger(MongoFields.FactionsFields.ID.get()),
+                            document.getString(MongoFields.FactionsFields.NAME.get()),
+                            document.getString(MongoFields.FactionsFields.LEADER.get()),
+                            document.getInteger(MongoFields.FactionsFields.BALANCE.get()));
+                    if (isValidJSON(document.getString(MongoFields.FactionsFields.STATISTICS.get()))) {
+                        faction.loadFactionHistory(new JSONObject(document.getString(MongoFields.FactionsFields.STATISTICS.get())));
+                    } else {
+                        faction.loadFactionHistory(faction.assembleFactionHistory());
+                    }
+                    faction.setPoints(document.getInteger(MongoFields.FactionsFields.POINTS.get()));
+
+                    Main.factionCache.put(document.getInteger(MongoFields.FactionsFields.ID.get()), faction);
+                    Main.nameToFaction.put(document.getString(MongoFields.FactionsFields.NAME.get()), faction);
+
+                    faction.setDTR(Double.parseDouble(CalculateDTR(faction)));
+                    if (Main.debug)
+                        Main.sendCmdMessage(faction.getName() + " Prepared");
+                    if(!document.containsKey(MongoFields.FactionsFields.HOME.get()))
+                        continue;
+                    if(document.getString(MongoFields.FactionsFields.HOME.get()) == null)
+                        continue;
+                    if (document.getString(MongoFields.FactionsFields.HOME.get()).equalsIgnoreCase("null"))
+                        continue;
+                    Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(document.getString(MongoFields.FactionsFields.HOME.get())));
+                    Location loc = new Location(
+                            Bukkit.getWorld(Config.WorldName.asStr()),
+                            Integer.parseInt(map.get("X").toString()),
+                            Integer.parseInt(map.get("Y").toString()),
+                            Integer.parseInt(map.get("Z").toString()),
+                            Integer.parseInt(map.get("YAW").toString()),
+                            Integer.parseInt(map.get("PITCH").toString()));
+                    faction.setHomeLocation(loc.add(/*x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5*/0.5, 0, 0.5));
                 }
-                faction.setPoints(rs.getInt("points"));
+            } else {
+                PreparedStatement ps = con.prepareStatement("SELECT * FROM factions");
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    Faction faction = new Faction(rs.getInt("ID"), rs.getString("name"),
+                            Objects.equals(rs.getString("leader"), "null") ? null : rs.getString("leader"),
+                            rs.getInt("money"));
+                    if (isValidJSON(rs.getString("statistics"))) {
+                        faction.loadFactionHistory(new JSONObject(rs.getString("statistics")));
+                    } else {
+                        faction.loadFactionHistory(faction.assembleFactionHistory());
+                    }
+                    faction.setPoints(rs.getInt("points"));
 
-                Main.factionCache.put(rs.getInt("ID"), faction);
-                Main.nameToFaction.put(rs.getString("name"), faction);
+                    Main.factionCache.put(rs.getInt("ID"), faction);
+                    Main.nameToFaction.put(rs.getString("name"), faction);
 
-                faction.setDTR(Double.parseDouble(CalculateDTR(faction)));
-//                if(main_score.getTeam(faction.name) == null)
-//                    main_score.registerNewTeam(faction.name).setPrefix(ChatColor.GREEN.toString());
-//                else{
-//                    main_score.getTeam(faction.name).unregister();
-//                    main_score.registerNewTeam(faction.name).setPrefix(ChatColor.GREEN.toString());
-//                }
-                //System.out.println(main_score.getTeams());
-                //Main.sendCmdMessage(faction.name + " UWUUUUUUUUUUUUUUUUUUU");
-                if (Main.debug)
-                    Main.sendCmdMessage(faction.getName() + " Prepared");
-                if (rs.getString("home") == null || rs.getString("home").equalsIgnoreCase("null"))
-                    continue;
-                Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(rs.getString("home")));
-                Location loc = new Location(
-                        Bukkit.getWorld(Config.WorldName.asStr()),
-                        Integer.parseInt(map.get("X").toString()),
-                        Integer.parseInt(map.get("Y").toString()),
-                        Integer.parseInt(map.get("Z").toString()),
-                        Integer.parseInt(map.get("YAW").toString()),
-                        Integer.parseInt(map.get("PITCH").toString()));
-                int x = loc.getBlockX();
-                int z = loc.getBlockZ();
-                faction.setHomeLocation(loc.add(/*x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5*/0.5, 0, 0.5));
-                /*Main.DTR_REGEN.put(faction.factionid, System.currentTimeMillis() + DTR_REGEN_TIME* 1000L);
-                faction.DTR -= Main.DEATH_DTR;*/
+                    faction.setDTR(Double.parseDouble(CalculateDTR(faction)));
+                    if (Main.debug)
+                        Main.sendCmdMessage(faction.getName() + " Prepared");
+                    if (rs.getString("home") == null || rs.getString("home").equalsIgnoreCase("null"))
+                        continue;
+                    Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(rs.getString("home")));
+                    Location loc = new Location(
+                            Bukkit.getWorld(Config.WorldName.asStr()),
+                            Integer.parseInt(map.get("X").toString()),
+                            Integer.parseInt(map.get("Y").toString()),
+                            Integer.parseInt(map.get("Z").toString()),
+                            Integer.parseInt(map.get("YAW").toString()),
+                            Integer.parseInt(map.get("PITCH").toString()));
+                    faction.setHomeLocation(loc.add(/*x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5*/0.5, 0, 0.5));
+                }
 
             }
-            //Check if warzone enabled, and the spawn location is setted
-
-            // ToDo: Setup allies!
-
         } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
@@ -472,30 +536,41 @@ public class Playertools {
     }
 
     public static void loadRanks() {
-        /*try {
-            PreparedStatement rank_ps =  con.prepareStatement("SELECT * FROM ranks");
-            ResultSet rank_rs = rank_ps.executeQuery();
-            PreparedStatement member_ps =  con.prepareStatement("SELECT * FROM members");
-            ResultSet member_rs = member_ps.executeQuery();
-            while (rs.next()){
-               // rankManager.addRankToCache(rs.getInt("ID"),rs.getInt("faction"), rs.getString("name"), rs.getString("permissions").split(","));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
         try {
-            PreparedStatement rank_ps = con.prepareStatement("SELECT * FROM ranks");
-            ResultSet rank_rs = rank_ps.executeQuery();
-            while (rank_rs.next()) {
-                for (Map.Entry<Integer, Faction> f : Main.factionCache.entrySet()) {
-                    Integer id = f.getKey();
-                    Faction faction = f.getValue();
-                    if (id.equals(rank_rs.getInt("faction"))) {
-                        FactionRankManager.Rank rank = new FactionRankManager.Rank(rank_rs.getInt("ID"), rank_rs.getString("name"), rank_rs.getInt("isDefault") == 1, rank_rs.getInt("isLeader") == 1);
-                        rank.setPriority(rank_rs.getInt("priority"));
-                        ranks.add(rank);
-                        faction.addRank(rank);
-                        faction.sortRanks();
+            if (Main.isUsingMongoDB()) {
+                ArrayList<Document> res = MongoDBDriver.FindAll(MongoDBDriver.MongoCollections.RANKS, empty());
+                for (Document document : res) {
+                    for (Map.Entry<Integer, Faction> f : Main.factionCache.entrySet()) {
+                        Integer id = f.getKey();
+                        Faction faction = f.getValue();
+                        if (id.equals(document.getInteger(MongoFields.RanksFields.FACTION.get()))) {
+                            FactionRankManager.Rank rank = new FactionRankManager.Rank(
+                                    document.getInteger(MongoFields.RanksFields.ID.get()),
+                                    document.getString(MongoFields.RanksFields.NAME.get()),
+                                    document.getBoolean(MongoFields.RanksFields.ISDEFAULT.get()),
+                                    document.getBoolean(MongoFields.RanksFields.ISLEADER.get()));
+
+                            rank.setPriority(document.getInteger(MongoFields.RanksFields.PRIORITY.get()));
+                            ranks.add(rank);
+                            faction.addRank(rank);
+                            faction.sortRanks();
+                        }
+                    }
+                }
+            }else {
+                PreparedStatement rank_ps = con.prepareStatement("SELECT * FROM ranks");
+                ResultSet rank_rs = rank_ps.executeQuery();
+                while (rank_rs.next()) {
+                    for (Map.Entry<Integer, Faction> f : Main.factionCache.entrySet()) {
+                        Integer id = f.getKey();
+                        Faction faction = f.getValue();
+                        if (id.equals(rank_rs.getInt("faction"))) {
+                            FactionRankManager.Rank rank = new FactionRankManager.Rank(rank_rs.getInt("ID"), rank_rs.getString("name"), rank_rs.getInt("isDefault") == 1, rank_rs.getInt("isLeader") == 1);
+                            rank.setPriority(rank_rs.getInt("priority"));
+                            ranks.add(rank);
+                            faction.addRank(rank);
+                            faction.sortRanks();
+                        }
                     }
                 }
             }
@@ -570,7 +645,20 @@ public class Playertools {
         Faction faction = new Faction(largestID, name, leader, 0);
         Main.factionCache.put(largestID, faction);
         Main.nameToFaction.put(faction.getName(), faction);
-        SQL_Connection.dbExecute(con, "INSERT INTO factions SET ID='?', name='?',leader='?'", String.valueOf(faction.getId()), name, leader);
+        if(Main.isUsingMongoDB()){
+            Document insert = new Document();
+            insert.append(MongoFields.FactionsFields.NAME.get(),name);
+            insert.append(MongoFields.FactionsFields.LEADER.get(), leader);
+            insert.append(MongoFields.FactionsFields.ID.get(), faction.getId());
+            insert.append(MongoFields.FactionsFields.BALANCE.get(), Config.DefaultBalanceFaction.asInt());
+            insert.append(MongoFields.FactionsFields.POINTS.get(), Config.PointStart.asInt());
+            insert.append(MongoFields.FactionsFields.HOME.get(),"null");
+            insert.append(MongoFields.FactionsFields.STATISTICS.get(), "{\"balanceHistory\":[],\"inviteHistory\":[],\"rankCreateHistory\":[],\"joinLeftHistory\":[],\"factionjoinLeftHistory\":[],\"kickHistory\":[]}");
+            insert.append(MongoFields.FactionsFields.ALLIES.get(),"{}");
+            MongoDBDriver.Insert(MongoDBDriver.MongoCollections.FACTIONS,insert);
+        }else {
+            SQL_Connection.dbExecute(con, "INSERT INTO factions SET ID='?', name='?',leader='?'", String.valueOf(faction.getId()), name, leader);
+        }
         return faction;
     }
 
@@ -626,18 +714,6 @@ public class Playertools {
         return Objects.equals(f1.getId(), f2.getId());
     }
 
-//    private static Map<String, FactionRankManager.Rank> sortbykey(HashMap map) {
-//        // TreeMap to store values of HashMap
-//        Map<String, FactionRankManager.Rank> sorted = new TreeMap<>(map);
-//
-//        // Copy all data from hashMap into TreeMap
-//        sorted.putAll(map);
-//
-//        // Display the TreeMap which is naturally sorted
-//        //  hashMap
-//        return sorted;
-//    }
-
     public static boolean isAlly(Player player1, Player player2) {
         HCFPlayer hcf1 = HCFPlayer.getPlayer(player1);
         HCFPlayer hcf2 = HCFPlayer.getPlayer(player2);
@@ -653,22 +729,12 @@ public class Playertools {
         return MM + " minutes " + SS + " seconds";
     }
 
-    /*public static void DrawCircle(Location center,double radius,double smoothness,Effect effect){
-        double angle = 0;
-        while (angle < 360){
-            double radiant_angle = Math.toRadians(angle);
-            double angleX = center.getX() + Math.cos(radiant_angle) * radius;
-            double angleZ = center.getZ() + Math.sin(radiant_angle) * radius;
-            angle = angle + smoothness;
-            center.getWorld().playEffect(new Location(center.getWorld(),angleX,center.getY(),angleZ), effect,effect.getId());
-        }
-    }*/
 
     public static boolean hasTeam(Player p, String team) {
         return p.getScoreboard().getTeam(team) != null;
     }
 
-    public static Scoreboard getSB(Player p, String team) {
+    /*public static Scoreboard getSB(Player p, String team) {
         if (hasTeam(p, team)) {
             return p.getScoreboard();
         } else {
@@ -683,7 +749,7 @@ public class Playertools {
             t.setAllowFriendlyFire(false);
             return b;
         }
-    }
+    }*/
 
     public static boolean isValidJSON(String json) {
         try {
@@ -734,12 +800,6 @@ public class Playertools {
         return claim.getFaction().getId() == 2;
     }
 
-    public static void cancelSpawnClaim(Player admin) {
-        HCFPlayer player = HCFPlayer.getPlayer(admin);
-        player.setClaimType(ClaimTypes.NONE);
-        admin.sendMessage(Messages.faction_claim_decline.language(admin).queue());
-        admin.getInventory().remove(Wand.claimWand());
-    }
 
     public static boolean isValidName(String name) {
         if(name.length() <= Config.MinNameLength.asInt()){

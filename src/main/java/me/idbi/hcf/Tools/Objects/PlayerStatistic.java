@@ -1,7 +1,10 @@
 package me.idbi.hcf.Tools.Objects;
 
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.SQL_Connection;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
+import me.idbi.hcf.Tools.Playertools;
+import org.bson.conversions.Bson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,8 +13,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.set;
+
 public class PlayerStatistic {
-    private static final Connection con = Main.getConnection();
+    private static final Connection con = Playertools.con;
     public final static String defaultStats = "{\"totalFactions\":0,\"lastLogin\":0,\"TimePlayed\":0,\"MoneySpend\":0,\"ClassTimes\":{\"Miner\":0,\"Archer\":0,\"Assassin\":0,\"Total\":0,\"Bard\":0},\"MoneyEarned\":0,\"FactionHistory\":[],\"startDate\":0}";
     public long TotalBardClassTime;
     public long TotalAssassinClassTime;
@@ -80,8 +87,13 @@ public class PlayerStatistic {
         }
         jsonComp.put("FactionHistory", factions);
         jsonComp.put("ClassTimes", classTimes);
-
-        SQL_Connection.dbExecute(con, "UPDATE members SET statistics='?' WHERE uuid='?'", jsonComp.toString(), uuid.toString());
+        if(Main.isUsingMongoDB()) {
+            Bson where = eq("uuid", uuid.toString());
+            Bson updates = set("statistics",jsonComp.toString());
+            MongoDBDriver.Update("members", where, updates);
+        }else {
+            SQL_Connection.dbExecute(con, "UPDATE members SET statistics='?' WHERE uuid='?'", jsonComp.toString(), uuid.toString());
+        }
     }
     public void saveSync(UUID uuid) {
         JSONObject jsonComp = new JSONObject();
@@ -105,7 +117,12 @@ public class PlayerStatistic {
         }
         jsonComp.put("FactionHistory", factions);
         jsonComp.put("ClassTimes", classTimes);
-
-        SQL_Connection.dbSyncExec(con, "UPDATE members SET statistics='?' WHERE uuid='?'", jsonComp.toString(), uuid.toString());
+        if(Main.isUsingMongoDB()) {
+            Bson where = eq("uuid", uuid.toString());
+            Bson updates = set("statistics",jsonComp.toString());
+            MongoDBDriver.Update("members", where, updates);
+        }else {
+            SQL_Connection.dbSyncExec(con, "UPDATE members SET statistics='?' WHERE uuid='?'", jsonComp.toString(), uuid.toString());
+        }
     }
 }

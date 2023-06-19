@@ -2,13 +2,16 @@ package me.idbi.hcf.Commands.CustomClaimCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.Tools.SQL_Async;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Async;
 import org.bukkit.entity.Player;
 
-import static me.idbi.hcf.Commands.FactionCommands.FactionCreateCommand.con;
+import static com.mongodb.client.model.Filters.eq;
+import static me.idbi.hcf.Tools.Playertools.con;
 
 public class CustomClaimUnclaimCommand extends SubCommand {
     @Override
@@ -45,7 +48,11 @@ public class CustomClaimUnclaimCommand extends SubCommand {
             return;
         }
         f.clearClaims();
-        SQL_Async.dbExecuteAsync(con,"DELETE FROM claims WHERE factionid='?'", String.valueOf(f.getId()));
+        if(Main.isUsingMongoDB()){
+            MongoDBDriver.Delete(MongoDBDriver.MongoCollections.CLAIMS,eq("factionid",f.getId()));
+        }else {
+            SQL_Async.dbExecuteAsync(con,"DELETE FROM claims WHERE factionid='?'", String.valueOf(f.getId()));
+        }
         hcfPlayer.sendMessage(Messages.success_unclaim);
     }
 }

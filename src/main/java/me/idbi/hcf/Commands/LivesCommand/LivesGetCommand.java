@@ -1,6 +1,5 @@
 package me.idbi.hcf.Commands.LivesCommand;
 
-import com.comphenix.protocol.PacketType;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;

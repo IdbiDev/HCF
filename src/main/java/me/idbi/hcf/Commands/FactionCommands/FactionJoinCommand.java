@@ -4,19 +4,22 @@ import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
 import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.*;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.Tools.SQL_Connection;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
+import org.bson.conversions.Bson;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.util.Date;
-import java.util.HashMap;
-
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.*;
+import static me.idbi.hcf.Tools.Playertools.con;
 public class FactionJoinCommand extends SubCommand {
-    private static final Connection con = Main.getConnection();
 
     @Override
     public String getName() {
@@ -63,8 +66,13 @@ public class FactionJoinCommand extends SubCommand {
                 for (Player member : faction.getOnlineMembers()) {
                     member.sendMessage(Messages.new_member_join_faction.language(member).setPlayer(p).queue());
                 }
+                if(Main.isUsingMongoDB()){
+                    Bson update = combine(set("faction",faction.getId()),set("rank",faction.getDefaultRank().getName()));
+                    MongoDBDriver.Update(MongoDBDriver.MongoCollections.MEMBERS,eq("uuid",p.getUniqueId().toString()),update);
+                }else {
+                    SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?' WHERE uuid='?'", String.valueOf(faction.getId()), faction.getDefaultRank().getName(), p.getUniqueId().toString());
 
-                SQL_Connection.dbExecute(con, "UPDATE members SET faction='?',rank='?' WHERE uuid='?'", String.valueOf(faction.getId()), faction.getDefaultRank().getName(), p.getUniqueId().toString());
+                }
 
                 // displayTeams.addPlayerToTeam(p);
                 //faction.addPrefixPlayer(p);

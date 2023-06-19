@@ -107,7 +107,6 @@ public class InteractShopSign implements Listener {
                             if (remainingSpace < amount && remainingSpace > 0) {
                                 is = new ItemStack(material, remainingSpace, Short);
                                 if (isFull(p, is)) {
-                                    System.out.println("1");
                                     p.sendMessage(Messages.not_enough_slot.language(p).queue());
                                     return;
                                 }

@@ -1,16 +1,17 @@
 package me.idbi.hcf.Tools;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import me.idbi.hcf.Tools.Objects.*;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -18,10 +19,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.mongodb.client.model.Filters.eq;
 import static me.idbi.hcf.Tools.Playertools.*;
 
 public class Claiming {
-    private static final Connection con = Main.getConnection();
+    private static final Connection con = Playertools.con;
     public static final HashMap<Integer, Point> startpositions = new HashMap<>();
     public static final HashMap<Integer, Point> endpositions = new HashMap<>();
 
@@ -139,17 +141,29 @@ public class Claiming {
                         return false;
                     }
                 }
-                SQL_Connection.dbExecute(
-                        con,
-                        "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?', type='?',world='?'",
-                        String.valueOf(faction),
-                        startX + "",
-                        startZ + "",
-                        endX + "",
-                        endZ + "",
-                        attribute.name().toLowerCase(),
-                        p.getWorld().getName()
-                );
+                if(!Main.isUsingMongoDB())
+                    SQL_Connection.dbExecute(
+                            con,
+                            "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?', type='?',world='?'",
+                            String.valueOf(faction),
+                            startX + "",
+                            startZ + "",
+                            endX + "",
+                            endZ + "",
+                            attribute.name().toLowerCase(),
+                            p.getWorld().getName()
+                    );
+                else {
+                    Document insert = new Document();
+                    insert.append(MongoFields.ClaimsFields.FACTIONID.get(),faction);
+                    insert.append(MongoFields.ClaimsFields.STARTX.get(),startX);
+                    insert.append(MongoFields.ClaimsFields.STARTZ.get(),startZ);
+                    insert.append(MongoFields.ClaimsFields.ENDX.get(),endX);
+                    insert.append(MongoFields.ClaimsFields.ENDZ.get(),endZ);
+                    insert.append(MongoFields.ClaimsFields.TYPE.get(),attribute.name().toLowerCase());
+                    insert.append(MongoFields.ClaimsFields.WORLD.get(),p.getWorld().getName());
+                    MongoDBDriver.Insert(MongoDBDriver.MongoCollections.CLAIMS,insert);
+                }
                 Claim claim;
                 claim = new Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
                 f.addClaim(claim);
@@ -172,17 +186,30 @@ public class Claiming {
                 int startZ = Math.min(faction_start.getZ(), faction_end.getZ());
                 int endX = Math.max(faction_start.getX(), faction_end.getX());
                 int endZ = Math.max(faction_start.getZ(), faction_end.getZ());
-                SQL_Connection.dbExecute(
-                        con,
-                        "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?', type='?',world='?'",
-                        String.valueOf(faction),
-                        startX + "",
-                        startZ + "",
-                        endX + "",
-                        endZ + "",
-                        attribute.name().toLowerCase(),
-                        p.getWorld().getName()
-                );
+
+                if(Main.isUsingMongoDB()){
+                    Document insert = new Document();
+                    insert.append(MongoFields.ClaimsFields.FACTIONID.get(),faction);
+                    insert.append(MongoFields.ClaimsFields.STARTX.get(),startX);
+                    insert.append(MongoFields.ClaimsFields.STARTZ.get(),startZ);
+                    insert.append(MongoFields.ClaimsFields.ENDX.get(),endX);
+                    insert.append(MongoFields.ClaimsFields.ENDZ.get(),endZ);
+                    insert.append(MongoFields.ClaimsFields.TYPE.get(),attribute.name().toLowerCase());
+                    insert.append(MongoFields.ClaimsFields.WORLD.get(),p.getWorld().getName());
+                    MongoDBDriver.Insert(MongoDBDriver.MongoCollections.CLAIMS,insert);
+                }else {
+                    SQL_Connection.dbExecute(
+                            con,
+                            "INSERT INTO claims SET factionid='?',startX='?',startZ='?',endX='?',endZ='?', type='?',world='?'",
+                            String.valueOf(faction),
+                            startX + "",
+                            startZ + "",
+                            endX + "",
+                            endZ + "",
+                            attribute.name().toLowerCase(),
+                            p.getWorld().getName()
+                    );
+                }
                 Faction f = Main.factionCache.get(faction);
                 Claim claim = new Claim(startX, endX, startZ, endZ, f.getId(), attribute, p.getWorld().getName());
                 f.addClaim(claim);

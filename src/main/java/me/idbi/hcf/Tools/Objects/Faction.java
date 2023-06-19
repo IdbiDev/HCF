@@ -7,7 +7,14 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.HCFRules;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.*;
+import me.idbi.hcf.Tools.Database.MongoDB.AsyncMongoDBDriver;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Async;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -19,11 +26,15 @@ import org.json.JSONObject;
 import java.sql.Connection;
 import java.util.*;
 
+import static com.mongodb.client.model.Aggregates.*;
+import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.*;
+import static com.mongodb.client.model.Updates.set;
 import static me.idbi.hcf.Main.maxAlliesProFaction;
 import static me.idbi.hcf.Main.maxMembersProFaction;
 
 public class Faction {
-    private static final Connection con = Main.getConnection();
+    private static final Connection con = Main.getCon();
 
     @Getter private int id;
     @Getter @Setter private String name;
@@ -60,6 +71,9 @@ public class Faction {
         this.id = id;
         this.name = name;
         this.leader = leader;
+        if(this.leader != null && this.leader.equalsIgnoreCase("null")) {
+            this.leader = null;
+        }
         this.invites = new InviteManager.FactionInvite();
         this.allyInvites = new AllyManager();
         this.balance = balance;
@@ -140,13 +154,16 @@ public class Faction {
         return this.leader == null || this.leader.equals("null");
     }
 
+    public boolean hasLeader() {
+        return isCustom();
+    }
+
     public void setHomeLocation(Location loc) {
         Location loc2 = loc.clone();
         loc2.setX(loc.getBlockX());
         loc2.setZ(loc.getBlockZ());
         int x = loc2.getBlockX();
         int z = loc2.getBlockZ();
-        System.out.println(loc2);
         this.homeLocation = loc2.add(0.5, 0, 0.5)/*.add(x >= 0 ? 0.5 : -0.5, 0.0, z >= 0 ? 0.5 : -0.5);*/;
         for (Player member : getOnlineMembers()) {
             HCFPlayer hcfPlayer = HCFPlayer.getPlayer(member);
@@ -188,16 +205,41 @@ public class Faction {
 
     public void saveFactionData() {
         String AlliesEntry = AllyTools.getAlliesJson(this);
-
-        SQL_Connection.dbExecute(con, "UPDATE factions SET name='?',money='?',leader='?',`statistics`='?', Allies='?',home='?',points='?' WHERE ID='?'", this.name, String.valueOf(this.balance), leader, assembleFactionHistory().toString(), AlliesEntry,homeLocationToJSON(), String.valueOf(this.points), String.valueOf(id));
+        if(Main.isUsingMongoDB()) {
+            Bson where = eq(MongoFields.FactionsFields.ID.get(),id);
+            Bson updates = combine(
+                    set(MongoFields.FactionsFields.NAME.get(),this.name),
+                    set(MongoFields.FactionsFields.BALANCE.get(),this.balance),
+                    set(MongoFields.FactionsFields.LEADER.get(),this.leader),
+                    set(MongoFields.FactionsFields.STATISTICS.get(),assembleFactionHistory().toString()),
+                    set(MongoFields.FactionsFields.ALLIES.get(),AlliesEntry),
+                    set(MongoFields.FactionsFields.HOME.get(),homeLocationToJSON()),
+                    set(MongoFields.FactionsFields.POINTS.get(),this.points));
+            MongoDBDriver.Update("factions",where,updates);
+        }else {
+            SQL_Connection.dbExecute(con, "UPDATE factions SET name='?',money='?',leader='?',`statistics`='?', Allies='?',home='?',points='?' WHERE ID='?'", this.name, String.valueOf(this.balance), leader, assembleFactionHistory().toString(), AlliesEntry,homeLocationToJSON(), String.valueOf(this.points), String.valueOf(id));
+        }
         for (FactionRankManager.Rank rank : ranks) {
             rank.saveRank();
         }
     }
     public void saveFactionDataSync() {
         String AlliesEntry = AllyTools.getAlliesJson(this);
+        if(Main.isUsingMongoDB()){
+            MongoDBDriver.Update(MongoDBDriver.MongoCollections.FACTIONS,eq(MongoFields.FactionsFields.ID.get(),this.id),
+                    combine(
+                            set(MongoFields.FactionsFields.NAME.get(),this.name),
+                            set(MongoFields.FactionsFields.BALANCE.get(),this.balance),
+                            set(MongoFields.FactionsFields.LEADER.get(),this.leader),
+                            set(MongoFields.FactionsFields.STATISTICS.get(),assembleFactionHistory().toString()),
+                            set(MongoFields.FactionsFields.ALLIES.get(),AlliesEntry),
+                            set(MongoFields.FactionsFields.HOME.get(),homeLocationToJSON()),
+                            set(MongoFields.FactionsFields.POINTS.get(),this.points))
+                    );
+        }else {
+            SQL_Connection.dbSyncExec(con, "UPDATE factions SET name='?',money='?',leader='?',`statistics`='?', Allies='?',home='?',points='?' WHERE ID='?'", this.name, String.valueOf(this.balance), leader, assembleFactionHistory().toString(), AlliesEntry,homeLocationToJSON(), String.valueOf(this.points), String.valueOf(id));
 
-        SQL_Connection.dbSyncExec(con, "UPDATE factions SET name='?',money='?',leader='?',`statistics`='?', Allies='?',home='?',points='?' WHERE ID='?'", this.name, String.valueOf(this.balance), leader, assembleFactionHistory().toString(), AlliesEntry,homeLocationToJSON(), String.valueOf(this.points), String.valueOf(id));
+        }
         for (FactionRankManager.Rank rank : ranks) {
             rank.saveRankSync();
         }
@@ -270,7 +312,6 @@ public class Faction {
             return;
         }
         allyInvites.inviteFactionToAlly(ally);
-        Main.sendCmdMessage("Invite requested! Requester: " + this.name + " Receiver: " + ally.name);
     }
 
     public void resolveFactionAlly(Faction ally) {
@@ -300,8 +341,6 @@ public class Faction {
                 return rank;
             }
         }
-        //NameChanger.refresh(p);
-        Bukkit.broadcastMessage("Not found rank: "+ name);
         return getDefaultRank();
     }
 
@@ -310,7 +349,13 @@ public class Faction {
             if (Objects.equals(rank.getName(), name)) {
                 HCFPlayer hcf = HCFPlayer.getPlayer(p.getUniqueId());
                 hcf.setRank(rank);
-                SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE uuid='?'", rank.getName(), p.getUniqueId().toString());
+                if(Main.isUsingMongoDB()) {
+                    Bson where = eq("uuid", p.getUniqueId().toString());
+                    Bson updates = set("rank",rank.getName());
+                    MongoDBDriver.Update("members", where, updates);
+                }else {
+                    SQL_Connection.dbExecute(con, "UPDATE members SET rank='?' WHERE uuid='?'", rank.getName(), p.getUniqueId().toString());
+                }
                 break;
             }
         }
@@ -376,30 +421,63 @@ public class Faction {
     }
 
     public void setupAllies() {
-        SQL_Async.dbPollAsync(con, "SELECT * FROM factions WHERE ID='?'", String.valueOf(this.id)).thenAcceptAsync(permissionmap -> {
-            JSONObject obj = new JSONObject((String) permissionmap.get("Allies"));
-            Map<String, Object> map = JsonUtils.jsonToMap(obj);
+        if(Main.isUsingMongoDB()){
+           AsyncMongoDBDriver.Find(MongoDBDriver.MongoCollections.FACTIONS.getName(),eq(MongoFields.FactionsFields.ID.get(),this.id)).thenAcceptAsync(res -> {
+               try {
+                   String cucc = res.getString(MongoFields.FactionsFields.ALLIES.get());
+                   JSONObject obj = new JSONObject(cucc);
+               Map<String, Object> map = JsonUtils.jsonToMap(obj);
 
-            for (Map.Entry<String, Object> hash : map.entrySet()) {
-                if (!hash.getKey().matches("^[0-9]+$")) continue;
+               for (Map.Entry<String, Object> hash : map.entrySet()) {
+                   if (!hash.getKey().matches("^[0-9]+$")) continue;
 
-                Map<String, Object> jsonPerms = JsonUtils.jsonToMap(new JSONObject(hash.getValue()));
-                Map<Permissions, Boolean> perms = new HashMap<>();
+                   Map<String, Object> jsonPerms = JsonUtils.jsonToMap(new JSONObject(hash.getValue()));
+                   Map<Permissions, Boolean> perms = new HashMap<>();
 
-                for (Map.Entry<String, Object> permsJson : jsonPerms.entrySet()) {
-                    if (Permissions.getByName(permsJson.getKey()) == null) continue;
-                    perms.put(Permissions.getByName(permsJson.getKey()), Boolean.parseBoolean(permsJson.getValue() + ""));
+                   for (Map.Entry<String, Object> permsJson : jsonPerms.entrySet()) {
+                       if (Permissions.getByName(permsJson.getKey()) == null) continue;
+                       perms.put(Permissions.getByName(permsJson.getKey()), Boolean.parseBoolean(permsJson.getValue() + ""));
+                   }
+
+                   int id = Integer.parseInt(hash.getKey());
+                   AllyFaction allyFaction = new AllyFaction(id, Main.factionCache.get(id));
+
+                   for (Map.Entry<Permissions, Boolean> permsHash : perms.entrySet()) {
+                       allyFaction.setPermission(permsHash.getKey(), permsHash.getValue());
+                   }
+                   this.allies.put(id, allyFaction);
+               }
+               } catch(Exception e){
+                   e.printStackTrace();
+               }
+            });
+
+        }else {
+            SQL_Async.dbPollAsync(con, "SELECT * FROM factions WHERE ID='?'", String.valueOf(this.id)).thenAcceptAsync(permissionmap -> {
+                JSONObject obj = new JSONObject((String) permissionmap.get("Allies"));
+                Map<String, Object> map = JsonUtils.jsonToMap(obj);
+
+                for (Map.Entry<String, Object> hash : map.entrySet()) {
+                    if (!hash.getKey().matches("^[0-9]+$")) continue;
+
+                    Map<String, Object> jsonPerms = JsonUtils.jsonToMap(new JSONObject(hash.getValue()));
+                    Map<Permissions, Boolean> perms = new HashMap<>();
+
+                    for (Map.Entry<String, Object> permsJson : jsonPerms.entrySet()) {
+                        if (Permissions.getByName(permsJson.getKey()) == null) continue;
+                        perms.put(Permissions.getByName(permsJson.getKey()), Boolean.parseBoolean(permsJson.getValue() + ""));
+                    }
+
+                    int id = Integer.parseInt(hash.getKey());
+                    AllyFaction allyFaction = new AllyFaction(id, Main.factionCache.get(id));
+
+                    for (Map.Entry<Permissions, Boolean> permsHash : perms.entrySet()) {
+                        allyFaction.setPermission(permsHash.getKey(), permsHash.getValue());
+                    }
+                    this.allies.put(id, allyFaction);
                 }
-
-                int id = Integer.parseInt(hash.getKey());
-                AllyFaction allyFaction = new AllyFaction(id, Main.factionCache.get(id));
-
-                for (Map.Entry<Permissions, Boolean> permsHash : perms.entrySet()) {
-                    allyFaction.setPermission(permsHash.getKey(), permsHash.getValue());
-                }
-                this.allies.put(id, allyFaction);
-            }
-        });
+            });
+        }
         //        //(String) permissionmap.get("Allies")
 
     }
@@ -454,10 +532,18 @@ public class Faction {
         }
 
         this.allies.clear();
-        SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(this.id));
-        SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(this.id));
-        SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(this.id));
-        SQL_Connection.dbExecute(con, "UPDATE members SET rank='None',faction=0 WHERE faction='?'", String.valueOf(this.id));
+        if(Main.isUsingMongoDB()){
+            MongoDBDriver.Delete(MongoDBDriver.MongoCollections.RANKS, eq(MongoFields.RanksFields.FACTION.get(),this.id));
+            MongoDBDriver.Delete(MongoDBDriver.MongoCollections.FACTIONS, eq(MongoFields.FactionsFields.ID.get(),this.id));
+            MongoDBDriver.Delete(MongoDBDriver.MongoCollections.CLAIMS, eq(MongoFields.ClaimsFields.FACTIONID.get(),this.id));
+            MongoDBDriver.Update(MongoDBDriver.MongoCollections.MEMBERS, eq(MongoFields.MembersFields.FACTION.get(),this.id),
+                    combine(set(MongoFields.MembersFields.RANK.get(), "None"),set(MongoFields.MembersFields.FACTION.get(), 0)));
+        }else {
+            SQL_Connection.dbExecute(con, "DELETE FROM ranks WHERE faction='?'", String.valueOf(this.id));
+            SQL_Connection.dbExecute(con, "DELETE FROM factions WHERE ID='?'", String.valueOf(this.id));
+            SQL_Connection.dbExecute(con, "DELETE FROM claims WHERE factionid='?'", String.valueOf(this.id));
+            SQL_Connection.dbExecute(con, "UPDATE members SET rank='None',faction=0 WHERE faction='?'", String.valueOf(this.id));
+        }
     }
 
     public void loadFactionHistory(JSONObject mainJSON) {

@@ -15,18 +15,21 @@ public enum Config {
     BungeeCord(true),
     DefaultLanguage("Language", "en", createComment("Sets the default language to the players.")),
     Timezone("Timezone", "Europe/Budapest", createComment("Sets the default timezone on the server. ", "Please use this website if you don't understand the timezone format:","https://code2care.org/pages/java-timezone-list-utc-gmt-offset")),
-    Host("Database", "localhost"),
-    Port("Database", "3306"),
-    Database("Database", "database"),
-    Username("Database", "root"),
-    Password("Database", " "),
+    StorageMethod("Database","mongodb",createComment("Selects the database service.","Currently only 'mongodb' and 'mysql' available!","Default: mongodb")),
+    MySQLHost("MySQL", "localhost"),
+    MySQLPort("MySQL", "3306"),
+    MySQLDatabase("MySQL", "database"),
+    MySQLUsername("MySQL", "root"),
+    MySQLPassword("MySQL", ""),
+    MongoDBURL("MongoDB", "",createComment("Paste the given link from the MongoDB website.","Help: After creating a Cluster, click on the 'Connect button'","Paste the link, and replace the <password> field with your password")),
+    MongoDBDatabase("MongoDB", "HCFPlus"),
     EnderPearl("Cooldowns", 10, createComment("Sets the enderpearl cooldown after thrown.", "Must be in seconds")),
     PvPTimer("Cooldowns", 30, createComment("This will be set if after joining, or respawning.", "Must be in seconds")),
     CombatTag("Cooldowns", 30, createComment("This will be set if you are hit", "Must be in seconds")),
     ArcherTag("Cooldowns", 30, createComment("This will be set if you are hit by an archer.", "Must be in seconds")),
     GolderApple("Cooldowns", 30, createComment("This will be set if you eat a normal G apple", "Must be in seconds")),
     EnchantedGoldenApple("Cooldowns", 3600, createComment("This will be set if you eat an Enchanted G apple", "Must be in seconds")),
-    BardEnergy("Cooldowns", 3, createComment("This will be set if you use the bard powerup", "Must be in seconds")),
+    BardEnergy("Cooldowns", 3, createComment("This will be set if you use the bard power-up", "Must be in seconds")),
     ClassWarmupTime("Cooldowns", 3, createComment("This will be used if you are equipping a class", "Must be in seconds")),
     Deathban("Cooldowns", 3600, createComment("This will be set if you die.", "Must be in seconds")),
     TeleportHome("Cooldowns", 10, createComment("This will be set if you teleporting home.", "Must be in seconds")),
@@ -110,9 +113,9 @@ public enum Config {
     MinNameLength("Faction Settings",3),
     MaxNameLength("Faction Settings",12),
     DisabledCharactersInName("Faction Settings",Arrays.asList(
-            "meow",
-            "uwu",
-            "kawaii"
+            "$",
+            "ß",
+            "|"
     )),
 
     MustBeConnected("Faction Claim",true),
@@ -132,7 +135,7 @@ public enum Config {
     StaffModeColor("Colors", "&b"),
 
     BlackListedNames(Arrays.asList(
-            "dick", "tit", "boobs", "b00bs", "bo0bs", "fuck", "gay"
+            "example1","example2","badword"
     ), createComment("These words are blocked in names (Faction, rank etc.)", "No case-sensitive and it will be blocked when the word contains one of them!")),
 
     MountainEventReset("MountainEvent", 3600, createComment("Set Mountain event reset time", "Must be in seconds")),
@@ -141,9 +144,9 @@ public enum Config {
     MountainEventLocation2("MountainEvent", "15 80 15", createComment("Set Mountain event block type")),
 
     LunarWaypoints("Waypoints", Arrays.asList(
-            "Spawn; world; 0.5, 75, 0; #FF0000",
-            "End; world; 0.5, 75, 0.5; #FFFFFF",
-            "End Exit; world_the_end; 0.5, 75, 0.5; #FFFFFF"
+            "Spawn; world; 0, 75, 0; #FF0000",
+            "End; world; 0, 75, 0; #FFFFFF",
+            "End Exit; world_the_end; 0, 75, 0; #FFFFFF"
     ), createComment("Syntax: 'name; world; x, y, z; #hexcode'")),
     HomeWaypoint("Waypoints", "Home; #0000FF"),
     RallyWaypoint("Waypoints", "Rally; #FF0000"),

@@ -12,9 +12,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 public class PlayerRespawn implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
-
-        if (Main.debug)
-            System.out.println("Respawning player.. Loading it ");
         Playertools.loadOnlinePlayer(e.getPlayer());
         //String str = Config.SpawnLocation.asStr();
         /*Location spawn = new Location(

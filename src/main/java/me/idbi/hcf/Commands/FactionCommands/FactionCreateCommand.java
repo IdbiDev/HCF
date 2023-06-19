@@ -6,6 +6,8 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.FactionGUI.GUISound;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.Faction;
@@ -13,16 +15,21 @@ import me.idbi.hcf.Tools.Objects.FactionHistory;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.Tools.SQL_Connection;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.util.Date;
-import java.util.HashMap;
 
+import static com.mongodb.client.model.Updates.set;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.combine;
+import static me.idbi.hcf.Tools.Playertools.con;
 public class FactionCreateCommand extends SubCommand {
-    public static Connection con = Main.getConnection();
+
 
     public static boolean isFactionNameTaken(String name) {
         return Main.nameToFaction.containsKey(name);
@@ -72,8 +79,30 @@ public class FactionCreateCommand extends SubCommand {
 
                 //Create Faction
                 int x = Playertools.getFreeFactionId();
-                SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?', leader='?',ID = '?'", name, p.getUniqueId().toString(), String.valueOf(x));
-                Faction faction = new Faction(x, name, p.getUniqueId().toString(), 0);
+                if(Main.isUsingMongoDB()) {
+                    Document insert = new Document();
+                    insert.append(MongoFields.FactionsFields.NAME.get(),name);
+                    insert.append(MongoFields.FactionsFields.LEADER.get(), p.getUniqueId().toString());
+                    insert.append(MongoFields.FactionsFields.ID.get(), x);
+                    insert.append(MongoFields.FactionsFields.BALANCE.get(), Config.DefaultBalanceFaction.asInt());
+                    insert.append(MongoFields.FactionsFields.POINTS.get(), Config.PointStart.asInt());
+                    insert.append(MongoFields.FactionsFields.HOME.get(),"null");
+                    insert.append(MongoFields.FactionsFields.STATISTICS.get(), "{\"balanceHistory\":[],\"inviteHistory\":[],\"rankCreateHistory\":[],\"joinLeftHistory\":[],\"factionjoinLeftHistory\":[],\"kickHistory\":[]}");
+                    insert.append(MongoFields.FactionsFields.ALLIES.get(),"{}");
+                    MongoDBDriver.Insert(MongoDBDriver.MongoCollections.FACTIONS.getName(),insert);
+//                    insert.append("name",name);
+//                    insert.append("leader",p.getUniqueId().toString());
+//                    insert.append("ID",x);
+//                    insert.append("balance",Config.DefaultBalanceFaction.asInt());
+//                    insert.append("points",Config.PointStart.asInt());
+//                    insert.append("home","null");
+//                    insert.append("statistics","{\"balanceHistory\":[],\"inviteHistory\":[],\"rankCreateHistory\":[],\"joinLeftHistory\":[],\"factionjoinLeftHistory\":[],\"kickHistory\":[]}");
+//                    insert.append("Allies","{}");
+//                    MongoDBDriver.Insert(MongoDBDriver.MongoCollections.FACTIONS,insert);
+                }else {
+                    SQL_Connection.dbExecute(con, "INSERT INTO factions SET name='?', leader='?',ID = '?'", name, p.getUniqueId().toString(), String.valueOf(x));
+                }
+                Faction faction = new Faction(x, name, p.getUniqueId().toString(), Config.DefaultBalanceFaction.asInt());
                 faction.setPoints(Config.PointStart.asInt());
                 Main.factionCache.put(x, faction);
                 Main.nameToFaction.put(faction.getName(), faction);
@@ -89,9 +118,12 @@ public class FactionCreateCommand extends SubCommand {
                 FactionRankManager.Rank leaderRank = FactionRankManager.create(p, "Leader", true, false);
                 hcf.setRank(leaderRank);
 
-
-                SQL_Connection.dbExecute(con, "UPDATE members SET faction = ?, rank='?' WHERE uuid = '?'", String.valueOf(x), "Leader", p.getUniqueId().toString());
-
+                if(Main.isUsingMongoDB()){
+                    Bson update = combine(set(MongoFields.MembersFields.FACTION.get(), faction.getId()),set(MongoFields.MembersFields.RANK.get(),"Leader"));
+                    MongoDBDriver.UpdateMany(MongoDBDriver.MongoCollections.MEMBERS.getName(),eq(MongoFields.MembersFields.UUID.get(),p.getUniqueId().toString()),update);
+                }else {
+                    SQL_Connection.dbExecute(con, "UPDATE members SET faction = ?, rank='?' WHERE uuid = '?'", String.valueOf(x), "Leader", p.getUniqueId().toString());
+                }
                 // Kiíratás global chatre ->
                 //                              xy faction létre jött
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {

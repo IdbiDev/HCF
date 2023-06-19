@@ -114,23 +114,7 @@ public class FactionChatCommand extends SubCommand {
                 hcfPlayer.sendChat(String.join(" ", args)
                         .replace(args[0] + " ", "")
                         .replaceFirst(args[1] + " ", ""), newChat);
-                    /*Faction faction = Playertools.getPlayerFaction(p);
-                    Messages message = null;
-                    switch (newChat) {
-                        case ALLY -> message = Messages.ally_chat.language(p);
-                        case LEADER -> message = Messages.leader_chat.language(p);
-                        case FACTION -> message = Messages.faction_chat.language(p);
-                        case STAFF -> message = Messages.staff_chat.language(p);
-                        case PUBLIC -> message = Messages.chat_prefix_faction.language(p);
-                    }
-                    faction.BroadcastFaction(message
-                            .setMessage(
-                                    String.join(" ", args)
-                                            .replace(args[0] + " ", "")
-                                            .replaceFirst(args[1] + " ", ""))
-                            .setPlayer(p)
-                            .setRank(hcfPlayer.rank.name)
-                            .setFaction(faction.name));*/
+
             }
         }
     }

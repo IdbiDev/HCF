@@ -12,7 +12,6 @@ depend:
   - Vault
   - ProtocolLib
 loadbefore:
-  - HCFAbilities
   - ProtocolLib
 
 commands:

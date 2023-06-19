@@ -1,4 +1,4 @@
-package me.idbi.hcf.Tools;
+package me.idbi.hcf.Tools.Database.MySQL;
 
 import me.idbi.hcf.Main;
 import org.bukkit.scheduler.BukkitRunnable;

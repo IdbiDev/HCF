@@ -1,4 +1,4 @@
-package me.idbi.hcf.Tools;
+package me.idbi.hcf.Tools.Database.MySQL;
 
 import me.idbi.hcf.Main;
 import org.bukkit.Bukkit;
@@ -20,12 +20,13 @@ public class SQL_Connection {
             con = DriverManager.getConnection(
                     "jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
             if (con.isValid(0)) {
-                if (Main.debug)
-                    Main.sendCmdMessage(ChatColor.GREEN + "Sucessfully connected to the database!");
+                Main.sendCmdMessage(ChatColor.GREEN + "Successfully connected to the database!");
+            }else {
+                Main.sendCmdMessage(ChatColor.DARK_RED + "Invalid Database connection. TIME OUT");
             }
         } catch (Exception e) {
-            Main.sendCmdMessage(ChatColor.DARK_RED + "Invaild Database connection... shutting down!");
-            Bukkit.getServer().shutdown();
+            e.printStackTrace();
+            Main.sendCmdMessage(ChatColor.DARK_RED + "Invalid Database connection.");
         }
         return con;
     }
@@ -55,8 +56,6 @@ public class SQL_Connection {
                     st.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
-                } finally {
-
                 }
             }
         }.runTaskAsynchronously(m);

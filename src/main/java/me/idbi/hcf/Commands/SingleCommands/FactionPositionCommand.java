@@ -40,45 +40,9 @@ public class FactionPositionCommand extends HCFCommand {
         for (Player member : faction.getOnlineMembers()) {
             member.sendMessage(convertLocation(p, p.getLocation()));
         }
-        for (HCFPlayer hcf : Main.playerCache.values()) {
-            hcf.save();
-        }
-        for (Map.Entry<Integer, Faction> integerFactionEntry : Main.factionCache.entrySet()) {
-            integerFactionEntry.getValue().saveFactionData();
-            for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
-                rank.saveRank();
-            }
-        }
         addCooldown(p);
     }
 
-//    @Override
-//    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-//        if (sender instanceof Player) {
-//            Player p = (Player) sender;
-//            if(!HCFPermissions.faction_call.check(p)) return false;
-//            if (Playertools.getPlayerFaction(p) == null) {
-//                p.sendMessage(Messages.not_in_faction.language(p).queue());
-//                return false;
-//            }
-//            Faction faction = Playertools.getPlayerFaction(p);
-//            //faction.BroadcastFaction("&2"+p.getName()+" >> &o" +  convertLocation(p,p.getLocation()));
-//
-//            for (Player member : faction.getOnlineMembers()) {
-//                member.sendMessage(convertLocation(p, p.getLocation()));
-//            }
-//            for (HCFPlayer hcf : Main.playerCache.values()) {
-//                hcf.save();
-//            }
-//            for (Map.Entry<Integer, Faction> integerFactionEntry : Main.factionCache.entrySet()) {
-//                integerFactionEntry.getValue().saveFactionData();
-//                for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
-//                    rank.saveRank();
-//                }
-//            }
-//        }
-//        return false;
-//    }
 
     @Override
     public int getCooldown() {

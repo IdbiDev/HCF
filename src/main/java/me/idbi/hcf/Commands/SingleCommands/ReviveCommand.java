@@ -4,11 +4,13 @@ import me.idbi.hcf.BukkitCommands.CommandInfo;
 import me.idbi.hcf.BukkitCommands.HCFCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import me.idbi.hcf.Tools.SQL_Connection;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import org.bukkit.entity.Player;
 
-import static me.idbi.hcf.Commands.FactionCommands.FactionCreateCommand.con;
+import static com.mongodb.client.model.Filters.eq;
+import static me.idbi.hcf.Tools.Playertools.con;
 @CommandInfo(
         name = "revive",
         description = "Revive a deathbanned player",
@@ -30,7 +32,11 @@ public class ReviveCommand extends HCFCommand {
                     Main.deathWaitClear.add(targetPlayer.getUUID());
                     targetPlayer.setDeathBanned(false);
                     targetPlayer.setDeathTime(0);
-                    SQL_Connection.dbExecute(con, "DELETE FROM deathbans WHERE uuid='?'", targetPlayer.getUUID().toString());
+                    if(Main.isUsingMongoDB()){
+                        MongoDBDriver.Delete(MongoDBDriver.MongoCollections.DEATHBANS,eq("uuid",targetPlayer.getUUID().toString()));
+                    }else {
+                        SQL_Connection.dbExecute(con, "DELETE FROM deathbans WHERE uuid='?'", targetPlayer.getUUID().toString());
+                    }
                     addCooldown(p);
                 } else {
                     player.sendMessage(Messages.not_deathbanned);

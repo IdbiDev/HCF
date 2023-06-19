@@ -17,6 +17,11 @@ import me.idbi.hcf.Economy.VaultHook;
 import me.idbi.hcf.Koth.AutoKoth;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Scoreboard.BoardManager;
+import me.idbi.hcf.Tools.Database.MongoDB.AsyncMongoDBDriver;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Generator;
 import me.idbi.hcf.Tools.Objects.CustomTimers;
 import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
 import me.idbi.hcf.TabManager.TabManager;
@@ -24,6 +29,7 @@ import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.*;
 import net.milkbowl.vault.economy.Economy;
+import org.bson.Document;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -40,7 +46,8 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.Connection;
 import java.util.*;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import static me.idbi.hcf.HCFRules.*;
 
 
@@ -98,7 +105,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static HashMap<UUID, Inventory> inventoryRollbacks;
     public static AutoKoth autoKoth = new AutoKoth();
     private static ConfigManager configManager;
-    private static Connection con;
+    @Getter private static Connection con;
     public static MiscTimers miscTimers;
     public static HashMap<UUID, FastBoard> boards;
 
@@ -112,11 +119,9 @@ public final class Main extends JavaPlugin implements Listener {
     @Getter private BungeeChanneling bungeeChanneling;
     public static String lobbyName;
     @Getter private HCFRules rules;
+    @Getter private static boolean usingMongoDB = true;
 
     // Egyszerű SQL Connection getter
-    public static Connection getConnection() {
-        return con;
-    }
 
     public static void saveFactions() {
         for (Map.Entry<Integer, Faction> faction : factionCache.entrySet()) {
@@ -191,6 +196,7 @@ public final class Main extends JavaPlugin implements Listener {
 
         HCFRules rules = new HCFRules();
 
+
         this.scoreboardManager = new BoardManager(this);
         this.scoreboardManager.setup();
         // Variables
@@ -217,22 +223,34 @@ public final class Main extends JavaPlugin implements Listener {
         maxDTR = Config.MaxDTR.asDouble();
         cookSpeedMultiplier = Config.CookingSpeedMultiplier.asInt();
         brewingSpeedMultiplier = Config.BrewingSpeedMultiplier.asInt();
-        con = SQL_Connection.dbConnect(
-                Config.Host.asStr(),
-                Config.Port.asStr(),
-                Config.Database.asStr(),
-                Config.Username.asStr(),
-                Config.Password.asStr());
+        usingMongoDB = !Config.StorageMethod.asStr().equalsIgnoreCase("mysql");
+        HCFServer server = new HCFServer();
+        if(!usingMongoDB) {
+            Main.sendCmdMessage("Connecting to the MySQL Servers");
+            con = SQL_Connection.dbConnect(
+                    Config.MySQLHost.asStr(),
+                    Config.MySQLPort.asStr(),
+                    Config.MySQLDatabase.asStr(),
+                    Config.MySQLUsername.asStr(),
+                    Config.MySQLPassword.asStr());
+            if (con == null) {
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+        } else {
+            Main.sendCmdMessage("Connecting to the MongoDB Servers");
+            MongoDBDriver.Connect(Config.MongoDBURL.asStr(),Config.MongoDBDatabase.asStr());
+        }
+        Playertools.initConnection();
+        AsyncMongoDBDriver.setClient(MongoDBDriver.getDatabase());
         Plugin multi = getServer().getPluginManager().getPlugin("Multiverse-Core");
         EOTWENABLED = false;
         SOTWEnabled = false;
         timeZone = TimeZone.getTimeZone(Config.Timezone.asStr());
         TimeZone.setDefault(timeZone);
         // SQL
-        if (con == null)
-            return;
-        new SQL_Generator();
-
+        if(!isUsingMongoDB())
+            new SQL_Generator(con);
         // koth
         KothRewardsFile.setup();
         ReclaimFile.setup();
@@ -247,15 +265,12 @@ public final class Main extends JavaPlugin implements Listener {
         SetupEvents.setupEvents();
         SetupCommands.setupCommands();
 
-        HCFServer server = new HCFServer();
-
         // playertools
         Playertools.setFactionCache();
         Playertools.cacheFactionClaims();
         Playertools.loadRanks();
         playerCache.clear();
         Playertools.cacheAll();
-        print(playerCache.size());
         new NameChanger(this);
         // Load online players
 
@@ -282,25 +297,29 @@ public final class Main extends JavaPlugin implements Listener {
                 sendCmdMessage("§aMultiverse-Core found. Plugin connected to Multiverse-Core\n§aMultiverse-Core version: §a§o" + multi.getDescription().getVersion());
 
         }
+        //    @Getter public static final int maxInvitesPerFaction = 14; // >> GUI limit
+        //    @Getter public static final int maxMembersPerFaction = 14; // >> GUI limit
+        //    @Getter public static final int maxRanksPerFaction = 28; // >> GUI limit
+        //    @Getter public static final int maxAlliesPerFaction = 14; // >> GUI limit
         if (maxMembersProFaction > maxMembersPerFaction) {
             Main.sendCmdMessage(ChatColor.DARK_RED + "The maximum value that can be set is 14. A faction per member should not exceed this!");
-            Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
-            Bukkit.getServer().shutdown();
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
         if (Bukkit.getWorld(Config.EndName.asStr()) == null) {
             Main.sendCmdMessage(ChatColor.DARK_RED + "End not found!");
-            Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
-            Bukkit.getServer().shutdown();
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
         if (Bukkit.getWorld(Config.NetherName.asStr()) == null) {
             Main.sendCmdMessage(ChatColor.DARK_RED + "Nether not found!");
-            Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
-            Bukkit.getServer().shutdown();
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
         if (Bukkit.getWorld(Config.WorldName.asStr()) == null) {
             Main.sendCmdMessage(ChatColor.DARK_RED + "World not found!");
-            Main.sendCmdMessage(ChatColor.DARK_RED + "Shutting down...");
-            Bukkit.getServer().shutdown();
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
         World world = Bukkit.getWorld(Config.WorldName.asStr());
         //Double[] dbs = Playertools.getDoubles(Config.SpawnLocation.asStr().split(" "));
@@ -315,6 +334,20 @@ public final class Main extends JavaPlugin implements Listener {
         autoKoth.startAutoKoth();
         if (Config.WarzoneSize.asInt() != 0) {
             Faction f = Main.factionCache.get(2);
+            if(f == null){
+                f = new Faction(2,"Warzone",null,0);
+                Document insert = new Document();
+                insert.append(MongoFields.FactionsFields.NAME.get(), "Warzone");
+                insert.append(MongoFields.FactionsFields.LEADER.get(), null);
+                insert.append(MongoFields.FactionsFields.ID.get(), 2);
+                insert.append(MongoFields.FactionsFields.BALANCE.get(), Config.DefaultBalanceFaction.asInt());
+                insert.append(MongoFields.FactionsFields.POINTS.get(), Config.PointStart.asInt());
+                insert.append(MongoFields.FactionsFields.HOME.get(), "null");
+                insert.append(MongoFields.FactionsFields.STATISTICS.get(),"{\"balanceHistory\":[],\"inviteHistory\":[],\"rankCreateHistory\":[],\"joinLeftHistory\":[],\"factionjoinLeftHistory\":[],\"kickHistory\":[]}");
+                insert.append(MongoFields.FactionsFields.ALLIES.get(), "{}");
+                MongoDBDriver.Insert(MongoDBDriver.MongoCollections.FACTIONS, insert);
+                Main.factionCache.put(2,f);
+            }
             int warzoneSize = Config.WarzoneSize.asInt();
             Claim claim;
             claim = new Claim(spawnLocation.getBlockX() - warzoneSize, spawnLocation.getBlockX() + warzoneSize, spawnLocation.getBlockZ() - warzoneSize, spawnLocation.getBlockZ() + warzoneSize, 2, ClaimAttributes.SPECIAL, spawnLocation.getWorld().getName());
@@ -327,7 +360,6 @@ public final class Main extends JavaPlugin implements Listener {
             FastBoard board = new FastBoard(player);
             Main.boards.put(player.getUniqueId(), board);
             Playertools.loadOnlinePlayer(player);
-            System.out.println(player);
         }
     }
 
@@ -356,20 +388,27 @@ public final class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void onDisableEvent(PluginDisableEvent e) {
         if (e.getPlugin().equals(this)) {
-            try {
-                for (HCFPlayer hcf : playerCache.values()) {
-                    hcf.saveSync();
-                }
-                for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
-                    integerFactionEntry.getValue().saveFactionDataSync();
-                    for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
-                        rank.saveRankSync();
+            this.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+            this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
+            if(con != null) {
+                try {
+                    for (HCFPlayer hcf : playerCache.values()) {
+                        hcf.saveSync();
                     }
-                    integerFactionEntry.getValue().clearClaims();
-                    integerFactionEntry.getValue().setRanks(null);
-                    integerFactionEntry.getValue().setMembers(null);
+                    for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
+                        integerFactionEntry.getValue().saveFactionDataSync();
+                        for (FactionRankManager.Rank rank : integerFactionEntry.getValue().getRanks()) {
+                            rank.saveRankSync();
+                        }
+                        integerFactionEntry.getValue().clearClaims();
+                        integerFactionEntry.getValue().setRanks(null);
+                        integerFactionEntry.getValue().setMembers(null);
+                    }
+                    con.close();
+                } catch (Exception a) {
+
                 }
-                con.close();
+            }
                 con = null;
                 customSBTimers.clear();
                 factionCache.clear();
@@ -400,12 +439,8 @@ public final class Main extends JavaPlugin implements Listener {
                 ConfigManager.getEnglishMessages().free();
                 ConfigManager.getGUIMessages().free();
                 ConfigManager.getGUIEnglishMessages().free();
-            } catch (Exception asked) {
-                asked.printStackTrace();
             }
         }
-    }
-
     @Override
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDisable() {
@@ -414,10 +449,10 @@ public final class Main extends JavaPlugin implements Listener {
 
         this.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
         this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
+        if(con != null) {
             try {
                 for (HCFPlayer hcf : playerCache.values()) {
                     hcf.saveSync();
-                    hcf.getWaypointPlayer().disable();
                 }
                 for (Map.Entry<Integer, Faction> integerFactionEntry : factionCache.entrySet()) {
                     integerFactionEntry.getValue().saveFactionDataSync();
@@ -429,69 +464,41 @@ public final class Main extends JavaPlugin implements Listener {
                     integerFactionEntry.getValue().setMembers(null);
                 }
                 con.close();
-                con = null;
-                customSBTimers.clear();
-                factionCache.clear();
-                nameToFaction.clear();
-                playerCache.clear();
-                ranks.clear();
-                savedItems.clear();
-                savedPlayers.clear();
-                deathWaitClear.clear();
-                availableLanguages.clear();
-                playerBlockChanges.clear();
-                factionMapBlockChanges.clear();
-                kothRewardsGUI.clear();
-                blacklistedRankNames.clear();
-                inventoryRollbacks.clear();
-                boards.clear();
-                playerBank.clear();
-                for(BukkitTask t : miscTimers.tasks){
-                    t.cancel();
-                }
-                miscTimers.tasks.clear();
-                HCFServer.getServer().clearMaps();
-                HCFRules.getRules().clearLists();
-                ConfigManager.getClassConfig().free();
-                ConfigManager.getSimpleConfig().free();
-                ConfigManager.getMainMessages().free();
-                ConfigManager.getEnglishMessages().free();
-                ConfigManager.getGUIMessages().free();
-                ConfigManager.getGUIEnglishMessages().free();
+            } catch (Exception a) {
 
-            } catch (Exception asked) {
-                asked.printStackTrace();
-                con = null;
-                customSBTimers.clear();
-                factionCache.clear();
-                nameToFaction.clear();
-                playerCache.clear();
-                ranks.clear();
-                savedItems.clear();
-                savedPlayers.clear();
-                deathWaitClear.clear();
-                availableLanguages.clear();
-                playerBlockChanges.clear();
-                factionMapBlockChanges.clear();
-                kothRewardsGUI.clear();
-                blacklistedRankNames.clear();
-                inventoryRollbacks.clear();
-                boards.clear();
-                playerBank.clear();
-                for(BukkitTask t : miscTimers.tasks){
-                    t.cancel();
-                }
-                miscTimers.tasks.clear();
-                HCFServer.getServer().clearMaps();
-                HCFRules.getRules().clearLists();
-                ConfigManager.getClassConfig().free();
-                ConfigManager.getSimpleConfig().free();
-                ConfigManager.getMainMessages().free();
-                ConfigManager.getEnglishMessages().free();
-                ConfigManager.getGUIMessages().free();
-                ConfigManager.getGUIEnglishMessages().free();
             }
         }
+        con = null;
+        customSBTimers.clear();
+        factionCache.clear();
+        nameToFaction.clear();
+        playerCache.clear();
+        ranks.clear();
+        savedItems.clear();
+        savedPlayers.clear();
+        deathWaitClear.clear();
+        availableLanguages.clear();
+        playerBlockChanges.clear();
+        factionMapBlockChanges.clear();
+        kothRewardsGUI.clear();
+        blacklistedRankNames.clear();
+        AdminTools.InvisibleManager.invisedAdmins.clear();
+        inventoryRollbacks.clear();
+        boards.clear();
+        playerBank.clear();
+        for(BukkitTask t : miscTimers.tasks){
+            t.cancel();
+        }
+        miscTimers.tasks.clear();
+        HCFServer.getServer().clearMaps();
+        HCFRules.getRules().clearLists();
+        ConfigManager.getClassConfig().free();
+        ConfigManager.getSimpleConfig().free();
+        ConfigManager.getMainMessages().free();
+        ConfigManager.getEnglishMessages().free();
+        ConfigManager.getGUIMessages().free();
+        ConfigManager.getGUIEnglishMessages().free();
+    }
     public static void print(Object... args){
         for(Object o : args){
             System.out.println(o);

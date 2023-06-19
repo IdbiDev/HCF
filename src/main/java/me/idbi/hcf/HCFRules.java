@@ -174,13 +174,13 @@ public class HCFRules {
     @Getter public static final int maxMembersPerFaction = 14; // >> GUI limit
     @Getter public static final int maxRanksPerFaction = 28; // >> GUI limit
     @Getter public static final int maxAlliesPerFaction = 14; // >> GUI limit
-    @Getter public static final String version = "0.1";
+    @Getter public static final String version = "1.1";
     public static final String authors = "Idbi & Koba";
     public static final String discord = "https://discord.gg/aaswGgjJgU";
-    public static final String website = "UwU";
+    public static final String website = "None";
     public static final String startMessageInfo = "\n" +
             "-------------------------------------------\n" +
-            "HCF Plus | Version" + version + "\n" +
+            "HCF Plus | Version " + version + "\n" +
             ">>Authors: " + authors + "\n" +
             ">>Discord: " + discord + "\n" +
             ">>Website: " + website + "\n" +

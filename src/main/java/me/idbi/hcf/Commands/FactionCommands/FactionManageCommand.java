@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import java.sql.Connection;
 
 public class FactionManageCommand  extends SubCommand {
-    private static final Connection con = Main.getConnection();
+    private static final Connection con = Main.getCon();
 
     @Override
     public String getName() {

@@ -2,12 +2,15 @@ package me.idbi.hcf.Commands.FactionCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
 import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.Claim;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.Tools.SQL_Connection;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
+import org.bson.conversions.Bson;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -16,9 +19,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static me.idbi.hcf.Commands.FactionCommands.FactionCreateCommand.con;
+import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.set;
+import static me.idbi.hcf.Tools.Playertools.con;
 
 public class FactionSetHomeCommand extends SubCommand implements Listener {
+
     public static ArrayList<Player> teleportPlayers = new ArrayList<>();
     @Override
     public String getName() {
@@ -67,7 +73,12 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
         Claim claim = Claiming.sendClaimByXZ(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ());
         if (claim != null) {
             if (claim.getFaction().getId() == faction.getId()) {
-                SQL_Connection.dbExecute(con,"UPDATE factions SET home='?' WHERE ID='?'", new JSONObject(map).toString(), faction.getId() + "");
+                if(Main.isUsingMongoDB()){
+                    Bson update = set("home",new JSONObject(map).toString());
+                    MongoDBDriver.Update(MongoDBDriver.MongoCollections.FACTIONS,eq("ID",faction.getId()),update);
+                }else {
+                    SQL_Connection.dbExecute(con,"UPDATE factions SET home='?' WHERE ID='?'", new JSONObject(map).toString(), faction.getId() + "");
+                }
                 int x = p.getLocation().getBlockX();
                 int z = p.getLocation().getBlockZ();
                 Location secLoc = p.getLocation().clone();
@@ -93,55 +104,5 @@ public class FactionSetHomeCommand extends SubCommand implements Listener {
             p.sendMessage(Messages.faction_dont_have_claim.language(p).queue());
         }
     }
-/*    private static void delayer(Player p, Location loc) {
-        new BukkitRunnable() {
-            int delay = Config.TeleportHome.asInt() * 20;
 
-            @Override
-            public void run() {
-                if (!teleportPlayers.contains(p)) {
-                    p.sendMessage(Messages.teleport_cancel.language(p).queue());
-                    cancel();
-                    return;
-                }
-
-                if (delay <= 0) {
-                    p.sendMessage(Messages.successfully_teleport.language(p).queue());
-                    p.teleport(loc.add(0.5, 0, 0.5));
-                    cancel();
-                    return;
-                }
-                delay -= 2;
-            }
-        }.runTaskTimer(Main.getPlugin(Main.class), 0L, 2L);
-    }
-    public static void teleportToHome(Player p) {
-        Faction faction = Playertools.getPlayerFaction(p);
-        if(faction == null){
-            p.sendMessage(Messages.not_in_faction.language(p).queue());
-            return;
-        }
-        HashMap<String, Object> json = SQL_Connection.dbPoll(con, "SELECT * FROM factions WHERE ID = '?' AND home IS NOT NULL", String.valueOf(faction.id));
-        if (json.size() > 0) {
-            Map<String, Object> map = JsonUtils.jsonToMap(new JSONObject(json.get("home").toString()));
-            Location loc = new Location(
-                    Bukkit.getWorld(Config.WorldName.asStr()),
-                    Integer.parseInt(map.get("X").toString()),
-                    Integer.parseInt(map.get("Y").toString()),
-                    Integer.parseInt(map.get("Z").toString()),
-                    Integer.parseInt(map.get("YAW").toString()),
-                    Integer.parseInt(map.get("PITCH").toString()));
-
-            p.sendMessage(Messages.teleport_cancel.language(p).queue().replace("%time%", Config.TeleportHome.asStr()));
-            teleportPlayers.add(p);
-            delayer(p, loc);
-        } else {
-            p.sendMessage(Messages.doesnt_home.language(p).queue());
-        }
-    }
-
-    @EventHandler
-    public void onMove(PlayerMoveEvent e) {
-        teleportPlayers.remove(e.getPlayer());
-    }*/
 }

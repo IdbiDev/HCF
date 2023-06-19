@@ -10,7 +10,11 @@ import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Board;
 import me.idbi.hcf.Tools.*;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,9 +28,13 @@ import org.json.JSONObject;
 import java.sql.Connection;
 import java.util.*;
 
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.set;
+
 public class HCFPlayer {
 
-    private static final Connection con = Main.getConnection();
+    private static final Connection con = Playertools.con;
 
     // le lehet kérni: "getUUID()"
     private UUID uuid;
@@ -254,7 +262,6 @@ public class HCFPlayer {
             return;
         }
         EconomyResponse r = Main.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(this.uuid), amount);
-        System.out.println("Economy response addMoney: " + r.transactionSuccess() + " Error: " + r.errorMessage);
         this.money = Math.toIntExact(Math.round(r.balance));
     }
 
@@ -264,7 +271,6 @@ public class HCFPlayer {
             return;
         }
         EconomyResponse r = Main.getEconomy().withdrawPlayer(Bukkit.getOfflinePlayer(this.uuid), Math.max(0, amount));
-        System.out.println("Economy response addMoney: " + r.transactionSuccess() + " Error: " + r.errorMessage);
         this.money = Math.toIntExact(Math.round(r.balance));
     }
 
@@ -607,37 +613,62 @@ public class HCFPlayer {
     }
 
     public void save() {
-        // ToDo: Push to SQL
         if (this.name == null) return;
-
-        SQL_Connection.dbExecute(con,
-                "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?', lives='?' WHERE UUID='?'",
-                this.faction == null ? 0 + "" : this.faction.getId() + "",
-                this.rank == null ? "None" : this.rank.getName(),
-                this.playerStatistic.kills + "",
-                this.playerStatistic.deaths + "",
-                this.money + "",
-                this.name,
-                this.language,
-                this.lives+"",
-                this.uuid.toString());
+        if(Main.isUsingMongoDB()) {
+            Bson where = eq(MongoFields.MembersFields.UUID.get(), this.uuid.toString());
+            Bson updates = combine(set(MongoFields.MembersFields.NAME.get(), this.name),
+                    set(MongoFields.MembersFields.FACTION.get(), this.faction == null ? 0 : this.faction.getId()),
+                    set(MongoFields.MembersFields.RANK.get(),     this.rank == null ? "None" : this.rank.getName()),
+                    set(MongoFields.MembersFields.KILLS.get(),     this.playerStatistic.kills),
+                    set(MongoFields.MembersFields.DEATHS.get(),   this.playerStatistic.deaths),
+                    set(MongoFields.MembersFields.MONEY.get(),   this.money),
+                    set(MongoFields.MembersFields.NAME.get(),     this.name),
+                    set(MongoFields.MembersFields.LANGUAGE.get(), this.language),
+                    set(MongoFields.MembersFields.LIVES.get(),     this.lives));
+            MongoDBDriver.Update(MongoDBDriver.MongoCollections.MEMBERS.getName(), where, updates);
+        }else {
+            SQL_Connection.dbExecute(con,
+                    "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?', lives='?' WHERE UUID='?'",
+                    this.faction == null ? 0 + "" : this.faction.getId() + "",
+                    this.rank == null ? "None" : this.rank.getName(),
+                    this.playerStatistic.kills + "",
+                    this.playerStatistic.deaths + "",
+                    this.money + "",
+                    this.name,
+                    this.language,
+                    this.lives + "",
+                    this.uuid.toString());
+        }
         saveStats();
     }
     public void saveSync() {
-        // ToDo: Push to SQL
         if (this.name == null) return;
+        if(Main.isUsingMongoDB()) {
+            Bson where = eq(MongoFields.MembersFields.UUID.get(), this.uuid.toString());
+            Bson updates = combine(set(MongoFields.MembersFields.NAME.get(), this.name),
+                    set(MongoFields.MembersFields.FACTION.get(), this.faction == null ? 0 : this.faction.getId()),
+                    set(MongoFields.MembersFields.RANK.get(),     this.rank == null ? "None" : this.rank.getName()),
+                    set(MongoFields.MembersFields.KILLS.get(),     this.playerStatistic.kills),
+                    set(MongoFields.MembersFields.DEATHS.get(),   this.playerStatistic.deaths),
+                    set(MongoFields.MembersFields.MONEY.get(),   this.money),
+                    set(MongoFields.MembersFields.NAME.get(),     this.name),
+                    set(MongoFields.MembersFields.LANGUAGE.get(), this.language),
+                    set(MongoFields.MembersFields.LIVES.get(),     this.lives));
+            MongoDBDriver.Update(MongoDBDriver.MongoCollections.MEMBERS.getName(), where, updates);
+        }else {
 
-        SQL_Connection.dbSyncExec(con,
-                "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?', lives='?' WHERE UUID='?'",
-                this.faction == null ? 0 + "" : this.faction.getId() + "",
-                this.rank == null ? "None" : this.rank.getName(),
-                this.playerStatistic.kills + "",
-                this.playerStatistic.deaths + "",
-                this.money + "",
-                this.name,
-                this.language,
-                this.lives+"",
-                this.uuid.toString());
+            SQL_Connection.dbSyncExec(con,
+                    "UPDATE members SET faction='?', rank='?', kills='?', deaths='?', money='?', name='?', language = '?', lives='?' WHERE UUID='?'",
+                    this.faction == null ? 0 + "" : this.faction.getId() + "",
+                    this.rank == null ? "None" : this.rank.getName(),
+                    this.playerStatistic.kills + "",
+                    this.playerStatistic.deaths + "",
+                    this.money + "",
+                    this.name,
+                    this.language,
+                    this.lives + "",
+                    this.uuid.toString());
+        }
         saveStatsSync();
     }
 

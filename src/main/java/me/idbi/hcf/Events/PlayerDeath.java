@@ -19,7 +19,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -27,7 +26,6 @@ import static me.idbi.hcf.Main.dtrRegenTime;
 
 
 public class PlayerDeath implements Listener {
-    private final Connection con = Main.getConnection();
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {

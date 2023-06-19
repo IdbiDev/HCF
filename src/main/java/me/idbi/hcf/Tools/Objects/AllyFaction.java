@@ -1,13 +1,9 @@
 package me.idbi.hcf.Tools.Objects;
 
-import me.idbi.hcf.Main;
-
-import java.sql.Connection;
 import java.util.HashMap;
 
 
 public class AllyFaction {
-    private final Connection con = AllyCon.con;
     /**
      * Az a faction, akivel szövetkezett a super class.
      */
@@ -56,28 +52,3 @@ public class AllyFaction {
         //System.out.println(perm.name() + class_permissions.get(perm) + " UTÁNA");
     }
 }
-
-class AllyCon {
-    protected static final Connection con = Main.getConnection();
-
-}
-/*
-    CukiMC:
-        KisCat ALLY
-        -Jogok CukiMC területén:
-            -asd
-            -asd
-            -Kurva
-
-    KisCat:
-        CukiMC ALLY
-        -Jogok kiscica területén:
-            -ASKED
-   Értesítés minden esetbe ha változás van
- */
-
-
-/*
-    Faction  -> Allies 1. ->permissions
- */
-

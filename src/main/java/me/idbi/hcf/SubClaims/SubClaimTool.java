@@ -20,12 +20,7 @@ public class SubClaimTool {
         if(hcfPlayer.getRank() == null) return false;
 
         FactionRankManager.Rank signRank = hcfPlayer.getFaction().getRank(rankName);
-        if(signRank.getPriority() <= hcfPlayer.getRank().getPriority() && faction == hcfPlayer.getFaction()) {
-            System.out.println("Van jogod! " + signRank.getName() + " " + hcfPlayer.getRank().getName());
-            return true;
-        }
-
-        return false;
+        return signRank.getPriority() <= hcfPlayer.getRank().getPriority() && faction == hcfPlayer.getFaction();
     }
 
     public static boolean isSubClaim(Sign sign) {

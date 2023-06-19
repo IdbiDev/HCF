@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import java.sql.Connection;
 
 public class FactionTransferCommand extends SubCommand {
-    public static Connection con = Main.getConnection();
+    public static Connection con = Playertools.con;
 
     @Override
     public String getName() {

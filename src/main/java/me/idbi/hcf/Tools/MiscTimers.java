@@ -301,11 +301,9 @@ public class MiscTimers {
             }
         }
         if(Timers.PVP_TIMER.nowExpire(hcfPlayer)) {
-            System.out.println("Expired PVP_TIMER");
             removeFakeWalls(p);
         }
         if(Timers.COMBAT_TAG.nowExpire(hcfPlayer)) {
-            System.out.println("Expired combat");
             removeFakeWalls(p);
         }
     }

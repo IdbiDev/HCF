@@ -3,18 +3,22 @@ package me.idbi.hcf.AdminSystem.Commands;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.Tools.SQL_Connection;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.util.HashMap;
 
+import static com.mongodb.client.model.Updates.set;
+import static com.mongodb.client.model.Filters.eq;
+
+import static me.idbi.hcf.Tools.Playertools.con;
 public class AdminSetFactionLeaderCommand extends SubCommand {
-    private static final Connection con = Main.getConnection();
 
     @Override
     public String getName() {
@@ -84,7 +88,12 @@ public class AdminSetFactionLeaderCommand extends SubCommand {
 
         assert selectedFaction != null;
         selectedFaction.updateLeader(hcf);
-        SQL_Connection.dbExecute(con, "UPDATE factions SET leader='?' WHERE name='?'", selectedFaction.getLeader(), args[1]);
+        if(Main.isUsingMongoDB()){
+            MongoDBDriver.Update(MongoDBDriver.MongoCollections.FACTIONS,eq("name",args[1]),set("leader",selectedFaction.getLeader()));
+        }else {
+            SQL_Connection.dbExecute(con, "UPDATE factions SET leader='?' WHERE name='?'", selectedFaction.getLeader(), args[1]);
+
+        }
 
         for (Player member : selectedFaction.getOnlineMembers()) {
             member.sendMessage(Messages.set_faction_leader_by_admin.language(member).setPlayer(Bukkit.getPlayer(args[2])).setExecutor(p).queue());

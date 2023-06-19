@@ -6,7 +6,7 @@ import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.Tools.SQL_Connection;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerRankManagerInventory {
-    public static Connection con = Main.getConnection();
+    public static Connection con = Playertools.con;
 
     // --------------------- ONLINE PLAYER ---------------------------- //
     public static Inventory inv(Player owner, Player p) {

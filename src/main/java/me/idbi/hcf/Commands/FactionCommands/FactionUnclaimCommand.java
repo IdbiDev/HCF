@@ -3,15 +3,16 @@ package me.idbi.hcf.Commands.FactionCommands;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
+import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Claiming;
+import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import me.idbi.hcf.Tools.SQL_Async;
-import me.idbi.hcf.Tools.SQL_Connection;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Async;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
+import static com.mongodb.client.model.Filters.eq;
+import static me.idbi.hcf.Tools.Playertools.con;
 
-import static me.idbi.hcf.Commands.FactionCommands.FactionCreateCommand.con;
 
 public class FactionUnclaimCommand extends SubCommand {
 
@@ -50,7 +51,11 @@ public class FactionUnclaimCommand extends SubCommand {
                     double backmoney = Claiming.calculateMoneyFromClaim(player.getFaction())  * Config.UnClaimPriceMultiplier.asDouble();
                     player.addMoney(Math.toIntExact(Math.round(backmoney)));
                     player.getFaction().clearClaims(); // done
-                    SQL_Async.dbExecuteAsync(con,"DELETE FROM claims WHERE factionid='?'", String.valueOf(player.getFaction().getId()));
+                    if(Main.isUsingMongoDB()){
+                        MongoDBDriver.Delete(MongoDBDriver.MongoCollections.CLAIMS,eq("factionid",player.getFaction().getId()));
+                    }else {
+                        SQL_Async.dbExecuteAsync(con,"DELETE FROM claims WHERE factionid='?'", String.valueOf(player.getFaction().getId()));
+                    }
                     player.sendMessage(Messages.success_unclaim);
 
                 }else {

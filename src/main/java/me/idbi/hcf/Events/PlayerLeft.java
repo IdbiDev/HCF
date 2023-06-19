@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class PlayerLeft implements Listener {
-    //private final Connection con = Main.getConnection();
+    //private final Connection con = Main.getCon();
     private final Main m = Main.getPlugin(Main.class);
 
     @EventHandler
