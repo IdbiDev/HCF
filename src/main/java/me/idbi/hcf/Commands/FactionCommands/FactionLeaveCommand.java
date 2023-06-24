@@ -7,15 +7,14 @@ import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.*;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import org.bson.conversions.Bson;
 import org.bukkit.entity.Player;
 
-import java.sql.Connection;
 import java.util.Date;
 import java.util.Objects;
 

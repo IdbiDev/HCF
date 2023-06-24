@@ -5,8 +5,8 @@ import me.idbi.hcf.BukkitCommands.HCFCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
-import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.entity.Player;
 
 import static com.mongodb.client.model.Filters.eq;

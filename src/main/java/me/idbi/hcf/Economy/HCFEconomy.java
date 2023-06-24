@@ -3,10 +3,10 @@ package me.idbi.hcf.Economy;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
 import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import net.milkbowl.vault.economy.EconomyResponse;
 
 import java.util.List;
 import java.util.UUID;

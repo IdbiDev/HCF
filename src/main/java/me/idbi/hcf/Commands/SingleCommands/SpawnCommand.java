@@ -8,8 +8,6 @@ import me.idbi.hcf.HCFServer;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
-import me.idbi.hcf.Tools.Timers;
-import net.minecraft.server.v1_8_R3.WorldGenEnder;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 

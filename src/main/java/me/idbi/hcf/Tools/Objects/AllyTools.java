@@ -3,15 +3,14 @@ package me.idbi.hcf.Tools.Objects;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
 import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
-import me.idbi.hcf.Tools.Database.MySQL.SQL_Async;
 import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import org.bson.conversions.Bson;
 import org.json.JSONObject;
 
 import java.util.Map;
 
-import static com.mongodb.client.model.Updates.set;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 import static me.idbi.hcf.Tools.Playertools.con;
 
 public class AllyTools {

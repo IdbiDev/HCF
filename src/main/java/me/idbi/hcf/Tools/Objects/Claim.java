@@ -4,11 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.Claiming;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import me.idbi.hcf.Tools.Objects.Point;
 
 import static me.idbi.hcf.Tools.Playertools.getDistanceBetweenPoints2D;
 

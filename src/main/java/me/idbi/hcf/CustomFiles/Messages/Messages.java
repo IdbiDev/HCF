@@ -83,8 +83,6 @@ public enum Messages {
 
     faction_rally("Factions","%prefix% &2&o%player% &ahas set a rally point at &2&o%location% &a(&2&o%world%&a)"),
     faction_unrally("Factions","%prefix% &eYour factions rally point has been removed!"),
-    faction_rally_waypoint_name("Factions", "Rally"),
-    faction_home_waypoint_name("Factions", "Home"),
 
     // Commands
     faction_creation("Factions","%prefix% &2&o%faction_name% &awas created by &2&o%player%&a!"),
@@ -297,7 +295,6 @@ public enum Messages {
 
     cant_damage_while_pvptimer("PvP","%prefix% &cYou can't attack while you have a PvP timer on you!"),
     cant_damage_while_pvptimer_victim("PvP","%prefix% &cThis player has a PvP timer!"),
-    cant_damage_while_sotw_timer_active("PvP","%prefix% &cThis player has an active SOTW timer!"),
     stuck_started("Stuck","%prefix% &aStuck timer started! You are getting teleported to a safe zone in &o&e%amount%&r&a seconds! Don't move!"),
     stuck_finished("Stuck","%prefix%  &bYou successfully teleported to a safe zone!"),
     stuck_interrupted("Stuck","%prefix% &cYou interrupted the stuck timer!"),
@@ -336,8 +333,6 @@ public enum Messages {
     lives_give_player("Lives", "%prefix% &2&o%executor%&a gave you &2&o%lives% &alive. You have &2&o%leftlives% &alive now!"),
     lives_set_executor("Lives", "%prefix% &aYou set &2&o%player%&a lives to &2&o%lives%&a."),
     lives_set_player("Lives", "%prefix% &2&o%executor%&a set your lives to &2&o%lives%&a."),
-
-    warzone_no_permission("Server","%prefix% &eYou can't do this in the Warzone!"),
 
     // GUI
     gui_rank_created("Gui","%prefix% &bYou have successfully created rank: &b&o%rank%!"),
@@ -440,58 +435,12 @@ public enum Messages {
             "&f➥ Discard the claim."
     )),*/
 
-    claim_info_admin(Arrays.asList(
-            "%prefix% &6Spawn claiming information:",
-            "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
-            "&7&l» &ePress &6&o[LEFT] &eclick on the ground, to place the other position!", // pos2
-            "&eTo accept the claim, press &bShift + Right Click", // right click
-            "&eTo discard the claim, press &bShift + Left Click" // left click
-    )),
     claim_info(Arrays.asList(
             "%prefix% &6Claiming information:",
             "&7&l» &ePress &6&o[RIGHT] &eclick on the ground, to place one of the positions!", // pos1
             "&7&l» &ePress &6&o[LEFT] &eclick on the ground, to place the other position!", // pos2
             "&eTo accept the claim, press &bShift + Right Click", // right click
             "&eTo discard the claim, press &bShift + Left Click" // left click
-    )),
-
-    commands(Arrays.asList(
-            "§9/f create <Name> §7- Create your faction",
-            "§9/f show [Faction] §7- Show faction",
-            "§9/f claim §7- Claiming",
-            "§9/f invite <Player> §7- Invite player to your faction",
-            "§9/f join §7- Join to a faction",
-            "§9/f leave §7- Leave from your faction",
-            "§9/f deposit <Amount> §7- Deposit money to your faction bank",
-            "§9/f withdraw <Amount> §7- Withdraw money from faction bank",
-            "§9/f sethome §7- Sets a home to your faction",
-            "§9/f home §7- Teleport to faction's home",
-            "§9/f reload [file] §7- Reload files"
-    )),
-
-    koth_commands(Arrays.asList(
-            "§9/koth create <Name> §7- Create the koth",
-            "§9/koth setcapturezone <Name> §7- Claim the koth place (CAPTURE ZONE)",
-            "§9/koth setnatrualzone <Name> §7- Claim the koth place (NEUTRAL ZONE)",
-            "§9/koth setreward §7- Set the koth reward with GUI"
-
-    )),
-
-    admin_commands(Arrays.asList(
-            "§9/admin duty §7- Entering duty mode",
-            "§9/admin deposit <Faction> <Amount> §7- Deposit x amount money to a faction",
-            "§9/admin withdraw <Faction> <Amount> §7- Withdraw x amount money from a faction",
-            "§9/admin freeze <Player> §7- Freeze/Unfreeze a player",
-            "§9/admin kick <Player> §7- Kick a player from the server",
-            "§9/admin setfaction <Player> <Faction> §7- Add the player to a faction",
-            "§9/admin removefaction <Player> <Faction> §7- Remove the player from a faction",
-            "§9/admin eotw §7- Starts the EOTW (End Of The World) (Time in the config file)",
-            "§9/admin deletefaction <Faction> §7- Delete the selected faction",
-            "§9/admin setleader <Faction> <newLeader> §7- Set the player to a faction leader",
-            "§9/admin givemoney <Player> <Amount> §7- Gives x amount money to a player",
-            "§9/admin takemoney <Player> <Amount> §7- Takes x amount money from a player",
-            "§9/admin setfactionname <Faction> <Name> §7- Sets a faction to a new name",
-            "§9/admin spawnclaim <state> §7- Starts the spawn claiming method!"
     ));
 
     public String section;

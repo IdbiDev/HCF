@@ -1,12 +1,11 @@
 package me.idbi.hcf.FactionGUI.Menus;
 
 import me.idbi.hcf.FactionGUI.Items.GUI_Items;
-import me.idbi.hcf.Main;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;

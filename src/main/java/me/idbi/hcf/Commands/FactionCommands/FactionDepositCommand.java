@@ -11,8 +11,6 @@ import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.TimeZone;
 
 public class FactionDepositCommand extends SubCommand {
     boolean transaction;

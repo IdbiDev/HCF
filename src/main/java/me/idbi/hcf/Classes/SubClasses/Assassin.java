@@ -179,7 +179,6 @@ public class Assassin implements HCF_Class, Listener {
             addEffect(p, PotionEffectType.WEAKNESS, 0);
         }
         hcf.setAssassinState(level);
-        Main.sendCmdMessage(p.getDisplayName() + "level >>" + level);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

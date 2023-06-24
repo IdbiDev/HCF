@@ -6,8 +6,6 @@ import me.idbi.hcf.Tools.Objects.ChatTypes;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-
 public class FactionChatToggleCommand extends SubCommand {
 
     @Override

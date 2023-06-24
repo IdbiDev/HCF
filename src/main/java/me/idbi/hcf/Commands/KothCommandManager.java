@@ -1,6 +1,8 @@
 package me.idbi.hcf.Commands;
 
-import me.idbi.hcf.Commands.KothCommands.*;
+import me.idbi.hcf.Commands.KothCommands.KothSetRewardCommand;
+import me.idbi.hcf.Commands.KothCommands.KothStartCommand;
+import me.idbi.hcf.Commands.KothCommands.KothStopCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

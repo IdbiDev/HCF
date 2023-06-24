@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
-import java.util.HashMap;
 
 public class FactionInviteCommand extends SubCommand {
     @Override

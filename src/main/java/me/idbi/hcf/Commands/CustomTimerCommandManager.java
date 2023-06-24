@@ -1,12 +1,7 @@
 package me.idbi.hcf.Commands;
 
-import me.idbi.hcf.Commands.CustomClaimCommands.*;
 import me.idbi.hcf.Commands.CustomTimer.*;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.Objects.CustomTimers;
-import me.idbi.hcf.Tools.Formatter;
-import me.idbi.hcf.Tools.Objects.HCFPermissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,7 +11,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CustomTimerCommandManager implements CommandExecutor, TabCompleter {
 

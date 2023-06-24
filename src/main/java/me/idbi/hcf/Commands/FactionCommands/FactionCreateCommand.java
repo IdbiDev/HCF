@@ -8,25 +8,24 @@ import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
 import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
 import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
-import me.idbi.hcf.Tools.Nametag.NameChanger;
+import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import me.idbi.hcf.Tools.FactionRankManager;
+import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.Faction;
 import me.idbi.hcf.Tools.Objects.FactionHistory;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.sql.Connection;
 import java.util.Date;
 
-import static com.mongodb.client.model.Updates.set;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.set;
 import static me.idbi.hcf.Tools.Playertools.con;
 public class FactionCreateCommand extends SubCommand {
 

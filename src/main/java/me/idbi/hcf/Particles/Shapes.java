@@ -1,6 +1,5 @@
 package me.idbi.hcf.Particles;
 
-import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.Point;
 import org.bukkit.Effect;
 import org.bukkit.Location;

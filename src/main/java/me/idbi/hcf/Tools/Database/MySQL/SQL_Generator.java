@@ -1,7 +1,6 @@
 package me.idbi.hcf.Tools.Database.MySQL;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
-import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.PlayerStatistic;
 
 import java.sql.Connection;

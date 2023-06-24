@@ -3,7 +3,6 @@ package me.idbi.hcf.Commands.FactionCommands;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.ClaimTypes;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
@@ -11,8 +10,6 @@ import me.idbi.hcf.Tools.Objects.Wand;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
-import java.util.HashMap;
 
 public class FactionClaimCommand extends SubCommand {
     @Override

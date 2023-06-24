@@ -14,14 +14,13 @@ import java.util.Date;
 import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Updates.set;
 
 public class PlayerStatistic {
     private static final Connection con = Playertools.con;
-    public final static String defaultStats = "{\"totalFactions\":0,\"lastLogin\":0,\"TimePlayed\":0,\"MoneySpend\":0,\"ClassTimes\":{\"Miner\":0,\"Archer\":0,\"Assassin\":0,\"Total\":0,\"Bard\":0},\"MoneyEarned\":0,\"FactionHistory\":[],\"startDate\":0}";
+    public final static String defaultStats = "{\"totalFactions\":0,\"lastLogin\":0,\"TimePlayed\":0,\"MoneySpend\":0,\"ClassTimes\":{\"Miner\":0,\"Archer\":0,\"Rogue\":0,\"Total\":0,\"Bard\":0},\"MoneyEarned\":0,\"FactionHistory\":[],\"startDate\":0}";
     public long TotalBardClassTime;
-    public long TotalAssassinClassTime;
+    public long TotalRogueClassTime;
     public long TotalArcherClassTime;
     public long TotalMinerClassTime;
     public long TotalClassTime;
@@ -40,7 +39,7 @@ public class PlayerStatistic {
         //System.out.println(mainJSON.toString());
         JSONObject ClassTimes = mainJSON.getJSONObject("ClassTimes");
         TotalBardClassTime = Long.parseLong(ClassTimes.get("Bard").toString());
-        TotalAssassinClassTime = Long.parseLong(ClassTimes.get("Assassin").toString());
+        TotalRogueClassTime = Long.parseLong(ClassTimes.get("Rogue").toString());
         TotalArcherClassTime = Long.parseLong(ClassTimes.get("Archer").toString());
         TotalMinerClassTime = Long.parseLong(ClassTimes.get("Miner").toString());
         TotalClassTime = Long.parseLong(ClassTimes.get("Total").toString());
@@ -71,10 +70,10 @@ public class PlayerStatistic {
         //JSONArray ClassTimes = new JSONArray();
         JSONObject classTimes = new JSONObject();
         classTimes.put("Bard", TotalBardClassTime);
-        classTimes.put("Assassin", TotalAssassinClassTime);
+        classTimes.put("Rogue", TotalRogueClassTime);
         classTimes.put("Archer", TotalArcherClassTime);
         classTimes.put("Miner", TotalMinerClassTime);
-        classTimes.put("Total", TotalMinerClassTime + TotalArcherClassTime + TotalAssassinClassTime + TotalBardClassTime);
+        classTimes.put("Total", TotalMinerClassTime + TotalArcherClassTime + TotalRogueClassTime + TotalBardClassTime);
 
         jsonComp.put("totalFactions", factionHistory.size());
         jsonComp.put("MoneySpend", MoneySpend);
@@ -101,10 +100,10 @@ public class PlayerStatistic {
         //JSONArray ClassTimes = new JSONArray();
         JSONObject classTimes = new JSONObject();
         classTimes.put("Bard", TotalBardClassTime);
-        classTimes.put("Assassin", TotalAssassinClassTime);
+        classTimes.put("Rogue", TotalRogueClassTime);
         classTimes.put("Archer", TotalArcherClassTime);
         classTimes.put("Miner", TotalMinerClassTime);
-        classTimes.put("Total", TotalMinerClassTime + TotalArcherClassTime + TotalAssassinClassTime + TotalBardClassTime);
+        classTimes.put("Total", TotalMinerClassTime + TotalArcherClassTime + TotalRogueClassTime + TotalBardClassTime);
 
         jsonComp.put("totalFactions", factionHistory.size());
         jsonComp.put("MoneySpend", MoneySpend);

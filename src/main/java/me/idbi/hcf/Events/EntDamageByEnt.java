@@ -3,7 +3,6 @@ package me.idbi.hcf.Events;
 import me.idbi.hcf.Classes.SubClasses.Archer;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.Claim;
 import me.idbi.hcf.Tools.Objects.ClaimAttributes;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;

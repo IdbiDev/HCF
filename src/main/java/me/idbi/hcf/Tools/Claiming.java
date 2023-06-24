@@ -9,8 +9,9 @@ import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
 import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import me.idbi.hcf.Tools.Objects.*;
 import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -19,7 +20,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.mongodb.client.model.Filters.eq;
 import static me.idbi.hcf.Tools.Playertools.*;
 
 public class Claiming {

@@ -5,8 +5,6 @@ import me.idbi.hcf.BukkitCommands.HCFCommand;
 import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.HCFServer;
-import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 @CommandInfo(

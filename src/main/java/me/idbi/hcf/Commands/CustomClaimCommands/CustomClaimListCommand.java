@@ -3,7 +3,6 @@ package me.idbi.hcf.Commands.CustomClaimCommands;
 import me.idbi.hcf.ClickableMessages.ClickableFactions;
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.FactionListGUI.FactionToplistInventory;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Tools.Objects.Faction;
 import org.bukkit.entity.Player;

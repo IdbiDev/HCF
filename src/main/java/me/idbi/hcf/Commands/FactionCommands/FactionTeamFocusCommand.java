@@ -8,8 +8,6 @@ import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-
 public class FactionTeamFocusCommand extends SubCommand {
     @Override
     public String getName() {

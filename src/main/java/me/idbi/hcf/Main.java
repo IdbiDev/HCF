@@ -17,15 +17,14 @@ import me.idbi.hcf.Economy.VaultHook;
 import me.idbi.hcf.Koth.AutoKoth;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Scoreboard.BoardManager;
+import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
+import me.idbi.hcf.TabManager.TabManager;
+import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.Database.MongoDB.AsyncMongoDBDriver;
 import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
 import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
 import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import me.idbi.hcf.Tools.Database.MySQL.SQL_Generator;
-import me.idbi.hcf.Tools.Objects.CustomTimers;
-import me.idbi.hcf.Scoreboard.FastBoard.FastBoard;
-import me.idbi.hcf.TabManager.TabManager;
-import me.idbi.hcf.Tools.*;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
 import me.idbi.hcf.Tools.Objects.*;
 import net.milkbowl.vault.economy.Economy;
@@ -46,8 +45,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.Connection;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import static me.idbi.hcf.HCFRules.*;
 
 

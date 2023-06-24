@@ -5,7 +5,6 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Scoreboard.Scoreboards;
-import me.idbi.hcf.Tools.Database.MongoDB.AsyncMongoDBDriver;
 import me.idbi.hcf.Tools.Database.MongoDB.MongoDBDriver;
 import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
 import me.idbi.hcf.Tools.Database.MySQL.SQL_Async;
@@ -15,10 +14,6 @@ import me.idbi.hcf.Tools.Objects.*;
 import org.bson.Document;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.NameTagVisibility;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
-import org.jetbrains.annotations.Async;
 import org.json.JSONException;
 import org.json.JSONObject;
 

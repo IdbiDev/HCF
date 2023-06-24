@@ -13,7 +13,6 @@ import me.idbi.hcf.Tools.Database.MongoDB.MongoFields;
 import me.idbi.hcf.Tools.Database.MySQL.SQL_Async;
 import me.idbi.hcf.Tools.Database.MySQL.SQL_Connection;
 import me.idbi.hcf.Tools.FactionHistorys.HistoryEntrys;
-import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

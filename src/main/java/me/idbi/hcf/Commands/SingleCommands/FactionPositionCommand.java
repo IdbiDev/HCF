@@ -3,19 +3,10 @@ package me.idbi.hcf.Commands.SingleCommands;
 import me.idbi.hcf.BukkitCommands.CommandInfo;
 import me.idbi.hcf.BukkitCommands.HCFCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.FactionRankManager;
 import me.idbi.hcf.Tools.Objects.Faction;
-import me.idbi.hcf.Tools.Objects.HCFPermissions;
-import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Map;
 @CommandInfo(
         name = "factioncall",
         description = "Gives your position to your faction!",

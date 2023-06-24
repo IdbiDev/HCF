@@ -2,10 +2,8 @@ package me.idbi.hcf.CustomFiles.ConfigManagers;
 
 import me.idbi.hcf.CustomFiles.Configs.ClassConfig;
 import me.idbi.hcf.CustomFiles.Configs.Config;
-import me.idbi.hcf.CustomFiles.Configs.ConfigComments;
 import me.idbi.hcf.CustomFiles.GUIMessages.GUIMessages;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.CustomFiles.Messages.MessagesComments;
 import me.idbi.hcf.CustomFiles.MessagesTool;
 import me.idbi.hcf.Main;
 import org.bukkit.Bukkit;

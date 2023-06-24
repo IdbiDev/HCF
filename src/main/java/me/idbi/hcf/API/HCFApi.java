@@ -1,6 +1,5 @@
 package me.idbi.hcf.API;
 
-import me.idbi.hcf.BukkitCommands.HCFCommand;
 import me.idbi.hcf.CustomFiles.ReclaimFile;
 import me.idbi.hcf.HCFMap;
 import me.idbi.hcf.HCFRules;
@@ -8,9 +7,10 @@ import me.idbi.hcf.HCFServer;
 import me.idbi.hcf.Main;
 import me.idbi.hcf.Reclaim.ReclaimConfig;
 import me.idbi.hcf.Tools.Nametag.NameChanger;
-import me.idbi.hcf.Tools.Objects.*;
+import me.idbi.hcf.Tools.Objects.Claim;
+import me.idbi.hcf.Tools.Objects.Faction;
+import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
-import me.idbi.hcf_abilitys.api.HCFAbilityApi;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;

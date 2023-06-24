@@ -2,14 +2,10 @@ package me.idbi.hcf.Commands.FactionCommands;
 
 import me.idbi.hcf.Commands.SubCommand;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
-import me.idbi.hcf.Main;
 import me.idbi.hcf.WorldModes.Deathmatch;
 import me.idbi.hcf.WorldModes.EOTW;
 import me.idbi.hcf.WorldModes.SOTW;
 import org.bukkit.entity.Player;
-
-import java.sql.Connection;
-import java.util.HashMap;
 
 public class FactionStartEventCommand extends SubCommand {
     SOTW sotw = new SOTW();

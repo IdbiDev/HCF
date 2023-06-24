@@ -4,7 +4,6 @@ import me.idbi.hcf.CustomFiles.Configs.Config;
 import me.idbi.hcf.CustomFiles.Messages.Messages;
 import me.idbi.hcf.Koth.Koth;
 import me.idbi.hcf.Main;
-import me.idbi.hcf.Tools.Claiming;
 import me.idbi.hcf.Tools.Objects.Claim;
 import me.idbi.hcf.Tools.Objects.ClaimAttributes;
 import me.idbi.hcf.Tools.Objects.Faction;
@@ -16,8 +15,6 @@ import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-
-import static me.idbi.hcf.Tools.Playertools.getDistanceBetweenPoints2D;
 
 public class EOTW implements Gamemode {
     BukkitTask task = null;

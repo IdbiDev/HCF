@@ -84,8 +84,8 @@ public class MiscTimers {
                     PlayerStatistic stats = hcf.getPlayerStatistic();
                     stats.TimePlayed += 1000L;
                     Classes clss = hcf.getPlayerClass();
-                    if (clss == Classes.ASSASSIN) {
-                        stats.TotalAssassinClassTime += 1000L;
+                    if (clss == Classes.ROGUE) {
+                        stats.TotalRogueClassTime += 1000L;
                     }
                     if (clss == Classes.ARCHER) {
                         stats.TotalArcherClassTime += 1000L;

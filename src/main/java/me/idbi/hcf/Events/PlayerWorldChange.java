@@ -1,13 +1,11 @@
 package me.idbi.hcf.Events;
 
 import me.idbi.hcf.CustomFiles.Configs.Config;
-import me.idbi.hcf.HCFMap;
 import me.idbi.hcf.HCFServer;
 import me.idbi.hcf.InventoryRollback.Rollback;
 import me.idbi.hcf.Tools.Objects.HCFPlayer;
 import me.idbi.hcf.Tools.Playertools;
 import me.idbi.hcf.Tools.Tasks;
-import me.idbi.hcf.Tools.WaypointPlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
