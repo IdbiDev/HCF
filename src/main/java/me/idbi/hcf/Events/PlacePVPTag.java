@@ -24,8 +24,10 @@ public class PlacePVPTag implements Listener {
             HCFPlayer victimplayer = HCFPlayer.getPlayer(victim);
             HCFPlayer damagerplayer = HCFPlayer.getPlayer(damager);
 
-            if(!Playertools.canDmg(victim, damager))
+            if(!Playertools.canDmg(victim, damager)) {
+                e.setCancelled(true);
                 return;
+            }
             if (e.getCause() != EntityDamageEvent.DamageCause.FALL) {
                 //Add combatTimer
                 if (!Timers.COMBAT_TAG.has(victimplayer)) {
